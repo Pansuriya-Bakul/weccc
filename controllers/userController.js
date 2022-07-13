@@ -867,7 +867,7 @@ exports.update = (req, res, next) => {
 			});
 		} else {
 			if ('password' in query) {
-				bcrypt.hash(config.server.default.admin.password, 10, (hashError, hash) => {
+				bcrypt.hash(req.body.password, 10, (hashError, hash) => {
 					if (hashError) {
 						log.error('There was an error hashing a signup password');
 
