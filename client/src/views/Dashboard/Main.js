@@ -56,10 +56,10 @@ class Main extends Component {
 
 			if (response.status === 200) {
 				// console.log(response.data.surveys[0]._id);
-				console.log(response.data);
+				// console.log(response.data);
 				this.setState({ clientData: response.data });
-				this.setState({ clientSurvey: response.data.surveys[0]._id });
-				console.log(this.state.clientData);
+				this.setState({ clientSurvey: response.data.surveys });
+				// console.log(this.state.clientData);
 			}
 		}); // call the get request.
 	};
@@ -142,13 +142,21 @@ class Main extends Component {
 											</Grid>
 											<Grid item xs={12}>
 												<Typography variant="body2" component="h2">
+													<p>{this.state.clientData.message}</p>
 													{this.state.clientSurvey !== '' ? (
+														Object.keys(this.state.clientSurvey).map(key=> {
+															return(
 														<>
-															<p>{this.state.clientData.message}</p>
-															<a href={`/administration/booklets/user/view/${this.state.clientSurvey}`}>View Survey</a>
+															<Grid item xs={12}>
+																<a href={`/administration/booklets/user/view/${this.state.clientSurvey[key]._id}`}>
+																	View Survey {parseInt(key, 10)+1}
+																</a>
+															</Grid>
 														</>
+															);
+														})
 													) : (
-														<p>{this.state.clientData.message}</p>
+														''
 													)}
 												</Typography>
 											</Grid>
