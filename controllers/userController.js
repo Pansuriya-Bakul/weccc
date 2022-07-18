@@ -340,7 +340,7 @@ exports.signup = (req, res, next) => {
 // just generate a JWT!
 // ====================================================
 exports.login = (req, res, next) => {
-	log.warn(req);
+	// log.warn(req);
 
 	if (req.user == null) {
 		log.warn('User was not part of the request.  Unauthorized.');
@@ -556,6 +556,7 @@ exports.read = (req, res, next) => {
 		.then(user => {
 			if (user) {
 				if (user.info.name.length > 60) {
+					log.warn(user.patients);
 					res.status(200).json({
 						user: {
 							_id: req.user._id,
@@ -572,26 +573,52 @@ exports.read = (req, res, next) => {
 								full: req.user.research.full
 							},
 							patients: user.patients.map(patients => {
-								return {
-									info: {
-										pastAddresses: patients.info.pastAddress,
-										name: key_private.decrypt(patients.info.name, 'utf8'),
-										gender: key_private.decrypt(patients.info.gender, 'utf8'),
-										dateOfBirth: patients.info.dateOfBirth,
-										language: patients.info.language,
-										currentAddress: patients.info.currentAddress
-									},
-									research: patients.research,
-									patients: patients.patients,
-									workers: patients.workers,
-									_id: patients._id,
-									email: patients.email,
-									enabled: patients.enabled,
-									role: patients.role,
-									facilityId: patients.facilityId,
-									createdAt: patients.createdAt,
-									updatedAt: patients.updatedAt
-								};
+								if (patients){
+									if (patients.info.name.length > 60 ){
+										return {
+											info: {
+												pastAddresses: patients.info.pastAddress,
+												name: key_private.decrypt(patients.info.name, 'utf8'),
+												gender: key_private.decrypt(patients.info.gender, 'utf8'),
+												dateOfBirth: patients.info.dateOfBirth,
+												language: patients.info.language,
+												currentAddress: patients.info.currentAddress
+											},
+											research: patients.research,
+											patients: patients.patients,
+											workers: patients.workers,
+											_id: patients._id,
+											email: patients.email,
+											enabled: patients.enabled,
+											role: patients.role,
+											facilityId: patients.facilityId,
+											createdAt: patients.createdAt,
+											updatedAt: patients.updatedAt
+										};
+									}
+									else{
+										return {
+											info: {
+												pastAddresses: patients.info.pastAddress,
+												name: patients.info.name,
+												gender: patients.info.gender,
+												dateOfBirth: patients.info.dateOfBirth,
+												language: patients.info.language,
+												currentAddress: patients.info.currentAddress
+											},
+											research: patients.research,
+											patients: patients.patients,
+											workers: patients.workers,
+											_id: patients._id,
+											email: patients.email,
+											enabled: patients.enabled,
+											role: patients.role,
+											facilityId: patients.facilityId,
+											createdAt: patients.createdAt,
+											updatedAt: patients.updatedAt
+										};
+									}
+								}
 							}),
 							workers: req.user.workers,
 							projectList: req.user.projectList,
@@ -627,8 +654,88 @@ exports.read = (req, res, next) => {
 						}
 					});
 				} else if (user.info.name.length < 60) {
+					log.warn(user);
 					res.status(200).json({
-						user: user,
+						user: {
+							_id: user._id,
+							info: {
+								pastAddresses: user.info.pastAddresses,
+								name: user.info.name,
+								gender: user.info.gender,
+								dateOfBirth: user.info.dateOfBirth,
+								language: user.info.language,
+								currentAddress: user.info.currentAddress
+							},
+							research: {
+								enabled: user.research.enabled,
+								full: user.research.full
+							},
+							patients: user.patients.map(patients => {
+								if (patients.info.name.length > 60 ){
+									return {
+										info: {
+											pastAddresses: patients.info.pastAddress,
+											name: key_private.decrypt(patients.info.name, 'utf8'),
+											gender: key_private.decrypt(patients.info.gender, 'utf8'),
+											dateOfBirth: patients.info.dateOfBirth,
+											language: patients.info.language,
+											currentAddress: patients.info.currentAddress
+										},
+										research: patients.research,
+										patients: patients.patients,
+										workers: patients.workers,
+										_id: patients._id,
+										email: patients.email,
+										enabled: patients.enabled,
+										role: patients.role,
+										facilityId: patients.facilityId,
+										createdAt: patients.createdAt,
+										updatedAt: patients.updatedAt
+									};
+								}
+								else{
+									return {
+										info: {
+											pastAddresses: patients.info.pastAddress,
+											name: patients.info.name,
+											gender: patients.info.gender,
+											dateOfBirth: patients.info.dateOfBirth,
+											language: patients.info.language,
+											currentAddress: patients.info.currentAddress
+										},
+										research: patients.research,
+										patients: patients.patients,
+										workers: patients.workers,
+										_id: patients._id,
+										email: patients.email,
+										enabled: patients.enabled,
+										role: patients.role,
+										facilityId: patients.facilityId,
+										createdAt: patients.createdAt,
+										updatedAt: patients.updatedAt
+									};
+								}
+							}),
+							workers: user.workers,
+							projectList: user.projectList,
+							collectionList: user.collectionList,
+							memberCollectionList: user.memberCollectionList,
+							memberSurveyList: user.memberSurveyList,
+
+							sequence_id: user.sequence_id,
+							email: user.email,
+							password: user.password,
+							enabled: user.enabled,
+							role: user.role,
+							facilityId: {
+								_id: user.facilityId._id,
+								name: user.facilityId.name,
+								prefix: user.facilityId.prefix
+							},
+							createdAt: user.createdAt,
+							updatedAt: user.updatedAt,
+							__v: user.__v
+						},
 						request: {
 							type: 'GET',
 							url:
@@ -1223,12 +1330,12 @@ exports.findClientSurveys = (req, res, next) => {
 
 				// Checking if the user has any surveys
 				if (clientSurveys.length === 0 && user.info.name.length < 60) {
-					return res.status(200).json({ message: `${user.info.name} has no surveys at the moment` });
+					return res.status(200).json({ message: `${user.info.name} has no surveys at the moment` , surveys: []});
 				}
 				if (clientSurveys.length === 0 && user.info.name.length > 60) {
 					return res
 						.status(200)
-						.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has no surveys at the moment` });
+						.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has no surveys at the moment` , surveys: []});
 				}
 
 				for (let surveyIndex in clientSurveys) {
@@ -1237,16 +1344,16 @@ exports.findClientSurveys = (req, res, next) => {
 					const userSurveyCompleteness = clientSurveys[surveyIndex].completeness;
 
 					if (userSurveyCompleteness != 100) {
-						surveysNotCompleted.push(clientSurveys[surveyIndex]); // add the survey to the not completed survey list
+						surveysNotCompleted.push([surveyIndex]); // add the survey to the not completed survey list
 					}
 				}
 
 				if (surveysNotCompleted.length === 0 && user.info.name.length < 60) {
-					return res.status(200).json({ message: `${user.info.name} has completed all of their surveys.` });
+					return res.status(200).json({ message: `${user.info.name} has completed all of their surveys.` , surveys: []});
 				} else if (surveysNotCompleted.length === 0 && user.info.name.length > 60) {
 					return res
 						.status(200)
-						.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has completed all of their surveys.` });
+						.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has completed all of their surveys.` , surveys: []});
 				}
 
 				// otherwise the user has to complete their surveys
