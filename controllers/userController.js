@@ -31,6 +31,7 @@ const axios = require('axios');
 const config = require('../config/config');
 const logger = require('../config/logging');
 const res = require('express/lib/response');
+const user = require('../models/user');
 const log = logger.users;
 
 // ====================================================
@@ -555,113 +556,13 @@ exports.read = (req, res, next) => {
 		.exec()
 		.then(user => {
 			if (user) {
-				if (user.info.name.length > 60) {
-					log.warn(user.patients);
-					res.status(200).json({
-						user: {
-							_id: req.user._id,
-							info: {
-								pastAddresses: req.user.info.pastAddresses,
-								name: key_private.decrypt(req.user.info.name, 'utf8'),
-								gender: key_private.decrypt(req.user.info.gender, 'utf8'),
-								dateOfBirth: req.user.info.dateOfBirth,
-								language: req.user.info.language,
-								currentAddress: req.user.info.currentAddress
-							},
-							research: {
-								enabled: req.user.research.enabled,
-								full: req.user.research.full
-							},
-							patients: user.patients.map(patients => {
-								if (patients){
-									if (patients.info.name.length > 60 ){
-										return {
-											info: {
-												pastAddresses: patients.info.pastAddress,
-												name: key_private.decrypt(patients.info.name, 'utf8'),
-												gender: key_private.decrypt(patients.info.gender, 'utf8'),
-												dateOfBirth: patients.info.dateOfBirth,
-												language: patients.info.language,
-												currentAddress: patients.info.currentAddress
-											},
-											research: patients.research,
-											patients: patients.patients,
-											workers: patients.workers,
-											_id: patients._id,
-											email: patients.email,
-											enabled: patients.enabled,
-											role: patients.role,
-											facilityId: patients.facilityId,
-											createdAt: patients.createdAt,
-											updatedAt: patients.updatedAt
-										};
-									}
-									else{
-										return {
-											info: {
-												pastAddresses: patients.info.pastAddress,
-												name: patients.info.name,
-												gender: patients.info.gender,
-												dateOfBirth: patients.info.dateOfBirth,
-												language: patients.info.language,
-												currentAddress: patients.info.currentAddress
-											},
-											research: patients.research,
-											patients: patients.patients,
-											workers: patients.workers,
-											_id: patients._id,
-											email: patients.email,
-											enabled: patients.enabled,
-											role: patients.role,
-											facilityId: patients.facilityId,
-											createdAt: patients.createdAt,
-											updatedAt: patients.updatedAt
-										};
-									}
-								}
-							}),
-							workers: req.user.workers,
-							projectList: req.user.projectList,
-							collectionList: req.user.collectionList,
-							memberCollectionList: req.user.memberCollectionList,
-							memberSurveyList: req.user.memberSurveyList,
-
-							sequence_id: req.user.sequence_id,
-							email: req.user.email,
-							password: req.user.password,
-							enabled: req.user.enabled,
-							role: req.user.role,
-							facilityId: {
-								_id: '60e1f2bd08fa9904cc62cdf5',
-								name: 'Palliative IMS Facility',
-								prefix: 'YQG'
-							},
-							createdAt: req.user.createdAt,
-							updatedAt: req.user.updatedAt,
-							__v: req.user.__v
-						},
-						request: {
-							type: 'GET',
-							url:
-								config.server.protocol +
-								'://' +
-								config.server.hostname +
-								':' +
-								config.server.port +
-								config.server.extension +
-								'/users/' +
-								user._id
-						}
-					});
-				} else if (user.info.name.length < 60) {
-					log.warn(user);
 					res.status(200).json({
 						user: {
 							_id: user._id,
 							info: {
 								pastAddresses: user.info.pastAddresses,
-								name: user.info.name,
-								gender: user.info.gender,
+								name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
+								gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
 								dateOfBirth: user.info.dateOfBirth,
 								language: user.info.language,
 								currentAddress: user.info.currentAddress
@@ -671,12 +572,11 @@ exports.read = (req, res, next) => {
 								full: user.research.full
 							},
 							patients: user.patients.map(patients => {
-								if (patients.info.name.length > 60 ){
 									return {
 										info: {
 											pastAddresses: patients.info.pastAddress,
-											name: key_private.decrypt(patients.info.name, 'utf8'),
-											gender: key_private.decrypt(patients.info.gender, 'utf8'),
+											name: (patients.info.name.length > 60 ? key_private.decrypt(patients.info.name, 'utf8') : patients.info.name),
+											gender: (patients.info.gender.length > 60 ? key_private.decrypt(patients.info.gender, 'utf8') : patients.info.gender),
 											dateOfBirth: patients.info.dateOfBirth,
 											language: patients.info.language,
 											currentAddress: patients.info.currentAddress
@@ -691,30 +591,7 @@ exports.read = (req, res, next) => {
 										facilityId: patients.facilityId,
 										createdAt: patients.createdAt,
 										updatedAt: patients.updatedAt
-									};
-								}
-								else{
-									return {
-										info: {
-											pastAddresses: patients.info.pastAddress,
-											name: patients.info.name,
-											gender: patients.info.gender,
-											dateOfBirth: patients.info.dateOfBirth,
-											language: patients.info.language,
-											currentAddress: patients.info.currentAddress
-										},
-										research: patients.research,
-										patients: patients.patients,
-										workers: patients.workers,
-										_id: patients._id,
-										email: patients.email,
-										enabled: patients.enabled,
-										role: patients.role,
-										facilityId: patients.facilityId,
-										createdAt: patients.createdAt,
-										updatedAt: patients.updatedAt
-									};
-								}
+									};								
 							}),
 							workers: user.workers,
 							projectList: user.projectList,
@@ -749,7 +626,6 @@ exports.read = (req, res, next) => {
 								user._id
 						}
 					});
-				}
 			} else {
 				res.status(404).json({
 					error: 'User not found.'
@@ -770,14 +646,12 @@ exports.read = (req, res, next) => {
 // ====================================================
 exports.readall = (req, res, next) => {
 	log.info('Incoming readall request');
-
 	User.find()
 		.exec()
 		.then(users => {
 			const response = {
 				count: users.length,
 				users: users.map(user => {
-					if (user.info.name.length > 60) {
 						return {
 							_id: user._id,
 							sequenceId: user.sequence_id,
@@ -792,8 +666,8 @@ exports.readall = (req, res, next) => {
 							enabled: user.enabled,
 							info: {
 								pastAddresses: user.info.pastAddresses,
-								name: key_private.decrypt(user.info.name, 'utf8'),
-								gender: key_private.decrypt(user.info.gender, 'utf8'),
+								name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
+								gender: (user.info.name.gender > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
 								dateOfBirth: user.info.dateOfBirth,
 								language: user.info.language,
 								currentAddress: user.info.currentAddress
@@ -816,38 +690,6 @@ exports.readall = (req, res, next) => {
 									user._id
 							}
 						};
-					}
-					return {
-						_id: user._id,
-						sequenceId: user.sequence_id,
-						email: user.email,
-						role: user.role,
-						patients: user.patients,
-						workers: user.workers,
-						projectList: user.projectList,
-						collectionList: user.collectionList,
-						memberCollectionList: user.memberCollectionList,
-						memberSurveyList: user.memberSurveyList,
-						enabled: user.enabled,
-						info: user.info,
-						research: user.research,
-						createdAt: user.createdAt,
-						createdBy: user.createdBy,
-						updatedAt: user.updatedAt,
-						modifiedBy: user.modifiedBy,
-						request: {
-							type: 'GET',
-							url:
-								config.server.protocol +
-								'://' +
-								config.server.hostname +
-								':' +
-								config.server.port +
-								config.server.extension +
-								'/users/' +
-								user._id
-						}
-					};
 				})
 			};
 
@@ -876,49 +718,19 @@ exports.query = (req, res, next) => {
 			const response = {
 				count: users.length,
 				users: users.map(user => {
-					if (user.info.name.length > 60) {
-						return {
-							_id: user._id,
-							email: user.email,
-							role: user.role,
-							enabled: user.enabled,
-							info: {
-								pastAddresses: user.info.pastAddresses,
-								name: key_private.decrypt(user.info.name, 'utf8'),
-								gender: key_private.decrypt(user.info.gender, 'utf8'),
-								dateOfBirth: user.info.dateOfBirth,
-								language: user.info.language,
-								currentAddress: user.info.currentAddress
-							},
-							patients: user.patients,
-							workers: user.workers,
-							projectList: user.projectList,
-							collectionList: user.collectionList,
-							memberCollectionList: user.memberCollectionList,
-							memberSurveyList: user.memberSurveyList,
-							workers: user.workers,
-							createdAt: user.createdAt,
-							updatedAt: user.updatedAt,
-							request: {
-								type: 'GET',
-								url:
-									config.server.protocol +
-									'://' +
-									config.server.hostname +
-									':' +
-									config.server.port +
-									config.server.extension +
-									'/users/' +
-									user._id
-							}
-						};
-					}
 					return {
 						_id: user._id,
 						email: user.email,
 						role: user.role,
 						enabled: user.enabled,
-						info: user.info,
+						info: {
+							pastAddresses: user.info.pastAddresses,
+							name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
+							gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
+							dateOfBirth: user.info.dateOfBirth,
+							language: user.info.language,
+							currentAddress: user.info.currentAddress
+						},
 						patients: user.patients,
 						workers: user.workers,
 						projectList: user.projectList,
@@ -1327,6 +1139,7 @@ exports.findClientSurveys = (req, res, next) => {
 				if (!user) throw new Error('Client does not exist');
 
 				const clientSurveys = user.memberSurveyList;
+				log.warn('clientSurveys' , clientSurveys);
 
 				// Checking if the user has any surveys
 				if (clientSurveys.length === 0 && user.info.name.length < 60) {
@@ -1340,11 +1153,12 @@ exports.findClientSurveys = (req, res, next) => {
 
 				for (let surveyIndex in clientSurveys) {
 					log.info(`${surveyIndex}: Completeness score: ${clientSurveys[surveyIndex].completeness}`);
+					
 
 					const userSurveyCompleteness = clientSurveys[surveyIndex].completeness;
 
 					if (userSurveyCompleteness != 100) {
-						surveysNotCompleted.push([surveyIndex]); // add the survey to the not completed survey list
+						surveysNotCompleted.push([clientSurveys[surveyIndex]._id]); // add the survey to the not completed survey list
 					}
 				}
 
@@ -1356,6 +1170,7 @@ exports.findClientSurveys = (req, res, next) => {
 						.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has completed all of their surveys.` , surveys: []});
 				}
 
+				// log.warn(surveysNotCompleted);
 				// otherwise the user has to complete their surveys
 				return res.status(200).json({
 					message: `Pending... ${user.info.name} needs to complete ${surveysNotCompleted.length} survey(s).`,

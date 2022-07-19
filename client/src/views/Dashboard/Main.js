@@ -59,6 +59,7 @@ class Main extends Component {
 				// console.log(response);
 				this.setState({ clientData: response.data });
 				this.setState({ clientSurvey: response.data.surveys });
+				console.log(response.data.surveys);
 			}
 		}); // call the get request.
 	};
@@ -150,7 +151,7 @@ class Main extends Component {
 														return(
 													<>
 														<Grid item xs={12}>
-															<a href={`/administration/booklets/user/view/${this.state.clientSurvey[key]._id}`}>
+															<a href={`/administration/booklets/user/view/${this.state.clientSurvey[key]}`}>
 																View Survey {parseInt(key, 10)+1}
 															</a>
 														</Grid>
