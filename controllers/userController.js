@@ -1139,7 +1139,6 @@ exports.findClientSurveys = (req, res, next) => {
 				if (!user) throw new Error('Client does not exist');
 
 				const clientSurveys = user.memberSurveyList;
-				log.warn('clientSurveys' , clientSurveys);
 
 				// Checking if the user has any surveys
 				if (clientSurveys.length === 0 && user.info.name.length < 60) {
@@ -1153,7 +1152,6 @@ exports.findClientSurveys = (req, res, next) => {
 
 				for (let surveyIndex in clientSurveys) {
 					log.info(`${surveyIndex}: Completeness score: ${clientSurveys[surveyIndex].completeness}`);
-					
 
 					const userSurveyCompleteness = clientSurveys[surveyIndex].completeness;
 
@@ -1170,14 +1168,23 @@ exports.findClientSurveys = (req, res, next) => {
 						.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has completed all of their surveys.` , surveys: []});
 				}
 
-				// log.warn(surveysNotCompleted);
 				// otherwise the user has to complete their surveys
-				return res.status(200).json({
-					message: `Pending... ${user.info.name} needs to complete ${surveysNotCompleted.length} survey(s).`,
-					surveys: surveysNotCompleted,
-					info: user.info,
-					id: id
-				});
+				if (user.info.name.length > 60 ){
+					return res.status(200).json({
+						message: `Pending... ${key_private.decrypt(user.info.name, 'utf8')} needs to complete ${surveysNotCompleted.length} survey(s).`,
+						surveys: surveysNotCompleted,
+						info: user.info,
+						id: id
+					});
+				}
+				else{
+					return res.status(200).json({
+						message: `Pending... ${user.info.name} needs to complete ${surveysNotCompleted.length} survey(s).`,
+						surveys: surveysNotCompleted,
+						info: user.info,
+						id: id
+					});
+				}
 			}
 
 			return res.status(401).json({ message: 'Unauthorized!' });
