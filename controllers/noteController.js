@@ -19,6 +19,22 @@ const { notes } = require("../config/logging");
 const log = notes;
 
 // ====================================================
+// Encryption routes for keys and extracting keys
+// ====================================================
+const NodeRSA = require('node-rsa');
+const fs = require('fs');
+const bcrypt = require('bcryptjs');
+
+let key_private = new NodeRSA();
+let key_public = new NodeRSA();
+
+var public = fs.readFileSync('./Keys/public.pem', 'utf8');
+var private = fs.readFileSync('./Keys/private.pem', 'utf8');
+
+key_private.importKey(private);
+key_public.importKey(public);
+
+// ====================================================
 // Add a new note to the schema
 // POST: /api/notes/
 // ====================================================
@@ -111,6 +127,13 @@ exports.getNotesForUser = (req, res, next) => {
       if(error) return res.status(400).json({ error: error.message });
       
       if(foundNotes.length === 0) return res.status(404).json({ message: `${userID} has not received any notes.` });
+
+
+      foundNotes.forEach(currentUser => {
+        if (currentUser.senderId.info.name.length > 60){
+          currentUser.senderId.info.name = key_private.decrypt(currentUser.senderId.info.name, 'utf8');
+        }
+      });
 
       return res.status(200).json({ foundNotes: foundNotes });
     });
