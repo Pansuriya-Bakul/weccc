@@ -56,7 +56,7 @@ mongoose.connect(
     }
 );
 
-mongoose.set('useCreateIndex', true);
+// mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
 
 app.use(passport.initialize());
