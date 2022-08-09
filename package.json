@@ -20,6 +20,7 @@
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "chart.js": "^3.9.1",
     "chartjs": "^0.3.24",
     "chartjs-gauge": "^0.3.0",
     "dotenv": "^8.0.0",
