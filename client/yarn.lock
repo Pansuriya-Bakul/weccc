@@ -4119,9 +4119,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.3.103, electron-to-chromium@^1.4.202:
-  version "1.4.212"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.212.tgz#20cd48e88288fd2428138c108804edb1961bf559"
-  integrity sha512-LjQUg1SpLj2GfyaPDVBUHdhmlDU1vDB4f0mJWSGkISoXQrn5/lH3ECPCuo2Bkvf6Y30wO+b69te+rZK/llZmjg==
+  version "1.4.213"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.213.tgz#a0d0f535e4fbddc25196c91ff2964b5660932297"
+  integrity sha512-+3DbGHGOCHTVB/Ms63bGqbyC1b8y7Fk86+7ltssB8NQrZtSCvZG6eooSl9U2Q0yw++fL2DpHKOdTU0NVEkFObg==
 
 elliptic@^6.5.3:
   version "6.5.4"
@@ -10551,9 +10551,9 @@ supports-preserve-symlinks-flag@^1.0.0:
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
 survey-analytics@^1.9.10:
-  version "1.9.43"
-  resolved "https://registry.yarnpkg.com/survey-analytics/-/survey-analytics-1.9.43.tgz#d525205bc540534621790b9bfcc1242a2d62f75a"
-  integrity sha512-LLjMQY/mTUWDHCqKY3uUjMedMoy1nCmddqugPtJU8L7uoFzX7ErwTfzB22lc2qCxCF1H4GzG/p+7ddB1Kmm3HQ==
+  version "1.9.44"
+  resolved "https://registry.yarnpkg.com/survey-analytics/-/survey-analytics-1.9.44.tgz#25f09cecd2056eae8fc8371b359e313d6b9bf1f7"
+  integrity sha512-ibaLZhMxMk+ytuAO5eeWYCjba7t7SvcsZzQgj9wlbUssqJXwNViYjhTocj+ZhlFKJd/9NjwK6bF18bdjGustvQ==
   dependencies:
     datatables.net "^1.11.5"
     datatables.net-buttons "^1.7.1"
@@ -10575,49 +10575,49 @@ survey-analytics@^1.9.10:
     wordcloud "^1.2.2"
 
 survey-core@^1.8.29, survey-core@^1.9.10, survey-core@^1.9.22:
-  version "1.9.43"
-  resolved "https://registry.yarnpkg.com/survey-core/-/survey-core-1.9.43.tgz#fb9e1e8762bf3bdf559ed317dbf066c83f13a498"
-  integrity sha512-jZLUfDq3OJBrhu2OcGAyWur/3W5EKCo+GDqcrFJpWrQdh5tw+1y52T+gFRx+5JJfVPelvJM5P6HGmRDHZHqh8g==
+  version "1.9.44"
+  resolved "https://registry.yarnpkg.com/survey-core/-/survey-core-1.9.44.tgz#afcb016a6722752718c2d36ebe4ef5bfdfb26a8b"
+  integrity sha512-z34XCa8TbBVX9IaAphSrPVjcUXJIbkUNuHIp36KQu2Szx0z/5qJlR1f6nQ8To3lPHh7v+fWmzep9y3vFo5syNA==
 
 survey-creator@^1.9.10:
-  version "1.9.43"
-  resolved "https://registry.yarnpkg.com/survey-creator/-/survey-creator-1.9.43.tgz#570adea572425371afb62011cab02c89165db568"
-  integrity sha512-TOmzl6RTv4aK7xXIzmdmcWb3BayAx1GM1W8kR3Ukwp8Ev9kx5er4h7CXHrNlDNZFKePlc/u30X6WEWbmEOE8Cw==
+  version "1.9.44"
+  resolved "https://registry.yarnpkg.com/survey-creator/-/survey-creator-1.9.44.tgz#f85f7001c990dcc347f0790a2a61c34e7897ee80"
+  integrity sha512-TFjcu1nCTsKXUQuGzAyCnMVF1ryNRGwFwGw35/USI+EMrAuqlTOW10tt0P1Cpy57teAFWuZoanxkNdjoY/z16w==
   dependencies:
     knockout "^3.5.0"
-    survey-knockout "^1.9.43"
+    survey-knockout "^1.9.44"
 
 survey-jquery@^1.9.10:
-  version "1.9.43"
-  resolved "https://registry.yarnpkg.com/survey-jquery/-/survey-jquery-1.9.43.tgz#f5e5214cd991e8c3272840aa1777c344cc708bfb"
-  integrity sha512-YVddwvKbRFtyXB6Oa91KHSiE1Yszc2m0p2a0PujFSkOIo2EwJJzgIqf2qpgJG1MLgKywFKbr4bdzdIbTiUheUg==
+  version "1.9.44"
+  resolved "https://registry.yarnpkg.com/survey-jquery/-/survey-jquery-1.9.44.tgz#3c8c2ab1944376a570a5b40ee4fd1b1ba3e02611"
+  integrity sha512-GFkrO+wlYDGN7Tg94tkQcsDquohrDz69Zo/zo/0rygevyNJVuZsl9UEaJPtAneyjRu4qhmokTAKgjxLB76ZvEw==
   dependencies:
     jquery ">=1.12.4"
 
-survey-knockout@^1.9.10, survey-knockout@^1.9.43:
-  version "1.9.43"
-  resolved "https://registry.yarnpkg.com/survey-knockout/-/survey-knockout-1.9.43.tgz#34ea6276f8b81e5da148df846315254ff94288e1"
-  integrity sha512-henjrWEWBZhjskO47NyqymYjfOMvwmLMDqscsa1QONjJxi3KSp8KK8IseOGwBsPHDb3dPKv7i7ltfQlN6XCwsg==
+survey-knockout@^1.9.10, survey-knockout@^1.9.44:
+  version "1.9.44"
+  resolved "https://registry.yarnpkg.com/survey-knockout/-/survey-knockout-1.9.44.tgz#cb0bd06f546d7b347bb2993d0a94ee69e58544a8"
+  integrity sha512-yZ8rPvxjQxUw80Yr5KcZTpKgQq5kuXG1xLmXvt1TYqspUyGw1LAUD72o0/vCr6KTY5fIL+l4+x7XDbpwX2NKjQ==
   dependencies:
     knockout "^3.5.1"
 
 survey-pdf@^1.9.10:
-  version "1.9.43"
-  resolved "https://registry.yarnpkg.com/survey-pdf/-/survey-pdf-1.9.43.tgz#674df6dac557e498986f17cde2497f657b673cb7"
-  integrity sha512-U+IocOZz1eDbzvp+a80BCCxsVAOkjXe8v2xxHX0tl7yP97sjMZ4wsVpsa4YFVhj3/lKW0JJt7evd0Wa28XHQTg==
+  version "1.9.44"
+  resolved "https://registry.yarnpkg.com/survey-pdf/-/survey-pdf-1.9.44.tgz#9782c5c03b5d6e7b12b0394e1906f87a86afa45b"
+  integrity sha512-GDB5LTmHEZV8jnZ7Bw6hu1CMWUeQAmYxQug+YplztKvgvYIBYeWP40wiJgt4cRq/48ibMR/57/ql3cobmIjhjQ==
   dependencies:
     jspdf "^2.3.0"
     survey-core "^1.8.29"
 
 survey-react@^1.9.10:
-  version "1.9.43"
-  resolved "https://registry.yarnpkg.com/survey-react/-/survey-react-1.9.43.tgz#871e4cd9951dc2de9e407a7c1a244a943f46f598"
-  integrity sha512-WPpvuPwgGB3EK7vFAh8PcZ3EoquKHTw2QvaA1FXPUwp+2fQk54qsAwZ9uvHfBc2DOEXGwFqRe9GbkmMz15jRqQ==
+  version "1.9.44"
+  resolved "https://registry.yarnpkg.com/survey-react/-/survey-react-1.9.44.tgz#6686efb21b0cf8ae690a2cfc12f16fa08b9c8835"
+  integrity sha512-VfdPGrl4BmYSZ+Ke9JdCw4ukVQSLTLd41uajfSpAQM/9VbSF+fHqblYIKmeR4TOxfRylfOnQhiimypbBQEboxA==
 
 surveyjs-widgets@^1.9.10:
-  version "1.9.43"
-  resolved "https://registry.yarnpkg.com/surveyjs-widgets/-/surveyjs-widgets-1.9.43.tgz#50628b3f4c8feb5bada1e2376029b2072abe4a06"
-  integrity sha512-5YlCMYXhdguejR43uRswhLwCE1VpaDKEIrLdmSPxzViV82BYyAv8ca0fwCTM/n9zwpA/a/GeothQqCUTFTokGg==
+  version "1.9.44"
+  resolved "https://registry.yarnpkg.com/surveyjs-widgets/-/surveyjs-widgets-1.9.44.tgz#9e7b3d5d47afe80cd8afc0033f69836141298f20"
+  integrity sha512-m+ZM+I8smr9YGBcuHtm56BPpCOTdq0yeBaZj8B8ir1YQhbUIQthcaGvBeb5bDmHPBw0FDKoMOoF6G3LDmKojqA==
   dependencies:
     bootstrap-slider "^10.0.0"
     easy-autocomplete "^1.3.5"
