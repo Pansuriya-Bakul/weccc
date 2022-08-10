@@ -12,7 +12,7 @@
     "babel": "^6.23.0",
     "bootstrap": "^3.3.6",
     "bootstrap-slider": "^11.0.2",
-    "chart.js": 3.9.1,
+    "chart.js": "3.9.1",
     "chartjs-gauge": "^0.3.0",
     "classnames": "^2.3.1",
     "date-fns": "^2.25.0",
