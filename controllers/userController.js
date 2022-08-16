@@ -866,30 +866,59 @@ exports.update = (req, res, next) => {
 exports.delete = (req, res, next) => {
 	const id = req.params.userID;
 
-	User.findByIdAndDelete(id)
-		.exec()
-		.then(result => {
-			if (result) {
-				log.info('User with id ' + id + ' deleted');
+	// User.findByIdAndDelete(id)
+	// 	.exec()
+	// 	.then(result => {
+	// 		if (result) {
+	// 			log.info('User with id ' + id + ' deleted');
+
+	// 			res.status(200).json({
+	// 				message: 'User deleted'
+	// 			});
+	// 		} else {
+	// 			log.warn('Unable to delete user with id ' + id);
+
+	// 			res.status(401).json({
+	// 				message: 'Unable to delete user'
+	// 			});
+	// 		}
+	// 	})
+	// 	.catch(error => {
+	// 		log.error(error.message);
+
+	// 		res.status(500).json({
+	// 			message: error.message
+	// 		});
+	// 	});
+
+	log.warn("Deleting....");
+
+	User.findById(id, (error, user) => {
+		if (error) {
+			log.error(error.message);
+
+			return res.status(404).json({
+				message: error.message
+			});
+		} else {
+			user.enabled = false;
+			user.save((saveError, updatedUser) => {
+				if (saveError) {
+					log.error(saveError.message);
+
+					return res.status(500).json({
+						message: saveError.message
+					});
+				}
+
+				log.info('User with id ' + id + ' disabled');
 
 				res.status(200).json({
 					message: 'User deleted'
 				});
-			} else {
-				log.warn('Unable to delete user with id ' + id);
-
-				res.status(401).json({
-					message: 'Unable to delete user'
-				});
-			}
-		})
-		.catch(error => {
-			log.error(error.message);
-
-			res.status(500).json({
-				message: error.message
 			});
-		});
+		}
+	});
 };
 
 // ====================================================
