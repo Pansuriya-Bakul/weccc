@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import get from '../../helpers/common/get';
+import { Link } from 'react-router-dom';
 // ==================== MUI ====================
+import Tooltip from '@material-ui/core/Tooltip';
+import EditIcon from '@material-ui/icons/Edit';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
@@ -35,6 +38,9 @@ class Main extends Component {
 	checkAuth = () => {
 		setTimeout(() => {
 			this.props.ToggleDrawerClose();
+			this.setState({
+				render: true
+			});
 			this.props.CheckAuthenticationValidity(tokenValid => {
 				if (tokenValid) {
 					this.setState({
@@ -151,9 +157,23 @@ class Main extends Component {
 														return(
 													<>
 														<Grid item xs={12}>
-															<a href={`/administration/booklets/user/view/${this.state.clientSurvey[key]}`}>
-																View Survey {parseInt(key, 10)+1}
-															</a>
+															<Tooltip
+																placement="bottom"
+																title="Edit Chapter"
+															>
+																<Box m={1} pt={1}>
+																<Button 
+																	size="small" 
+																	variant="contained" 
+																	color="primary"
+																	startIcon={<EditIcon />}
+																	component={Link}
+																	to={`/administration/booklets/user/view/${this.state.clientSurvey[key]}`}
+																>
+																	View Survey {parseInt(key, 10)+1}
+																</Button>
+																</Box>
+															</Tooltip>
 														</Grid>
 													</>
 														);

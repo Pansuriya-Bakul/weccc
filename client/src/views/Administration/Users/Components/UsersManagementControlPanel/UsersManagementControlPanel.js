@@ -59,7 +59,7 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
 
 // ================= Static Variables ================
-const selectFilterOptions = [ { key: "Name", value: "name", display: "Name"}, { key: "SequenceId", value: "sequenceId", display: "Sequence ID"}, { key: "Email", value: "email", display: "Email"}, { key: "Role", value: "role", display: "Role"} ]
+const selectFilterOptions = [ { key: "Name", value: "name", display: "Name"}, { key: "SequenceId", value: "sequenceId", display: "Sequence ID"}, { key: "Email", value: "email", display: "Email"}, { key: "Role", value: "role", display: "Role"},  { key: "Enabled", value: "enabled", display: "Enabled"}]
 
 // ================= Static Functions ================
 
@@ -159,6 +159,14 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
                     case "role":
 
                         if(item.role.toUpperCase().indexOf(tempFilter) > -1)
+                        {
+                            tempArray.push(item);
+                        }
+
+                        break;
+                    case "enabled":
+                        let status = item.enabled ? "true" : "false";
+                        if(status.toUpperCase().indexOf(tempFilter) > -1)
                         {
                             tempArray.push(item);
                         }

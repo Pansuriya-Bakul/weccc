@@ -558,76 +558,84 @@ exports.read = (req, res, next) => {
 		.exec()
 		.then(user => {
 			if (user) {
-					res.status(200).json({
-						user: {
-							_id: user._id,
-							info: {
-								pastAddresses: user.info.pastAddresses,
-								name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
-								gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
-								dateOfBirth: user.info.dateOfBirth,
-								language: user.info.language,
-								currentAddress: user.info.currentAddress
-							},
-							research: {
-								enabled: user.research.enabled,
-								full: user.research.full
-							},
-							patients: user.patients.map(patients => {
-									return {
-										info: {
-											pastAddresses: patients.info.pastAddress,
-											name: (patients.info.name.length > 60 ? key_private.decrypt(patients.info.name, 'utf8') : patients.info.name),
-											gender: (patients.info.gender.length > 60 ? key_private.decrypt(patients.info.gender, 'utf8') : patients.info.gender),
-											dateOfBirth: patients.info.dateOfBirth,
-											language: patients.info.language,
-											currentAddress: patients.info.currentAddress
-										},
-										research: patients.research,
-										patients: patients.patients,
-										workers: patients.workers,
-										_id: patients._id,
-										email: patients.email,
-										enabled: patients.enabled,
-										role: patients.role,
-										facilityId: patients.facilityId,
-										createdAt: patients.createdAt,
-										updatedAt: patients.updatedAt
-									};								
-							}),
-							workers: user.workers,
-							projectList: user.projectList,
-							collectionList: user.collectionList,
-							memberCollectionList: user.memberCollectionList,
-							memberSurveyList: user.memberSurveyList,
-
-							sequence_id: user.sequence_id,
-							email: user.email,
-							password: user.password,
-							enabled: user.enabled,
-							role: user.role,
-							facilityId: {
-								_id: user.facilityId._id,
-								name: user.facilityId.name,
-								prefix: user.facilityId.prefix
-							},
-							createdAt: user.createdAt,
-							updatedAt: user.updatedAt,
-							__v: user.__v
+				if (user.workers){
+					var index = 0;
+					(user.workers).forEach(item =>{
+						user.workers[index].info.name = item.info.name.length > 60 ? key_private.decrypt(item.info.name, 'utf8') : item.info.name;
+						user.workers[index].info.gender = item.info.gender.length > 60 ? key_private.decrypt(item.info.gender, 'utf8') : item.info.genders;
+						index += 1;
+					})
+				}
+				res.status(200).json({
+					user: {
+						_id: user._id,
+						info: {
+							pastAddresses: user.info.pastAddresses,
+							name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
+							gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
+							dateOfBirth: user.info.dateOfBirth,
+							language: user.info.language,
+							currentAddress: user.info.currentAddress
 						},
-						request: {
-							type: 'GET',
-							url:
-								config.server.protocol +
-								'://' +
-								config.server.hostname +
-								':' +
-								config.server.port +
-								config.server.extension +
-								'/users/' +
-								user._id
-						}
-					});
+						research: {
+							enabled: user.research.enabled,
+							full: user.research.full
+						},
+						patients: user.patients.map(patients => {
+								return {
+									info: {
+										pastAddresses: patients.info.pastAddress,
+										name: (patients.info.name.length > 60 ? key_private.decrypt(patients.info.name, 'utf8') : patients.info.name),
+										gender: (patients.info.gender.length > 60 ? key_private.decrypt(patients.info.gender, 'utf8') : patients.info.gender),
+										dateOfBirth: patients.info.dateOfBirth,
+										language: patients.info.language,
+										currentAddress: patients.info.currentAddress
+									},
+									research: patients.research,
+									patients: patients.patients,
+									workers: patients.workers,
+									_id: patients._id,
+									email: patients.email,
+									enabled: patients.enabled,
+									role: patients.role,
+									facilityId: patients.facilityId,
+									createdAt: patients.createdAt,
+									updatedAt: patients.updatedAt
+								};								
+						}),
+						workers: user.workers,
+						projectList: user.projectList,
+						collectionList: user.collectionList,
+						memberCollectionList: user.memberCollectionList,
+						memberSurveyList: user.memberSurveyList,
+
+						sequence_id: user.sequence_id,
+						email: user.email,
+						password: user.password,
+						enabled: user.enabled,
+						role: user.role,
+						facilityId: {
+							_id: user.facilityId._id,
+							name: user.facilityId.name,
+							prefix: user.facilityId.prefix
+						},
+						createdAt: user.createdAt,
+						updatedAt: user.updatedAt,
+						__v: user.__v
+					},
+					request: {
+						type: 'GET',
+						url:
+							config.server.protocol +
+							'://' +
+							config.server.hostname +
+							':' +
+							config.server.port +
+							config.server.extension +
+							'/users/' +
+							user._id
+					}
+				});
 			} else {
 				res.status(404).json({
 					error: 'User not found.'
@@ -869,30 +877,59 @@ exports.update = (req, res, next) => {
 exports.delete = (req, res, next) => {
 	const id = req.params.userID;
 
-	User.findByIdAndDelete(id)
-		.exec()
-		.then(result => {
-			if (result) {
-				log.info('User with id ' + id + ' deleted');
+	// User.findByIdAndDelete(id)
+	// 	.exec()
+	// 	.then(result => {
+	// 		if (result) {
+	// 			log.info('User with id ' + id + ' deleted');
+
+	// 			res.status(200).json({
+	// 				message: 'User deleted'
+	// 			});
+	// 		} else {
+	// 			log.warn('Unable to delete user with id ' + id);
+
+	// 			res.status(401).json({
+	// 				message: 'Unable to delete user'
+	// 			});
+	// 		}
+	// 	})
+	// 	.catch(error => {
+	// 		log.error(error.message);
+
+	// 		res.status(500).json({
+	// 			message: error.message
+	// 		});
+	// 	});
+
+	log.warn("Deleting....");
+
+	User.findById(id, (error, user) => {
+		if (error) {
+			log.error(error.message);
+
+			return res.status(404).json({
+				message: error.message
+			});
+		} else {
+			user.enabled = false;
+			user.save((saveError, updatedUser) => {
+				if (saveError) {
+					log.error(saveError.message);
+
+					return res.status(500).json({
+						message: saveError.message
+					});
+				}
+
+				log.info('User with id ' + id + ' disabled');
 
 				res.status(200).json({
 					message: 'User deleted'
 				});
-			} else {
-				log.warn('Unable to delete user with id ' + id);
-
-				res.status(401).json({
-					message: 'Unable to delete user'
-				});
-			}
-		})
-		.catch(error => {
-			log.error(error.message);
-
-			res.status(500).json({
-				message: error.message
 			});
-		});
+		}
+	});
 };
 
 // ====================================================
