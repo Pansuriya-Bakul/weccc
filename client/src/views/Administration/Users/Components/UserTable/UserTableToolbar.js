@@ -120,9 +120,9 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
             get(url, token, (error, response) => {
                 if (error){ return;       }
 
-                if (response.status === 200) {                     
+                if (response.status === 200) {                    
                     setClientData(response.data);
-                    setClientSurvey(response.data.surveys[0]._id);
+                    setClientSurvey(response.data.surveys[0][0]);
                 } 
             }); // call the get request.
         }, [clientData, clientSurvey]);
