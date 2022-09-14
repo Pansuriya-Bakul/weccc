@@ -198,6 +198,10 @@ class App extends Component
 			authenticated: false,
 			render: true
 		});
+		
+		if (window.location.pathname != '/'){
+			window.history.replaceState(null, "Login", "/");
+		}
 	}
 	
 	render()

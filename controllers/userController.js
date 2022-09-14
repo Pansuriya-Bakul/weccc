@@ -34,6 +34,7 @@ const config = require('../config/config');
 const logger = require('../config/logging');
 const res = require('express/lib/response');
 const user = require('../models/user');
+const Survey = require("../models/survey");
 const log = logger.users;
 
 // ====================================================
@@ -1168,6 +1169,10 @@ exports.findClientSurveys = (req, res, next) => {
 	// Look for the client:
 	const id = req.params.userID;
 	let surveysNotCompleted = [];
+	let surveysNotCompletedNames = [];
+	// let surveysCompleted = [];
+	let surveysCompletedNames = [];
+
 	log.info('Incoming find surveys request for client with ID ' + id);
 
 	User.findById(id)
@@ -1189,45 +1194,82 @@ exports.findClientSurveys = (req, res, next) => {
 						.status(200)
 						.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has no surveys at the moment` , surveys: []});
 				}
-
+				
 				for (let surveyIndex in clientSurveys) {
 					log.info(`${surveyIndex}: Completeness score: ${clientSurveys[surveyIndex].completeness}`);
 
 					const userSurveyCompleteness = clientSurveys[surveyIndex].completeness;
 
 					if (userSurveyCompleteness != 100) {
-						surveysNotCompleted.push([clientSurveys[surveyIndex]._id]); // add the survey to the not completed survey list
+						// add the survey to the not completed survey list
+						surveysNotCompleted.push([clientSurveys[surveyIndex]._id]); 
+						MemberSurvey.findById(clientSurveys[surveyIndex]._id)
+						.exec()
+						.then( foundMemberSurvey=> {
+
+							if(foundMemberSurvey)
+							{
+								Survey.findById(foundMemberSurvey.surveyTemplate)
+								.select('name')
+								.exec()
+								.then( foundSurvey => {
+									surveysNotCompletedNames.push([[clientSurveys[surveyIndex]._id], [foundSurvey.name]]);
+								});
+							}
+						});
+					}
+					else {
+						// add the survey to the completed survey list
+						MemberSurvey.findById(clientSurveys[surveyIndex]._id)
+						.exec()
+						.then( foundMemberSurvey=> {
+
+							if(foundMemberSurvey)
+							{
+								Survey.findById(foundMemberSurvey.surveyTemplate)
+								.select('name')
+								.exec()
+								.then( foundSurvey => {
+									surveysCompletedNames.push([foundSurvey.name]);
+								});
+							}
+						});
 					}
 				}
 
-				if (surveysNotCompleted.length === 0 && user.info.name.length < 60) {
-					return res.status(200).json({ message: `${user.info.name} has completed all of their surveys.` , surveys: []});
-				} else if (surveysNotCompleted.length === 0 && user.info.name.length > 60) {
-					return res
-						.status(200)
-						.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has completed all of their surveys.` , surveys: []});
-				}
+				setTimeout( function() {
+					if (surveysNotCompleted.length === 0 && user.info.name.length < 60) {
+						return res.status(200).json({ message: `${user.info.name} has completed all of their surveys.` , surveys: []});
+					} else if (surveysNotCompleted.length === 0 && user.info.name.length > 60) {
+						return res
+							.status(200)
+							.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has completed all of their surveys.` , surveys: []});
+					}
 
-				// otherwise the user has to complete their surveys
-				if (user.info.name.length > 60 ){
-					return res.status(200).json({
-						message: `Pending... ${key_private.decrypt(user.info.name, 'utf8')} needs to complete ${surveysNotCompleted.length} survey(s).`,
-						surveys: surveysNotCompleted,
-						info: user.info,
-						id: id
-					});
-				}
-				else{
-					return res.status(200).json({
-						message: `Pending... ${user.info.name} needs to complete ${surveysNotCompleted.length} survey(s).`,
-						surveys: surveysNotCompleted,
-						info: user.info,
-						id: id
-					});
-				}
-			}
-
-			return res.status(401).json({ message: 'Unauthorized!' });
+					// otherwise the user has to complete their surveys
+					if (user.info.name.length > 60 ){
+						return res.status(200).json({
+							message: `Pending... ${key_private.decrypt(user.info.name, 'utf8')} needs to complete ${surveysNotCompleted.length} survey(s).`,
+							surveys: surveysNotCompleted,
+							notCompletedSurveys: surveysNotCompletedNames,
+							completedSurveys: surveysCompletedNames,
+							info: user.info,
+							id: id
+						});
+					}
+					else{
+						return res.status(200).json({
+							message: `Pending... ${user.info.name} needs to complete ${surveysNotCompleted.length} survey(s).`,
+							surveys: surveysNotCompleted,
+							notCompletedSurveys: surveysNotCompletedNames,
+							completedSurveys: surveysCompletedNames,
+							info: user.info,
+							id: id
+						});
+					}
+					return res.status(401).json({ message: 'Unauthorized!' });
+				}, 300);
+			}			
 		})
 		.catch(error => {
 			log.error(error.message);

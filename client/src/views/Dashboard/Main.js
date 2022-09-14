@@ -65,7 +65,9 @@ class Main extends Component {
 				// console.log(response);
 				this.setState({ clientData: response.data });
 				this.setState({ clientSurvey: response.data.surveys });
-				console.log(response.data.surveys);
+				this.setState({ clientCompletedSurvey: response.data.completedSurveys });
+				this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
+				// console.log(this.state.clientNotCompletedSurvey);
 			}
 		}); // call the get request.
 	};
@@ -118,17 +120,30 @@ class Main extends Component {
 						<Card raised={true}>
 							<CardContent>
 								<Box mx={1} my={1} boxShadow={0}>
-									<Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
+									<Grid container direction="column" justifyContent="flex-start" alignItems="stretch" >
 										<Grid item xs={12}>
-											<Typography variant="subtitle2" component="h2">
+											<Typography variant="h5" component="h1">
 												Welcome back, {appState.name}
 											</Typography>
 										</Grid>
+										<br/>
+										{(this.state.clientCompletedSurvey !== undefined && this.state.clientCompletedSurvey !==[]) ? 
+										(<Typography variant="subtitle2" component="h2">Completed Survey(s)</Typography>) : ''}
+										<br/>
 										<Grid item xs={12}>
-											<Typography variant="body2" component="h2">
-												Looks like there isnt much on the dashboard as of this moment. Please check in later to see
-												changes to your dashboard!
-											</Typography>
+											{(this.state.clientCompletedSurvey !== undefined) ? 
+											Object.keys(this.state.clientCompletedSurvey).map(key => {
+												return (
+													<Grid item xs={12} style={{ border: "1px solid grey" }}>
+														<Box m={2} justifyContent="center" alignItems="center">
+															<Typography variant="body2" component="h2">
+																{this.state.clientCompletedSurvey[key]}
+															</Typography>
+														</Box>
+													</Grid>
+												);
+											}) : ''}
+											
 										</Grid>
 									</Grid>
 								</Box>
@@ -143,7 +158,7 @@ class Main extends Component {
 										<Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
 											<Grid item xs={12}>
 												<Typography variant="subtitle2" component="h2">
-													Survey to complete
+													Survey(s) to complete
 												</Typography>
 											</Grid>
 											<Grid item xs={12}>
@@ -152,8 +167,8 @@ class Main extends Component {
 												{this.state.clientData.message ? (
 													<p>{this.state.clientData.message}</p>
 												):( '')}
-												{this.state.clientSurvey !== '' ? (
-													Object.keys(this.state.clientSurvey).map(key=> {
+												{(this.state.clientNotCompletedSurvey !== '' && this.state.clientNotCompletedSurvey !== undefined) ? (
+													Object.keys(this.state.clientNotCompletedSurvey).map(key=> {
 														return(
 													<>
 														<Grid item xs={12}>
@@ -168,9 +183,10 @@ class Main extends Component {
 																	color="primary"
 																	startIcon={<EditIcon />}
 																	component={Link}
-																	to={`/administration/booklets/user/view/${this.state.clientSurvey[key]}`}
+																	to={`/administration/booklets/user/view/${this.state.clientNotCompletedSurvey[key][0][0]}`}
 																>
-																	View Survey {parseInt(key, 10)+1}
+																	{/* View Survey {parseInt(key, 10)+1} :  */}
+																	{this.state.clientNotCompletedSurvey[key][1][0]}
 																</Button>
 																</Box>
 															</Tooltip>
@@ -189,44 +205,6 @@ class Main extends Component {
 							</Card>
 						</Grid>
 					)}
-
-					<Grid item xs={12} container direction="row" justifyContent="space-evenly" alignItems="stretch" spacing={2}>
-						<Grid item xs={4}>
-							<Card variant="outlined" style={{ backgroundColor: 'aliceblue' }}>
-								<CardContent>
-									<Typography color="textSecondary" gutterBottom>
-										Word of the Day
-									</Typography>
-									<Typography variant="h6" component="h2">
-										be{this.bull}nev{this.bull}o{this.bull}lent
-									</Typography>
-									<Typography className={classes.pos} color="textSecondary">
-										adjective
-									</Typography>
-									<Typography variant="body2" component="p">
-										well meaning and kindly.
-										<br />
-										{'"a benevolent smile"'}
-									</Typography>
-								</CardContent>
-								<CardActions>
-									<Button size="small">Learn More</Button>
-								</CardActions>
-							</Card>
-						</Grid>
-						<Grid item xs={8}>
-							<Card variant="outlined" style={{ backgroundColor: 'whitesmoke' }}>
-								<CardContent>
-									<Typography color="textSecondary" gutterBottom>
-										Calendar
-									</Typography>
-								</CardContent>
-								<CardActions>
-									<Button size="small">Learn More</Button>
-								</CardActions>
-							</Card>
-						</Grid>
-					</Grid>
 				</Grid>
 			);
 		} else {
