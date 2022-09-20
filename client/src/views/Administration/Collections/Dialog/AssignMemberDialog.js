@@ -248,11 +248,61 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
 
         }, [ setAssignMemberDialog, setCurrentCollection, setCurrentMember, setSelectedCollectionList, setSelectedMemberList ]);
 
+        const createMemberCollection = useCallback(() =>
+        {
+            // if(selectedCollectionTemplateList.length == 0 || selectedMemberList.length == 0)
+            // {
+            //     setParentAlert(new AlertType('Unable create member Collection. Please make sure Service, and member are not empty.', "error"))
+            //     return;
+            // }
+            if(selectedCollectionList.length > 0 && selectedMemberList.length > 0)
+            {
+                selectedCollectionList.forEach(collection => 
+                {
+                    const selectedMemberIdList = selectedMemberList.map(item => { return item._id; });
+                    selectedMemberIdList.forEach(memberId => 
+                    {
+                        let postBody = {
+                            collectionTemplate: collection._id,
+                            member: memberId,
+                            // collectionTemplate: selectedCollectionTemplateList[0]._id,
+                            // member: selectedMemberList[0]._id,
+                            createdBy: appState._id,
+                            modifiedBy: appState._id,
+                        }
+                        console.log('createMemberCollection');
+                        console.log(postBody);
+                        post("membercollections/",  appState.token, postBody, (error, response) => 
+                        {
+                            if(error)
+                            {
+                                setParentAlert(new AlertType('Unable create  member Collection. Please refresh and try again.', "error"));
+                            }
+                            else
+                            {
+                                if(response.status === 201)
+                                {
+                                    getParentData();
+                                    setParentAlert(new AlertType('Member Collection created.', "success"));
+                                }
+                                else
+                                {
+                                    setParentAlert(new AlertType('Unable create Member Collection. Please refresh and try again.', "error"));
+                                }
+                            }
+                        });
+                    });
+                });
+            }
+
+        }, [ appState, getParentData, setParentAlert, selectedCollectionList, selectedMemberList ] );
+
 
         const createHandler = useCallback(() => {
 
             setAssignMemberDialogExecuting(true);
             assignMembers();
+            createMemberCollection();
             setAssignMemberDialogExecuting(false);
             setAssignMemberDialog(false);
 
