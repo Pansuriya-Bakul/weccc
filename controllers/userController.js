@@ -33,6 +33,7 @@ const logger = require('../config/logging');
 const res = require('express/lib/response');
 const user = require('../models/user');
 const Survey = require("../models/survey");
+const { info } = require('console');
 const log = logger.users;
 
 // ====================================================
@@ -783,6 +784,7 @@ exports.update = (req, res, next) => {
 	const id = req.params.userID;
 	const query = req.body;
 
+
 	log.info('Incoming update query');
 	log.info(query);
 
@@ -836,7 +838,32 @@ exports.update = (req, res, next) => {
 					});
 				});
 			} else {
-				user.set(query);
+				let updatedQuery = query;
+				if ('patients' in updatedQuery) {
+					let queryPatients = Object.values(updatedQuery)[0];
+					user.patients.forEach(patient => {
+						if (!queryPatients.includes(patient.valueOf())){
+							queryPatients.push(patient.valueOf());
+						}
+					})
+					updatedQuery = {
+						patients : queryPatients
+					}
+				}
+
+				if ('workers' in updatedQuery) {
+					let queryWorkers = Object.values(updatedQuery)[0];
+					user.workers.forEach(worker => {
+						if (!queryWorkers.includes(worker.valueOf())){
+							queryWorkers.push(worker.valueOf());
+						}
+					})
+					updatedQuery = {
+						workers : queryWorkers
+					}
+				}
+				
+				user.set(updatedQuery);
 				user.save((saveError, updatedUser) => {
 					if (saveError) {
 						log.error(saveError.message);
