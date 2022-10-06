@@ -239,7 +239,7 @@ const Reports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      Your Reports
+                      Reports
                     </Typography>
                   </Grid>
                 </Grid>
@@ -271,7 +271,7 @@ const Reports = (props) => {
                         size="small"
                         className={classes.formControl}
                       >
-                        <InputLabel id="select-label-Member">Member</InputLabel>
+                        {/* <InputLabel id="select-label-Member">Member</InputLabel>
                         <Select
                           className={classes.selectEmpty}
                           labelId="select-label-Member"
@@ -289,8 +289,32 @@ const Reports = (props) => {
                               </MenuItem>
                             );
                           })}
-                        </Select>
+                        </Select> */}
                       </FormControl>
+                        <Typography
+                              variant="h45"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Patient's name:  
+                        </Typography>
+                      {patientData.map((item, index) => {
+                        if (item._id == currentPatient){
+                          return(
+                            <Box mx={1} my={2} boxShadow={1}>
+                              <Typography
+                                    variant="h4"
+                                    color="textPrimary"
+                                    align="left"
+                                    gutterBottom
+                                  >
+                                    {item.info.name}   
+                              </Typography>
+                              </Box>
+                          );
+                        }
+                    })}
                     </Grid>
                     <Grid item xs={12}>
                       {reportsData ? (
