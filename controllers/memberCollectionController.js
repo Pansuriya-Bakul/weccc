@@ -27,6 +27,7 @@ const log = memberCollections;
 const NodeRSA = require('node-rsa');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
+const { and } = require("joi/lib/types/object");
 
 // ====================================================
 // Encryption routes for keys and extracting keys
@@ -49,6 +50,7 @@ exports.create = (req, res, next) => {
     const collectionTemplateId = req.body.collectionTemplate;
     const memberId = req.body.member;
     const creatorId = req.body.createdBy;
+    let surveyFlag = 0;
 
     log.warn("Incoming MemberCollection Create Request.");
 
@@ -103,9 +105,10 @@ exports.create = (req, res, next) => {
                                                                                             MemberCollection.updateOne({ _id: newMemberCollection._id }, { $addToSet: { memberSurveyList: newMemberSurvey._id } })
                                                                                                 .then(res4 => {
                                                                                                     if (res4) {
-                                                                                                        if (newMemberSurveyIdList.length == verifiedCollectionTemplate[0].surveyList.length) {
+                                                                                                        if (newMemberSurveyIdList.length == verifiedCollectionTemplate[0].surveyList.length && surveyFlag == 0) {
                                                                                                             log.info("Successful Member Collection Create Request.");
-
+                                                                                                            surveyFlag = 1;
+                                        
                                                                                                             return res.status(201).json({
                                                                                                                 request: {
                                                                                                                     type: 'POST',
@@ -166,6 +169,8 @@ exports.create = (req, res, next) => {
                                                                         });
 
                                                                 });
+
+                                                                if (surveyFlag != 0){return;}
 
                                                             }
                                                             else {
