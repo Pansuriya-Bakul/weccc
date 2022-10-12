@@ -101,12 +101,12 @@ class DrawerContents extends Component
 						<ListItemIcon><Dashboard color="primary"/></ListItemIcon>
 						<ListItemText primary="Dashboard"/>
 					</ListItem>
-					{appState.role !== "Patient" &&
-					<ListItem button component={Link} to="/reports">
-						<ListItemIcon><AssessmentIcon color="primary"/></ListItemIcon>
-						<ListItemText primary="Your Reports" />
-					</ListItem>
-					}
+					{/* {appState.role !== "Patient" &&
+					// <ListItem button component={Link} to="/reports">
+					// 	<ListItemIcon><AssessmentIcon color="primary"/></ListItemIcon>
+					// 	<ListItemText primary="Your Reports" />
+					// </ListItem>
+					} */}
 					{appState.role == "Patient" &&
 					<ListItem button component={Link} to="/ClientReports">
 						<ListItemIcon><AssessmentIcon color="primary"/></ListItemIcon>

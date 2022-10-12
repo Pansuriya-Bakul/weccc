@@ -31,7 +31,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import FilterListIcon from '@material-ui/icons/FilterList';
-
+import Ballot from '@material-ui/icons/Ballot';
 // ==================== MUI Styles ===================
 
     const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
@@ -81,6 +81,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
         const [clientData, setClientData] = useState([]);
         const [clientSurvey, setClientSurvey] = useState("");
         const [editUrl, setEditUrl] = useState("");
+        const [reportUrl, setReportUrl] = useState("");
 
         const [toolNone, setToolNone] = useState(false);
         const [toolOne, setToolOne] = useState(false);
@@ -139,16 +140,20 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
             if(toolNone || toolMultiple) {
                 setViewUrl("");
                 // setEditUrl("");
+                setReportUrl("");
             }
             else if(toolOne) {
 
                 if(appState.role === "Admin")
                 {
-                    setViewUrl(viewUserBaseLinkAdministration + "view/" + selectedDataItemsList[0]._id); 
+                    setViewUrl(viewUserBaseLinkAdministration + "view/" + selectedDataItemsList[0]._id);
+                    localStorage.setItem('_id', selectedDataItemsList[0]._id);
+                    setReportUrl('/reports');
                 }
                 else if(appState.role === "Volunteer")
                 {   
                     setEditUrl(`users/client/${selectedDataItemsList[0]._id}`);
+                    setReportUrl('/report');
                     checkClientSurveys(editUrl);
                     if(clientSurvey != '') {
                         setViewUrl(viewBookletBaseLink + "view/" + clientSurvey); 
@@ -162,6 +167,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                 else if(appState.role === "Coordinator")
                 {
                     setViewUrl(viewUserBaseLinkStaff + "view/" + selectedDataItemsList[0]._id); 
+                    setReportUrl('/report');
                 }                               
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -224,6 +230,11 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                         <Tooltip title="Delete">
                             <IconButton aria-label="delete" onClick={() => deleteHandler()}>
                                 <DeleteIcon />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Report">
+                            <IconButton aria-label="edit" component={Link} to={reportUrl} >
+                                <Ballot/>
                             </IconButton>
                         </Tooltip>
                     </>
