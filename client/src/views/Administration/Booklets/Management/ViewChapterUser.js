@@ -125,7 +125,7 @@ const ViewChapterUser = (props) => { // Notice the arrow function... regular fun
                         {
                             setSurveyJSLoading(true);
                             setChapterOriginal(response.data.memberSurvey);
-                            // console.log(response.data.memberSurvey);
+                            console.log("WHAAAAAAAAT is", response.data.memberSurvey);
                             
                         }
                         else
@@ -179,6 +179,8 @@ const ViewChapterUser = (props) => { // Notice the arrow function... regular fun
                     tempSurvey.data = responseJSON;
                     
                     setSurvey(tempSurvey);
+
+                    // console.log("SURVEEEEEEEEEYS", setSurvey(tempSurvey));
 
                     setSurveyJSLoading(false);
                     setAlert(new AlertType('Successfully pulled survey. Please go to the Edit page to add content to it.', "success"));

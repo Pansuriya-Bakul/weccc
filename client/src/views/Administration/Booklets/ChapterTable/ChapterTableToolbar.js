@@ -127,11 +127,13 @@ const ChapterTableToolbar = (props) => { // Notice the arrow function... regular
                 
                 if(isTemplates)
                 {
+                    
                     setViewUrl(viewChapterBaseLink + "template/view/" + selectedDataItemsList[0]._id);
                     setEditUrl(editChapterBaseLink + "template/edit/" + selectedDataItemsList[0]._id);
                 }
                 else
                 {
+                    
                     setViewUrl(viewChapterBaseLink + "user/view/" + selectedDataItemsList[0]._id);
                     setEditUrl(editChapterBaseLink + "user/edit/" + selectedDataItemsList[0]._id);
                 }

@@ -102,13 +102,26 @@ class DrawerContents extends Component
 						<ListItemText primary="Dashboard"/>
 					</ListItem>
 					{/* {appState.role !== "Patient" &&
-					// <ListItem button component={Link} to="/reports">
-					// 	<ListItemIcon><AssessmentIcon color="primary"/></ListItemIcon>
-					// 	<ListItemText primary="Your Reports" />
-					// </ListItem>
+					<ListItem button component={Link} to="/reports">
+						<ListItemIcon><AssessmentIcon color="primary"/></ListItemIcon>
+						<ListItemText primary="Your Reports" />
+					</ListItem>
+					} */}
+					{/* new test */}
+					{/* {appState.role == "Admin"  &&
+					<ListItem button component={Link} to="/ScreenReports">
+						<ListItemIcon><AssessmentIcon color="primary"/></ListItemIcon>
+						<ListItemText primary="Screen Reports" />
+					</ListItem>
+					} */}
+					{/* {appState.role == "Patient"  &&
+					<ListItem button component={Link} to="/ScreenReports1">
+						<ListItemIcon><AssessmentIcon color="primary"/></ListItemIcon>
+						<ListItemText primary="Screen Reports" />
+					</ListItem>
 					} */}
 					{appState.role == "Patient" &&
-					<ListItem button component={Link} to="/ClientReports">
+					<ListItem button component={Link} to="/MainReports">
 						<ListItemIcon><AssessmentIcon color="primary"/></ListItemIcon>
 						<ListItemText primary="Your Reports" />
 					</ListItem>
@@ -141,18 +154,22 @@ class DrawerContents extends Component
 								<ListItemIcon><PeopleIcon /></ListItemIcon>
 								<ListItemText secondary="Users" />
 							</ListItem>
+							{appState.role === "Admin" && 
 							<ListItem button component={Link} to="/administration/booklets/management" className={classes.nested}>
 								<ListItemIcon><Ballot /></ListItemIcon>
 								<ListItemText secondary="Chapters" />
 							</ListItem>
+							}
 							<ListItem button component={Link} to="/administration/services/management" className={classes.nested}>
 								<ListItemIcon><LibraryBooksIcon /></ListItemIcon>
 								<ListItemText secondary="Services" />
 							</ListItem>
+							{appState.role === "Admin" && 
 							<ListItem button component={Link} to="/administration/projects/management" className={classes.nested}>
 								<ListItemIcon><ListAltIcon /></ListItemIcon>
 								<ListItemText secondary="Projects" />
 							</ListItem>
+							}
 							<ListItem button component={Link} to="/administration/reports/management" className={classes.nested}>
 								<ListItemIcon><AssessmentIcon /></ListItemIcon>
 								<ListItemText secondary="Reports" />

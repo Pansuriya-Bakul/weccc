@@ -16,9 +16,9 @@ import Select from "@material-ui/core/Select";
 // ==================== Components ==================
 import AlertMessage from "../../components/AlertMessage";
 
-import Summary from "./Summary";
-import PossibleConcerns from "./PossibleConcerns";
-import Suggestions from "./Suggestions";
+import Summary from "./Summary1";
+// import PossibleConcerns from "./PossibleConcerns";
+// import Suggestions from "./Suggestions";
 import ContactInfo from "./ContactInfo";
 
 // ==================== Helpers =====================
@@ -36,7 +36,7 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
-import ReportDashboard from "./ReportDashboard";
+//import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 
 // ==================== MUI Icons ====================
@@ -93,7 +93,7 @@ const Reports = (props) => {
 
   const getPatients = useCallback(() => {
     if (appState.role == "Patient") {
-      // console.log("Hello");
+      console.log("DATAAAAAAAAAAAAAAAAA", reportsData);
       setAlert(
         new AlertType("You do not have Permission to recieve Patients", "error")
       );
@@ -144,54 +144,21 @@ const Reports = (props) => {
     }
   }, [appState]);
 
-  const getNeighbours = useCallback(
-    (userId) => {
-      get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
-        if (err) {
-          //Bad callback
-          setAlert(
-            new AlertType(
-              "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.",
-              "error"
-            )
-          );
-        } else {
-          if (res.status === 200) {
-            console.log(res.data);
-            if (Object.keys(res.data).length === 0) {
-              setReportsData(null);
-            } else {
-              setReportsData(res.data);
-            }
-          } else {
-            //Bad HTTP Response
-            setAlert(
-              new AlertType(
-                "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.",
-                "error"
-              )
-            );
-          }
-        }
-      });
-    },
-    [appState]
-  );
+  
 
   // const getScreen = useCallback(
   //   (userId) => {
-  //     get("reports/Screen/user/" + userId, appState.token, (err, res) => {
+  //     get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
   //       if (err) {
   //         //Bad callback
   //         setAlert(
   //           new AlertType(
-  //             "Unable to retrieve Screen Chapter Reports. Please refresh and try again.",
+  //             "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.",
   //             "error"
   //           )
   //         );
   //       } else {
   //         if (res.status === 200) {
-            
   //           if (Object.keys(res.data).length === 0) {
   //             setReportsData(null);
   //           } else {
@@ -211,6 +178,41 @@ const Reports = (props) => {
   //   },
   //   [appState]
   // );
+
+  const getScreen = useCallback(
+    (userId) => {
+      get("reports/Screen/user/" + userId, appState.token, (err, res) => {
+        if (err) {
+          //Bad callback
+          setAlert(
+            new AlertType(
+              "Unable to retrieve Screen Chapter Reports. Please refresh and try again.",
+              "error"
+            )
+          );
+        } else {
+          if (res.status === 200) {
+            //console.log("Test", res.data);
+            if (Object.keys(res.data).length === 0) {
+              setReportsData(null);
+              console.log("Test", res.data);
+            } else {
+              setReportsData(res.data);
+            }
+          } else {
+            //Bad HTTP Response
+            setAlert(
+              new AlertType(
+                "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.",
+                "error"
+              )
+            );
+          }
+        }
+      });
+    },
+    [appState]
+  );
 
   const patientSelectHandler = useCallback((event) => {
     setCurrentPatient(event.target.value);
@@ -235,12 +237,22 @@ const Reports = (props) => {
 
   useEffect(() => {
     if (currentPatient != "") {
-      getNeighbours(currentPatient);
-      // getScreen(currentPatient);
+      // getNeighbours(currentPatient);
+      console.log("MESSAAAAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+      getScreen(currentPatient);
+      //console.log("SRVVVVVVVVVVVVVVVVV", reportsData.SRVNum_PRF_SD);
+      
     }
   }, [currentPatient]);
 
 
+
+  // patientData.map((item, index) => {
+  //   if (item._id == currentPatient){
+  //     console.log(patientData);
+  //     console.log(item._id);
+  //   }
+  // }
   // useEffect( () =>
   // {
   //     console.log(currentReportIndex);
@@ -280,7 +292,7 @@ const Reports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      Reports
+                      Your Reports
                     </Typography>
                   </Grid>
                 </Grid>
@@ -332,8 +344,7 @@ const Reports = (props) => {
                           })}
                         </Select> */}
                       </FormControl>
-
-                        <Typography
+                      <Typography
                               variant="h45"
                               color="textSecondary"
                               align="left"
@@ -341,8 +352,10 @@ const Reports = (props) => {
                             >
                               Patient's name:  
                         </Typography>
+                      
                       {patientData.map((item, index) => {
                         if (item._id == currentPatient){
+                
                           return(
                             <Box mx={1} my={2} boxShadow={1}>
                               <Typography
@@ -358,21 +371,22 @@ const Reports = (props) => {
                         }
                     })}
                     </Grid>
-                    {/* <Grid item xs={12}>
-                      {reportsData ? (
-                        <Pagination
-                          count={reportsData.SRVNum_PRF_SD.length}
-                          showFirstButton
-                          showLastButton
-                          disabled={!reportsData}
-                          onChange={(event, page) => {
-                            reportsPaginationHandler(event, page);
-                          }}
-                        />
-                      ) : (
-                        <> </>
-                      )}
-                    </Grid> */}
+                    {/*<Grid item xs={12}>*/}
+                    {/*  {reportsData ? (*/}
+                    {/*    <Pagination*/}
+                    {/*      */}
+                    {/*      count={reportsData.SRVNum_PRF_SD.length}*/}
+                    {/*      showFirstButton*/}
+                    {/*      showLastButton*/}
+                    {/*      disabled={!reportsData}*/}
+                    {/*      onChange={(event, page) => {*/}
+                    {/*        reportsPaginationHandler(event, page);*/}
+                    {/*      }}*/}
+                    {/*    />*/}
+                    {/*  ) : (*/}
+                    {/*    <> </>*/}
+                    {/*  )}*/}
+                    {/*</Grid>*/}
                   </Grid>
                 </Box>
               </Card>
@@ -393,25 +407,25 @@ const Reports = (props) => {
                       <>
                         <Grid item xs={12}>
                           <Typography variant="h4" color="textPrimary">
-                            Compassion Care Community Neighbours Report
+                            Compassion Care Community Social Health Screening Report
                           </Typography>
                           <Divider light />
                         </Grid>
 
-                        <Grid item xs={12} id="dashboard">
-                          <Typography
-                            variant="h5"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          >
-                            Dashboard
-                          </Typography>
-                          <ReportDashboard
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          ></ReportDashboard>
-                        </Grid>
+                        {/*<Grid item xs={12} id="dashboard">*/}
+                        {/*  <Typography*/}
+                        {/*    variant="h5"*/}
+                        {/*    color="textSecondary"*/}
+                        {/*    align="left"*/}
+                        {/*    gutterBottom*/}
+                        {/*  >*/}
+                        {/*    Dashboard*/}
+                        {/*  </Typography>*/}
+                        {/*  <ReportDashboard*/}
+                        {/*    reports={reportsData}*/}
+                        {/*    collection={currentReportIndex}*/}
+                        {/*  ></ReportDashboard>*/}
+                        {/*</Grid>*/}
 
                         <Grid item xs={12} id="summary">
                           <Typography
@@ -420,7 +434,7 @@ const Reports = (props) => {
                             align="left"
                             gutterBottom
                           >
-                            Summary of your report
+                            Summary of your screening report 
                           </Typography>
                           <Summary
                             reports={reportsData}
@@ -428,7 +442,7 @@ const Reports = (props) => {
                           />
                         </Grid>
 
-                        <Grid item xs={12} id="possible concerns">
+                        {/* <Grid item xs={12} id="possible concerns">
                           <Typography
                             variant="h5"
                             color="textSecondary"
@@ -441,9 +455,9 @@ const Reports = (props) => {
                             reports={reportsData}
                             collection={currentReportIndex}
                           />
-                        </Grid>
+                        </Grid> */}
 
-                        <Grid item xs={12} id="suggestions">
+                        {/* <Grid item xs={12} id="suggestions">
                           <Typography
                             variant="h5"
                             color="textSecondary"
@@ -456,7 +470,7 @@ const Reports = (props) => {
                             reports={reportsData}
                             collection={currentReportIndex}
                           />
-                        </Grid>
+                        </Grid> */}
                       </>
                     ) : (
                       <>

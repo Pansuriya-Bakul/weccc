@@ -1,5 +1,5 @@
 // ================================================
-// Code associated with Report.js
+// Code associated with ClientReport.js
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
@@ -16,9 +16,10 @@ import Select from "@material-ui/core/Select";
 // ==================== Components ==================
 import AlertMessage from "../../components/AlertMessage";
 
-import Summary from "./Summary";
-import PossibleConcerns from "./PossibleConcerns";
-import Suggestions from "./Suggestions";
+// import Summary from "./Summary";
+import Summary1 from "./Summary1";
+// import PossibleConcerns from "./PossibleConcerns";
+// import Suggestions from "./Suggestions";
 import ContactInfo from "./ContactInfo";
 
 // ==================== Helpers =====================
@@ -36,7 +37,7 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
-import ReportDashboard from "./ReportDashboard";
+// import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 
 // ==================== MUI Icons ====================
@@ -63,7 +64,7 @@ const useStyles = makeStyles(
 
 // ======================== React Modern | Functional Component ========================
 
-const Reports = (props) => {
+const ClientReports = (props) => {
   // Notice the arrow function... regular function()  works too
 
   // Variables ===
@@ -74,6 +75,8 @@ const Reports = (props) => {
   // Declaration of Stateful Variables ===
   const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
+  // console.log("PROPPPPPPPPPPPPPPS" , props);
+
   // Alert variable
   const [alert, setAlert] = useState(new AlertType());
 
@@ -82,24 +85,24 @@ const Reports = (props) => {
   // const [personId, setPersonId] = useState("60e879aac417375c838307b9");
 
   const [reportsData, setReportsData] = useState(null);
+  // const [reports1Data, setReports1Data] = useState(null);
   const [patientData, setPatientData] = useState([]);
   const [currentPatient, setCurrentPatient] = useState(
     localStorage.getItem("_id")
   );
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
 
-  
   // Functions ===
 
   const getPatients = useCallback(() => {
     if (appState.role == "Patient") {
-      // console.log("Hello");
-      setAlert(
-        new AlertType("You do not have Permission to recieve Patients", "error")
-      );
+      // console.log(reportsData);
+      // setAlert(
+      //   new AlertType("You do not have Permission to recieve Patients", "error")
+      // );
       return;
     } else {
-      if (appState.patients.length <= 0) {
+      if (appState.patients.length <= 0) { 
         setAlert(
           new AlertType(
             "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
@@ -114,7 +117,6 @@ const Reports = (props) => {
           $in: appState.patients,
         },
       };
-      console.log(http_query._id.$in[0]);
 
       post("users/query", appState.token, http_query, (err, res) => {
         if (err) {
@@ -127,11 +129,9 @@ const Reports = (props) => {
           );
         } else {
           if (res.status === 200) {
-            
             setPatientData(res.data.response.users);
           } else {
             //Bad HTTP Response
-            
             setAlert(
               new AlertType(
                 "Unable to retrieve Patients. Please refresh and try again.",
@@ -144,54 +144,21 @@ const Reports = (props) => {
     }
   }, [appState]);
 
-  const getNeighbours = useCallback(
-    (userId) => {
-      get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
-        if (err) {
-          //Bad callback
-          setAlert(
-            new AlertType(
-              "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.",
-              "error"
-            )
-          );
-        } else {
-          if (res.status === 200) {
-            console.log(res.data);
-            if (Object.keys(res.data).length === 0) {
-              setReportsData(null);
-            } else {
-              setReportsData(res.data);
-            }
-          } else {
-            //Bad HTTP Response
-            setAlert(
-              new AlertType(
-                "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.",
-                "error"
-              )
-            );
-          }
-        }
-      });
-    },
-    [appState]
-  );
+  
 
-  // const getScreen = useCallback(
+  // const getNeighbours = useCallback(
   //   (userId) => {
-  //     get("reports/Screen/user/" + userId, appState.token, (err, res) => {
+  //     get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
+  //       console.log(window.location);
   //       if (err) {
   //         //Bad callback
   //         setAlert(
   //           new AlertType(
-  //             "Unable to retrieve Screen Chapter Reports. Please refresh and try again.",
-  //             "error"
+  //             "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again."
   //           )
   //         );
   //       } else {
   //         if (res.status === 200) {
-            
   //           if (Object.keys(res.data).length === 0) {
   //             setReportsData(null);
   //           } else {
@@ -211,6 +178,39 @@ const Reports = (props) => {
   //   },
   //   [appState]
   // );
+
+  const getScreen = useCallback(
+    (userId) => {
+      get("reports/Screen/user/" + userId, appState.token, (err, res) => {
+        if (err) {
+          //Bad callback
+          setAlert(
+            new AlertType(
+              "Unable to retrieve Screen Chapter Reports. Please refresh and try again."
+            )
+          );
+        } else {
+          if (res.status === 200) {
+            if (Object.keys(res.data).length === 0) {
+              setReportsData(null);
+            } else {
+              setReportsData(res.data);
+              console.log(reportsData);
+            }
+          } else {
+            //Bad HTTP Response
+            setAlert(
+              new AlertType(
+                "Unable to retrieve Screen Chapter Reports. Please refresh and try again.",
+                "error"
+              )
+            );
+          }
+        }
+      });
+    },
+    [appState]
+  );
 
   const patientSelectHandler = useCallback((event) => {
     setCurrentPatient(event.target.value);
@@ -235,11 +235,11 @@ const Reports = (props) => {
 
   useEffect(() => {
     if (currentPatient != "") {
-      getNeighbours(currentPatient);
-      // getScreen(currentPatient);
+      // getNeighbours(currentPatient);
+      getScreen(currentPatient);
+      console.log("RES",reportsData);
     }
   }, [currentPatient]);
-
 
   // useEffect( () =>
   // {
@@ -280,7 +280,7 @@ const Reports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      Reports
+                      Your Reports
                     </Typography>
                   </Grid>
                 </Grid>
@@ -288,7 +288,7 @@ const Reports = (props) => {
             </Grid>
             <Grid item xs={4}>
               <Box mx={1} my={1}>
-                {/* <AlertMessage alert={alert} setParentAlert={setAlert} /> */}
+                <AlertMessage alert={alert} setParentAlert={setAlert} />
                 {/* <Button
                                             onClick = { () => {console.log((collectionIndex + 1)%reportsData.SRVNum_PRF_SD.length);}} >
                                             Viewing data from collection {collectionIndex + 1} out of {reportsData.SRVNum_PRF_SD.length}
@@ -297,22 +297,22 @@ const Reports = (props) => {
             </Grid>
             <Grid item xs={12}>
               <Card raised={true}>
-                <Box mx={1} my={1} boxShadow={0}>
-                  <Grid
+                {/* <Box mx={1} my={1} boxShadow={0}>
+                  {/* <Grid
                     container
                     direction="column"
                     justifyContent="flex-start"
                     alignItems="stretch"
                     spacing={1}
                   >
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                       <FormControl
                         fullWidth
                         variant="filled"
                         size="small"
                         className={classes.formControl}
                       >
-                        {/* <InputLabel id="select-label-Member">Member</InputLabel>
+                        <InputLabel id="select-label-Member">Member</InputLabel>
                         <Select
                           className={classes.selectEmpty}
                           labelId="select-label-Member"
@@ -330,35 +330,10 @@ const Reports = (props) => {
                               </MenuItem>
                             );
                           })}
-                        </Select> */}
+                        </Select>
                       </FormControl>
-
-                        <Typography
-                              variant="h45"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Patient's name:  
-                        </Typography>
-                      {patientData.map((item, index) => {
-                        if (item._id == currentPatient){
-                          return(
-                            <Box mx={1} my={2} boxShadow={1}>
-                              <Typography
-                                    variant="h4"
-                                    color="textPrimary"
-                                    align="left"
-                                    gutterBottom
-                                  >
-                                    {item.info.name}   
-                              </Typography>
-                              </Box>
-                          );
-                        }
-                    })}
-                    </Grid>
-                    {/* <Grid item xs={12}>
+                    </Grid> */}
+                {/* <Grid item xs={12}>
                       {reportsData ? (
                         <Pagination
                           count={reportsData.SRVNum_PRF_SD.length}
@@ -372,9 +347,9 @@ const Reports = (props) => {
                       ) : (
                         <> </>
                       )}
-                    </Grid> */}
-                  </Grid>
-                </Box>
+                    </Grid> 
+                  </Grid> *
+                </Box> */}
               </Card>
             </Grid>
             <Grid item xs={12}>
@@ -398,7 +373,7 @@ const Reports = (props) => {
                           <Divider light />
                         </Grid>
 
-                        <Grid item xs={12} id="dashboard">
+                        {/* <Grid item xs={12} id="dashboard">
                           <Typography
                             variant="h5"
                             color="textSecondary"
@@ -411,24 +386,39 @@ const Reports = (props) => {
                             reports={reportsData}
                             collection={currentReportIndex}
                           ></ReportDashboard>
-                        </Grid>
+                        </Grid> */}
 
-                        <Grid item xs={12} id="summary">
+                        {/* <Grid item xs={12} id="summary">
                           <Typography
                             variant="h5"
                             color="textSecondary"
                             align="left"
                             gutterBottom
                           >
-                            Summary of your report
+                            Summary
                           </Typography>
-                          <Summary
+                          <Summary1
+                            reports={reportsData}
+                            collection={currentReportIndex}
+                          />
+                        </Grid> */}
+                        
+                        <Grid item xs={12} id="summary1">
+                          <Typography
+                            variant="h5"
+                            color="textSecondary"
+                            align="left"
+                            gutterBottom
+                          >
+                            Summary 1
+                          </Typography>
+                          <Summary1
                             reports={reportsData}
                             collection={currentReportIndex}
                           />
                         </Grid>
 
-                        <Grid item xs={12} id="possible concerns">
+                        {/* <Grid item xs={12} id="possible concerns">
                           <Typography
                             variant="h5"
                             color="textSecondary"
@@ -456,9 +446,10 @@ const Reports = (props) => {
                             reports={reportsData}
                             collection={currentReportIndex}
                           />
-                        </Grid>
+                        </Grid> */}
                       </>
                     ) : (
+                      
                       <>
                         <Typography
                           variant="subtitle2"
@@ -467,6 +458,7 @@ const Reports = (props) => {
                           gutterBottom
                         >
                           No available reports.
+                          
                         </Typography>
                       </>
                     )}
@@ -495,17 +487,67 @@ const Reports = (props) => {
 };
 
 // ======================== Component PropType Check ========================
-Reports.propTypes = {
+ClientReports.propTypes = {
   // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
   appState: PropTypes.object.isRequired,
   ToggleDrawerClose: PropTypes.func.isRequired,
   CheckAuthenticationValidity: PropTypes.func.isRequired,
 };
 
-Reports.defaultProps = {
+ClientReports.defaultProps = {
   appState: {},
   ToggleDrawerClose: () => {},
   CheckAuthenticationValidity: () => {},
 };
 
-export default Reports; // You can even shorthand this line by adding this at the function [Component] declaration stage
+export default ClientReports; // You can even shorthand this line by adding this at the function [Component] declaration stage
+
+/*
+
+                                    <Card raised={true}>
+                                        <Box mx={1} my={1} boxShadow={0}>
+                                            <Grid
+                                                container
+                                                direction="column"
+                                                justifyContent="flex-start"
+                                                alignItems="stretch"
+                                                spacing={1}
+                                            >
+                                                <Grid item xs={12}>
+                                                    <FormControl fullWidth variant="filled" size="small" className={classes.formControl}>
+                                                        <InputLabel id="select-label-Member">Member</InputLabel>
+                                                        <Select
+        
+                                                            className={classes.selectEmpty}
+                                                            labelId="select-label-Member"
+                                                            id="select-Member"
+                                                            defaultValue = ""
+                                                            disabled={patientData? false : true}
+                                                            onChange={(event) => { patientSelectHandler(event); } }
+                                                        >
+                                                            {patientData.map( (item, index) => 
+                                                            {
+                                                                return(
+                                                                    <MenuItem key={item._id} value={item._id}>
+                                                                        <em>{item.info.name}</em>
+                                                                    </MenuItem>  
+                                                                )
+                                                            })}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    {reportsData? (
+                                                        <Pagination count={reportsData.SRVNum_PRF_SD.length} showFirstButton showLastButton
+                                                            disabled={!reportsData}
+                                                            onChange={(event, page) => { reportsPaginationHandler(event, page); }}
+                                                        />
+                                                    ) : (
+                                                        <> </>
+                                                    )}
+                                                </Grid>
+                                            </Grid>
+                                        </Box>
+                                    </Card>
+
+*/

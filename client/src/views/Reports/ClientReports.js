@@ -17,6 +17,7 @@ import Select from "@material-ui/core/Select";
 import AlertMessage from "../../components/AlertMessage";
 
 import Summary from "./Summary";
+import Summary1 from "./Summary1";
 import PossibleConcerns from "./PossibleConcerns";
 import Suggestions from "./Suggestions";
 import ContactInfo from "./ContactInfo";
@@ -74,6 +75,8 @@ const ClientReports = (props) => {
   // Declaration of Stateful Variables ===
   const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
+  // console.log("PROPPPPPPPPPPPPPPS" , props);
+
   // Alert variable
   const [alert, setAlert] = useState(new AlertType());
 
@@ -82,6 +85,7 @@ const ClientReports = (props) => {
   // const [personId, setPersonId] = useState("60e879aac417375c838307b9");
 
   const [reportsData, setReportsData] = useState(null);
+  const [reports1Data, setReports1Data] = useState(null);
   const [patientData, setPatientData] = useState([]);
   const [currentPatient, setCurrentPatient] = useState(
     localStorage.getItem("_id")
@@ -92,12 +96,13 @@ const ClientReports = (props) => {
 
   const getPatients = useCallback(() => {
     if (appState.role == "Patient") {
-      setAlert(
-        new AlertType("You do not have Permission to recieve Patients", "error")
-      );
+      // console.log(reportsData);
+      // setAlert(
+      //   new AlertType("You do not have Permission to recieve Patients", "error")
+      // );
       return;
     } else {
-      if (appState.patients.length <= 0) {
+      if (appState.patients.length <= 0) { 
         setAlert(
           new AlertType(
             "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
@@ -139,10 +144,12 @@ const ClientReports = (props) => {
     }
   }, [appState]);
 
+  
+
   const getNeighbours = useCallback(
     (userId) => {
       get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
-        console.log(res);
+        console.log(window.location);
         if (err) {
           //Bad callback
           setAlert(
@@ -172,6 +179,38 @@ const ClientReports = (props) => {
     [appState]
   );
 
+  // const getScreen = useCallback(
+  //   (userId) => {
+  //     get("reports/Screen/user/" + userId, appState.token, (err, res) => {
+  //       if (err) {
+  //         //Bad callback
+  //         setAlert(
+  //           new AlertType(
+  //             "Unable to retrieve Screen Chapter Reports. Please refresh and try again."
+  //           )
+  //         );
+  //       } else {
+  //         if (res.status === 200) {
+  //           if (Object.keys(res.data).length === 0) {
+  //             setReports1Data(null);
+  //           } else {
+  //             setReports1Data(res.data);
+  //           }
+  //         } else {
+  //           //Bad HTTP Response
+  //           setAlert(
+  //             new AlertType(
+  //               "Unable to retrieve Screen Chapter Reports. Please refresh and try again.",
+  //               "error"
+  //             )
+  //           );
+  //         }
+  //       }
+  //     });
+  //   },
+  //   [appState]
+  // );
+
   const patientSelectHandler = useCallback((event) => {
     setCurrentPatient(event.target.value);
   }, []);
@@ -196,6 +235,7 @@ const ClientReports = (props) => {
   useEffect(() => {
     if (currentPatient != "") {
       getNeighbours(currentPatient);
+      // getScreen(currentPatient);
     }
   }, [currentPatient]);
 
@@ -360,6 +400,21 @@ const ClientReports = (props) => {
                             collection={currentReportIndex}
                           />
                         </Grid>
+                        
+                        <Grid item xs={12} id="summary1">
+                          <Typography
+                            variant="h5"
+                            color="textSecondary"
+                            align="left"
+                            gutterBottom
+                          >
+                            {/* Summary 1
+                          </Typography>
+                          <Summary1
+                            reports={reports1Data}
+                            collection={currentReportIndex}
+                          />
+                        </Grid>
 
                         <Grid item xs={12} id="possible concerns">
                           <Typography
@@ -367,7 +422,7 @@ const ClientReports = (props) => {
                             color="textSecondary"
                             align="left"
                             gutterBottom
-                          >
+                          > */}
                             Possible Concerns
                           </Typography>
                           <PossibleConcerns
@@ -392,6 +447,7 @@ const ClientReports = (props) => {
                         </Grid>
                       </>
                     ) : (
+                      
                       <>
                         <Typography
                           variant="subtitle2"
@@ -400,6 +456,7 @@ const ClientReports = (props) => {
                           gutterBottom
                         >
                           No available reports.
+                          
                         </Typography>
                       </>
                     )}

@@ -11,10 +11,13 @@ const { validateBody, schemas } = require('../middleware/routeValidation');
 const router = express.Router();
 
 const ReportController = require('../controllers/reportController');
+const ReportController1 = require('../controllers/reportController1');
 const authenticate = passport.authenticate('JwtToken', { session: false });
 
-router.get('/neighbours/user/:userId', ReportController.userNeighbours);
+router.get('/neighbours/user/:userId', ReportController.Neighbour);
+router.get('/Screen/user/:userId', ReportController1.Screen);
 
 router.get('/communityCare/StandardId/:userId', ReportController.standardAccountId);
+
 
 module.exports = router;

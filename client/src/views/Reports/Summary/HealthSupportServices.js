@@ -7,10 +7,13 @@ export default class HealthSupportServices extends Component {
 
 	render() {
 		return (
+            
 			<>
                 <Typography variant="h6" color="secondary" align="left" gutterBottom>
-                    Health Support Services
+                    Health Support Services 
 				</Typography>
+                
+                
                 <Box m={1} mb={2}>
                     {this.props.reports.support_wellness_program[this.props.collection] !== 999 &&
                     <Typography display="block" component="div" align="left" gutterBottom>

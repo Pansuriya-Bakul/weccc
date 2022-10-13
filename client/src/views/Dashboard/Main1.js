@@ -16,6 +16,11 @@ import Typography from '@material-ui/core/Typography';
 import Dashboard from '@material-ui/icons/Dashboard';
 import { CircularProgress } from '@material-ui/core';
 
+
+// const [currentPatient, setCurrentPatient] = useState(
+// localStorage.getItem("_id");
+//   );
+
 const styles = theme => ({
 	bullet: {
 		display: 'inline-block',
@@ -54,7 +59,7 @@ class Main extends Component {
 	checkClientSurveys = () => {
 		let { appState } = this.props;
 
-		const url = `users/client/${appState._id}`;
+		const url = `users/client/${localStorage.getItem("_id")}`;
 		const token = appState.token;
 
 		get(url, token, (error, response) => {

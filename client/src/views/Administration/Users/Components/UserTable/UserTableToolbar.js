@@ -32,6 +32,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Ballot from '@material-ui/icons/Ballot';
+import ImageSearchIcon from '@material-ui/icons/ChromeReaderMode';
 // ==================== MUI Styles ===================
 
     const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
@@ -60,6 +61,8 @@ import Ballot from '@material-ui/icons/Ballot';
 // const editChapterBaseLink = "/administration/booklets/";
 const viewUserBaseLinkAdministration = "/administration/users/";
 const viewUserBaseLinkStaff =  "/staff/users/";
+const viewUserDashboard =  "/staff/users/Dashboard";
+
 const viewBookletBaseLink =  "/administration/booklets/user/";
 
 // ================= Static Functions ================
@@ -82,6 +85,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
         const [clientSurvey, setClientSurvey] = useState("");
         const [editUrl, setEditUrl] = useState("");
         const [reportUrl, setReportUrl] = useState("");
+        const [reportUrl1, setReportUrl1] = useState("");
 
         const [toolNone, setToolNone] = useState(false);
         const [toolOne, setToolOne] = useState(false);
@@ -141,22 +145,28 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                 setViewUrl("");
                 // setEditUrl("");
                 setReportUrl("");
+                setReportUrl1("");
             }
             else if(toolOne) {
 
                 if(appState.role === "Admin")
                 {
                     setViewUrl(viewUserBaseLinkAdministration + "view/" + selectedDataItemsList[0]._id);
+                    console.log("LOOOOOOOOOOOOOOOOOG", selectedDataItemsList[0]._id);
                     localStorage.setItem('_id', selectedDataItemsList[0]._id);
                     setReportUrl('/reports');
+                    setReportUrl1('/ScreenReports');
                 }
                 else if(appState.role === "Volunteer")
                 {   
                     setEditUrl(`users/client/${selectedDataItemsList[0]._id}`);
-                    setReportUrl('/report');
+                    localStorage.setItem('_id', selectedDataItemsList[0]._id);
+                    setReportUrl('/reports');
+                    setReportUrl1('/ScreenReports');
                     checkClientSurveys(editUrl);
                     if(clientSurvey != '') {
                         setViewUrl(viewBookletBaseLink + "view/" + clientSurvey); 
+                        // setViewUrl(viewUserDashboard  + selectedDataItemsList[0]._id); 
                     }
                     // If no survey exixts for selected user
                     else {
@@ -167,7 +177,10 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                 else if(appState.role === "Coordinator")
                 {
                     setViewUrl(viewUserBaseLinkStaff + "view/" + selectedDataItemsList[0]._id); 
-                    setReportUrl('/report');
+                    localStorage.setItem('_id', selectedDataItemsList[0]._id);
+                    setReportUrl('/reports');
+                    setReportUrl1('/ScreenReports');
+
                 }                               
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -232,9 +245,14 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                                 <DeleteIcon />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Report">
+                        <Tooltip title="Neighbour's Report">
                             <IconButton aria-label="edit" component={Link} to={reportUrl} >
                                 <Ballot/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Social Report">
+                            <IconButton aria-label="edit" component={Link} to={reportUrl1} >
+                                <ImageSearchIcon/>
                             </IconButton>
                         </Tooltip>
                     </>

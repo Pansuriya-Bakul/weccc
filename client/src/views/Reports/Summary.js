@@ -9,6 +9,7 @@ import HealthStatus from './Summary/HealthStatus';
 import HealthSupportServices from './Summary/HealthSupportServices';
 import PersonalWellBeing from './Summary/PersonalWellBeing';
 import Goals from './Summary/Goals';
+// import SocialHealth from './Summary/SocialHealth';
 
 export default class Summary extends Component {
 	render() {
@@ -22,6 +23,7 @@ export default class Summary extends Component {
                     <HealthSupportServices reports = {this.props.reports} collection = {this.props.collection}/>
                     <PersonalWellBeing reports = {this.props.reports} collection = {this.props.collection}/>
                     <Goals reports = {this.props.reports} collection = {this.props.collection}/>
+                    {/* <SocialHealth reports = {this.props.reports} collection = {this.props.collection}/> */}
                 </Box>
             </>
 			)

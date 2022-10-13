@@ -1,4 +1,4 @@
-// const { off } = require("../models/collection");
+const { off } = require("../models/collection");
 
 module.exports = {
     collectionIds,
@@ -86,14 +86,14 @@ module.exports = {
     frequency_get_together_neighbours,
     frequency_of_social_contacts_month_phone_computer,
     perceived_loneliness_sometimes_count,
-    perceived_loneliness_often_count,
-    feel_isolated,
-    feel_leftout,
-    lack_companionship,
-    local_community_belonging,
-    life_satisfaction2,
-    community_activity_participate,
-    household2_size
+    perceived_loneliness_often_count
+    // feel_isolated,
+    // feel_leftout,
+    // lack_companionship,
+    // local_community_belonging,
+    // life_satisfaction2,
+    // community_activity_participate,
+    // household2_size
 }
 
 function collectionIds(list)
@@ -3204,35 +3204,19 @@ function household2_size(question)
     if(!question && !Array.isArray(question))
         return 999;
 
-    
-
     let DF = parseInt(question[0]);
 
     if(isNaN(question))
         return 999;
     
-    if(DF == 0)
+    if(DF >= 0 && DF <= 4)
     {
-        DF = "Lives alone";
+        return DF;
     }
-    else if(DF == 1)
+    else
     {
-        DF = "1 person";
+        return 999;
     }
-    else if(DF == 2){
-        DF = "2 people";
-    }
-    else if(DF == 3){
-        DF = "3 people";
-    }
-    else if(DF == 4){
-        DF = "4 or more people";
-    }
-    else{
-        DF = 999;
-    }
-
-    return DF;
 }
 
 function community_activity_participate(question)
@@ -3250,19 +3234,14 @@ function community_activity_participate(question)
     if(isNaN(question))
         return 999;
     
-    if(DF == 0)
+    if(DF >= 0 && DF <= 1)
     {
-        DF = "No";
-    }
-    else if(DF == 1){
-        DF = "Yes";
+        return DF;
     }
     else
     {
-        DF = 999;
+        return 999;
     }
-
-    return DF;
 }
 
 function life_satisfaction2(question)
@@ -3279,58 +3258,23 @@ function life_satisfaction2(question)
     if(isNaN(question))
         return 999;
     
-    if(DF>0 && DF<=10){
+    if(DF >= 0 && DF <= 9)
+    {
         return DF;
     }
-    else{
+    else
+    {
         return 999;
     }
-    // if(DF == 10)
-    // {
-    //     DF = "1";
-    // }
-    // else if(DF == 20){
-    //     DF = "2";
-    // }
-    // else if(DF == 30){
-    //     DF = "3";
-    // }
-    // else if(DF == 40){
-    //     DF = "4";
-    // }
-    // else if(DF == 50){
-    //     DF = "5";
-    // }
-    // else if(DF == 60){
-    //     DF = "6";
-    // }
-    // else if(DF == 70){
-    //     DF = "7";
-    // }
-    // else if(DF == 80){
-    //     DF = "8";
-    // }
-    // else if(DF == 90){
-    //     DF = "9";
-    // }
-    // else if(DF == 100){
-    //     DF = "10";
-    // }
-    // else
-    // {
-    //     DF = 999;
-    // }
-
-    // return DF;
 }
 
 function local_community_belonging(question)
 {
     // Value Chart of question
-    // 3 very strong
-    // 2 somewhat strong
-    // 1 somewhat weak
-    // 0 very weak
+    // 0 very strong
+    // 1 somewhat strong
+    // 2 somewhat weak
+    // 3 very weak
     
     if(!question && !Array.isArray(question))
         return 999;
@@ -3340,25 +3284,14 @@ function local_community_belonging(question)
     if(isNaN(question))
         return 999;
     
-    if(DF == 0)
+    if(DF >= 0 && DF <= 3)
     {
-         DF = "very weak";
-    }
-    else if(DF == 1){
-        DF = "somewhat weak";
-    }
-    else if(DF == 2){
-        DF = "somewhat strong";
-    }
-    else if(DF == 3){
-        DF = "very strong";
+        return DF;
     }
     else
     {
-        DF = 999;
+        return 999;
     }
-
-    return DF;
 }
 
 function lack_companionship(question)
@@ -3376,22 +3309,14 @@ function lack_companionship(question)
     if(isNaN(question))
         return 999;
     
-    if(DF == 2)
+    if(DF >= 0 && DF <= 2)
     {
-        DF = "Often";
-    }
-    else if(DF == 1){
-        DF = "Sometimes";
-    }
-    else if(DF == 0){
-        DF = "Hardly Ever";
+        return DF;
     }
     else
     {
-        DF = 999;
+        return 999;
     }
-
-    return DF;
 }
 
 function feel_leftout(question)
@@ -3409,22 +3334,14 @@ function feel_leftout(question)
     if(isNaN(question))
         return 999;
     
-    if(DF == 2)
+    if(DF >= 0 && DF <= 2)
     {
-        DF = "Often";
-    }
-    else if(DF == 1){
-        DF = "Sometimes";
-    }
-    else if(DF == 0){
-        DF = "Hardly Ever";
+        return DF;
     }
     else
     {
-        DF = 999;
+        return 999;
     }
-
-    return DF;
 }
 
 function feel_isolated(question)
@@ -3442,74 +3359,16 @@ function feel_isolated(question)
     if(isNaN(question))
         return 999;
     
-    if(DF == 2)
+    if(DF >= 0 && DF <= 2)
     {
-        DF = "Often";
-    }
-    else if(DF == 1){
-        DF = "Sometimes";
-    }
-    else if(DF == 0){
-        DF = "Hardly Ever";
+        return DF;
     }
     else
     {
-        DF = 999;
+        return 999;
     }
-
-    return DF;
 }
 
-// function support_informal(question)
-// {
 
-//     // Value Chart per sub question of Question
-//     // 999  Total invalid or blank answer
-//     // 300  Daily
-//     // 50   Weekly
-//     // 12   Monthly
-//     // 4    3-4 Times a year
-//     // 1    Yearly
-//     // 0    Never
-
-//     if(!question)
-//         return 999;
-
-//     let DF = parseInt(question.D);
-    
-//     if(isNaN(DF))
-//         return 999;
-
-//     if(DF == 300)
-//     {
-//         DF = "Daily";
-//     }
-//     else if(DF == 50)
-//     {
-//         DF = "Weekly";
-//     }
-//     else if(DF == 12)
-//     {
-//         DF = "Monthly";
-//     }
-//     else if(DF == 4)
-//     {
-//         DF = "3-4 Times a year";
-//     }
-//     else if(DF == 1)
-//     {
-//         DF = "Yearly";
-//     }
-//     else if(DF == 0)
-//     {
-//         DF = "Never";
-//     }
-//     else
-//     {
-//         DF = 999;
-//     }
-
-//     return DF;
-// }
 
 

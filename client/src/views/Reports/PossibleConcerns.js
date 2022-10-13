@@ -10,6 +10,7 @@ import LonelinessAlert from "./ConcernAlerts/LonelinessAlert";
 import PersonalWellBeingAlert from './ConcernAlerts/PersonalWellBeingAlert';
 import SocialContactAlert from './ConcernAlerts/SocialContactAlert';
 import SupportAvailabilityAlert from './ConcernAlerts/SupportAvailabilityAlert';
+import SocialHealthAlert from './ConcernAlerts/SocialHealthAlert';
 
 export default class PossibleConcerns extends Component {
 
@@ -34,8 +35,8 @@ export default class PossibleConcerns extends Component {
                         <SupportAvailabilityAlert reports = {this.props.reports} collection = {this.props.collection}/>  
                         <LonelinessAlert reports = {this.props.reports} collection = {this.props.collection}/>
                         <CommunityParticipationAlert reports = {this.props.reports} collection = {this.props.collection}/>
-                        <SocialContactAlert reports = {this.props.reports} collection = {this.props.collection}/>
                     </Grid>
+                    {/* <SocialHealthAlert reports = {this.props.reports} collection = {this.props.collection}/> */}
                 </Box>
                 
             </>
