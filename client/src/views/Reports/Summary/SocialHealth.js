@@ -83,6 +83,17 @@ export default class SocialHealth extends Component {
 							</Typography>
 						</Typography>
 				}
+				{/* {this.props.reports.con_que[this.props.collection] !== 999 &&
+						<Typography display="block" component="div" align="left" gutterBottom>
+							<Typography display="inline" variant="body1" component="div" color="primary" align="left" gutterBottom>
+								Do you agree to be contacted in the future to receive your private and confidential personal results of the Neighbours mini screening questions, along with suggested community resources, programs and support options?   &nbsp;
+							</Typography>
+							<Typography display="inline" variant="body1" component="div" color="inherit" align="left" gutterBottom>
+								{this.props.reports.con_que[this.props.collection]}
+							</Typography>
+						</Typography>
+				} */}
+
 
 				</Box>
 			</>

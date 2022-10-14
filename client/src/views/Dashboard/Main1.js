@@ -59,7 +59,7 @@ class Main extends Component {
 	checkClientSurveys = () => {
 		let { appState } = this.props;
 
-		const url = `users/client/${localStorage.getItem("_id")}`;
+		const url = `users/client/${localStorage.getItem("_pid")}`;
 		const token = appState.token;
 
 		get(url, token, (error, response) => {
@@ -72,7 +72,10 @@ class Main extends Component {
 				this.setState({ clientSurvey: response.data.surveys });
 				this.setState({ clientCompletedSurvey: response.data.completedSurveys });
 				this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
-				// console.log(this.state.clientNotCompletedSurvey);
+				// console.log(this.state.clientData.in);
+				this.setState({ clientName: this.state.clientData.info.name });
+				// console.log(this.state.clientName);
+
 			}
 		}); // call the get request.
 	};
@@ -82,7 +85,7 @@ class Main extends Component {
 		this.classes = styles();
 		this.bull = <span className={this.classes.bullet}>•</span>;
 
-		if (appState.role === 'Patient') {
+		if (appState.role === 'Volunteer') {
 			this.checkClientSurveys();
 		}
 
@@ -130,7 +133,7 @@ class Main extends Component {
 									<Grid container direction="column" justifyContent="flex-start" alignItems="stretch" >
 										<Grid item xs={12}>
 											<Typography variant="h5" component="h1">
-												Welcome back, {appState.name}
+												Welcome back, {this.state.clientName}
 											</Typography>
 										</Grid>
 										<br/>
@@ -157,7 +160,7 @@ class Main extends Component {
 							</CardContent>
 						</Card>
 					</Grid>
-					{appState.role === 'Patient' && (
+					{appState.role === 'Volunteer' && (
 						<Grid item xs={12}>
 							<Card raised={true}>
 								<CardContent>

@@ -368,7 +368,7 @@ const ClientReports = (props) => {
                       <>
                         <Grid item xs={12}>
                           <Typography variant="h4" color="textPrimary">
-                            Compassion Care Community Neighbours Report
+                            Compassion Care Community Social Health Report
                           </Typography>
                           <Divider light />
                         </Grid>
@@ -410,7 +410,7 @@ const ClientReports = (props) => {
                             align="left"
                             gutterBottom
                           >
-                            Summary 1
+                            
                           </Typography>
                           <Summary1
                             reports={reportsData}

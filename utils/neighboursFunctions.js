@@ -3460,49 +3460,27 @@ function feel_isolated(question)
     return DF;
 }
 
-// function support_informal(question)
+// function Con_que(question)
 // {
-
-//     // Value Chart per sub question of Question
-//     // 999  Total invalid or blank answer
-//     // 300  Daily
-//     // 50   Weekly
-//     // 12   Monthly
-//     // 4    3-4 Times a year
-//     // 1    Yearly
-//     // 0    Never
-
-//     if(!question)
-//         return 999;
-
-//     let DF = parseInt(question.D);
+//     // Value Chart of question
+//     // 0 Yes
+//     // 1 No
     
-//     if(isNaN(DF))
+    
+//     if(!question && !Array.isArray(question))
 //         return 999;
 
-//     if(DF == 300)
+//     let DF = parseInt(question[0]);
+
+//     if(isNaN(question))
+//         return 999;
+    
+//     if(DF == 0)
 //     {
-//         DF = "Daily";
+//         DF = "No";
 //     }
-//     else if(DF == 50)
-//     {
-//         DF = "Weekly";
-//     }
-//     else if(DF == 12)
-//     {
-//         DF = "Monthly";
-//     }
-//     else if(DF == 4)
-//     {
-//         DF = "3-4 Times a year";
-//     }
-//     else if(DF == 1)
-//     {
-//         DF = "Yearly";
-//     }
-//     else if(DF == 0)
-//     {
-//         DF = "Never";
+//     else if(DF == 1){
+//         DF = "Yes";
 //     }
 //     else
 //     {
@@ -3511,5 +3489,4 @@ function feel_isolated(question)
 
 //     return DF;
 // }
-
 

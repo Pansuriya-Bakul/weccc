@@ -61,7 +61,7 @@ import ImageSearchIcon from '@material-ui/icons/ChromeReaderMode';
 // const editChapterBaseLink = "/administration/booklets/";
 const viewUserBaseLinkAdministration = "/administration/users/";
 const viewUserBaseLinkStaff =  "/staff/users/";
-const viewUserDashboard =  "/staff/users/Dashboard";
+const viewUserDashboard =  "/Dashboard/";
 
 const viewBookletBaseLink =  "/administration/booklets/user/";
 
@@ -161,12 +161,13 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                 {   
                     setEditUrl(`users/client/${selectedDataItemsList[0]._id}`);
                     localStorage.setItem('_id', selectedDataItemsList[0]._id);
+                    localStorage.setItem('_pid', selectedDataItemsList[0]._id);
                     setReportUrl('/reports');
                     setReportUrl1('/ScreenReports');
                     checkClientSurveys(editUrl);
                     if(clientSurvey != '') {
-                        setViewUrl(viewBookletBaseLink + "view/" + clientSurvey); 
-                        // setViewUrl(viewUserDashboard  + selectedDataItemsList[0]._id); 
+                        // setViewUrl(viewBookletBaseLink + "view/" + clientSurvey); 
+                        setViewUrl(viewUserDashboard); 
                     }
                     // If no survey exixts for selected user
                     else {
