@@ -169,7 +169,8 @@ exports.Screen = async (req, res) =>
                             // Feeling isolated
                             let feel_isolated = new Array();
 
-                            // let con_que = new Array();
+                            // Confidentiality question
+                            let con_que = new Array();
 
                             
                             // log.info(memberCollectionList);
@@ -231,7 +232,7 @@ exports.Screen = async (req, res) =>
                                         lack_companionship.push(neighbourFunctions.lack_companionship(chapter7Values.lack_companionship));
                                         feel_leftout.push(neighbourFunctions.feel_leftout(chapter7Values.feel_leftout));
                                         feel_isolated.push(neighbourFunctions.feel_isolated(chapter7Values.feel_isolated));
-                                        // Con_que.push(neighbourFunctions.Con_que(chapter7Values.Con_que));
+                                        con_que.push(neighbourFunctions.con_que(chapter7Values.con_que));
                                         // log.info(neighbourFunctions.feel_isolated(chapter7Values.feel_leftout));
 
                                     }
@@ -261,7 +262,7 @@ exports.Screen = async (req, res) =>
                         life_satisfaction2: life_satisfaction2,
                         community_activity_participate: community_activity_participate,
                         household2_size: household2_size,
-                        // con_que: con_que,
+                        con_que: con_que,
                         // request: { 
                         //     type: 'GET',
                         //     url: config.server.protocol + '://' + config.server.hostname +':' + config.server.port + '/api/reports/Screen/user/' + req.params.userId

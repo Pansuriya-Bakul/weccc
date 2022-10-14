@@ -17,8 +17,8 @@ import Select from "@material-ui/core/Select";
 import AlertMessage from "../../components/AlertMessage";
 
 import Summary from "./Summary1";
-// import PossibleConcerns from "./PossibleConcerns";
-// import Suggestions from "./Suggestions";
+import PossibleConcerns from "./PossibleConcerns1";
+import Suggestions from "./Suggestions1";
 import ContactInfo from "./ContactInfo";
 
 // ==================== Helpers =====================
@@ -93,7 +93,7 @@ const Reports = (props) => {
 
   const getPatients = useCallback(() => {
     if (appState.role == "Patient") {
-      console.log("DATAAAAAAAAAAAAAAAAA", reportsData);
+      // console.log("DATAAAAAAAAAAAAAAAAA", reportsData);
       setAlert(
         new AlertType("You do not have Permission to recieve Patients", "error")
       );
@@ -195,7 +195,7 @@ const Reports = (props) => {
             //console.log("Test", res.data);
             if (Object.keys(res.data).length === 0) {
               setReportsData(null);
-              console.log("Test", res.data);
+              // console.log("Test", res.data);
             } else {
               setReportsData(res.data);
             }
@@ -238,7 +238,7 @@ const Reports = (props) => {
   useEffect(() => {
     if (currentPatient != "") {
       // getNeighbours(currentPatient);
-      console.log("MESSAAAAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+      // console.log("MESSAAAAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
       getScreen(currentPatient);
       //console.log("SRVVVVVVVVVVVVVVVVV", reportsData.SRVNum_PRF_SD);
       
@@ -442,7 +442,7 @@ const Reports = (props) => {
                           />
                         </Grid>
 
-                        {/* <Grid item xs={12} id="possible concerns">
+                        <Grid item xs={12} id="possible concerns1">
                           <Typography
                             variant="h5"
                             color="textSecondary"
@@ -455,9 +455,9 @@ const Reports = (props) => {
                             reports={reportsData}
                             collection={currentReportIndex}
                           />
-                        </Grid> */}
+                        </Grid>
 
-                        {/* <Grid item xs={12} id="suggestions">
+                        <Grid item xs={12} id="suggestions1">
                           <Typography
                             variant="h5"
                             color="textSecondary"
@@ -470,7 +470,7 @@ const Reports = (props) => {
                             reports={reportsData}
                             collection={currentReportIndex}
                           />
-                        </Grid> */}
+                        </Grid>
                       </>
                     ) : (
                       <>

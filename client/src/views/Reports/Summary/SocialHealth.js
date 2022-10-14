@@ -10,7 +10,7 @@ export default class SocialHealth extends Component {
 			<>		
 				
 				<Typography variant="h6" color="secondary" align="left" gutterBottom>
-					Social Health
+					{/* Social Health */}
 				</Typography>
 				<Box m={1} mb={2}>
 				{this.props.reports.household2_size[this.props.collection] !== 999 &&
@@ -83,7 +83,7 @@ export default class SocialHealth extends Component {
 							</Typography>
 						</Typography>
 				}
-				{/* {this.props.reports.con_que[this.props.collection] !== 999 &&
+				{this.props.reports.con_que[this.props.collection] !== 999 &&
 						<Typography display="block" component="div" align="left" gutterBottom>
 							<Typography display="inline" variant="body1" component="div" color="primary" align="left" gutterBottom>
 								Do you agree to be contacted in the future to receive your private and confidential personal results of the Neighbours mini screening questions, along with suggested community resources, programs and support options?   &nbsp;
@@ -92,7 +92,7 @@ export default class SocialHealth extends Component {
 								{this.props.reports.con_que[this.props.collection]}
 							</Typography>
 						</Typography>
-				} */}
+				}
 
 
 				</Box>

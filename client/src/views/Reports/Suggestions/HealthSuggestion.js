@@ -66,7 +66,7 @@ export default class HealthSuggestion extends Component {
                 <em> mobility </em>
                 }
                 {this.props.reports.PC_QofL2_SD[this.props.collection] >= 2 && this.props.reports.PC_QofL2_SD[this.props.collection] !== 999 &&
-                <em> personal care, usual activities]</em>
+                <em> personal care, usual activities</em>
                 }
                 {this.props.reports.UA_QofL2_SD[this.props.collection] >= 2 && this.props.reports.UA_QofL2_SD[this.props.collection] !== 999 &&
                 <em> usual activities </em>

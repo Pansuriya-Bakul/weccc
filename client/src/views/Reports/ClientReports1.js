@@ -18,8 +18,8 @@ import AlertMessage from "../../components/AlertMessage";
 
 // import Summary from "./Summary";
 import Summary1 from "./Summary1";
-// import PossibleConcerns from "./PossibleConcerns";
-// import Suggestions from "./Suggestions";
+import PossibleConcerns from "./PossibleConcerns1";
+import Suggestions from "./Suggestions1";
 import ContactInfo from "./ContactInfo";
 
 // ==================== Helpers =====================
@@ -195,7 +195,7 @@ const ClientReports = (props) => {
               setReportsData(null);
             } else {
               setReportsData(res.data);
-              console.log(reportsData);
+              // console.log(reportsData);
             }
           } else {
             //Bad HTTP Response
@@ -237,7 +237,7 @@ const ClientReports = (props) => {
     if (currentPatient != "") {
       // getNeighbours(currentPatient);
       getScreen(currentPatient);
-      console.log("RES",reportsData);
+      // console.log("RES",reportsData);
     }
   }, [currentPatient]);
 
@@ -410,7 +410,7 @@ const ClientReports = (props) => {
                             align="left"
                             gutterBottom
                           >
-                            
+                            Summary of your screening report
                           </Typography>
                           <Summary1
                             reports={reportsData}
@@ -418,7 +418,7 @@ const ClientReports = (props) => {
                           />
                         </Grid>
 
-                        {/* <Grid item xs={12} id="possible concerns">
+                        <Grid item xs={12} id="possible concerns1">
                           <Typography
                             variant="h5"
                             color="textSecondary"
@@ -433,7 +433,7 @@ const ClientReports = (props) => {
                           />
                         </Grid>
 
-                        <Grid item xs={12} id="suggestions">
+                        <Grid item xs={12} id="suggestions1">
                           <Typography
                             variant="h5"
                             color="textSecondary"
@@ -446,7 +446,7 @@ const ClientReports = (props) => {
                             reports={reportsData}
                             collection={currentReportIndex}
                           />
-                        </Grid> */}
+                        </Grid> 
                       </>
                     ) : (
                       
