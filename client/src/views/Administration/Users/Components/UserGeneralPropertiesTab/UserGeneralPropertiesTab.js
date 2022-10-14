@@ -229,8 +229,6 @@ const UserGeneralPropertiesTab = (props) => { // Notice the arrow function... re
                 // Object.assign(updateData, {password: password});
                 updateData = { ...updateData, password: password };
             }
-
-            // console.log(updateData);
     
             if(userID != null)
             {

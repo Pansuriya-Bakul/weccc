@@ -80,22 +80,11 @@ exports.Neighbour = async (req, res) =>
     // else social health
     Collection.find({ name: "Neighbours"}) //Test_screen_neighbours
     .then(verifiedCollection => {
-        // log.info("VERRRRRRRRRRRRRRRRRRIFEI", verifiedCollection);
         if(verifiedCollection.length == 0){
             
-
-            // log.info("ERRROOOOOR");
             flag1 = 0;
         }
         if( flag1 == 1){
-            
-            // log.info("REEEEEEEEEEEEEEEEEEEEEQ",req.params.userId);
-
-            // log.info("Yeeees, Neighbouuuuuuuuuuur");
-            // log.info(verifiedCollection.length, "\n");
-            // log.info(verifiedCollection);
-            
-
             MemberCollection.find( { collectionTemplate: verifiedCollection, member: req.params.userId }).sort( { createdAt: 1 })
             .populate( { path: 'member', options: { limit: 1 }, select: '-password', populate: { path: 'info.currentAddress', model: "Address" } })
             .populate( { path: 'memberSurveyList', populate: { path: 'surveyTemplate', model: "Survey" } } )
@@ -103,10 +92,7 @@ exports.Neighbour = async (req, res) =>
             .then(memberCollectionList => {                
                 if(memberCollectionList)
                 {
-                       
-                    // log.info(memberCollectionList);
-                    //log.info(memberCollection).find().;
-                    
+
                     // START - Account info step ==================================================
 
                         let account_id = userFunctions.getStandardAccountId(memberCollectionList[0].member.role || "",
@@ -393,29 +379,10 @@ exports.Neighbour = async (req, res) =>
                         // Feeling isolated
                         let feel_isolated = new Array();
 
-                        
-                        // log.info(memberCollectionList);
-                        
-
                         memberCollectionList.forEach(memberCollection => {
-                            
-                            // if( memberCollection.collectionTemplate == '62017ad39894374f8451348e'){
-                                // log.info('%' , "MEMBERRRRRRRR COLLECTIOOOOOOOOOON" ,memberCollectionList , "EEEEEEEEEEEEEEEEEND");
-
-                            
-
-                            
-
-                            
-                            // if( collectio name == )
-                            
                             
                             if(memberCollection.memberSurveyList)
                             {
-                                
-                                // log.info(memberCollection.memberSurveyList);
-                                
-
                                 const neighboursArray = Array.from(memberCollection.memberSurveyList);
 
                                 let chapter1Values = null;
@@ -457,8 +424,6 @@ exports.Neighbour = async (req, res) =>
                                 let chapter7Results = neighboursArray.find(survey => 
                                     survey.surveyTemplate.name == "Social Health"
                                 );
-
-                                // log.info(chapter7Results);
 
                                 chapter1Values = JSON.parse(chapter1Results.responseJSON);
                                 chapter2Values = JSON.parse(chapter2Results.responseJSON);
@@ -630,8 +595,6 @@ exports.Neighbour = async (req, res) =>
                                     PAG_QofL1_SD.push(neighbourFunctions.progress_achieving_goals(chapter6Values.PAG_QofL1_SD));
 
                                 }
-
-                                // log.info(typeof neighbourFunctions.household2_size);
 
                                 if(chapter7Values){
 

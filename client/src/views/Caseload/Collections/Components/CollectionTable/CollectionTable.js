@@ -98,8 +98,6 @@ export default function CollectionTable(props) {
 
         const handleRequestSort = useCallback((event, property) => {
 
-            // console.log(property);
-
             let isAsc = orderBy === property && order === 'asc';
             setOrder(isAsc ? 'desc' : 'asc');
             setOrderBy(property);

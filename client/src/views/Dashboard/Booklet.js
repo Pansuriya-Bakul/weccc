@@ -182,8 +182,6 @@ class Booklet extends Component
             completeStatus: calculateCompleteness(survey)
         };
 
-        // console.log(data);
-
         this.setState({
             currentSurveyResponseJSON: JSON.stringify(survey.data)
         });

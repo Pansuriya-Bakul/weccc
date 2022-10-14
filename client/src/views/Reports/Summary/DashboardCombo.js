@@ -20,7 +20,6 @@ export default class DashboardCombo extends Component {
                 validScores++;
             }
         }
-        // console.log(sum + " " + validScores);
         return sum/validScores;
     }
 

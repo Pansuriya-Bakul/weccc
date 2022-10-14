@@ -66,16 +66,11 @@ class Main extends Component {
 			if (error) return;
 
 			if (response.status === 200) {
-				// console.log(response.data.surveys[0]._id);
-				// console.log(response);
 				this.setState({ clientData: response.data });
 				this.setState({ clientSurvey: response.data.surveys });
 				this.setState({ clientCompletedSurvey: response.data.completedSurveys });
 				this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
-				// console.log(this.state.clientData.in);
 				this.setState({ clientName: this.state.clientData.info.name });
-				// console.log(this.state.clientName);
-
 			}
 		}); // call the get request.
 	};

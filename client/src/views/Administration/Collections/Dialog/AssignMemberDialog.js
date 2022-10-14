@@ -270,8 +270,7 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                             createdBy: appState._id,
                             modifiedBy: appState._id,
                         }
-                        console.log('createMemberCollection');
-                        console.log(postBody);
+
                         post("membercollections/",  appState.token, postBody, (error, response) => 
                         {
                             if(error)

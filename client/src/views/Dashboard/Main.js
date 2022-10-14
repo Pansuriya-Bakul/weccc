@@ -61,13 +61,10 @@ class Main extends Component {
 			if (error) return;
 
 			if (response.status === 200) {
-				// console.log(response.data.surveys[0]._id);
-				// console.log(response);
 				this.setState({ clientData: response.data });
 				this.setState({ clientSurvey: response.data.surveys });
 				this.setState({ clientCompletedSurvey: response.data.completedSurveys });
 				this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
-				// console.log(this.state.clientNotCompletedSurvey);
 			}
 		}); // call the get request.
 	};
@@ -87,7 +84,6 @@ class Main extends Component {
 
 	render() {
 		let { appState, classes } = this.props;
-		// console.log(this.state.clientNotCompletedSurvey[0][0]);
 
 		if (this.render) {
 			return (

@@ -195,7 +195,6 @@ const Management = (props) => { // Notice the arrow function... regular function
 
 
         const getData = useCallback(() => {
-            // console.log("Get Data Invoked", new Date());
             isTemplates? getTemplates() : getUserChapters();
         }, [ isTemplates, getTemplates, getUserChapters ] );
 

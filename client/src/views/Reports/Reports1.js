@@ -93,7 +93,6 @@ const Reports = (props) => {
 
   const getPatients = useCallback(() => {
     if (appState.role == "Patient") {
-      console.log("DATAAAAAAAAAAAAAAAAA", reportsData);
       setAlert(
         new AlertType("You do not have Permission to recieve Patients", "error")
       );
@@ -114,7 +113,6 @@ const Reports = (props) => {
           $in: appState.patients,
         },
       };
-      console.log(http_query._id.$in[0]);
 
       post("users/query", appState.token, http_query, (err, res) => {
         if (err) {
@@ -192,10 +190,8 @@ const Reports = (props) => {
           );
         } else {
           if (res.status === 200) {
-            //console.log("Test", res.data);
             if (Object.keys(res.data).length === 0) {
               setReportsData(null);
-              console.log("Test", res.data);
             } else {
               setReportsData(res.data);
             }
@@ -238,9 +234,7 @@ const Reports = (props) => {
   useEffect(() => {
     if (currentPatient != "") {
       // getNeighbours(currentPatient);
-      console.log("MESSAAAAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
       getScreen(currentPatient);
-      //console.log("SRVVVVVVVVVVVVVVVVV", reportsData.SRVNum_PRF_SD);
       
     }
   }, [currentPatient]);

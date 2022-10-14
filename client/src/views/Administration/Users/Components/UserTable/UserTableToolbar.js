@@ -152,7 +152,6 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                 if(appState.role === "Admin")
                 {
                     setViewUrl(viewUserBaseLinkAdministration + "view/" + selectedDataItemsList[0]._id);
-                    console.log("LOOOOOOOOOOOOOOOOOG", selectedDataItemsList[0]._id);
                     localStorage.setItem('_id', selectedDataItemsList[0]._id);
                     setReportUrl('/reports');
                     setReportUrl1('/ScreenReports');
@@ -186,7 +185,6 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [toolNone, toolOne, toolMultiple, editUrl, clientSurvey, viewUrl ]);
-        // console.log("URL "+viewUrl); 
 
     // Render Section ===
 

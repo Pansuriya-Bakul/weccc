@@ -75,8 +75,6 @@ const ClientReports = (props) => {
   // Declaration of Stateful Variables ===
   const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
-  // console.log("PROPPPPPPPPPPPPPPS" , props);
-
   // Alert variable
   const [alert, setAlert] = useState(new AlertType());
 
@@ -96,7 +94,6 @@ const ClientReports = (props) => {
 
   const getPatients = useCallback(() => {
     if (appState.role == "Patient") {
-      // console.log(reportsData);
       // setAlert(
       //   new AlertType("You do not have Permission to recieve Patients", "error")
       // );
@@ -149,7 +146,6 @@ const ClientReports = (props) => {
   const getNeighbours = useCallback(
     (userId) => {
       get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
-        // console.log(window.location);
         if (err) {
           //Bad callback
           setAlert(

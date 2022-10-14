@@ -6,7 +6,6 @@ export default class LineChart extends Component {
 	chartRef = React.createRef();
 
 	findValue = (str) =>{
-		console.log(str);
 		if(str == "No Problem") {return 0}
 		if(str == "Slight Problem") {return 1;}
 		if(str == "Moderate Problem") {return 2;}
@@ -28,8 +27,6 @@ export default class LineChart extends Component {
 			//find numeric value for anxiety/depression
 			anxiety: this.findValue(this.props.anxious)
 		}
-		// console.log(this.state.care);
-
 	}
 
 

@@ -169,8 +169,6 @@ const CreateUserDialog = (props) => { // Notice the arrow function... regular fu
                     }
                 }
             }
-
-            // console.log(data);
             
             post("users/register",  appState.token, data, (error, response) => 
             {

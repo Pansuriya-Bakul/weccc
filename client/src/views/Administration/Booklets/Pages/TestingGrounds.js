@@ -106,14 +106,12 @@ const TestingGrounds = (props) => { // Notice the arrow function... regular func
                 if(err)
                 {
                     //Bad callback
-                    // console.log(err);
                     setAlert(new AlertType('Unable to retrieve Patients. Please refresh and try again.', "error"));
                 }
                 else
                 {
                     if(res.status === 200)
                     {
-                        // console.log(res.data.response);
                         setPatientData(res.data.response.users); 
                     }
                     else
@@ -135,15 +133,12 @@ const TestingGrounds = (props) => { // Notice the arrow function... regular func
             if(err)
             {   
                 //Bad callback
-                // console.log(err);
                 setAlert(new AlertType('Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.', "error"));
             }
             else
             {
                 if(res.status === 200)
-                {
-                    // console.log(res.data);
-                    
+                {                    
                     if(Object.keys(res.data).length === 0)
                     {
                         setReportsData(null);
@@ -212,7 +207,6 @@ const TestingGrounds = (props) => { // Notice the arrow function... regular func
 
         useEffect( () =>
         {
-            // console.log(currentReportIndex);
             
         }, [ currentReportIndex ]);
 

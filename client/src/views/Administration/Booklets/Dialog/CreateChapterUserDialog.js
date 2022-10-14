@@ -125,8 +125,6 @@ const CreateChapterUserDialog = (props) => { // Notice the arrow function... reg
         // Gets members based on account role
         const getMembers = useCallback(() =>
         {
-            // console.log(appState);
-
             let MongoQuery;
 
             if(appState.role === 'Patient')

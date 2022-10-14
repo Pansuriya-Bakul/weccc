@@ -149,12 +149,10 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
 
             if(userID)
             {
-                console.log("serID");
                 setSelectSearchFilterOption(selectFilterOptionsMemberClient[0].value);
             }
             else
             {
-                console.log("userID");
                 setSelectSearchFilterOption(selectFilterOptionsMember[0].value);
             }
             

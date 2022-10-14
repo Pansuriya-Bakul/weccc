@@ -166,8 +166,6 @@ const ViewChapterTemplate = (props) => { // Notice the arrow function... regular
             
             if(chapterOriginal) {
                 
-                // console.log(chapterOriginal);
-
                 if(chapterOriginal.surveyJSON !== "")
                 {
                     setSurvey(JSON.parse(chapterOriginal.surveyJSON));

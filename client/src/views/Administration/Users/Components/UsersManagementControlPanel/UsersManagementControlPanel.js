@@ -181,7 +181,6 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
             setSearchFilter(event.target.value);
             setSearchFilteredDataList(tempArray);
         }, [ dataList, setSearchFilteredDataList, selectSearchFilterOption ]);
-        // console.log(dataList);
 
     // Hooks ===
 

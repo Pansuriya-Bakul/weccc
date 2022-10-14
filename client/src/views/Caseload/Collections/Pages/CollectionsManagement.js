@@ -212,7 +212,6 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
         }, [ populateList, appState.token ] );
 
         const getData = useCallback(() => {
-            // console.log("Get Data Invoked", new Date());
             isTemplates? getCollectionTemplates() : getMemberCollections();
         }, [ isTemplates, getCollectionTemplates, getMemberCollections ] );
 

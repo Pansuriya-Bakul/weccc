@@ -74,8 +74,6 @@ const CollectionTableToolbar = (props) => { // Notice the arrow function... regu
         // Declaration of Stateful Variables ===
         const { appState, isTemplates, selectedDataItemsList, setParentDeleteCollectionDialog, setParentExportCollectionDialog} = props;
 
-        console.log(appState);
-
         const [viewUrl, setViewUrl] = useState("");
         const [editUrl, setEditUrl] = useState("");
 
@@ -130,7 +128,6 @@ const CollectionTableToolbar = (props) => { // Notice the arrow function... regu
             {
                 if(appState.role === "Admin")
                 {
-                    console.log(selectedDataItemsList);
                     setViewUrl(viewCollectionBaseLinkAdministration + "view/" + selectedDataItemsList[0]._id);
                 }
                 else if(appState.role === "Coordinator" || appState.role === "Volunteer")

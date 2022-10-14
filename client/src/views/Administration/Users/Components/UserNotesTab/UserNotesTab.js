@@ -115,7 +115,6 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
             'receiverId': value,
             'message': note
         };
-        console.log(noteData);
         if (userID != null) {
             post("notes/", appState.token, noteData, (error, res) => {
                 if (error) {
@@ -198,7 +197,6 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
                 setParentAlert(new AlertType('Note read. ', "success"));       
         }
         put("notes/", appState.token, { 'noteID': noteId }, (err, res) => {
-            // console.log(res);
         });
     }, [setValue, value]);
 

@@ -98,7 +98,6 @@ const CreateCollectionDialog = (props) => { // Notice the arrow function... regu
                 {
                     if(response.status === 200)
                     {
-                        // console.log("Patient Query", response.data.response);
                         setSurveyTemplatesList(response.data.surveyList);
                     }
                     else
