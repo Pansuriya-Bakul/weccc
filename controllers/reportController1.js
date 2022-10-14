@@ -80,7 +80,7 @@ exports.Screen = async (req, res) =>
             if(verifiedCollection.length == 0){
                 
 
-                log.info("ERRROOOOOR");
+                // log.info("Collection does not Exist");
                 flag1 = 0;
             }
             if( flag1 == 1){
@@ -115,7 +115,7 @@ exports.Screen = async (req, res) =>
                             let account_id = userFunctions.getStandardAccountId(memberCollectionList[0].member.role || "",
                             memberCollectionList[0].member.facilityId || "", memberCollectionList[0].member.sequence_id || "");
 
-                            log.info("AAAAAAAAAAAAAAAAAA", account_id);
+                            // log.info("AAAAAAAAAAAAAAAAAA", account_id);
 
                             let account_involvement = neighbourFunctions.formatInvolvement(memberCollectionList[0].member.role || "");
                             
@@ -139,7 +139,7 @@ exports.Screen = async (req, res) =>
 
                             let neighboursChapter_ids = neighbourFunctions.neighbourChapterIds(memberCollectionList);
 
-                            log.info("EEEEEEEEEEEe",neighboursChapter_ids);
+                            // log.info("EEEEEEEEEEEe",neighboursChapter_ids);
 
                             let neighboursChapter_dates = neighbourFunctions.neighbourChapterDates(memberCollectionList);
 

@@ -80,18 +80,18 @@ exports.Neighbour = async (req, res) =>
     // else social health
     Collection.find({ name: "Neighbours"}) //Test_screen_neighbours
     .then(verifiedCollection => {
-        log.info("VERRRRRRRRRRRRRRRRRRIFEI", verifiedCollection);
+        // log.info("VERRRRRRRRRRRRRRRRRRIFEI", verifiedCollection);
         if(verifiedCollection.length == 0){
             
 
-            log.info("ERRROOOOOR");
+            // log.info("ERRROOOOOR");
             flag1 = 0;
         }
         if( flag1 == 1){
             
-            log.info("REEEEEEEEEEEEEEEEEEEEEQ",req.params.userId);
+            // log.info("REEEEEEEEEEEEEEEEEEEEEQ",req.params.userId);
 
-            log.info("Yeeees, Neighbouuuuuuuuuuur");
+            // log.info("Yeeees, Neighbouuuuuuuuuuur");
             // log.info(verifiedCollection.length, "\n");
             // log.info(verifiedCollection);
             
@@ -104,7 +104,7 @@ exports.Neighbour = async (req, res) =>
                 if(memberCollectionList)
                 {
                        
-                    log.info(memberCollectionList);
+                    // log.info(memberCollectionList);
                     //log.info(memberCollection).find().;
                     
                     // START - Account info step ==================================================

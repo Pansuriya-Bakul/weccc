@@ -149,7 +149,7 @@ const ClientReports = (props) => {
   const getNeighbours = useCallback(
     (userId) => {
       get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
-        console.log(window.location);
+        // console.log(window.location);
         if (err) {
           //Bad callback
           setAlert(
