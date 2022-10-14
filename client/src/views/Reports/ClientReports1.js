@@ -186,7 +186,7 @@ const ClientReports = (props) => {
           //Bad callback
           setAlert(
             new AlertType(
-              "Unable to retrieve Screen Chapter Reports. Please refresh and try again."
+              // "Unable to retrieve Screen Chapter Reports. Please refresh and try again."
             )
           );
         } else {
@@ -201,8 +201,8 @@ const ClientReports = (props) => {
             //Bad HTTP Response
             setAlert(
               new AlertType(
-                "Unable to retrieve Screen Chapter Reports. Please refresh and try again.",
-                "error"
+                // "Unable to retrieve Screen Chapter Reports. Please refresh and try again.",
+                // "error"
               )
             );
           }

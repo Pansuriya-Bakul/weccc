@@ -98,14 +98,14 @@ exports.Screen = async (req, res) =>
                     if(memberCollectionList)
                     {
 
-                        if(memberCollectionList.length === 0){
-                            log.info("0");
-                        }
+                        // if(memberCollectionList.length === 0){
+                        //     log.info("0");
+                        // }
 
-                        log.info("NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWwwww HIIIIIIIIIIIIIIII");
+                        // log.info("NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWwwww HIIIIIIIIIIIIIIII");
                         //log.info(memberCollection).find().;
                         
-                        log.info(memberCollectionList.length);
+                        // log.info(memberCollectionList.length);
 
                         
                             // log.info("HEEEEEEEEEEEELLO");
