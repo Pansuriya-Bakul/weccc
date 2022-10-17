@@ -49,6 +49,7 @@ import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import SaveIcon from '@material-ui/icons/Save';
+import get from "../../../../../helpers/common/get";
 
 // ==================== MUI Styles ===================
 
@@ -104,6 +105,8 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
             const [gender, setGender] = useState("");
             const [genderError, setGenderError] = useState(false);
+
+            const [facility, setFacility] = useState("");
 
             const [gender2, setGender2] = useState("");
             const [isGender2, setIsGender2] = useState("");
@@ -283,7 +286,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
         }, [ editable, setEditable, userOriginal, setUserEdit, setName, setNameError, setDateOfBirth, setDateOfBirthError, setGender, setGenderError, setIsGender2, setGender2, setGender2Error,
             setLanguage, setLanguageError, setIsLanguage2, setLanguage2, setLanguage2Error, setPhone, setPhoneError, setStreet, setStreetError, setPostalCode, setPostalCodeError, setCity, setCityError,
-            setProvince, setProvinceError, setCountry, setCountryError ]);
+            setProvince, setProvinceError, setCountry, setCountryError, setFacility ]);
 
         const nameHandler = useCallback((event) => {
             
@@ -306,6 +309,40 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         {
             setGender(event.target.value);
         }, [ setGender ]);
+
+        const facilityHandler = useCallback((event) =>
+        {
+            if(userEdit) // Edited by P., changing the Facility
+            get("facilities/", appState.token, (err, res) =>
+            {
+                if(err)
+                {
+                    //Bad callback call
+                    //setAlert(new AlertType(err.message, "error"));
+                    //setAlert(new AlertType('Unable to retrieve facilities.', "error"));
+                    console.log('error facility');
+                }
+                else
+                {
+                    if(res.status === 200){
+                        res.data.response.facilities.forEach(k => {
+                            if( k.name == event.target.value) {
+                                setUserEdit({
+                                    ...userEdit,
+                                    facilityId: {
+                                        ...userEdit.facilityId,
+                                        name: event.target.value,
+                                        _id: k._id,
+                                        prefix:k.prefix //Edited by P, added facility information like as FacilityId
+                                    }
+                                });
+
+                            }
+                        })
+
+                    }}});
+
+        }, [ userEdit, setUserEdit ]);
 
         const gender2Handler = useCallback((event) => 
         {
@@ -737,6 +774,21 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                 };
             }
 
+            if (userEdit.facilityId.name !== userOriginal.facilityId.name){
+                //console.log(facility);
+                updateData = {
+                    ...updateData,
+                    facilityId:{
+                        ...updateData.facilityID,
+                        name:userEdit.facilityId.name,
+                        _id:userEdit.facilityId._id,
+                        prefix:userEdit.facilityId.prefix
+                    }
+                }
+                //console.log('update',updateData);
+            }
+                        
+
             if(street !== userEdit.info.currentAddress.street)
             {
                 updateData = {
@@ -826,7 +878,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
         }, [ appState, userID, userEdit, setParentAlert, getParentInfo,
              nameError, genderError, gender2Error, dateOfBirthError, languageError, language2Error, phoneError, streetError, cityError, postalCodeError, provinceError, countryError,
-             gender, isGender2, gender2, language, isLanguage2, language2, phone, street, city, postalCode, province ]);
+             gender, isGender2, gender2, language, isLanguage2, language2, phone, street, city, postalCode, province, facility, setFacility ]);
 
     // Hooks ===
             
@@ -836,6 +888,11 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
             if(userOriginal)
             {
+                if (userOriginal.facilityId.name){
+                    setFacility(userOriginal.facilityId.name);
+                }
+                else
+                    setFacility("");
 
                 if(userOriginal.info.gender != "Male" && userOriginal.info.gender != "Female")
                 {
@@ -1303,9 +1360,32 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                             <Grid item xs={1}>
                                                 <TextField id="Sequence-prefix" size="small" variant="outlined" fullWidth label="Facility Prefix" readOnly disabled value={(userEdit.facilityId)? userEdit.facilityId.prefix : ""}/>
                                             </Grid>
-                                            <Grid item xs={3}>
+                                            {appState.role !== "Admin"?(
+                                                <Grid item xs={3}>
                                                 <TextField id="Facility-name" size="small" variant="outlined" fullWidth label="Facility" readOnly disabled value={(userEdit.facilityId)? userEdit.facilityId.name : ""}/>
-                                            </Grid>
+                                                </Grid>
+                                                )
+                                            : (
+                                                <Grid item xs={3}>  {/* Edited by P., making the facility changable*/}
+                                                <TextField
+                                                    id="Facility-name"
+                                                    select
+                                                    //required
+                                                    fullWidth
+                                                    label="Facility"
+                                                    value={(userEdit.facilityId)? userEdit.facilityId.name : ""}
+                                                    onChange={(event) => { facilityHandler(event); }}
+                                                    size="small"
+                                                    variant="outlined"
+                                                    readOnly={editable? false : true}
+                                                    disabled={editable? false : true}
+                                                >
+                                                    <MenuItem key={'Palliative IMS Facility'} value={'Palliative IMS Facility'}>Palliative IMS Facility</MenuItem>
+                                                    <MenuItem key={'WECCC'} value={'WECCC'}>WECCC</MenuItem>
+                                                    <MenuItem key={'XYZ'} value={'XYZ'}>XYZ</MenuItem>
+                                                    <MenuItem key={'Others'} value={'Others'}>Others</MenuItem>
+                                                </TextField>
+                                            </Grid> )}
                                             <Grid item xs={7}></Grid>
                                             <Grid item xs={12}>
                                                 <Typography variant="subtitle2" component="h6" color="textPrimary">

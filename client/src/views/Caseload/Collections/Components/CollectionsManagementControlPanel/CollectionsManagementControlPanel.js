@@ -91,7 +91,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
             dataList, getParentData,
             userID,
             setSearchFilteredDataList,
-            setCreateCollectionTemplateDialog, setCreateMemberCollectionDialog, setAssignMemberDialog, setAssignProjectDialog } = props;
+            setCreateCollectionTemplateDialog, setCreateMemberCollectionDialog, setAssignMemberDialog, setAssignProjectDialog, setAssignCoordinatorDialog } = props;
 
         const [selectSearchFilterOption, setSelectSearchFilterOption ] = useState(selectFilterOptionsTemplate[0].value);
         const [searchFilter, setSearchFilter] = useState("");
@@ -137,6 +137,11 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
         {
             setAssignMemberDialog(true);
         }, [ setAssignMemberDialog ]);
+
+        const AssignCoordinatorHandler = useCallback(() =>
+        {
+            setAssignCoordinatorDialog(true);
+        }, [ setAssignCoordinatorDialog ]);
 
         const AssignProjectHandler = useCallback(() =>
         {
@@ -335,6 +340,8 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                         </Grid>
                                         {isTemplates? (
                                             <>
+                                                {appState.role =="Admin"? (
+    //Edited by P. Only Admin can create a new survey template
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
@@ -349,8 +356,27 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                         >
                                                             Start a Service Template
                                                         </Button>
-                                                    </Tooltip> 
-                                                </Grid>
+                                                    </Tooltip>
+                                                </Grid>): <></>}
+                                                {appState.role=="Admin" ? (
+                                                <Grid item>
+                                                    <Tooltip
+                                                        placement="bottom"
+                                                        title="Assign Coordinators to Service"
+                                                    >
+                                                        <Button
+                                                            size="small"
+                                                            variant="contained"
+                                                            color="secondary"
+                                                            disabled={!isTemplates}
+                                                            startIcon={<AddBoxOutlinedIcon />}
+                                                            onClick={() => { AssignCoordinatorHandler(); }}
+                                                        >
+                                                            Assign Coordinator
+                                                        </Button>
+                                                    </Tooltip>
+                                                </Grid>):(<></>)}
+                                                
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
@@ -368,6 +394,8 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                         </Button>
                                                     </Tooltip> 
                                                 </Grid>
+
+                                                {appState.role == "Admin" ? ( //Edited by P., appState has been added to show the project assignment only to the Admin
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
@@ -385,26 +413,33 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                         </Button>
                                                     </Tooltip> 
                                                 </Grid>
+                                                ) : (
+                                                    <>
+                                                    </>
+                                                    )}
                                             </>
                                         ) : (
-                                            <Grid item>
-                                                <Tooltip
-                                                    placement="bottom"
-                                                    title="Create a Member Service Instance"
-                                                >
-                                                    <Button 
-                                                        size="small" 
-                                                        variant="contained" 
-                                                        color="primary"
-                                                        startIcon={<AddBoxOutlinedIcon />}
-                                                        onClick={() => { createMemberCollectionHandler(); }}
-                                                    >
-                                                        Start a Service Instance
-                                                    </Button>
-                                                </Tooltip> 
-                                            </Grid>
-                                            
+                                            <>
+                                        {appState.role == "Admin" ? ( //Edited by P., appState has been added to remove create new instance link
+                                        <Grid item>
+                                        <Tooltip
+                                            placement="bottom"
+                                            title="Create a Member Service Instance"
+                                        >
+                                            <Button 
+                                                size="small" 
+                                                variant="contained" 
+                                                color="primary"
+                                                startIcon={<AddBoxOutlinedIcon />}
+                                                onClick={() => { createMemberCollectionHandler(); }}
+                                            >
+                                                Start a Service Instance
+                                            </Button>
+                                        </Tooltip> 
+                                    </Grid>):<></>}
+                                    </>   
                                         )}
+                                        
                                     </Grid>
                                 </Box>
                             </Grid>
@@ -532,7 +567,8 @@ CollectionsManagementControlPanel.propTypes =
     setCreateCollectionTemplateDialog: PropTypes.func.isRequired,
     setCreateMemberCollectionDialog: PropTypes.func.isRequired,
     setAssignMemberDialog: PropTypes.func.isRequired,
-    setAssignProjectDialog: PropTypes.func.isRequired
+    setAssignProjectDialog: PropTypes.func.isRequired,
+    setAssignCoordinatorDialog:PropTypes.func.isRequired //Edited by P.
                         
 }
 
@@ -548,7 +584,8 @@ CollectionsManagementControlPanel.defaultProps =
     setCreateCollectionTemplateDialog: () => {},
     setCreateMemberCollectionDialog: () => {},
     setAssignMemberDialog: () => {},
-    setAssignProjectDialog: () => {}
+    setAssignProjectDialog: () => {},
+    setAssignCoordinatorDialog: () => {}    //Edited by P.
 }
 
 export default CollectionsManagementControlPanel;  // You can even shorthand this line by adding this at the function [Component] declaration stage

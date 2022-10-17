@@ -397,20 +397,20 @@ const ClientReports = (props) => {
                           />
                         </Grid>
                         
-                        <Grid item xs={12} id="summary1">
+                        {/* <Grid item xs={12} id="summary1">
                           <Typography
                             variant="h5"
                             color="textSecondary"
                             align="left"
                             gutterBottom
-                          >
-                            {/* Summary 1
+                          > */}
+                             {/* Summary 1
                           </Typography>
                           <Summary1
                             reports={reports1Data}
                             collection={currentReportIndex}
                           />
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item xs={12} id="possible concerns">
                           <Typography
@@ -418,7 +418,7 @@ const ClientReports = (props) => {
                             color="textSecondary"
                             align="left"
                             gutterBottom
-                          > */}
+                          > 
                             Possible Concerns
                           </Typography>
                           <PossibleConcerns

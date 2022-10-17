@@ -93,7 +93,8 @@ module.exports = {
     local_community_belonging,
     life_satisfaction2,
     community_activity_participate,
-    household2_size
+    household2_size,
+    con_que
 }
 
 function collectionIds(list)
@@ -3460,33 +3461,33 @@ function feel_isolated(question)
     return DF;
 }
 
-// function Con_que(question)
-// {
-//     // Value Chart of question
-//     // 0 Yes
-//     // 1 No
+function con_que(question)
+{
+    // Value Chart of question
+    // 0 Yes
+    // 1 No
     
     
-//     if(!question && !Array.isArray(question))
-//         return 999;
+    if(!question && !Array.isArray(question))
+        return 999;
 
-//     let DF = parseInt(question[0]);
+    let DF = parseInt(question[0]);
 
-//     if(isNaN(question))
-//         return 999;
+    if(isNaN(question))
+        return 999;
     
-//     if(DF == 0)
-//     {
-//         DF = "No";
-//     }
-//     else if(DF == 1){
-//         DF = "Yes";
-//     }
-//     else
-//     {
-//         DF = 999;
-//     }
+    if(DF == 0)
+    {
+        DF = "No";
+    }
+    else if(DF == 1){
+        DF = "Yes";
+    }
+    else
+    {
+        DF = 999;
+    }
 
-//     return DF;
-// }
+    return DF;
+}
 

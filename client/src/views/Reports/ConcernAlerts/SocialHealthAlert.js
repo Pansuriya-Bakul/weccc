@@ -15,7 +15,7 @@ export default class SocialHealthAlert extends Component {
 				<div>
 				
 				<Typography variant="h5" color="inherit" align="left" gutterBottom>
-					Social Health 
+					{/* Social Health  */}
 				</Typography>
                 {this.props.reports.household2_size[this.props.collection] !== 999 && this.props.reports.household2_size[this.props.collection] == "Lives alone" ?
 				(null_flag = null_flag + 1) &&
@@ -66,12 +66,15 @@ export default class SocialHealthAlert extends Component {
                     Congratulations. Your responses do not indicate any social health concerns currently.  
                 </Typography> : null
                 }
+                {sessionStorage.setItem("Null_Values", null_flag)}
                 </div>
 				
-
-				
+                
+                
 			
 			)
+            
+
 	}
 	
 }					

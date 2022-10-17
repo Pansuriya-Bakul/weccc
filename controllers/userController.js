@@ -676,6 +676,7 @@ exports.readall = (req, res, next) => {
 							memberCollectionList: user.memberCollectionList,
 							memberSurveyList: user.memberSurveyList,
 							enabled: user.enabled,
+							facid:user.facilityId._id,
 							info: {
 								pastAddresses: user.info.pastAddresses,
 								name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),

@@ -154,7 +154,18 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                 {
                     if(res.status === 200)
                     {
-                        populateCollections(res.data.collectionList);
+                        if(appState.role=="Admin") {
+                            populateCollections(res.data.collectionList);}
+                        else {
+                            var datatemp=[];
+                            res.data.collectionList.forEach (k => {
+                                //console.log(k.memberList);
+                                if ( k.memberList.includes(appState._id)) {
+                                    datatemp.push(k);
+                                }
+                            })
+                            populateCollections(datatemp);  // Edited by P., Restricting Service View by membership
+                        }
                     }
                     else
                     {
@@ -181,7 +192,18 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                 {
                     if(res.status === 200)
                     {
-                        populateUsers(res.data.response.users);
+                        if (appState.role === 'Admin') {
+                            populateUsers(res.data.response.users);
+                        }
+                        else {
+                            var tempusers = [];
+                        
+                            res.data.response.users.forEach(k => {
+                                if (k.facid == appState.facilityId)
+                                    tempusers.push(k);
+                            });
+                            populateUsers(tempusers); // Edited by P, filter users by facility ID
+                        }
                     }
                     else
                     {

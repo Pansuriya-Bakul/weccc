@@ -18,6 +18,7 @@ import ExportCollectionDialog from '../Dialog/ExportCollectionDialog';
 import DeleteCollectionDialog from '../Dialog/DeleteCollectionDialog';
 import AssignMemberDialog from '../Dialog/AssignMemberDialog';
 import AssignProjectDialog from '../Dialog/AssignProjectDialog';
+import AssignCoordinatorDialog from '../Dialog/AssignCoordinatorDialog';
 
 // ==================== Helpers ====================
 import get from '../../../../helpers/common/get';
@@ -87,6 +88,11 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
     // Assign Member Collection Dialog Logic variables
     const [assignMemberDialog, setAssignMemberDialog] = useState(false);
     const [assignMemberDialogExecuting, setAssignMemberDialogExecuting] = useState(false);
+
+    // Assign Coordinator Collection Dialog Logic variables
+    //Edited by P.
+    const [assignCoordinatorDialog, setAssignCoordinatorDialog] = useState(false);
+    const [assignCoordinatorDialogExecuting, setAssignCoordinatorDialogExecuting] = useState(false);
 
     // Assign Project Collection Dialog Logic variables
     const [assignProjectDialog, setAssignProjectDialog] = useState(false);
@@ -164,7 +170,19 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
             }
             else {
                 if (res.status === 200) {
-                    populateList(res.data.collectionList);
+                    if (appState.role == "Admin"){
+                        populateList(res.data.collectionList);
+                        }
+                        else {
+                            var datatemp=[];
+                            res.data.collectionList.forEach (k => {
+                                //console.log(k.memberList);
+                                if ( k.memberList.includes(appState._id)) {
+                                    datatemp.push(k);
+                                }
+                                })
+                            populateList(datatemp);  // Edited by P., Restricting Service View by membership
+                        }
                 }
                 else {
                     //Bad HTTP Response
@@ -174,7 +192,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
 
         });
     }, [populateList, appState.token]);
-
+    
     // Retrieve the list of Collections
     const getMemberCollections = useCallback(() => {
 
@@ -188,7 +206,19 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
             }
             else {
                 if (res.status === 200) {
-                    populateList(res.data.memberCollectionList);
+                    if (appState.role == "Admin"){
+                        populateList(res.data.memberCollectionList);
+                        }
+                        else {
+                            var datatemp=[];
+                            res.data.memberCollectionList.forEach(k => {
+                                if (k.member.facilityId === appState.facilityId){
+                                   datatemp.push(k);
+                                }
+                            }
+                            )
+                            populateList(datatemp); // Edited by P., filtering the service view by facilityId except Admin
+                        }
                 }
                 else {
                     //Bad HTTP Response
@@ -272,6 +302,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                                     {dataList && searchFilteredDataList && selectedDataItemsList ? (
                                         <Grid item xs={12}>
                                             <CollectionsManagementControlPanel
+                                                appState={appState}
                                                 isDense={isDense}
                                                 setIsDense={setIsDense}
                                                 isTemplates={isTemplates}
@@ -284,8 +315,10 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                                                 setAssignMemberDialog={setAssignMemberDialog}
                                                 setAssignProjectDialog={setAssignProjectDialog}
                                                 setParentAlert={setAlert}
+                                                setAssignCoordinatorDialog={setAssignCoordinatorDialog}
                                             />
                                             <CollectionTable
+                                                appState={appState}
                                                 isDense={isDense}
                                                 isTemplates={isTemplates}
                                                 searchFilteredDataList={searchFilteredDataList}
@@ -337,6 +370,18 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                     selectedDataItemsList={selectedDataItemsList}
                     appState={appState}
                 />
+
+                <AssignCoordinatorDialog
+                    assignCoordinatorDialog={assignCoordinatorDialog}
+                    setAssignCoordinatorDialog={setAssignCoordinatorDialog}
+                    assignCoordinatorDialogExecuting={assignCoordinatorDialogExecuting}
+                    setAssignCoordinatorDialogExecuting={setAssignCoordinatorDialogExecuting}
+                    setParentAlert={setAlert}
+                    getParentData={getCollectionTemplates}
+                    selectedDataItemsList={selectedDataItemsList}
+                    appState={appState}
+                />
+
                 <AssignProjectDialog
                     assignProjectDialog={assignProjectDialog}
                     setAssignProjectDialog={setAssignProjectDialog}
@@ -369,6 +414,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                     getParentData={getCollectionTemplates}
                     appState={appState}
                 />
+
             </div>
         ) : (
             <Typography variant="h6" color="inherit" align="center" gutterBottom>

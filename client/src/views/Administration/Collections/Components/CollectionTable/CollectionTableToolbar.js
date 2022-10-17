@@ -190,12 +190,14 @@ const CollectionTableToolbar = (props) => { // Notice the arrow function... regu
                                 <SystemUpdateAltIcon/>
                             </IconButton>
                         </Tooltip>
-                            
+                        {appState.role=="Admin" ? (
                         <Tooltip title="Delete">
                             <IconButton aria-label="delete" onClick={() => deleteHandler()}>
                                 <DeleteIcon />
                             </IconButton>
-                        </Tooltip>
+                        </Tooltip>):<></>}   
+
+                        
                     </>
                 ) : (null)}
                 {toolMultiple ? (
