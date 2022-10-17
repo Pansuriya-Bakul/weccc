@@ -157,7 +157,7 @@ const Reports = (props) => {
           );
         } else {
           if (res.status === 200) {
-            console.log(res.data);
+            // console.log(res.data);
             if (Object.keys(res.data).length === 0) {
               setReportsData(null);
             } else {

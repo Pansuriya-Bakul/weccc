@@ -1,5 +1,5 @@
 // ================================================
-// Code associated with AssignUserDialog
+// Code associated with assignCoordinatorDialog
 // ================================================
 import React, { useCallback, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';                     //Development Package to validate prop types [Type Checking] passed down
@@ -11,8 +11,7 @@ import PropTypes from 'prop-types';                     //Development Package to
 // ==================== Helpers =====================
 import AlertType from '../../../../helpers/models/AlertType';
 import get from '../../../../helpers/common/get';
-import post from  '../../../../helpers/common/post';
-import patch from '../../../../helpers/common/patch';
+import post from '../../../../helpers/common/post';
 
 // ==================== MUI =========================
 import { makeStyles } from '@material-ui/core/styles';  // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
@@ -67,7 +66,7 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 // ======================== React Modern | Functional Component ========================
 
-const AssignUserDialog = (props) => { // Notice the arrow function... regular function()  works too
+const AssignCoordinatorDialog = (props) => { // Notice the arrow function... regular function()  works too
 
     // Variables ===
 
@@ -75,26 +74,52 @@ const AssignUserDialog = (props) => { // Notice the arrow function... regular fu
         const classes = useStyles();
 
         // Declaration of Stateful Variables ===
-        const { appState, setParentAlert, getParentData, selectedUserList, 
-            assignUserDialog, setAssignUserDialog,
-            assignUserDialogExecuting, setAssignUserDialogExecuting } = props;
+        const { appState, setParentAlert, getParentData, selectedDataItemsList,
+            assignCoordinatorDialog, setAssignCoordinatorDialog,
+            assignCoordinatorDialogExecuting, setAssignCoordinatorDialogExecuting } = props;
 
-        const [ currentManagementUser, setCurrentManagementUser ] = useState("");
-        const [ selectedManagementUserList, setSelectedManagementUserList ] = useState(null);
-        const [ managementUserList, setManagementUserList ] = useState(null);
+        const [ currentCollection, setCurrentCollection ] = useState("");
+        const [ selectedCollectionList, setSelectedCollectionList ] = useState([]);
+        const [ collectionList, setCollectionList ] = useState(null);
 
-        const [ currentClientUser, setCurrentClientUser ] = useState("");
-        const [ selectedClientUserList, setSelectedClientUserList ] = useState(null);
-        const [ clientUserList, setClientUserList ] = useState(null);
+        const [ currentMember, setCurrentMember ] = useState("");
+        const [ selectedMemberList, setSelectedMemberList ] = useState([]);
+        const [ MemberList, setMemberList ] = useState(null);
 
-        const [ userList, setUserList ] = useState(null);
+        // const [ userList, setUserList ] = useState(null);
 
     // Functions ===
+
+        const populateCollections = useCallback((data) =>
+        {
+            let tempArray = new Array();
+
+            if(data && Array.isArray(data))
+            {
+                data.forEach(item => {
+
+                    tempArray.push(
+                        {
+                            _id: item._id,
+                            name: item.name,
+                            projectList: item.projectList,
+                            memberCollectionList: item.memberCollectionList,
+                            surveyList: item.surveyList,
+                            createdBy: item.createdBy,
+                            createdAt: item.updatedAt,
+                            modifiedBy: item.modifiedBy,
+                            updatedAt: item.updatedAt
+                        });
+                });
+            }
+
+            setCollectionList([...tempArray]);
+
+        }, [ appState, setCollectionList]);
 
         const populateUsers = useCallback((data) =>
         {
             let tempArray = new Array();
-
             if(data && Array.isArray(data))
             {
                 data.forEach(item => {
@@ -109,11 +134,38 @@ const AssignUserDialog = (props) => { // Notice the arrow function... regular fu
                 });
             }
 
-            setUserList([...tempArray]);
+            setMemberList([...tempArray]);
 
-        }, [ appState, setUserList]);
+        }, [ appState, setMemberList]);
 
         // Retrieve the list of Users
+        const getCollections = useCallback(() => {
+
+            get("collections/", appState.token, (err, res) => 
+            {
+                if(err)
+                {   
+                    //Bad callback call
+                    //setParentAlert(new AlertType(err.message, "error"));
+                    setParentAlert(new AlertType('Unable to retrieve Services. Please refresh and try again.', "error"));
+                }
+                else
+                {
+                    if(res.status === 200)
+                    {
+                        populateCollections(res.data.collectionList);
+                    }
+                    else
+                    {
+                        //Bad HTTP Response
+                        setParentAlert(new AlertType('Unable to retrieve Services. Please refresh and try again.', "error"));
+                    }
+                }
+
+            });
+        }, [ appState, populateUsers, setParentAlert ] );
+
+        // Retrieve the list of Collections
         const getUsers = useCallback(() => {
 
             get("users/", appState.token, (err, res) => 
@@ -128,19 +180,20 @@ const AssignUserDialog = (props) => { // Notice the arrow function... regular fu
                 {
                     if(res.status === 200)
                     {
-                        if (appState.role == 'Admin') {
-                            populateUsers(res.data.response.users)
+
+                        if (appState.role === 'Admin') {
+                            populateUsers(res.data.response.users);
                         }
                         else {
                             var tempusers = [];
-                        
+
                             res.data.response.users.forEach(k => {
                                 if (k.facid == appState.facilityId)
                                     tempusers.push(k);
                             });
-                            populateUsers(tempusers); //Edit by P, filter users by facility ID
-                            //populateUsers(res.data.response.users);
+                            populateUsers(tempusers); // Edited by P, filter users by facility ID
                         }
+                        //populateUsers(res.data.response.users);
                     }
                     else
                     {
@@ -153,312 +206,193 @@ const AssignUserDialog = (props) => { // Notice the arrow function... regular fu
         }, [ appState, populateUsers, setParentAlert ] );
 
         // Insert the new booklet into the database upon creation
-        const assignSelectedUsers = useCallback(() =>
+        const assignMembers = useCallback(() =>
         {
-            if(selectedManagementUserList.length > 0 && selectedClientUserList.length > 0)
+            if(selectedCollectionList.length > 0 && selectedMemberList.length > 0)
             {
-                let selectedManagementUserListFormatted = new Array();
-                let selectedClientUserListFormatted = new Array();
-                
-                // selectedManagementUserList.map(item => {
-                //     selectedManagementUserListFormatted.push(
-                //         {
-                //             $oid: item._id
-                //         }
-                //     );
-                // });
-
-                selectedManagementUserList.map(item => {
-                    selectedManagementUserListFormatted.push(item._id);
-                });
-
-                // selectedClientUserList.map(item => {
-                //     selectedClientUserListFormatted.push(
-                //         {
-                //             $oid: item._id
-                //         }
-                //     );
-                // });
-
-                selectedClientUserList.map(item => {
-                    selectedClientUserListFormatted.push(item._id);
-                });
-
-                selectedManagementUserList.forEach(managementUser => 
+                selectedCollectionList.forEach(collection => 
                 {
-                        let patchData = {
-                            patients: selectedClientUserListFormatted
+                        const selectedMemberIdList = selectedMemberList.map(item => { return item._id; });
+
+                        let postBody = {
+                            collectionId: collection._id,
+                            memberList: selectedMemberIdList
                         };
     
-                        patch("users/" + managementUser._id, appState.token, patchData, (error, response) => 
+                        post("collections/assign/member", appState.token, postBody, (error, response) => 
                         {
                             if(error)
                             {
-                                setParentAlert(new AlertType('Unable to update management user. Please refresh and try again.', "error"));
+                                setParentAlert(new AlertType('Unable to update collections. Please refresh and try again.', "error"));
                             }
                             else
                             {
                                 if(response.status === 200)
                                 {
+                                    //console.log(response);
                                     // getParentData();
                                     //  const _id = response.data.survey._id; The id to redirect to if you wish
-                                    setParentAlert(new AlertType('Successfully updated management user.', "success")); 
+                                    getParentData();
+                                    setParentAlert(new AlertType('Successfully updated collections.', "success"));
                                 }
                                 else
                                 {
-                                    setParentAlert(new AlertType('Unable to update management user. Please refresh and try again.', "error"));
+                                    setParentAlert(new AlertType('Unable to update collections. Please refresh and try again.', "error"));
                                 }
                             }
                         });
                 });
-
-                selectedClientUserList.forEach(ClientUser => 
-                {
-                    let patchData = {
-                        workers: selectedManagementUserListFormatted
-                    };
-    
-                    patch("users/" + ClientUser._id, appState.token, patchData, (error, response) => 
-                    {
-                        if(error)
-                        {
-                            setParentAlert(new AlertType('Unable to update client user. Please refresh and try again.', "error"));
-                        }
-                        else
-                        {
-                            if(response.status === 200)
-                            {
-                                // getParentData();
-                                //  const _id = response.data.survey._id; The id to redirect to if you wish
-                                setParentAlert(new AlertType('Successfully updated client user.', "success")); 
-                            }
-                            else
-                            {
-                                setParentAlert(new AlertType('Unable to update client user. Please refresh and try again.', "error"));
-    
-                            }
-                        }
-                    });
-                    
-                });
-
             }
             else
             {
-                setParentAlert(new AlertType('Unable to assign users. Please refresh and try again.', "error"));
+                setParentAlert(new AlertType('Unable to assign Coordinator to collection. Please refresh and try again.', "error"));
             }
 
-        }, [ appState, setParentAlert, selectedManagementUserList, selectedClientUserList]);
+        }, [ appState, getParentData, setParentAlert, selectedCollectionList, selectedMemberList]);
 
         
         const closeHandler = useCallback(() => {
 
-            setAssignUserDialog(false);
-            setCurrentManagementUser("");
-            setCurrentClientUser("");
-            setSelectedManagementUserList(new Array());
-            setSelectedClientUserList(new Array());
+            setAssignCoordinatorDialog(false);
+            setCurrentCollection("");
+            setCurrentMember("");
+            setSelectedCollectionList(new Array());
+            setSelectedMemberList(new Array());
 
-        }, [ setAssignUserDialog, setCurrentManagementUser, setCurrentClientUser, setSelectedManagementUserList, setSelectedClientUserList ]);
+        }, [ setAssignCoordinatorDialog, setCurrentCollection, setCurrentMember, setSelectedCollectionList, setSelectedMemberList ]);
 
 
         const createHandler = useCallback(() => {
 
-            setAssignUserDialogExecuting(true);
-            assignSelectedUsers();
-            setAssignUserDialogExecuting(false);
-            setAssignUserDialog(false);
+            setAssignCoordinatorDialogExecuting(true);
+            assignMembers();
+            setAssignCoordinatorDialogExecuting(false);
+            setAssignCoordinatorDialog(false);
 
-        }, [ assignSelectedUsers, setAssignUserDialogExecuting, setAssignUserDialog]);
+        }, [ assignMembers, setAssignCoordinatorDialogExecuting, setAssignCoordinatorDialog]);
 
-        const selectManagementHandler = useCallback((event) =>
+        const selectCollectionHandler = useCallback((event) =>
         {
-            setCurrentManagementUser(event.target.value);
+            setCurrentCollection(event.target.value);
 
-        }, [ setCurrentManagementUser ]);
+        }, [ setCurrentCollection ]);
 
-        const selectClientHandler = useCallback((event) =>
+        const selectMemberHandler = useCallback((event) =>
         {
-            setCurrentClientUser(event.target.value);
+            setCurrentMember(event.target.value);
 
-        }, [ setCurrentClientUser ]);
+        }, [ setCurrentMember ]);
 
-        const addManagementButtonHandler = useCallback(() =>
+        const addCollectionButtonHandler = useCallback(() =>
         {
-            if(currentManagementUser && currentManagementUser != "")
+            if(currentCollection && currentCollection != "")
             {
-                let tempUserObject = managementUserList.find(item => item._id == currentManagementUser);
+                let tempUserObject = collectionList.find(item => item._id == currentCollection);
 
                 if(tempUserObject != undefined)
                 {
-                    setSelectedManagementUserList([...selectedManagementUserList, tempUserObject]);
-                    setCurrentManagementUser("");
+                    setSelectedCollectionList([...selectedCollectionList, tempUserObject]);
+                    setCurrentCollection("");
                 }
             }
 
-        }, [ currentManagementUser, managementUserList, setSelectedManagementUserList, selectedManagementUserList, setCurrentManagementUser ]);
+        }, [ currentCollection, collectionList, setSelectedCollectionList, selectedCollectionList, setCurrentCollection ]);
 
-        const addClientButtonHandler = useCallback(() =>
+        const addMemberButtonHandler = useCallback(() =>
         {
-            if(currentClientUser && currentClientUser != "")
+            if(currentMember && currentMember != "")
             {
-                let tempUserObject = clientUserList.find(item => item._id == currentClientUser);
+                let tempUserObject = MemberList.find(item => item._id == currentMember);
 
                 if(tempUserObject != undefined)
                 {
-                    setSelectedClientUserList([...selectedClientUserList, tempUserObject]);
-                    setCurrentClientUser("");
+                    setSelectedMemberList([...selectedMemberList, tempUserObject]);
+                    setCurrentMember("");
                 }
 
             }
 
-        }, [ currentClientUser, clientUserList, setSelectedClientUserList, selectedClientUserList, setCurrentClientUser ]);
+        }, [ currentMember, MemberList, setSelectedMemberList, selectedMemberList, setCurrentMember ]);
 
-        const removeManagementButtonHandler = useCallback((item) =>
+        const removeCollectionButtonHandler = useCallback((item) =>
         {
-            let tempList = selectedManagementUserList;
+            let tempList = selectedCollectionList;
 
-            tempList.splice(selectedManagementUserList.findIndex(oldItem => oldItem._id == item._id), 1);
+            tempList.splice(selectedCollectionList.findIndex(oldItem => oldItem._id == item._id), 1);
 
-            setSelectedManagementUserList([...tempList]);
+            setSelectedCollectionList([...tempList]);
 
-        }, [ selectedManagementUserList, setSelectedManagementUserList ]);
+        }, [ selectedCollectionList, setSelectedCollectionList ]);
 
-        const removeClientButtonHandler = useCallback((item) =>
+        const removeMemberButtonHandler = useCallback((item) =>
         {
-            let tempList = selectedClientUserList;
+            let tempList = selectedMemberList;
 
-            tempList.splice(selectedClientUserList.findIndex(oldItem => oldItem._id == item._id), 1);
+            tempList.splice(selectedMemberList.findIndex(oldItem => oldItem._id == item._id), 1);
 
-            setSelectedClientUserList([...tempList]);
+            setSelectedMemberList([...tempList]);
 
-        }, [selectedClientUserList, setSelectedClientUserList ]);
+        }, [selectedMemberList, setSelectedMemberList ]);
 
     // Hooks ===
 
         useEffect( () =>
         {
-            if(assignUserDialog)
+            if(assignCoordinatorDialog)
             {
-                getUsers(); 
+                getCollections();
+                getUsers();
             }
             
-        }, [ assignUserDialog, getUsers]);
+        }, [ assignCoordinatorDialog, getUsers, getCollections]);
 
-        useEffect( () => 
-        {
-            if(userList)
-            {
-                //  Set Management User List
-                let tempManagementUserList = new Array();
-                
-                //  Set Client User List
-                let tempClientUserList = new Array();
 
-                userList.forEach(item => {
-                    
-                    if(item.role == 'Admin' || item.role == 'Coordinator' || item.role == 'Volunteer')
-                    {
-                        tempManagementUserList.push(item);
-                    }
-                    else if(item.role == 'Patient')
-                    {
-                        tempClientUserList.push(item);
-                    }
-
-                });
-
-                setManagementUserList([...tempManagementUserList]);
-                setClientUserList([...tempClientUserList]);
-            }
-
-        }, [ userList, setManagementUserList, setClientUserList ]);
-
-        useEffect( () => 
-        {
-            if(selectedUserList)
-            {
-                //  Set Selected Management User List
-                let tempSelectedManagementUserList = new Array();
-                
-                //  Set Selected Client User List
-                let tempSelectedClientUserList = new Array();
-
-                selectedUserList.forEach(item => {
-                    
-                    if(item.role == 'Admin' || item.role == 'Coordinator' || item.role == 'Volunteer')
-                    {
-                        tempSelectedManagementUserList.push({
-                            _id: item._id,
-                            name: item.info.name,
-                            role: item.role,
-                            createdAt: item.createdAt
-                        });
-                    }
-                    else if(item.role == 'Patient')
-                    {
-                        tempSelectedClientUserList.push({
-                            _id: item._id,
-                            name: item.info.name,
-                            role: item.role,
-                            createdAt: item.createdAt
-                        });
-                    }
-
-                });
-
-                setSelectedManagementUserList([...tempSelectedManagementUserList]);
-                setSelectedClientUserList([...tempSelectedClientUserList]);
-            }
-
-        }, [ selectedUserList, setSelectedManagementUserList, setSelectedClientUserList ]);
-
-    // Render Section ===
 
         return (
             <>
-                {assignUserDialog? (
-                    <Dialog id="assign-user-dialog"
+                {assignCoordinatorDialog? (
+                    <Dialog id="assign-member-dialog"
                         fullWidth
                         maxWidth="md"
-                        open={assignUserDialog}
+                        open={assignCoordinatorDialog}
                         onClose={() => { closeHandler(); }}
                     >
                         <DialogTitle>
-                            Assign Users
+                            Assign Coordinator(s) to Collection(s)
                         </DialogTitle>
                         <DialogContent>
-                            {assignUserDialogExecuting? (
+                            {assignCoordinatorDialogExecuting? (
                                 <CircularProgress />
                             ) : (
                                 <>
                                     <DialogContentText>
-                                        Please select users to be assigned to each other <em>(<u>Admin</u>, <u>Coordinator</u> and <u>Volunteer</u> users are assigned to <u>Client</u> users)</em>.
+                                        Please select <em><u>Coordinators</u></em> to be assigned to each the following <em><u>Collections</u></em>.
                                     </DialogContentText>
                                     <Box mx={1} my={1} boxShadow={0}>
                                         <Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
                                         <Grid item xs container direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
-                                                {managementUserList? (
+                                                {collectionList? (
                                                     <>
                                                         <Grid item xs={11}>
-                                                            <FormControl id="Management-options-label" variant="filled" size="small" fullWidth disabled={!managementUserList}>
+                                                            <FormControl id="Collection-options-label" variant="filled" size="small" fullWidth disabled={!collectionList}>
                                                                 <InputLabel>
-                                                                    Management
+                                                                    Collection
                                                                 </InputLabel>
                                                                 <Select
                                                                     fullWidth
-                                                                    labelId="Management-options-label"
-                                                                    value={currentManagementUser}
-                                                                    onChange={(event) => { selectManagementHandler(event); } }
+                                                                    labelId="Collection-options-label"
+                                                                    value={currentCollection}
+                                                                    onChange={(event) => { selectCollectionHandler(event); } }
+                                                                    //disabled={selectedCollectionList.length >= 1? true: false}
                                                                 >
                                                                     <MenuItem value="">
                                                                         <em>None</em>
                                                                     </MenuItem>
-                                                                    {managementUserList.map( (item, index) => 
+                                                                    {collectionList.map( (item, index) => 
                                                                     {
                                                                         return(
                                                                             <MenuItem key={`SelectOption${item._id}`} value={item._id}
-                                                                                disabled={(selectedManagementUserList.findIndex(oldItem => oldItem._id == item._id) == -1)? false : true}
+                                                                                disabled={(selectedCollectionList.findIndex(oldItem => oldItem._id == item._id) == -1)? false : true}
                                                                             >
                                                                                 <em>{item.name}</em>
                                                                             </MenuItem>  
@@ -468,8 +402,8 @@ const AssignUserDialog = (props) => { // Notice the arrow function... regular fu
                                                             </FormControl>
                                                         </Grid>
                                                         <Grid item xs={1}>
-                                                            <IconButton variant="outlined" size="medium" color="inherit" onClick={ () => { addManagementButtonHandler(); } }
-                                                                disabled={currentManagementUser == ""? true : false}>
+                                                            <IconButton variant="outlined" size="medium" color="inherit" onClick={ () => { addCollectionButtonHandler(); } }
+                                                                disabled={currentCollection == ""? true : false}>
                                                                 <AddCircleIcon />
                                                             </IconButton>
                                                         </Grid>
@@ -479,19 +413,19 @@ const AssignUserDialog = (props) => { // Notice the arrow function... regular fu
                                                 )}
                                             </Grid>
                                             <Grid item xs>
-                                                {(selectedManagementUserList)? (
-                                                     <Collapse in={(selectedManagementUserList.length > 0)? true : false}>
+                                                {(selectedCollectionList)? (
+                                                     <Collapse in={(selectedCollectionList.length > 0)? true : false}>
                                                         <Typography component="div" variant="body2" color="textSecondary" gutterBottom={true}>
-                                                            <em>{"The following selected management users"}</em> <u>{'to be assigned:'}</u>
+                                                            <em>{"The following selected collections"}</em> <u>{'to be assigned:'}</u>
                                                         </Typography>
                                                         <Typography component="div" variant="body2" color="primary" gutterBottom={true}>
                                                             <ol>
-                                                                {selectedManagementUserList.map((item, index) => {
+                                                                {selectedCollectionList.map((item, index) => {
                                                                     return (
                                                                         <li key={`${item._id}${index}`}>
                                                                             {item.name}
                                                                             <IconButton aria-label="delete" className={classes.margin} size="small"
-                                                                                onClick={ (item) => { removeManagementButtonHandler(item); } }
+                                                                                onClick={ (item) => { removeCollectionButtonHandler(item); } }
                                                                             >
                                                                                 <CancelIcon fontSize="inherit" />
                                                                             </IconButton>
@@ -507,38 +441,42 @@ const AssignUserDialog = (props) => { // Notice the arrow function... regular fu
                                                 )}
                                             </Grid>
                                             <Grid item xs container direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
-                                                {clientUserList? (
+                                                {MemberList? (
                                                     <>
                                                         <Grid item xs={11}>
-                                                            <FormControl id="Client-options-label" variant="filled" size="small" fullWidth disabled={!clientUserList}>
+                                                            <FormControl id="Member-options-label" variant="filled" size="small" fullWidth disabled={!MemberList}>
                                                                 <InputLabel>
-                                                                    Client
+                                                                    Coordinator
                                                                 </InputLabel>
                                                                 <Select
                                                                     fullWidth
-                                                                    labelId="Client-options-label"
-                                                                    value={currentClientUser}
-                                                                    onChange={(event) => { selectClientHandler(event); } }
+                                                                    labelId="Member-options-label"
+                                                                    value={currentMember}
+                                                                    onChange={(event) => { selectMemberHandler(event); } }
                                                                 >
                                                                     <MenuItem value="">
                                                                         <em>None</em>
                                                                     </MenuItem>
-                                                                    {clientUserList.map( (item, index) => 
-                                                                    {
+                                                                    {MemberList.map( (item, index) => 
+                                                                    { if(item.role === "Coordinator"){
                                                                         return(
                                                                             <MenuItem key={`SelectOption${item._id}`} value={item._id}
-                                                                                disabled={(selectedClientUserList.findIndex(oldItem => oldItem._id == item._id) == -1)? false : true}
+                                                                                disabled={(selectedMemberList.findIndex(oldItem => oldItem._id == item._id) == -1)? false : true}
                                                                             >
                                                                                 <em>{item.name}</em>
                                                                             </MenuItem>  
                                                                         )
-                                                                    })}
+                                                                    }
+                                                                    else {
+                                                                        return null;
+                                                                    }}
+                                                                    )}
                                                                 </Select>
                                                             </FormControl>
                                                         </Grid>
                                                         <Grid item xs={1}>
-                                                            <IconButton variant="outlined" size="medium" color="inherit" onClick={ () => { addClientButtonHandler(); } }
-                                                                disabled={currentClientUser == ""? true : false}>
+                                                            <IconButton variant="outlined" size="medium" color="inherit" onClick={ () => { addMemberButtonHandler(); } }
+                                                                disabled={currentMember == ""? true : false}>
                                                                 <AddCircleIcon />
                                                             </IconButton>
                                                         </Grid>
@@ -548,19 +486,19 @@ const AssignUserDialog = (props) => { // Notice the arrow function... regular fu
                                                 )}
                                             </Grid>
                                             <Grid item xs>
-                                                {selectedClientUserList? (
-                                                    <Collapse in={(selectedClientUserList.length > 0)? true : false}>
+                                                {selectedMemberList? (
+                                                    <Collapse in={(selectedMemberList.length > 0)? true : false}>
                                                         <Typography component="div" variant="body2" color="textSecondary" gutterBottom={true}>
-                                                            <em>{"The following selected client users"}</em> <u>{'to be assigned by:'}</u>
+                                                            <em>{"The following selected members"}</em> <u>{'to be assigned by:'}</u>
                                                         </Typography>
                                                         <Typography component="div" variant="body2" color="secondary" gutterBottom={true}>
                                                             <ol>
-                                                                {selectedClientUserList.map((item, index) => {
+                                                                {selectedMemberList.map((item, index) => {
                                                                     return (
                                                                         <li key={`${item._id}${index}`}>
                                                                             {item.name}
                                                                             <IconButton aria-label="delete" className={classes.margin} size="small"
-                                                                                onClick={ (item) => { removeClientButtonHandler(item); } }
+                                                                                onClick={ (item) => { removeMemberButtonHandler(item); } }
                                                                             >
                                                                                 <CancelIcon fontSize="inherit" />
                                                                             </IconButton>
@@ -581,11 +519,11 @@ const AssignUserDialog = (props) => { // Notice the arrow function... regular fu
                             )}
                         </DialogContent>
                         <DialogActions>
-                            <Button color="primary" variant="contained" onClick={() => { closeHandler(); }} disabled={assignUserDialogExecuting}>
+                            <Button color="primary" variant="contained" onClick={() => { closeHandler(); }} disabled={assignCoordinatorDialogExecuting}>
                                 Cancel
                             </Button>
-                            <Button color="primary" variant="contained" startIcon={<SupervisorAccountIcon />} onClick={() => { createHandler(); }} disabled={assignUserDialogExecuting}
-                                disabled={(selectedManagementUserList.length > 0 && selectedClientUserList.length > 0)? false : true}
+                            <Button color="primary" variant="contained" startIcon={<SupervisorAccountIcon />} onClick={() => { createHandler(); }} disabled={assignCoordinatorDialogExecuting}
+                                disabled={(selectedCollectionList.length > 0 && selectedMemberList.length > 0)? false : true}
                             >
                                 Assign
                             </Button>
@@ -600,30 +538,30 @@ const AssignUserDialog = (props) => { // Notice the arrow function... regular fu
 }
 
 // ======================== Component PropType Check ========================
-AssignUserDialog.propTypes = 
+AssignCoordinatorDialog.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
     setParentAlert: PropTypes.func.isRequired,
     getParentData: PropTypes.func.isRequired,
-    selectedUserList: PropTypes.arrayOf(PropTypes.object),
-    assignUserDialog: PropTypes.bool.isRequired,
-    setAssignUserDialog: PropTypes.func.isRequired,
-    assignUserDialogExecuting: PropTypes.bool.isRequired,
-    setAssignUserDialogExecuting: PropTypes.func.isRequired
+    selectedDataItemsList: PropTypes.arrayOf(PropTypes.object),
+    assignCoordinatorDialog: PropTypes.bool.isRequired,
+    setAssignCoordinatorDialog: PropTypes.func.isRequired,
+    assignCoordinatorDialogExecuting: PropTypes.bool.isRequired,
+    setAssignCoordinatorDialogExecuting: PropTypes.func.isRequired
 
 }
 
-AssignUserDialog.defaultProps = 
+AssignCoordinatorDialog.defaultProps =
 {
     appState: {},
     setParentAlert: () => {},
     getParentData:  () => {},
-    selectedUserList: {},
-    assignUserDialog: {},
-    setAssignUserDialog: () => {},
-    assignUserDialogExecuting: {},
-    setAssignUserDialogExecuting: () => {}
+    selectedDataItemsList: {},
+    assignCoordinatorDialog: {},
+    setAssignCoordinatorDialog: () => {},
+    assignCoordinatorDialogExecuting: {},
+    setAssignCoordinatorDialogExecuting: () => {}
 }
 
-export default AssignUserDialog;  // You can even shorthand this line by adding this at the function [Component] declaration stage
+export default AssignCoordinatorDialog;  // You can even shorthand this line by adding this at the function [Component] declaration stage

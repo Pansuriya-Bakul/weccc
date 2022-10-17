@@ -109,7 +109,7 @@ const CreateMemberCollectionDialog = (props) => { // Notice the arrow function..
                 });
             }
 
-            console.log(tempArray);
+            // console.log(tempArray);
 
             setMemberList([...tempArray]);
 

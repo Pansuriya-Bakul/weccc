@@ -141,7 +141,23 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                         {
                             if(res.status === 200)
                             {
-                                populateList(res.data.response.users);
+                                if (appState.role === 'Admin') {
+                                    populateList(res.data.response.users)
+                                }
+                                //test coordinator role
+                                else if (appState.role === 'Coordinator') {
+                                    const datatest=[];
+                                    //console.log(appState.facilityId);
+                                    res.data.response.users.forEach(k => {
+                                        if (k.facid == appState.facilityId){
+                                        //console.log(k._id, k.facid);
+                                            datatest.push(k);}
+                                        //    populateList(res.k)
+                                        //}
+                                    });
+                                    //console.log(datatest);
+                                    populateList(datatest); //Edited by P, filter users by facility ID
+                                }
                             }
                             else
                             {
