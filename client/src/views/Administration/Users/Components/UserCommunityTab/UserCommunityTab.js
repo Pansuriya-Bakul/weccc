@@ -9,11 +9,12 @@ import PropTypes from 'prop-types';                     //Development Package to
 
 // ==================== Components ==================
 // import ChangesUserDialog from '../Dialog/ChangesUserDialog';
-
+import UnassignUserDialog from '../../Dialog/UnassignUserDialog';
+import AlertMessage from '../../../../../components/AlertMessage';
 // ==================== Helpers =====================
 import get from '../../../../../helpers/common/get';
 import AlertType from '../../../../../helpers/models/AlertType';
-
+import patch from '../../../../../helpers/common/patch';
 // ==================== MUI =========================
 import { makeStyles } from '@material-ui/core/styles';  // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
 
@@ -43,10 +44,10 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+//import Switch from ' @material-ui/core/Switch';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import { TextField } from '@material-ui/core';
+import { Checkbox, TextField } from '@material-ui/core';
 
 // ==================== MUI Icons ====================
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
@@ -101,9 +102,13 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
         const classes = useStyles();
 
         // Declaration of Stateful Variables ===
-        const { appState, userID, setParentAlert, getParentInfo, panelId, panelIndex, userOriginal } = props;
+        const { appState, userID, setParentAlert, getParentInfo, panelId, panelIndex, userOriginal} = props;
 
         const [userEdit, setUserEdit] = useState(null);
+        const [selectedDataItemsList, setSelectedDataItemsList] = useState([]);
+        const [unassignUserDialog, setUnassignUserDialog] = useState(false);
+        const [unassignUserDialogExecuting, setUnassignUserDialogExecuting] = useState(false);
+        const [alert, setAlert] = useState(new AlertType());
 
     // Functions ===
 
@@ -120,13 +125,62 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
 
         }, [ userOriginal ]);
 
+        const handleClick = useCallback((event, item) => {
+            
+            let previousSelectedIds = selectedDataItemsList.map(elem => elem._id);
+            let selectedIndex = previousSelectedIds.indexOf(item._id);
+            console.log(previousSelectedIds[selectedIndex]);
+            let newSelected = [];
+
+            if (selectedIndex === -1)
+            {
+                newSelected = newSelected.concat(selectedDataItemsList, item);
+            }
+            else if (selectedIndex === 0)
+            {
+                newSelected = newSelected.concat(selectedDataItemsList.slice(1));
+            }
+            else if (selectedIndex === selectedDataItemsList.length - 1)
+            {
+                newSelected = newSelected.concat(selectedDataItemsList.slice(0, -1));
+            }
+            else if (selectedIndex > 0)
+            {
+                newSelected = newSelected.concat(
+                    selectedDataItemsList.slice(0, selectedIndex),
+                    selectedDataItemsList.slice(selectedIndex + 1),
+                );
+            }
+
+            setSelectedDataItemsList(newSelected);
+            console.log(selectedDataItemsList);
+        }, [ selectedDataItemsList, setSelectedDataItemsList ]);
+
+        const isSelected = useCallback((item) => {
+
+            let previousSelectedIds = selectedDataItemsList.map(elem => elem._id);
+            return previousSelectedIds.indexOf(item._id) !== -1;
+
+        }, [ selectedDataItemsList ]);
+
+        const dialogHandler = useCallback(() => {
+          //  setUnassignUserDialogExecuting(true)
+            setUnassignUserDialog(true)
+            
+
+        }, [ setUnassignUserDialog, appState, setParentAlert, selectedDataItemsList]);
+
+
     // Hooks ===
 
         useEffect( () => 
         {
             setUserEdit(userOriginal);
+            
 
         }, [ userOriginal ]);
+
+        
 
         useEffect( () =>
         {
@@ -138,6 +192,8 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
         }, [ panelIndex, panelId, resetInformationProperties]);
 
     // Render Section ===
+       // const isItemSelected = isSelected(item);
+       // const labelId = `enhanced-table-checkbox-${index}`;
 
         return (
             userOriginal != null? (
@@ -147,6 +203,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                     id={`Panel-${panelId}`}
                 >
                     <Collapse in={panelIndex == panelId? true : false}>
+
                         {userEdit? (
                             <Grid
                                 container
@@ -156,6 +213,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                 spacing={1}
                             >
                                 <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
+
                                     <Grid item>
                                         <Typography variant="h6" component="h6">
                                             My Community
@@ -234,10 +292,22 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={12}>
+                                    <UnassignUserDialog
+                                        userEdit = {userEdit}
+                                        unassignUserDialog={unassignUserDialog}
+                                        setUnassignUserDialog={setUnassignUserDialog}
+                                        unassignUserDialogExecuting={unassignUserDialogExecuting}
+                                        setUnassignUserDialogExecuting={setUnassignUserDialogExecuting}
+                                        selectedDataItemsList={selectedDataItemsList}
+                                        setSelectedDataItemsList={setSelectedDataItemsList}
+                                        setParentAlert={setAlert}
+                                        appState={appState}
+                                    />
                                     <Box mx={1} my={1} boxShadow={0}>
                                         <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={3}>
                                             {userEdit.role === "Patient"? (
                                                 <>
+
                                                     <Grid item xs={12}>
                                                         <Typography variant="subtitle2" component="h6" color="textPrimary">
                                                             Assigned Helpers
@@ -250,7 +320,9 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                             variant="outlined" 
                                                             color="primary"
                                                             startIcon={<PersonIcon />}
-                                                            disabled
+                                                            disabled = {selectedDataItemsList.length>0 ? false : true}
+                                                            onClick={() => {dialogHandler();}}
+                                                            //onClick={() => { removeSelectedUsers(); }}
                                                             // onClick={() => { resetInformationProperties(); }}
                                                         >
                                                             remove
@@ -268,6 +340,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                             assign
                                                         </Button>
                                                     </Grid>
+ 
                                                     <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
                                                         <Grid item xs>
                                                             {userEdit.workers? (
@@ -277,15 +350,25 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                                         let link = appState.role === "Admin"? viewUserLinkAdministration : "";
                                                                         link = appState.role === "Coordinator"? viewUserLinkStaff : link;
                                                                         link = appState.role === "Volunteer"? viewUserLinkStaff : link;
+                                                                        const isItemSelected = isSelected(item);
+                                                                        const labelId = `enhanced-table-checkbox-${index}`;
+                                                                        
 
                                                                         return (
+                                                      
+
                                                                             <ListItem key={`helper${index}-${item._id}`} dense={false} divider={true}>
+                                                                                <Checkbox 
+                                                                                    checked={isItemSelected}
+                                                                                    onClick={(event) => handleClick(event, item)}
+                                                                                    inputProps={{ 'aria-labelledby': labelId }}
+                                                                                />
                                                                                 <ListItemAvatar>
                                                                                     <Avatar>
                                                                                         <AccountCircleIcon />
                                                                                     </Avatar>
                                                                                 </ListItemAvatar>
-                                                                                <ListItemText
+                                                                                <ListItemText id={labelId}
                                                                                     primary={item.info? item.info.name : ""}
                                                                                     secondary={item.role? item.role : ""}
                                                                                 />
@@ -300,6 +383,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                                                     
                                                                                 </ListItemSecondaryAction>
                                                                             </ListItem> 
+                                                                    
                                                                         );
                                                                     })}
                                                                 </List>
@@ -325,9 +409,11 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                             variant="outlined" 
                                                             color="primary"
                                                             startIcon={<PersonIcon />}
-                                                            disabled
+                                                            disabled = {selectedDataItemsList.length>0 ? false : true}
                                                             // onClick={() => { resetInformationProperties(); }}
-                                                        >
+                                                            onClick={() => {dialogHandler();}}
+                                                            //onClick={() => { removeSelectedUsers(); }}
+                                                        >   
                                                             remove
                                                         </Button>
                                                     </Grid>
@@ -353,15 +439,22 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                                         let link = appState.role === "Admin"? viewUserLinkAdministration : "";
                                                                         link = appState.role === "Coordinator"? viewUserLinkStaff : link;
                                                                         link = appState.role === "Volunteer"? viewUserLinkStaff : link;
-
+                                                                        const isItemSelected = isSelected(item);
+                                                                        const labelId = `enhanced-table-checkbox-${index}`;
+                                                                        
                                                                         return (
                                                                             <ListItem key={`client${index}-${item._id}`} dense={false} divider={true}>
+                                                                                <Checkbox 
+                                                                                    checked={isItemSelected}
+                                                                                    onClick={(event) => handleClick(event, item)}
+                                                                                    inputProps={{ 'aria-labelledby': labelId }}
+                                                                                />
                                                                                 <ListItemAvatar>
                                                                                     <Avatar>
                                                                                         <AccountCircleIcon />
                                                                                     </Avatar>
                                                                                 </ListItemAvatar>
-                                                                                <ListItemText
+                                                                                <ListItemText id={labelId}
                                                                                     primary={item.info? item.info.name : ""}
                                                                                     secondary={item.role? item.role : ""}
                                                                                 />
@@ -411,7 +504,9 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                             </Grid>
                         )}
                     </Collapse>
-                </div>   
+
+                </div> 
+
             ) : (
                 <>
                 </>

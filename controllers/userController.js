@@ -845,7 +845,7 @@ exports.update = (req, res, next) => {
 				if ('patients' in updatedQuery) {
 					let queryPatients = Object.values(updatedQuery)[0];
 					user.patients.forEach(patient => {
-						if (!queryPatients.includes(patient.valueOf())){
+						if (!queryPatients.includes(patient.valueOf())){ 
 							queryPatients.push(patient.valueOf());
 						}
 					})
@@ -866,6 +866,20 @@ exports.update = (req, res, next) => {
 					}
 				}
 
+				if ('p' in updatedQuery) {
+					let queryPatients = Object.values(updatedQuery)[0];
+					updatedQuery = {
+						patients: queryPatients
+					}
+				}
+
+				if ('w' in updatedQuery) {
+					let queryWorkers = Object.values(updatedQuery)[0];
+					updatedQuery = {
+						workers: queryWorkers
+					}
+				}
+				
 				user.set(updatedQuery);
 				user.save((saveError, updatedUser) => {
 					if (saveError) {
