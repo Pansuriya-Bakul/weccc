@@ -54,7 +54,11 @@ mongoose.connect(
         useNewUrlParser: true,
         useUnifiedTopology: true
     }
-);
+).then(res=>{
+    console.log("DB Connected!")
+}).catch(err => {
+console.log(Error, err.message);
+});
 
 // mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
