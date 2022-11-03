@@ -109,7 +109,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
     const [unassignUserDialog, setUnassignUserDialog] = useState(false);
     const [unassignUserDialogExecuting, setUnassignUserDialogExecuting] = useState(false);
     const [alert, setAlert] = useState(new AlertType());
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isManagement, setIsManagement] = useState(false);
 
     // Functions ===
 
@@ -168,8 +168,8 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
     // Hooks ===
 
     useEffect(() => {
-        if (appState.role === "Admin") {
-            setIsAdmin(true)
+        if (appState.role === "Admin" || appState.role === "Coordinator") {
+            setIsManagement(true)
         }
     }, []);
 
@@ -309,7 +309,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                     </Typography>
                                                     <Divider light />
                                                 </Grid>
-                                                {isAdmin && <Grid item>
+                                                {isManagement && <Grid item>
                                                     <Button
                                                         size="small"
                                                         variant="outlined"
@@ -322,7 +322,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                         remove
                                                     </Button>
                                                 </Grid>}
-                                                {isAdmin && <Grid item>
+                                                {isManagement && <Grid item>
                                                     <Button
                                                         size="small"
                                                         variant="outlined"
@@ -352,7 +352,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
 
 
                                                                         <ListItem key={`helper${index}-${item._id}`} dense={false} divider={true}>
-                                                                            {isAdmin && <Checkbox
+                                                                            {isManagement && <Checkbox
                                                                                 checked={isItemSelected}
                                                                                 onClick={(event) => handleClick(event, item)}
                                                                                 inputProps={{ 'aria-labelledby': labelId }}
@@ -397,7 +397,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                     </Typography>
                                                     <Divider light />
                                                 </Grid>
-                                                {isAdmin && <>
+                                                {isManagement && <>
                                                     <Grid item>
                                                         <Button
                                                             size="small"
@@ -438,7 +438,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
 
                                                                     return (
                                                                         <ListItem key={`client${index}-${item._id}`} dense={false} divider={true}>
-                                                                            {isAdmin && <Checkbox
+                                                                            {isManagement && <Checkbox
                                                                                 checked={isItemSelected}
                                                                                 onClick={(event) => handleClick(event, item)}
                                                                                 inputProps={{ 'aria-labelledby': labelId }}
