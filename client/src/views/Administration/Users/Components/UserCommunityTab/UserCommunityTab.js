@@ -66,22 +66,22 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            flexGrow: 1,     // CSS determined this way, flexbox properties
-            height: '100%'
-        },
-        rootGrid: {
-            height: '100%'
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        flexGrow: 1,     // CSS determined this way, flexbox properties
+        height: '100%'
+    },
+    rootGrid: {
+        height: '100%'
+    }
+}));
 
 
 // ================= Static Variables ================
 const backLink = "/administration/users/management";
 const nameRegex = /^[a-zA-Z]+$/;
-const phoneRegex =/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
+const phoneRegex = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
 const wordsRegex = /^.+$/
 const streetRegex = /^(\d{1,})[a-zA-Z0-9\s]+(\.)?$/;    //WIP currently accepts number only
 const postalCodeRegex = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
@@ -98,132 +98,127 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, userID, setParentAlert, getParentInfo, panelId, panelIndex, userOriginal} = props;
+    // Declaration of Stateful Variables ===
+    const { appState, userID, setParentAlert, getParentInfo, panelId, panelIndex, userOriginal } = props;
 
-        const [userEdit, setUserEdit] = useState(null);
-        const [selectedDataItemsList, setSelectedDataItemsList] = useState([]);
-        const [unassignUserDialog, setUnassignUserDialog] = useState(false);
-        const [unassignUserDialogExecuting, setUnassignUserDialogExecuting] = useState(false);
-        const [alert, setAlert] = useState(new AlertType());
+    const [userEdit, setUserEdit] = useState(null);
+    const [selectedDataItemsList, setSelectedDataItemsList] = useState([]);
+    const [unassignUserDialog, setUnassignUserDialog] = useState(false);
+    const [unassignUserDialogExecuting, setUnassignUserDialogExecuting] = useState(false);
+    const [alert, setAlert] = useState(new AlertType());
+    const [isAdmin, setIsAdmin] = useState(false);
 
     // Functions ===
 
-        const resetInformationProperties = useCallback((event) => 
-        {
-            if(userOriginal)
-            {
-                setUserEdit(
-                    {
-                        ...userOriginal,
-                    }
-                );
-            }
+    const resetInformationProperties = useCallback((event) => {
+        if (userOriginal) {
+            setUserEdit(
+                {
+                    ...userOriginal,
+                }
+            );
+        }
 
-        }, [ userOriginal ]);
+    }, [userOriginal]);
 
-        const handleClick = useCallback((event, item) => {
-            
-            let previousSelectedIds = selectedDataItemsList.map(elem => elem._id);
-            let selectedIndex = previousSelectedIds.indexOf(item._id);
-            console.log(previousSelectedIds[selectedIndex]);
-            let newSelected = [];
+    const handleClick = useCallback((event, item) => {
 
-            if (selectedIndex === -1)
-            {
-                newSelected = newSelected.concat(selectedDataItemsList, item);
-            }
-            else if (selectedIndex === 0)
-            {
-                newSelected = newSelected.concat(selectedDataItemsList.slice(1));
-            }
-            else if (selectedIndex === selectedDataItemsList.length - 1)
-            {
-                newSelected = newSelected.concat(selectedDataItemsList.slice(0, -1));
-            }
-            else if (selectedIndex > 0)
-            {
-                newSelected = newSelected.concat(
-                    selectedDataItemsList.slice(0, selectedIndex),
-                    selectedDataItemsList.slice(selectedIndex + 1),
-                );
-            }
+        let previousSelectedIds = selectedDataItemsList.map(elem => elem._id);
+        let selectedIndex = previousSelectedIds.indexOf(item._id);
+        console.log(previousSelectedIds[selectedIndex]);
+        let newSelected = [];
 
-            setSelectedDataItemsList(newSelected);
-            console.log(selectedDataItemsList);
-        }, [ selectedDataItemsList, setSelectedDataItemsList ]);
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selectedDataItemsList, item);
+        }
+        else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selectedDataItemsList.slice(1));
+        }
+        else if (selectedIndex === selectedDataItemsList.length - 1) {
+            newSelected = newSelected.concat(selectedDataItemsList.slice(0, -1));
+        }
+        else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selectedDataItemsList.slice(0, selectedIndex),
+                selectedDataItemsList.slice(selectedIndex + 1),
+            );
+        }
 
-        const isSelected = useCallback((item) => {
+        setSelectedDataItemsList(newSelected);
+        console.log(selectedDataItemsList);
+    }, [selectedDataItemsList, setSelectedDataItemsList]);
 
-            let previousSelectedIds = selectedDataItemsList.map(elem => elem._id);
-            return previousSelectedIds.indexOf(item._id) !== -1;
+    const isSelected = useCallback((item) => {
 
-        }, [ selectedDataItemsList ]);
+        let previousSelectedIds = selectedDataItemsList.map(elem => elem._id);
+        return previousSelectedIds.indexOf(item._id) !== -1;
 
-        const dialogHandler = useCallback(() => {
-          //  setUnassignUserDialogExecuting(true)
-            setUnassignUserDialog(true)
-            
+    }, [selectedDataItemsList]);
 
-        }, [ setUnassignUserDialog, appState, setParentAlert, selectedDataItemsList]);
+    const dialogHandler = useCallback(() => {
+        //  setUnassignUserDialogExecuting(true)
+        setUnassignUserDialog(true)
 
+
+    }, [setUnassignUserDialog, appState, setParentAlert, selectedDataItemsList]);
 
     // Hooks ===
 
-        useEffect( () => 
-        {
-            setUserEdit(userOriginal);
-            
+    useEffect(() => {
+        if (appState.role === "Admin") {
+            setIsAdmin(true)
+        }
+    }, []);
 
-        }, [ userOriginal ]);
+    useEffect(() => {
+        setUserEdit(userOriginal);
+    }, [userOriginal]);
 
-        
 
-        useEffect( () =>
-        {
-            if(panelIndex !== panelId)
-            {
-                resetInformationProperties();
-            }
 
-        }, [ panelIndex, panelId, resetInformationProperties]);
+    useEffect(() => {
+        if (panelIndex !== panelId) {
+            resetInformationProperties();
+        }
+
+    }, [panelIndex, panelId, resetInformationProperties]);
 
     // Render Section ===
-       // const isItemSelected = isSelected(item);
-       // const labelId = `enhanced-table-checkbox-${index}`;
+    // const isItemSelected = isSelected(item);
+    // const labelId = `enhanced-table-checkbox-${index}`;
 
-        return (
-            userOriginal != null? (
-                <div
-                    role="tabpanel"
-                    hidden={panelIndex !== panelId}
-                    id={`Panel-${panelId}`}
-                >
-                    <Collapse in={panelIndex == panelId? true : false}>
+    return (
+        userOriginal != null ? (
+            <div
+                role="tabpanel"
+                hidden={panelIndex !== panelId}
+                id={`Panel-${panelId}`}
+            >
+                <Collapse in={panelIndex == panelId ? true : false}>
 
-                        {userEdit? (
-                            <Grid
-                                container
-                                direction="column"
-                                justifyContent="flex-start"
-                                alignItems="stretch"
-                                spacing={1}
-                            >
-                                <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
+                    {userEdit ? (
+                        <Grid
+                            container
+                            direction="column"
+                            justifyContent="flex-start"
+                            alignItems="stretch"
+                            spacing={1}
+                        >
+                            <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
 
-                                    <Grid item>
-                                        <Typography variant="h6" component="h6">
-                                            My Community
-                                        </Typography>
-                                        <Divider />
-                                    </Grid>
-                                    <Grid item xs>
-                                        <Box mx={3} my={1} boxShadow={0}>
-                                            <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                                                {/* <Grid item>
+                                <Grid item>
+                                    <Typography variant="h6" component="h6">
+                                        My Community
+                                    </Typography>
+                                    <Divider />
+                                </Grid>
+                                <Grid item xs>
+                                    <Box mx={3} my={1} boxShadow={0}>
+                                        <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                                            {/* <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
                                                         title="Unlock editable fields"
@@ -277,249 +272,248 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                         </Typography>
                                                     </Collapse>
                                                 </Grid> */}
-                                            </Grid>
-                                        </Box>
-                                    </Grid>
-                                    <Grid item>
-                                        <Tooltip
-                                            placement="left"
-                                            title="This page views user information."
-                                        >
-                                            <IconButton>
-                                                <HelpOutlineIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <UnassignUserDialog
-                                        userEdit = {userEdit}
-                                        unassignUserDialog={unassignUserDialog}
-                                        setUnassignUserDialog={setUnassignUserDialog}
-                                        unassignUserDialogExecuting={unassignUserDialogExecuting}
-                                        setUnassignUserDialogExecuting={setUnassignUserDialogExecuting}
-                                        selectedDataItemsList={selectedDataItemsList}
-                                        setSelectedDataItemsList={setSelectedDataItemsList}
-                                        setParentAlert={setAlert}
-                                        appState={appState}
-                                    />
-                                    <Box mx={1} my={1} boxShadow={0}>
-                                        <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={3}>
-                                            {userEdit.role === "Patient"? (
-                                                <>
-
-                                                    <Grid item xs={12}>
-                                                        <Typography variant="subtitle2" component="h6" color="textPrimary">
-                                                            Assigned Helpers
-                                                        </Typography>
-                                                        <Divider light/>
-                                                    </Grid>
-                                                    <Grid item>
-                                                        <Button 
-                                                            size="small" 
-                                                            variant="outlined" 
-                                                            color="primary"
-                                                            startIcon={<PersonIcon />}
-                                                            disabled = {selectedDataItemsList.length>0 ? false : true}
-                                                            onClick={() => {dialogHandler();}}
-                                                            //onClick={() => { removeSelectedUsers(); }}
-                                                            // onClick={() => { resetInformationProperties(); }}
-                                                        >
-                                                            remove
-                                                        </Button>
-                                                    </Grid>
-                                                    <Grid item>
-                                                        <Button 
-                                                            size="small" 
-                                                            variant="outlined" 
-                                                            color="secondary"
-                                                            startIcon={<PersonIcon />}
-                                                            disabled
-                                                            // onClick={() => { resetInformationProperties(); }}
-                                                        >
-                                                            assign
-                                                        </Button>
-                                                    </Grid>
- 
-                                                    <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
-                                                        <Grid item xs>
-                                                            {userEdit.workers? (
-                                                                <List dense={false}>
-                                                                    {userEdit.workers.map( (item, index) => {
-
-                                                                        let link = appState.role === "Admin"? viewUserLinkAdministration : "";
-                                                                        link = appState.role === "Coordinator"? viewUserLinkStaff : link;
-                                                                        link = appState.role === "Volunteer"? viewUserLinkStaff : link;
-                                                                        const isItemSelected = isSelected(item);
-                                                                        const labelId = `enhanced-table-checkbox-${index}`;
-                                                                        
-
-                                                                        return (
-                                                      
-
-                                                                            <ListItem key={`helper${index}-${item._id}`} dense={false} divider={true}>
-                                                                                <Checkbox 
-                                                                                    checked={isItemSelected}
-                                                                                    onClick={(event) => handleClick(event, item)}
-                                                                                    inputProps={{ 'aria-labelledby': labelId }}
-                                                                                />
-                                                                                <ListItemAvatar>
-                                                                                    <Avatar>
-                                                                                        <AccountCircleIcon />
-                                                                                    </Avatar>
-                                                                                </ListItemAvatar>
-                                                                                <ListItemText id={labelId}
-                                                                                    primary={item.info? item.info.name : ""}
-                                                                                    secondary={item.role? item.role : ""}
-                                                                                />
-                                                                                <ListItemSecondaryAction>
-                                                                                    
-                                                                                        <IconButton edge="end" aria-label="edit" size="small"
-                                                                                            disabled
-                                                                                            component={Link} to={link + "/users/view/" + item._id}
-                                                                                        >
-                                                                                            <VisibilityIcon/>
-                                                                                        </IconButton>
-                                                                                    
-                                                                                </ListItemSecondaryAction>
-                                                                            </ListItem> 
-                                                                    
-                                                                        );
-                                                                    })}
-                                                                </List>
-                                                            ) : (
-                                                                <Typography variant="body2" component="h6" color="textPrimary">
-                                                                    None available
-                                                                </Typography>
-                                                            )}
-                                                        </Grid>
-                                                    </Grid>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Grid item xs={12}>
-                                                        <Typography variant="subtitle2" component="h6" color="textPrimary">
-                                                            Assigned Clients
-                                                        </Typography>
-                                                        <Divider light/>
-                                                    </Grid>
-                                                    <Grid item>
-                                                        <Button 
-                                                            size="small" 
-                                                            variant="outlined" 
-                                                            color="primary"
-                                                            startIcon={<PersonIcon />}
-                                                            disabled = {selectedDataItemsList.length>0 ? false : true}
-                                                            // onClick={() => { resetInformationProperties(); }}
-                                                            onClick={() => {dialogHandler();}}
-                                                            //onClick={() => { removeSelectedUsers(); }}
-                                                        >   
-                                                            remove
-                                                        </Button>
-                                                    </Grid>
-                                                    <Grid item>
-                                                        <Button 
-                                                            size="small" 
-                                                            variant="outlined" 
-                                                            color="secondary"
-                                                            startIcon={<PersonIcon />}
-                                                            disabled
-                                                            // onClick={() => { resetInformationProperties(); }}
-                                                        >
-                                                            assign
-                                                        </Button>
-                                                    </Grid>
-                                                    <Grid item xs></Grid>
-                                                    <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
-                                                        <Grid item xs>
-                                                            {userEdit.patients? (
-                                                                <List dense={false}>
-                                                                    {userEdit.patients.map( (item, index) => {
-
-                                                                        let link = appState.role === "Admin"? viewUserLinkAdministration : "";
-                                                                        link = appState.role === "Coordinator"? viewUserLinkStaff : link;
-                                                                        link = appState.role === "Volunteer"? viewUserLinkStaff : link;
-                                                                        const isItemSelected = isSelected(item);
-                                                                        const labelId = `enhanced-table-checkbox-${index}`;
-                                                                        
-                                                                        return (
-                                                                            <ListItem key={`client${index}-${item._id}`} dense={false} divider={true}>
-                                                                                <Checkbox 
-                                                                                    checked={isItemSelected}
-                                                                                    onClick={(event) => handleClick(event, item)}
-                                                                                    inputProps={{ 'aria-labelledby': labelId }}
-                                                                                />
-                                                                                <ListItemAvatar>
-                                                                                    <Avatar>
-                                                                                        <AccountCircleIcon />
-                                                                                    </Avatar>
-                                                                                </ListItemAvatar>
-                                                                                <ListItemText id={labelId}
-                                                                                    primary={item.info? item.info.name : ""}
-                                                                                    secondary={item.role? item.role : ""}
-                                                                                />
-                                                                                <ListItemSecondaryAction>
-                                                                                
-                                                                                        <IconButton edge="end" aria-label="edit" size="small"
-                                                                                            disabled={item._id === appState._id? true : false}
-                                                                                            component={Link} to={link + "/users/view/" + item._id}
-                                                                                        >
-                                                                                            <VisibilityIcon/>
-                                                                                        </IconButton>
-                                                                                    
-                                                                                </ListItemSecondaryAction>
-                                                                            </ListItem> 
-                                                                        );
-                                                                    })}
-                                                                </List>
-                                                            ) : (
-                                                                <Typography variant="body2" component="h6" color="textPrimary">
-                                                                    None available
-                                                                </Typography>
-                                                            )}
-                                                        </Grid>
-                                                    </Grid>
-                                                </>
-                                            )}
-                                            
                                         </Grid>
                                     </Box>
                                 </Grid>
-                            </Grid>
-                        ) : (
-                            <Grid
-                                container
-                                direction="column"
-                                justifyContent="flex-start"
-                                alignItems="stretch"
-                                spacing={1}
-                            >
-                                <Grid item xs={12} container direction="row" justifyContent="center" alignItems="stretch" spacing={1}>
-                                    <Grid item>
-                                        <Box mx={1} my={1} boxShadow={0}>
-                                            <CircularProgress />
-                                        </Box>
-                                    </Grid>
+                                <Grid item>
+                                    <Tooltip
+                                        placement="left"
+                                        title="This page views user information."
+                                    >
+                                        <IconButton>
+                                            <HelpOutlineIcon />
+                                        </IconButton>
+                                    </Tooltip>
                                 </Grid>
                             </Grid>
-                        )}
-                    </Collapse>
+                            <Grid item xs={12}>
+                                <UnassignUserDialog
+                                    userEdit={userEdit}
+                                    unassignUserDialog={unassignUserDialog}
+                                    setUnassignUserDialog={setUnassignUserDialog}
+                                    unassignUserDialogExecuting={unassignUserDialogExecuting}
+                                    setUnassignUserDialogExecuting={setUnassignUserDialogExecuting}
+                                    selectedDataItemsList={selectedDataItemsList}
+                                    setSelectedDataItemsList={setSelectedDataItemsList}
+                                    setParentAlert={setAlert}
+                                    appState={appState}
+                                />
+                                <Box mx={1} my={1} boxShadow={0}>
+                                    <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={3}>
+                                        {userEdit.role === "Patient" ? (
+                                            <>
 
-                </div> 
+                                                <Grid item xs={12}>
+                                                    <Typography variant="subtitle2" component="h6" color="textPrimary">
+                                                        Assigned Helpers
+                                                    </Typography>
+                                                    <Divider light />
+                                                </Grid>
+                                                {isAdmin && <Grid item>
+                                                    <Button
+                                                        size="small"
+                                                        variant="outlined"
+                                                        color="primary"
+                                                        startIcon={<PersonIcon />}
+                                                        disabled={selectedDataItemsList.length > 0 ? false : true}
+                                                        onClick={() => { dialogHandler(); }}
+                                                    // onClick={() => { resetInformationProperties(); }}
+                                                    >
+                                                        remove
+                                                    </Button>
+                                                </Grid>}
+                                                {isAdmin && <Grid item>
+                                                    <Button
+                                                        size="small"
+                                                        variant="outlined"
+                                                        color="secondary"
+                                                        startIcon={<PersonIcon />}
+                                                        disabled
+                                                    // onClick={() => { resetInformationProperties(); }}
+                                                    >
+                                                        assign
+                                                    </Button>
+                                                </Grid>}
 
-            ) : (
-                <>
-                </>
-                // <Typography variant="h6" color="inherit" align="center" gutterBottom>
-                //     Not Authorized. Please refresh and try again.
-                // </Typography>
-            )
-            
-        );
+                                                <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
+                                                    <Grid item xs>
+                                                        {userEdit.workers ? (
+                                                            <List dense={false}>
+                                                                {userEdit.workers.map((item, index) => {
+
+                                                                    let link = appState.role === "Admin" ? viewUserLinkAdministration : "";
+                                                                    link = appState.role === "Coordinator" ? viewUserLinkStaff : link;
+                                                                    link = appState.role === "Volunteer" ? viewUserLinkStaff : link;
+                                                                    const isItemSelected = isSelected(item);
+                                                                    const labelId = `enhanced-table-checkbox-${index}`;
+
+
+                                                                    return (
+
+
+                                                                        <ListItem key={`helper${index}-${item._id}`} dense={false} divider={true}>
+                                                                            {isAdmin && <Checkbox
+                                                                                checked={isItemSelected}
+                                                                                onClick={(event) => handleClick(event, item)}
+                                                                                inputProps={{ 'aria-labelledby': labelId }}
+                                                                            />}
+                                                                            <ListItemAvatar>
+                                                                                <Avatar>
+                                                                                    <AccountCircleIcon />
+                                                                                </Avatar>
+                                                                            </ListItemAvatar>
+                                                                            <ListItemText id={labelId}
+                                                                                primary={item.info ? item.info.name : ""}
+                                                                                secondary={item.role ? item.role : ""}
+                                                                            />
+                                                                            <ListItemSecondaryAction>
+
+                                                                                <IconButton edge="end" aria-label="edit" size="small"
+                                                                                    disabled
+                                                                                    component={Link} to={link + "/users/view/" + item._id}
+                                                                                >
+                                                                                    <VisibilityIcon />
+                                                                                </IconButton>
+
+                                                                            </ListItemSecondaryAction>
+                                                                        </ListItem>
+
+                                                                    );
+                                                                })}
+                                                            </List>
+                                                        ) : (
+                                                            <Typography variant="body2" component="h6" color="textPrimary">
+                                                                None available
+                                                            </Typography>
+                                                        )}
+                                                    </Grid>
+                                                </Grid>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Grid item xs={12}>
+                                                    <Typography variant="subtitle2" component="h6" color="textPrimary">
+                                                        Assigned Clients
+                                                    </Typography>
+                                                    <Divider light />
+                                                </Grid>
+                                                {isAdmin && <>
+                                                    <Grid item>
+                                                        <Button
+                                                            size="small"
+                                                            variant="outlined"
+                                                            color="primary"
+                                                            startIcon={<PersonIcon />}
+                                                            disabled={selectedDataItemsList.length > 0 ? false : true}
+                                                            // onClick={() => { resetInformationProperties(); }}
+                                                            onClick={() => { dialogHandler(); }}
+                                                        >
+                                                            remove
+                                                        </Button>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Button
+                                                            size="small"
+                                                            variant="outlined"
+                                                            color="secondary"
+                                                            startIcon={<PersonIcon />}
+                                                            disabled
+                                                        // onClick={() => { resetInformationProperties(); }}
+                                                        >
+                                                            assign
+                                                        </Button>
+                                                    </Grid>
+                                                </>}
+                                                <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
+                                                    <Grid item xs>
+                                                        {userEdit.patients ? (
+                                                            <List dense={false}>
+                                                                {userEdit.patients.map((item, index) => {
+
+                                                                    let link = appState.role === "Admin" ? viewUserLinkAdministration : "";
+                                                                    link = appState.role === "Coordinator" ? viewUserLinkStaff : link;
+                                                                    link = appState.role === "Volunteer" ? viewUserLinkStaff : link;
+                                                                    const isItemSelected = isSelected(item);
+                                                                    const labelId = `enhanced-table-checkbox-${index}`;
+
+                                                                    return (
+                                                                        <ListItem key={`client${index}-${item._id}`} dense={false} divider={true}>
+                                                                            {isAdmin && <Checkbox
+                                                                                checked={isItemSelected}
+                                                                                onClick={(event) => handleClick(event, item)}
+                                                                                inputProps={{ 'aria-labelledby': labelId }}
+                                                                            />}
+                                                                            <ListItemAvatar>
+                                                                                <Avatar>
+                                                                                    <AccountCircleIcon />
+                                                                                </Avatar>
+                                                                            </ListItemAvatar>
+                                                                            <ListItemText id={labelId}
+                                                                                primary={item.info ? item.info.name : ""}
+                                                                                secondary={item.role ? item.role : ""}
+                                                                            />
+                                                                            <ListItemSecondaryAction>
+
+                                                                                <IconButton edge="end" aria-label="edit" size="small"
+                                                                                    disabled={item._id === appState._id ? true : false}
+                                                                                    component={Link} to={link + "/users/view/" + item._id}
+                                                                                >
+                                                                                    <VisibilityIcon />
+                                                                                </IconButton>
+
+                                                                            </ListItemSecondaryAction>
+                                                                        </ListItem>
+                                                                    );
+                                                                })}
+                                                            </List>
+                                                        ) : (
+                                                            <Typography variant="body2" component="h6" color="textPrimary">
+                                                                None available
+                                                            </Typography>
+                                                        )}
+                                                    </Grid>
+                                                </Grid>
+                                            </>
+                                        )}
+
+                                    </Grid>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    ) : (
+                        <Grid
+                            container
+                            direction="column"
+                            justifyContent="flex-start"
+                            alignItems="stretch"
+                            spacing={1}
+                        >
+                            <Grid item xs={12} container direction="row" justifyContent="center" alignItems="stretch" spacing={1}>
+                                <Grid item>
+                                    <Box mx={1} my={1} boxShadow={0}>
+                                        <CircularProgress />
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    )}
+                </Collapse>
+
+            </div>
+
+        ) : (
+            <>
+            </>
+            // <Typography variant="h6" color="inherit" align="center" gutterBottom>
+            //     Not Authorized. Please refresh and try again.
+            // </Typography>
+        )
+
+    );
 }
 
 // ======================== Component PropType Check ========================
-UserCommunityTab.propTypes = 
+UserCommunityTab.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -531,12 +525,12 @@ UserCommunityTab.propTypes =
     userOriginal: PropTypes.object
 }
 
-UserCommunityTab.defaultProps = 
+UserCommunityTab.defaultProps =
 {
     appState: {},
     userID: null,
-    setParentAlert: () => {},
-    getParentInfo: () => {},
+    setParentAlert: () => { },
+    getParentInfo: () => { },
     panelId: null,
     panelIndex: null,
     userOriginal: {}
