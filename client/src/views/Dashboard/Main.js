@@ -32,7 +32,9 @@ class Main extends Component {
 		this.state = {
 			render: false,
 			clientData: [],
-			clientSurvey: ''
+			clientSurvey: '',
+			quote: '',
+			author: ''
 		};
 	}
 
@@ -76,8 +78,12 @@ class Main extends Component {
 			return response.json();
 		})
 		.then(function(data) {
+			var today = new Date();
+			var dd = parseInt(String(today.getDate()).padStart(2, '0'));
+			var mm = parseInt(String(today.getMonth() + 1).padStart(2, '0')); //January is 0!
+			var num = mm + dd;
 			var count = Object.keys(data).length - 1;
-			var randomnumber = Math.floor(Math.random() * (count + 1));
+			var randomnumber = Math.floor(count / num);
 			return data[randomnumber];
 		});
 	};
@@ -93,6 +99,7 @@ class Main extends Component {
 		}
 
 		this.checkAuth();
+
 		this.getQuote().then(response => {
 			this.setState({quote : response['text']});
 			this.setState({author : response['author']});
