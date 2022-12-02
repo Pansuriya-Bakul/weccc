@@ -15,6 +15,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Dashboard from '@material-ui/icons/Dashboard';
 import { CircularProgress } from '@material-ui/core';
+import FormatQuoteIcon from '@material-ui/icons/FormatQuote';
 
 const styles = theme => ({
 	bullet: {
@@ -68,6 +69,19 @@ class Main extends Component {
 			}
 		}); // call the get request.
 	};
+	
+	getQuote = () => {
+		return fetch("https://type.fit/api/quotes")
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(data) {
+			var count = Object.keys(data).length - 1;
+			var randomnumber = Math.floor(Math.random() * (count + 1));
+			return data[randomnumber];
+		});
+	};
+
 
 	componentDidMount = () => {
 		let { appState } = this.props;
@@ -79,6 +93,10 @@ class Main extends Component {
 		}
 
 		this.checkAuth();
+		this.getQuote().then(response => {
+			this.setState({quote : response['text']});
+			this.setState({author : response['author']});
+		});;
 	};
 
 
@@ -203,6 +221,28 @@ class Main extends Component {
 							</Card>
 						</Grid>
 					)}
+					<Grid item xs={12} container direction="row" justifyContent="space-evenly" alignItems="stretch" spacing={4}>
+						<Grid item xs={4}>
+							<Card variant="outlined" style={{ backgroundColor: 'aliceblue' }}>
+								<CardContent>
+									<Typography color="textSecondary" gutterBottom>
+										<FormatQuoteIcon fontSize='large'/>
+									</Typography>
+									<Typography variant="h6" component="h2">
+										Word{this.bull}of{this.bull}the{this.bull}Day
+									</Typography>
+									<br/>
+									<Typography variant="body2" component="p">
+										{this.state.quote}
+									</Typography>
+									<br/>
+									<Typography className={classes.pos} color="textSecondary">
+										{this.state.author}
+									</Typography>
+								</CardContent>
+							</Card>
+						</Grid>
+					</Grid>
 				</Grid>
 			);
 		} else {
