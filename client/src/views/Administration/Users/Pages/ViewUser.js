@@ -279,7 +279,7 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                     {appState.role == "Volunteer"? (
                                     <Tabs value={panelIndex} onChange={(event, newValue) => { panelHandler(event, newValue); } } aria-label="Account Tabs">
                                         {/* <Tab label="Collections"  id={`Tab-${0}`} aria-controls={`Tab-${0}`} /> */}
-                                        <Tab label="Community"  id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
+                                        {/* <Tab label="Community"  id={`Tab-${0}`} aria-controls={`Tab-${0}`} /> */}
                                         <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
                                         <Tab label="Information" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
                                         <Tab label="Properties" id={`Tab-${3}`} aria-controls={`Tab-${3}`} />

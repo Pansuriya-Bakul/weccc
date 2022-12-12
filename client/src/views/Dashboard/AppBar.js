@@ -138,7 +138,7 @@ class AppBarContent extends Component
                 <div className={classes.grow}>
                 <Typography variant="h6" color="inherit" noWrap>
                     <Button color="inherit" component={Link} to="/">
-                        Windsor Essex Community Compassion Care IMS   
+                        Health and Wellness Friendly Communities Platform (IMS)   
                     </Button>
                 </Typography>
                 </div>

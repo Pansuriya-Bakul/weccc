@@ -1034,7 +1034,7 @@ exports.fullread = (req, res, next) => {
 											return {
 												_id: memberSurvey._id,
 												patientId: memberSurvey.patientId,
-												name: memberSurvey.name,
+												name: (memberSurvey.name.length > 60 ? key_private.decrypt(memberSurvey.name, 'utf8') : memberSurvey.name),
 												surveyJSON: memberSurvey.surveyJSON,
 												responseJSON: memberSurvey.responseJSON,
 												completeStatus: memberSurvey.completeStatus,
@@ -1294,7 +1294,14 @@ exports.findClientSurveys = (req, res, next) => {
 							surveys: surveysNotCompleted,
 							notCompletedSurveys: surveysNotCompletedNames,
 							completedSurveys: surveysCompletedNames,
-							info: user.info,
+							info: {
+								pastAddresses: user.info.pastAddresses,
+								name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
+								gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
+								dateOfBirth: user.info.dateOfBirth,
+								language: user.info.language,
+								currentAddress: user.info.currentAddress
+							},
 							id: id
 						});
 					}
@@ -1304,7 +1311,14 @@ exports.findClientSurveys = (req, res, next) => {
 							surveys: surveysNotCompleted,
 							notCompletedSurveys: surveysNotCompletedNames,
 							completedSurveys: surveysCompletedNames,
-							info: user.info,
+							info: {
+								pastAddresses: user.info.pastAddresses,
+								name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
+								gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
+								dateOfBirth: user.info.dateOfBirth,
+								language: user.info.language,
+								currentAddress: user.info.currentAddress
+							},
 							id: id
 						});
 					}

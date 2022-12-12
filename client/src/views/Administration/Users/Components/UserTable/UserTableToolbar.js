@@ -239,11 +239,6 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                             </IconButton>
                         </Tooltip> */}
                             
-                        <Tooltip title="Delete">
-                            <IconButton aria-label="delete" onClick={() => deleteHandler()}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </Tooltip>
                         <Tooltip title="Neighbour's Report">
                             <IconButton aria-label="edit" component={Link} to={reportUrl} >
                                 <Ballot/>
@@ -252,6 +247,11 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                         <Tooltip title="Social Report">
                             <IconButton aria-label="edit" component={Link} to={reportUrl1} >
                                 <ImageSearchIcon/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                            <IconButton aria-label="delete" onClick={() => deleteHandler()}>
+                                <DeleteIcon />
                             </IconButton>
                         </Tooltip>
                     </>
