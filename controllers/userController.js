@@ -896,9 +896,6 @@ exports.update = (req, res, next) => {
 
 					log.info('User with id ' + id + ' updated');
 					
-					console.log("INFOOOO");
-					console.log(query.info);
-					
 					try {	
 						if (Object.keys(query.info.currentAddress).length > 1){
 							Address.findById(query.info.currentAddress._id, (error, address) => {
