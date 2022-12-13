@@ -896,23 +896,30 @@ exports.update = (req, res, next) => {
 
 					log.info('User with id ' + id + ' updated');
 					
-					if (Object.keys(query.info.currentAddress).length > 1){
-						Address.findById(query.info.currentAddress._id, (error, address) => {
-							if (error) {
-								log.error(error.message);
-				
-								return res.status(404).json({
-									message: error.message
-								});
-							} else {
-								let addressQuery = query.info.currentAddress;
-								address.set(addressQuery);
-								address.save();
+					console.log("INFOOOO");
+					console.log(query.info);
+					
+					try {	
+						if (Object.keys(query.info.currentAddress).length > 1){
+							Address.findById(query.info.currentAddress._id, (error, address) => {
+								if (error) {
+									log.error(error.message);
+					
+									return res.status(404).json({
+										message: error.message
+									});
+								} else {
+									let addressQuery = query.info.currentAddress;
+									address.set(addressQuery);
+									address.save();
 
-							}
-						})
+								}
+							})
+						}
+					} catch (error) {
+						console.log(error);
 					}
-
+					
 					return res.status(200).json({
 						user: updatedUser,
 						request: {
