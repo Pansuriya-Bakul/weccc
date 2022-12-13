@@ -121,7 +121,7 @@ class Dashboard extends Component
     toggleDrawerClose = () =>
     {
         this.setState({
-            drawerOpen: false
+            drawerOpen: true
         });
     }
 

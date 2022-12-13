@@ -306,13 +306,15 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
                                                     Table Options
                                                 </Typography>
                                             </Grid>
-                                            <Grid item>
-                                                <FormControlLabel
-                                                    control={<Switch checked={isDense} onChange={ (event) => { compactHandler(event); }} />}
-                                                    label="Compact"
-                                                    labelPlacement="end"
-                                                />
-                                            </Grid>
+                                            {appState.role != "Volunteer"? (
+                                                <Grid item>
+                                                    <FormControlLabel
+                                                        control={<Switch checked={isDense} onChange={ (event) => { compactHandler(event); }} />}
+                                                        label="Compact"
+                                                        labelPlacement="end"
+                                                    />
+                                                </Grid>
+                                            ) :(<></>)}
                                             <Grid item>
                                                 <FormControl id="search-filter-select-label" variant="filled" size="small" style={{minWidth: 140}} disabled={dataList? false : true}>
                                                     <InputLabel>

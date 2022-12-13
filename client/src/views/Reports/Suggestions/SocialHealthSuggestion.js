@@ -3,8 +3,6 @@ import Typography from '@material-ui/core/Typography';  //h1, p replacement Tag
 import SocialHealthAlert from "../ConcernAlerts/SocialHealthAlert"
 
 var Null_Values = sessionStorage.getItem("Null_Values");
-console.log("NUUUUUUUUULL", Null_Values);
-
 
 export default class SocialHealthSuggestion extends Component {
 
