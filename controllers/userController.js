@@ -577,7 +577,8 @@ exports.read = (req, res, next) => {
 							gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
 							dateOfBirth: user.info.dateOfBirth,
 							language: user.info.language,
-							currentAddress: user.info.currentAddress
+							currentAddress: user.info.currentAddress,
+							phone: user.info.phone,
 						},
 						research: {
 							enabled: user.research.enabled,
@@ -591,7 +592,8 @@ exports.read = (req, res, next) => {
 										gender: (patients.info.gender.length > 60 ? key_private.decrypt(patients.info.gender, 'utf8') : patients.info.gender),
 										dateOfBirth: patients.info.dateOfBirth,
 										language: patients.info.language,
-										currentAddress: patients.info.currentAddress
+										currentAddress: patients.info.currentAddress,
+										phone: patients.info.phone,
 									},
 									research: patients.research,
 									patients: patients.patients,
@@ -683,7 +685,8 @@ exports.readall = (req, res, next) => {
 								gender: (user.info.name.gender > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
 								dateOfBirth: user.info.dateOfBirth,
 								language: user.info.language,
-								currentAddress: user.info.currentAddress
+								currentAddress: user.info.currentAddress,
+								phone: user.info.phone,
 							},
 							research: user.research,
 							createdAt: user.createdAt,
@@ -742,7 +745,8 @@ exports.query = (req, res, next) => {
 							gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
 							dateOfBirth: user.info.dateOfBirth,
 							language: user.info.language,
-							currentAddress: user.info.currentAddress
+							currentAddress: user.info.currentAddress,
+							phone: user.info.phone,
 						},
 						patients: user.patients,
 						workers: user.workers,
@@ -879,7 +883,7 @@ exports.update = (req, res, next) => {
 						workers: queryWorkers
 					}
 				}
-				
+
 				user.set(updatedQuery);
 				user.save((saveError, updatedUser) => {
 					if (saveError) {
@@ -891,6 +895,23 @@ exports.update = (req, res, next) => {
 					}
 
 					log.info('User with id ' + id + ' updated');
+					
+					if (Object.keys(query.info.currentAddress).length > 1){
+						Address.findById(query.info.currentAddress._id, (error, address) => {
+							if (error) {
+								log.error(error.message);
+				
+								return res.status(404).json({
+									message: error.message
+								});
+							} else {
+								let addressQuery = query.info.currentAddress;
+								address.set(addressQuery);
+								address.save();
+
+							}
+						})
+					}
 
 					return res.status(200).json({
 						user: updatedUser,
@@ -1300,7 +1321,8 @@ exports.findClientSurveys = (req, res, next) => {
 								gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
 								dateOfBirth: user.info.dateOfBirth,
 								language: user.info.language,
-								currentAddress: user.info.currentAddress
+								currentAddress: user.info.currentAddress,
+								phone: user.info.phone,
 							},
 							id: id
 						});
@@ -1317,7 +1339,8 @@ exports.findClientSurveys = (req, res, next) => {
 								gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
 								dateOfBirth: user.info.dateOfBirth,
 								language: user.info.language,
-								currentAddress: user.info.currentAddress
+								currentAddress: user.info.currentAddress,
+								phone: user.info.phone,
 							},
 							id: id
 						});
