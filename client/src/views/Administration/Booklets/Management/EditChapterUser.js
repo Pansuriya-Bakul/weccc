@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';                     //Development Package to
 // ==================== Components ==================
 import PullChapterDialog from '../Dialog/PullChapterDialog';
 import SaveChapterDialog from '../Dialog/SaveChapterDialog';
+import MarkCompleteChapterDialog from '../Dialog/MarkCompleteChapterDialog';
 import AlertMessage from '../../../../components/AlertMessage';
 
 // import 'nouislider/dist/nouislider.css'; This is the newer 15.5.0 version
@@ -61,6 +62,7 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import ReplayIcon from '@material-ui/icons/Replay';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import DoneIcon from '@material-ui/icons/Done'
 
 // ================= Static Variables ================
 const backLink = "/administration/booklets/management";
@@ -119,11 +121,16 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
 
         const [progress, setProgress] = useState(false);
 
+        const [editable, setEditable] = useState(true);
+
         const [saveChapterDialog, setSaveChapterDialog] = useState(false);
         const [saveChapterDialogExecuting, setSaveChapterDialogExecuting] = useState(false);
 
         const [pullChapterDialog, setPullChapterDialog] = useState(false);
         const [pullChapterDialogExecuting, setPullChapterDialogExecuting] = useState(false);
+
+        const [markCompleteChapterDialog, setMarkCompleteChapterDialog] = useState(false);
+        const [markCompleteChapterDialogExecuting, setMarkCompleteChapterDialogExecuting] = useState(false);
 
         // Alert variable
         const [alert, setAlert] = useState(new AlertType());
@@ -194,7 +201,14 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
             setPullChapterDialog(true);
         }, [ ]);
 
-        
+        const markCompleteHandler = useCallback(() => 
+        {
+            if(chapterCopy != null)
+            {
+                setMarkCompleteChapterDialog(true);
+            }
+        }, [ chapterCopy ]);
+
         // const restoreHandler = useCallback(() => 
         // {
         //     setChapterCopy(chapterOriginal);
@@ -410,6 +424,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                                 variant="contained" 
                                                                                 color="secondary"
                                                                                 startIcon={<VisibilityIcon />}
+                                                                                disabled={!editable}
                                                                                 component={Link}
                                                                                 to={`/administration/booklets/user/view/${ChapterID}`}
                                                                             >
@@ -432,28 +447,13 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                             variant="contained" 
                                                                             color="primary"
                                                                             startIcon={<RefreshIcon />}
+                                                                            disabled={!editable}
                                                                             onClick={() => { pullHandler(); }}
                                                                         >
                                                                             Refresh
                                                                         </Button>
                                                                     </Tooltip> 
                                                                 </Grid>
-                                                                {/* <Grid item>
-                                                                    <Tooltip
-                                                                        placement="bottom"
-                                                                        title="Restore Chapter"
-                                                                    >
-                                                                        <Button 
-                                                                            size="small" 
-                                                                            variant="contained" 
-                                                                            color="primary"
-                                                                            startIcon={<RestoreIcon />}
-                                                                            onClick={() => { restoreHandler(); }}
-                                                                        >
-                                                                            Restore
-                                                                        </Button>
-                                                                    </Tooltip>
-                                                                </Grid> */}
                                                                 <Grid item>
                                                                     <Tooltip
                                                                         placement="bottom"
@@ -464,9 +464,27 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                             variant="contained" 
                                                                             color="primary"
                                                                             startIcon={<ReplayIcon />}
+                                                                            disabled={!editable}
                                                                             onClick={() => { restartHandler(); }}
                                                                         >
                                                                             Restart
+                                                                        </Button>
+                                                                    </Tooltip>
+                                                                </Grid>
+                                                                <Grid item>
+                                                                    <Tooltip
+                                                                        placement="bottom"
+                                                                        title="Mark as Complete Chapter"
+                                                                    >
+                                                                        <Button 
+                                                                            size="small" 
+                                                                            variant="contained" 
+                                                                            color="secondary"
+                                                                            disabled={!editable}
+                                                                            startIcon={<DoneIcon />}
+                                                                            onClick={() => { markCompleteHandler(); }}
+                                                                        >
+                                                                            Mark Complete
                                                                         </Button>
                                                                     </Tooltip>
                                                                 </Grid>
@@ -658,6 +676,19 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                         setPullChapterDialog={setPullChapterDialog}
                         pullChapterDialogExecuting={pullChapterDialogExecuting}
                         setPullChapterDialogExecuting={setPullChapterDialogExecuting}
+                    />
+                    <MarkCompleteChapterDialog
+                        markCompleteChapterDialog={markCompleteChapterDialog}
+                        setMarkCompleteChapterDialog={setMarkCompleteChapterDialog}
+                        markCompleteChapterDialogExecuting={markCompleteChapterDialogExecuting}
+                        setMarkCompleteChapterDialogExecuting={setMarkCompleteChapterDialogExecuting}
+                        setParentAlert={setAlert}
+                        appState={appState}
+                        isTemplate={false}
+                        chapter={chapterCopy}
+                        chapterID={ChapterID}
+                        editable={editable}
+                        setEditable={setEditable}
                     />
                 </div>
             ) : (
