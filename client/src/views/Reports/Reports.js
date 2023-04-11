@@ -3,6 +3,8 @@
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
+import { jsPDF } from "jspdf";
+
 
 // ==================== Modules =====================
 import Pagination from "@material-ui/lab/Pagination";
@@ -87,7 +89,6 @@ const Reports = (props) => {
     localStorage.getItem("_id")
   );
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
-
 
   // Functions ===
 
@@ -423,6 +424,10 @@ const Reports = (props) => {
                           >
                             Dashboard
                           </Typography>
+                          <button onClick={GeneratePDF}>
+                            Click Me!
+                          </button>
+
                           <ReportDashboard
                             reports={reportsData}
                             collection={currentReportIndex}
