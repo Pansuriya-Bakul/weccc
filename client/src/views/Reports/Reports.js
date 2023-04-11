@@ -424,9 +424,6 @@ const Reports = (props) => {
                           >
                             Dashboard
                           </Typography>
-                          <button onClick={GeneratePDF}>
-                            Click Me!
-                          </button>
 
                           <ReportDashboard
                             reports={reportsData}
