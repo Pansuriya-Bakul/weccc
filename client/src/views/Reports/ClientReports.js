@@ -99,7 +99,7 @@ const ClientReports = (props) => {
       // );
       return;
     } else {
-      if (appState.patients.length <= 0) { 
+      if (appState.patients.length <= 0) {
         setAlert(
           new AlertType(
             "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
@@ -141,7 +141,7 @@ const ClientReports = (props) => {
     }
   }, [appState]);
 
-  
+
 
   const getNeighbours = useCallback(
     (userId) => {
@@ -357,12 +357,12 @@ const ClientReports = (props) => {
                     spacing={1}
                   >
                     {reportsData &&
-                    Object.keys(reportsData).length != 0 &&
-                    Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                      Object.keys(reportsData).length != 0 &&
+                      Object.getPrototypeOf(reportsData) === Object.prototype ? (
                       <>
                         <Grid item xs={12}>
                           <Typography variant="h4" color="textPrimary">
-                            Compassion Care Community Neighbours Report
+                            Compassion Care Community Connections Report
                           </Typography>
                           <Divider light />
                         </Grid>
@@ -396,7 +396,7 @@ const ClientReports = (props) => {
                             collection={currentReportIndex}
                           />
                         </Grid>
-                        
+
                         {/* <Grid item xs={12} id="summary1">
                           <Typography
                             variant="h5"
@@ -404,7 +404,7 @@ const ClientReports = (props) => {
                             align="left"
                             gutterBottom
                           > */}
-                             {/* Summary 1
+                        {/* Summary 1
                           </Typography>
                           <Summary1
                             reports={reports1Data}
@@ -418,7 +418,7 @@ const ClientReports = (props) => {
                             color="textSecondary"
                             align="left"
                             gutterBottom
-                          > 
+                          >
                             Possible Concerns
                           </Typography>
                           <PossibleConcerns
@@ -443,7 +443,7 @@ const ClientReports = (props) => {
                         </Grid>
                       </>
                     ) : (
-                      
+
                       <>
                         <Typography
                           variant="subtitle2"
@@ -452,7 +452,7 @@ const ClientReports = (props) => {
                           gutterBottom
                         >
                           No available reports.
-                          
+
                         </Typography>
                       </>
                     )}
@@ -490,8 +490,8 @@ ClientReports.propTypes = {
 
 ClientReports.defaultProps = {
   appState: {},
-  ToggleDrawerClose: () => {},
-  CheckAuthenticationValidity: () => {},
+  ToggleDrawerClose: () => { },
+  CheckAuthenticationValidity: () => { },
 };
 
 export default ClientReports; // You can even shorthand this line by adding this at the function [Component] declaration stage

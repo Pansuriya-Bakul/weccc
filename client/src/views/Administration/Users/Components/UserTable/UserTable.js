@@ -34,7 +34,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 // ==================== Static Helper Functions ====================
 
-    const descendingComparator = (a, b, orderBy) => {    // Establishing the result of a comparison between two objects in an array
+const descendingComparator = (a, b, orderBy) => {    // Establishing the result of a comparison between two objects in an array
     if (b[orderBy] < a[orderBy]) {
         return -1;
     }
@@ -42,16 +42,16 @@ import { makeStyles } from '@material-ui/core/styles';
         return 1;
     }
     return 0;
-    }
+}
 
-    const getComparator = (order, orderBy) => {            // Deciding asc or desc comparison, notice the negative version of the funcion above
+const getComparator = (order, orderBy) => {            // Deciding asc or desc comparison, notice the negative version of the funcion above
 
     return order === 'desc'
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
-    }
+}
 
-    const stableSort = (array, comparator) => {
+const stableSort = (array, comparator) => {
 
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -60,140 +60,134 @@ import { makeStyles } from '@material-ui/core/styles';
         return a[1] - b[1];
     });
     return stabilizedThis.map((el) => el[0]);
-    }
+}
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(1),
-        },
-        tableRow: {
-            cursor: "pointer"
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(1),
+    },
+    tableRow: {
+        cursor: "pointer"
+    }
+}));
 
 // ==================== Static Variables ====================
 
 //=================================================== TemplateTable Component ===================================================
 export default function UserTable(props) {
 
-  // Variables ===
-         // Alert variable
-         const [alert, setAlert] = useState(new AlertType());
+    // Variables ===
+    // Alert variable
+    const [alert, setAlert] = useState(new AlertType());
 
-         // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        const { appState, isDense, searchFilteredDataList, setParentDeleteUserDialog, setParentExportChapterDialog,
-            selectedDataItemsList, setSelectedDataItemsList } = props;
+    const { appState, isDense, searchFilteredDataList, setParentDeleteUserDialog, setParentExportChapterDialog,
+        selectedDataItemsList, setSelectedDataItemsList } = props;
 
-        // Responsive Table variables
-        const [order, setOrder] = useState('asc');
-        const [orderBy, setOrderBy] = useState('name');
-        const [page, setPage] = useState(0);
-        const [rowsPerPage, setRowsPerPage] = useState(20);
+    // Responsive Table variables
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('name');
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
 
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, searchFilteredDataList.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, searchFilteredDataList.length - page * rowsPerPage);
 
 
     // Functions ===
 
-        const handleRequestSort = useCallback((event, property) => {
+    const handleRequestSort = useCallback((event, property) => {
 
-            let isAsc = orderBy === property && order === 'asc';
-            setOrder(isAsc ? 'desc' : 'asc');
-            setOrderBy(property);
+        let isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
 
-        }, [ order, setOrder, orderBy, setOrderBy ]);
+    }, [order, setOrder, orderBy, setOrderBy]);
 
-        const handleSelectAllClick = useCallback((event) => {
+    const handleSelectAllClick = useCallback((event) => {
 
-            if (event.target.checked) {
+        if (event.target.checked) {
 
-                let newSelecteds = []
-                
-                searchFilteredDataList.forEach(elem => 
-                {
-                    newSelecteds.push(elem);
-                });
-                
-                setSelectedDataItemsList(newSelecteds);
-                
-                return;
+            let newSelecteds = []
 
-            }
+            searchFilteredDataList.forEach(elem => {
+                newSelecteds.push(elem);
+            });
 
-            setSelectedDataItemsList([]);
-        }, [ searchFilteredDataList, setSelectedDataItemsList ]);
+            setSelectedDataItemsList(newSelecteds);
 
-        const handleClick = useCallback((event, item) => {
-            
-            let previousSelectedIds = selectedDataItemsList.map(elem => elem._id);
-            let selectedIndex = previousSelectedIds.indexOf(item._id);
-            let newSelected = [];
+            return;
 
-            if (selectedIndex === -1)
-            {
-                newSelected = newSelected.concat(selectedDataItemsList, item);
-            }
-            else if (selectedIndex === 0)
-            {
-                newSelected = newSelected.concat(selectedDataItemsList.slice(1));
-            }
-            else if (selectedIndex === selectedDataItemsList.length - 1)
-            {
-                newSelected = newSelected.concat(selectedDataItemsList.slice(0, -1));
-            }
-            else if (selectedIndex > 0)
-            {
-                newSelected = newSelected.concat(
-                    selectedDataItemsList.slice(0, selectedIndex),
-                    selectedDataItemsList.slice(selectedIndex + 1),
-                );
-            }
+        }
 
-            setSelectedDataItemsList(newSelected);
-        }, [ selectedDataItemsList, setSelectedDataItemsList ]);
+        setSelectedDataItemsList([]);
+    }, [searchFilteredDataList, setSelectedDataItemsList]);
 
-        const isSelected = useCallback((item) => {
+    const handleClick = useCallback((event, item) => {
 
-            let previousSelectedIds = selectedDataItemsList.map(elem => elem._id);
-            return previousSelectedIds.indexOf(item._id) !== -1;
+        let previousSelectedIds = selectedDataItemsList.map(elem => elem._id);
+        let selectedIndex = previousSelectedIds.indexOf(item._id);
+        let newSelected = [];
 
-        }, [ selectedDataItemsList ]);
-        
-        const handleChangePage = useCallback((newPage) => {
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selectedDataItemsList, item);
+        }
+        else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selectedDataItemsList.slice(1));
+        }
+        else if (selectedIndex === selectedDataItemsList.length - 1) {
+            newSelected = newSelected.concat(selectedDataItemsList.slice(0, -1));
+        }
+        else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selectedDataItemsList.slice(0, selectedIndex),
+                selectedDataItemsList.slice(selectedIndex + 1),
+            );
+        }
 
-            setPage(newPage);
+        setSelectedDataItemsList(newSelected);
+    }, [selectedDataItemsList, setSelectedDataItemsList]);
 
-        }, [ setPage ]);
+    const isSelected = useCallback((item) => {
 
-        const handleChangeRowsPerPage = useCallback((event) => {
-            setRowsPerPage(parseInt(event.target.value, 10));
-            setPage(0);
-        }, [ setRowsPerPage, setPage]);
+        let previousSelectedIds = selectedDataItemsList.map(elem => elem._id);
+        return previousSelectedIds.indexOf(item._id) !== -1;
+
+    }, [selectedDataItemsList]);
+
+    const handleChangePage = useCallback((newPage) => {
+
+        setPage(newPage);
+
+    }, [setPage]);
+
+    const handleChangeRowsPerPage = useCallback((event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    }, [setRowsPerPage, setPage]);
 
     // Hooks ===
 
-        useEffect( () =>
-        {
-            setPage(0);
-        }, [ searchFilteredDataList ]);
+    useEffect(() => {
+        setPage(0);
+    }, [searchFilteredDataList]);
 
     // Render Section ===
     return (
 
         <div className={classes.root}>
-        
+
             <Box mx={1} my={1}>
                 <Paper className={classes.paper}>
                     <UserTableToolbar
                         appState={appState}
                         setParentAlert={setAlert}
-                        selectedDataItemsList={selectedDataItemsList} 
-                        setParentDeleteUserDialog={setParentDeleteUserDialog} 
-                        // setParentExportChapterDialog={setParentExportChapterDialog}
+                        selectedDataItemsList={selectedDataItemsList}
+                        setParentDeleteUserDialog={setParentDeleteUserDialog}
+                    // setParentExportChapterDialog={setParentExportChapterDialog}
                     />
                     <TableContainer>
                         <Table
@@ -213,61 +207,61 @@ export default function UserTable(props) {
 
                             <TableBody>
                                 {stableSort(searchFilteredDataList, getComparator(order, orderBy))
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((item, index) => {
-                                    const isItemSelected = isSelected(item);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .map((item, index) => {
+                                        const isItemSelected = isSelected(item);
+                                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                                    return (
-                                        <TableRow
-                                            className={classes.tableRow}
-                                            hover
-                                            onClick={(event) => handleClick(event, item)}
-                                            role="checkbox"
-                                            aria-checked={isItemSelected}
-                                            tabIndex={-1}
-                                            key={item.name + item._id}
-                                            selected={isItemSelected}
+                                        return (
+                                            <TableRow
+                                                className={classes.tableRow}
+                                                hover
+                                                onClick={(event) => handleClick(event, item)}
+                                                role="checkbox"
+                                                aria-checked={isItemSelected}
+                                                tabIndex={-1}
+                                                key={item.name + item._id}
+                                                selected={isItemSelected}
 
-                                        >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    checked={isItemSelected}
-                                                    inputProps={{ 'aria-labelledby': labelId }}
-                                                />
-                                            </TableCell>
+                                            >
+                                                <TableCell padding="checkbox">
+                                                    <Checkbox
+                                                        checked={isItemSelected}
+                                                        inputProps={{ 'aria-labelledby': labelId }}
+                                                    />
+                                                </TableCell>
 
-                                            <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                <Typography color="textPrimary" variant="subtitle2" style={{display: 'inline-block'}}>
-                                                    {item.info.name}
-                                                </Typography>
-                                            </TableCell>
+                                                <TableCell component="th" id={labelId} scope="row" padding="none">
+                                                    <Typography color="textPrimary" variant="subtitle2" style={{ display: 'inline-block' }}>
+                                                        {item.info.name}
+                                                    </Typography>
+                                                </TableCell>
 
-                                            <TableCell align="left">
-                                                <Typography color="primary" variant="body2" style={{display: 'inline-block'}}>
-                                                    {item.sequenceId}
-                                                </Typography>
-                                            </TableCell>
+                                                {/* <TableCell align="left">
+                                                    <Typography color="primary" variant="body2" style={{ display: 'inline-block' }}>
+                                                        {item.sequenceId}
+                                                    </Typography>
+                                                </TableCell> */}
 
-                                            <TableCell align="left" padding="none">
-                                                <Typography color="primary" variant="body2" style={{display: 'inline-block', color: item.enabled? 'green' : 'red' }}>
-                                                    {item.enabled? "true" : "false"}
-                                                </Typography>
-                                            </TableCell>
+                                                <TableCell align="left" padding="none">
+                                                    <Typography color="primary" variant="body2" style={{ display: 'inline-block', color: item.enabled ? 'green' : 'red' }}>
+                                                        {item.enabled ? "Active" : "Inactive"}
+                                                    </Typography>
+                                                </TableCell>
 
-                                            <TableCell align="left" padding="none">
-                                                <Typography color="textPrimary" variant="body2" style={{display: 'inline-block'}}>
-                                                    {item.email}
-                                                </Typography>
-                                            </TableCell>
+                                                <TableCell align="left" padding="none">
+                                                    <Typography color="textPrimary" variant="body2" style={{ display: 'inline-block' }}>
+                                                        {item.email}
+                                                    </Typography>
+                                                </TableCell>
 
-                                            <TableCell align="left" padding="none">
-                                                <Typography color="textPrimary" variant="body2" style={{display: 'inline-block'}}>
-                                                    {item.role}
-                                                </Typography>
-                                            </TableCell>
+                                                <TableCell align="left" padding="none">
+                                                    <Typography color="textPrimary" variant="body2" style={{ display: 'inline-block' }}>
+                                                        {item.role === 'Patient' ? 'Member' : item.role}
+                                                    </Typography>
+                                                </TableCell>
 
-                                            {/* <TableCell align="left" padding="none">
+                                                {/* <TableCell align="left" padding="none">
                                                 <Typography color="textPrimary" variant="body2" style={{display: 'inline-block', width: '120px'}}>
                                                     {item.collectionId}
                                                 </Typography>
@@ -291,9 +285,9 @@ export default function UserTable(props) {
                                                 </Typography>
                                             </TableCell> */}
 
-                                        </TableRow>
-                                    );
-                                })}
+                                            </TableRow>
+                                        );
+                                    })}
 
                                 {emptyRows > 0 && (
                                     <TableRow style={{ height: (isDense ? 33 : 53) * emptyRows }}>
@@ -304,14 +298,14 @@ export default function UserTable(props) {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    {searchFilteredDataList.length > 0? (
+                    {searchFilteredDataList.length > 0 ? (
                         <TablePagination
                             rowsPerPageOptions={[5, 10, 15, 20, 25]}
                             component="div"
                             count={searchFilteredDataList.length}
                             rowsPerPage={rowsPerPage}
-                            page={searchFilteredDataList.length <= rowsPerPage? 0 : page}
-                            onPageChange={ (event, pageNumber) => { handleChangePage(pageNumber); }}
+                            page={searchFilteredDataList.length <= rowsPerPage ? 0 : page}
+                            onPageChange={(event, pageNumber) => { handleChangePage(pageNumber); }}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />
                     ) : (
@@ -337,8 +331,8 @@ UserTable.defaultProps =
 {
     appState: {},
     searchFilteredDataList: {},
-    setParentDeleteUserDialog: () => {},
+    setParentDeleteUserDialog: () => { },
     // setParentExportChapterDialog: () => {},
     selectedDataItemsList: {},
-    setSelectedDataItemsList: () => {}
+    setSelectedDataItemsList: () => { }
 }

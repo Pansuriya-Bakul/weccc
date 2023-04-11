@@ -37,6 +37,7 @@ const user = require('../models/user');
 const Survey = require("../models/survey");
 const log = logger.users;
 const { info } = require('console');
+const util = require('util');
 
 // ====================================================
 // Encryption routes for keys and extracting keys
@@ -560,9 +561,9 @@ exports.read = (req, res, next) => {
 		.exec()
 		.then(user => {
 			if (user) {
-				if (user.workers){
+				if (user.workers) {
 					var index = 0;
-					(user.workers).forEach(item =>{
+					(user.workers).forEach(item => {
 						user.workers[index].info.name = item.info.name.length > 60 ? key_private.decrypt(item.info.name, 'utf8') : item.info.name;
 						user.workers[index].info.gender = item.info.gender.length > 60 ? key_private.decrypt(item.info.gender, 'utf8') : item.info.genders;
 						index += 1;
@@ -585,27 +586,27 @@ exports.read = (req, res, next) => {
 							full: user.research.full
 						},
 						patients: user.patients.map(patients => {
-								return {
-									info: {
-										pastAddresses: patients.info.pastAddress,
-										name: (patients.info.name.length > 60 ? key_private.decrypt(patients.info.name, 'utf8') : patients.info.name),
-										gender: (patients.info.gender.length > 60 ? key_private.decrypt(patients.info.gender, 'utf8') : patients.info.gender),
-										dateOfBirth: patients.info.dateOfBirth,
-										language: patients.info.language,
-										currentAddress: patients.info.currentAddress,
-										phone: patients.info.phone,
-									},
-									research: patients.research,
-									patients: patients.patients,
-									workers: patients.workers,
-									_id: patients._id,
-									email: patients.email,
-									enabled: patients.enabled,
-									role: patients.role,
-									facilityId: patients.facilityId,
-									createdAt: patients.createdAt,
-									updatedAt: patients.updatedAt
-								};								
+							return {
+								info: {
+									pastAddresses: patients.info.pastAddress,
+									name: (patients.info.name.length > 60 ? key_private.decrypt(patients.info.name, 'utf8') : patients.info.name),
+									gender: (patients.info.gender.length > 60 ? key_private.decrypt(patients.info.gender, 'utf8') : patients.info.gender),
+									dateOfBirth: patients.info.dateOfBirth,
+									language: patients.info.language,
+									currentAddress: patients.info.currentAddress,
+									phone: patients.info.phone,
+								},
+								research: patients.research,
+								patients: patients.patients,
+								workers: patients.workers,
+								_id: patients._id,
+								email: patients.email,
+								enabled: patients.enabled,
+								role: patients.role,
+								facilityId: patients.facilityId,
+								createdAt: patients.createdAt,
+								updatedAt: patients.updatedAt
+							};
 						}),
 						workers: user.workers,
 						projectList: user.projectList,
@@ -666,46 +667,46 @@ exports.readall = (req, res, next) => {
 			const response = {
 				count: users.length,
 				users: users.map(user => {
-						return {
-							_id: user._id,
-							sequenceId: user.sequence_id,
-							email: user.email,
-							role: user.role,
-							patients: user.patients,
-							workers: user.workers,
-							projectList: user.projectList,
-							collectionList: user.collectionList,
-							memberCollectionList: user.memberCollectionList,
-							memberSurveyList: user.memberSurveyList,
-							enabled: user.enabled,
-							facid:user.facilityId._id,
-							info: {
-								pastAddresses: user.info.pastAddresses,
-								name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
-								gender: (user.info.name.gender > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
-								dateOfBirth: user.info.dateOfBirth,
-								language: user.info.language,
-								currentAddress: user.info.currentAddress,
-								phone: user.info.phone,
-							},
-							research: user.research,
-							createdAt: user.createdAt,
-							createdBy: user.createdBy,
-							updatedAt: user.updatedAt,
-							modifiedBy: user.modifiedBy,
-							request: {
-								type: 'GET',
-								url:
-									config.server.protocol +
-									'://' +
-									config.server.hostname +
-									':' +
-									config.server.port +
-									config.server.extension +
-									'/users/' +
-									user._id
-							}
-						};
+					return {
+						_id: user._id,
+						sequenceId: user.sequence_id,
+						email: user.email,
+						role: user.role,
+						patients: user.patients,
+						workers: user.workers,
+						projectList: user.projectList,
+						collectionList: user.collectionList,
+						memberCollectionList: user.memberCollectionList,
+						memberSurveyList: user.memberSurveyList,
+						enabled: user.enabled,
+						facid: user.facilityId._id,
+						info: {
+							pastAddresses: user.info.pastAddresses,
+							name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
+							gender: (user.info.name.gender > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
+							dateOfBirth: user.info.dateOfBirth,
+							language: user.info.language,
+							currentAddress: user.info.currentAddress,
+							phone: user.info.phone,
+						},
+						research: user.research,
+						createdAt: user.createdAt,
+						createdBy: user.createdBy,
+						updatedAt: user.updatedAt,
+						modifiedBy: user.modifiedBy,
+						request: {
+							type: 'GET',
+							url:
+								config.server.protocol +
+								'://' +
+								config.server.hostname +
+								':' +
+								config.server.port +
+								config.server.extension +
+								'/users/' +
+								user._id
+						}
+					};
 				})
 			};
 
@@ -804,7 +805,7 @@ exports.update = (req, res, next) => {
 		} else {
 			if ('password' in query) {
 				bcrypt.hash(req.body.password, 10, (hashError, hash) => {
-					
+
 					if (hashError) {
 						log.error('There was an error hashing a signup password');
 
@@ -849,24 +850,24 @@ exports.update = (req, res, next) => {
 				if ('patients' in updatedQuery) {
 					let queryPatients = Object.values(updatedQuery)[0];
 					user.patients.forEach(patient => {
-						if (!queryPatients.includes(patient.valueOf())){ 
+						if (!queryPatients.includes(patient.valueOf())) {
 							queryPatients.push(patient.valueOf());
 						}
 					})
 					updatedQuery = {
-						patients : queryPatients
+						patients: queryPatients
 					}
 				}
 
 				if ('workers' in updatedQuery) {
 					let queryWorkers = Object.values(updatedQuery)[0];
 					user.workers.forEach(worker => {
-						if (!queryWorkers.includes(worker.valueOf())){
+						if (!queryWorkers.includes(worker.valueOf())) {
 							queryWorkers.push(worker.valueOf());
 						}
 					})
 					updatedQuery = {
-						workers : queryWorkers
+						workers: queryWorkers
 					}
 				}
 
@@ -895,13 +896,13 @@ exports.update = (req, res, next) => {
 					}
 
 					log.info('User with id ' + id + ' updated');
-					
-					try {	
-						if (Object.keys(query.info.currentAddress).length > 1){
+
+					try {
+						if (Object.keys(query.info.currentAddress).length > 1) {
 							Address.findById(query.info.currentAddress._id, (error, address) => {
 								if (error) {
 									log.error(error.message);
-					
+
 									return res.status(404).json({
 										message: error.message
 									});
@@ -916,7 +917,7 @@ exports.update = (req, res, next) => {
 					} catch (error) {
 						log.error(error.message);
 					}
-					
+
 					return res.status(200).json({
 						user: updatedUser,
 						request: {
@@ -1231,127 +1232,174 @@ exports.createResearchID = (req, res, next) => {
 // - Client id
 // Get only user id and name, Exclude the other data.
 // =========================================================================
-exports.findClientSurveys = (req, res, next) => {
+exports.findClientSurveys = async (req, res, next) => {
 	// Look for the client:
 	const id = req.params.userID;
 	let surveysNotCompleted = [];
 	let surveysNotCompletedNames = [];
 	// let surveysCompleted = [];
 	let surveysCompletedNames = [];
+	let collectionNames = [];
+	let collections = [];
 
 	log.info('Incoming find surveys request for client with ID ' + id);
 
 	User.findById(id)
-		.select('_id info email role memberSurveyList')
+		.select('_id info email role memberSurveyList facilityId')
 		.populate('memberSurveyList')
+		.populate({
+			path: 'collectionList',
+			select: 'name surveyList -_id'
+		})
+		.populate('facilityId')
 		.exec()
-		.then(user => {
+		.then(async user => {
 			if (user.role === 'Patient') {
 				if (!user) throw new Error('Client does not exist');
 
 				const clientSurveys = user.memberSurveyList;
+				const collectionList = user.collectionList;
 
 				// Checking if the user has any surveys
+				if (collectionList.length === 0 && user.info.name.length < 60) {
+					return res.status(200).json({ message: `${user.info.name} has no collections assigned`, surveys: [] });
+				}
 				if (clientSurveys.length === 0 && user.info.name.length < 60) {
-					return res.status(200).json({ message: `${user.info.name} has no surveys at the moment` , surveys: []});
+					return res.status(200).json({ message: `${user.info.name} has no surveys at the moment`, surveys: [] });
 				}
 				if (clientSurveys.length === 0 && user.info.name.length > 60) {
 					return res
 						.status(200)
-						.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has no surveys at the moment` , surveys: []});
-				}
-				
-				for (let surveyIndex in clientSurveys) {
-					log.info(`${surveyIndex}: Completeness score: ${clientSurveys[surveyIndex].completeness}`);
-
-					const userSurveyCompleteness = clientSurveys[surveyIndex].completeness;
-
-					if (userSurveyCompleteness != 100) {
-						// add the survey to the not completed survey list
-						surveysNotCompleted.push([clientSurveys[surveyIndex]._id]); 
-						MemberSurvey.findById(clientSurveys[surveyIndex]._id)
-						.exec()
-						.then( foundMemberSurvey=> {
-
-							if(foundMemberSurvey)
-							{
-								Survey.findById(foundMemberSurvey.surveyTemplate)
-								.select('name')
-								.exec()
-								.then( foundSurvey => {
-									surveysNotCompletedNames.push([[clientSurveys[surveyIndex]._id], [foundSurvey.name]]);
-								});
-							}
-						});
-					}
-					else {
-						// add the survey to the completed survey list
-						MemberSurvey.findById(clientSurveys[surveyIndex]._id)
-						.exec()
-						.then( foundMemberSurvey=> {
-
-							if(foundMemberSurvey)
-							{
-								Survey.findById(foundMemberSurvey.surveyTemplate)
-								.select('name')
-								.exec()
-								.then( foundSurvey => {
-									surveysCompletedNames.push([foundSurvey.name]);
-								});
-							}
-						});
-					}
+						.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has no surveys at the moment`, surveys: [] });
 				}
 
-				setTimeout( function() {
-					if (surveysNotCompleted.length === 0 && user.info.name.length < 60) {
-						return res.status(200).json({ message: `${user.info.name} has completed all of their surveys.` , surveys: []});
-					} else if (surveysNotCompleted.length === 0 && user.info.name.length > 60) {
-						return res
-							.status(200)
-							.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has completed all of their surveys.` , surveys: []});
-					}
+				for (let collectionId in collectionList) {
 
-					// otherwise the user has to complete their surveys
-					if (user.info.name.length > 60 ){
-						return res.status(200).json({
-							message: `Pending... ${key_private.decrypt(user.info.name, 'utf8')} needs to complete ${surveysNotCompleted.length} survey(s).`,
-							surveys: surveysNotCompleted,
-							notCompletedSurveys: surveysNotCompletedNames,
-							completedSurveys: surveysCompletedNames,
-							info: {
-								pastAddresses: user.info.pastAddresses,
-								name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
-								gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
-								dateOfBirth: user.info.dateOfBirth,
-								language: user.info.language,
-								currentAddress: user.info.currentAddress,
-								phone: user.info.phone,
-							},
-							id: id
-						});
+					collectionNames.push(collectionList[collectionId].name)
+
+					surveyList = collectionList[collectionId].surveyList
+					let temp = [];
+					let cs = null;
+					for (let surveyIndex in surveyList) {
+
+						if (clientSurveys.some(obj => util.isDeepStrictEqual(obj.surveyTemplate, surveyList[surveyIndex]))) {
+							clientSurveys.some(obj => {
+								if (util.isDeepStrictEqual(obj.surveyTemplate, surveyList[surveyIndex])) {
+									cs = obj;
+								}
+							})
+
+							await Survey.findById(cs.surveyTemplate)
+								.select('name')
+								.exec()
+								.then(foundSurvey => {
+									temp.push([cs._id, cs.completeness, foundSurvey.name])
+								});
+
+						}
 					}
-					else{
-						return res.status(200).json({
-							message: `Pending... ${user.info.name} needs to complete ${surveysNotCompleted.length} survey(s).`,
-							surveys: surveysNotCompleted,
-							notCompletedSurveys: surveysNotCompletedNames,
-							completedSurveys: surveysCompletedNames,
-							info: {
-								pastAddresses: user.info.pastAddresses,
-								name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
-								gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
-								dateOfBirth: user.info.dateOfBirth,
-								language: user.info.language,
-								currentAddress: user.info.currentAddress,
-								phone: user.info.phone,
-							},
-							id: id
-						});
-					}
-					return res.status(401).json({ message: 'Unauthorized!' });
-				}, 300);
-			}			
+					collections.push(temp);
+
+				}
+
+
+				// for (let surveyIndex in clientSurveys) {
+				// 	log.info(`${surveyIndex}: Completeness score: ${clientSurveys[surveyIndex].completeness}`);
+
+				// 	const userSurveyCompleteness = clientSurveys[surveyIndex].completeness;
+
+				// 	if (userSurveyCompleteness != 100) {
+				// 		// add the survey to the not completed survey list
+				// 		surveysNotCompleted.push([clientSurveys[surveyIndex]._id]);
+				// 		MemberSurvey.findById(clientSurveys[surveyIndex]._id)
+				// 			.exec()
+				// 			.then(foundMemberSurvey => { 
+
+				// 				if (foundMemberSurvey) {
+				// 					Survey.findById(foundMemberSurvey.surveyTemplate)
+				// 						.select('name')
+				// 						.exec()
+				// 						.then(foundSurvey => {
+				// 							surveysNotCompletedNames.push([[clientSurveys[surveyIndex]._id], [foundSurvey.name], [clientSurveys[surveyIndex].completeness]]);
+				// 						});
+				// 				}
+				// 			});
+				// 	}
+				// 	else {
+				// 		// add the survey to the completed survey list
+				// 		MemberSurvey.findById(clientSurveys[surveyIndex]._id)
+				// 			.exec()
+				// 			.then(foundMemberSurvey => {
+
+				// 				if (foundMemberSurvey) {
+				// 					Survey.findById(foundMemberSurvey.surveyTemplate)
+				// 						.select('name')
+				// 						.exec()
+				// 						.then(foundSurvey => {
+				// 							surveysCompletedNames.push([foundSurvey.name]);
+				// 						});
+				// 				}
+				// 			});
+				// 	}
+				// }
+
+				// setTimeout(function () {
+				// if (surveysNotCompleted.length === 0 && user.info.name.length < 60) {
+				// 	return res.status(200).json({ message: `${user.info.name} has completed all of their surveys.`, surveys: [] });
+				// } else if (surveysNotCompleted.length === 0 && user.info.name.length > 60) {
+				// 	return res
+				// 		.status(200)
+				// 		.json({ message: `${key_private.decrypt(user.info.name, 'utf8')} has completed all of their surveys.`, surveys: [] });
+				// }
+
+				// otherwise the user has to complete their surveys
+				if (user.info.name.length > 60) {
+					return res.status(200).json({
+						// message: `Pending... ${key_private.decrypt(user.info.name, 'utf8')} needs to complete ${surveysNotCompleted.length} survey(s).`,
+						// surveys: surveysNotCompleted,
+						// notCompletedSurveys: surveysNotCompletedNames,
+						// completedSurveys: surveysCompletedNames,
+						collectionNames: collectionNames,
+						collections: collections,
+						userName: key_private.decrypt(user.info.name, 'utf8'),
+						facilityName: user.facilityId.name,
+						// info: {
+						// 	pastAddresses: user.info.pastAddresses,
+						// 	name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
+						// 	gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
+						// 	dateOfBirth: user.info.dateOfBirth,
+						// 	language: user.info.language,
+						// 	currentAddress: user.info.currentAddress,
+						// 	phone: user.info.phone,
+						// },
+						// id: id
+					});
+				}
+				else {
+					return res.status(200).json({
+						// message: `Pending... ${user.info.name} needs to complete ${surveysNotCompleted.length} survey(s).`,
+						// surveys: surveysNotCompleted,
+						// notCompletedSurveys: surveysNotCompletedNames,
+						// completedSurveys: surveysCompletedNames,
+						collectionNames: collectionNames,
+						collections: collections,
+						userName: user.info.name,
+						facilityName: user.facilityId.name,
+						// info: {
+						// 	pastAddresses: user.info.pastAddresses,
+						// 	name: (user.info.name.length > 60 ? key_private.decrypt(user.info.name, 'utf8') : user.info.name),
+						// 	gender: (user.info.gender.length > 60 ? key_private.decrypt(user.info.gender, 'utf8') : user.info.gender),
+						// 	dateOfBirth: user.info.dateOfBirth,
+						// 	language: user.info.language,
+						// 	currentAddress: user.info.currentAddress,
+						// 	phone: user.info.phone,
+						// },
+						// id: id
+					});
+				}
+				return res.status(401).json({ message: 'Unauthorized!' });
+				// }, 700);
+			}
 		})
 		.catch(error => {
 			log.error(error.message);
@@ -1376,7 +1424,7 @@ exports.getAllUsers = (req, res, next) => {
 
 	// Find user
 	User.findById(userID)
-		.select('_id info.name role')
+		.select('_id info.name role facilityId')
 		.populate({ path: 'patients', select: 'info.name role' })
 		.populate({ path: 'workers', select: 'info.name role' })
 		.exec((err, foundUser) => {
@@ -1436,6 +1484,7 @@ exports.getAllUsers = (req, res, next) => {
 							}
 						});
 
+
 						const dataToSend = {
 							_id: foundUser._id,
 							name:
@@ -1453,12 +1502,57 @@ exports.getAllUsers = (req, res, next) => {
 					});
 			} else if (foundUser.role === 'Coordinator') {
 				// Staff/Coordinator: can send notes to admin and corresponding volunteer.
+				const coordinatorsList = [];
+				User.find({ facilityId: { $in: [foundUser.facilityId] } })
+					.select('_id info role patients workers')
+					.exec((err, foundAll) => {
+
+
+						if (err) return res.status(400).json({ message: err.message });
+
+						if (foundAll.length === 0) return res.status(404).json({ message: 'Not found' });
+
+						foundAll.forEach(currentUser => {
+							currentUser.info.name =
+								currentUser.info.name.length > 60
+									? key_private.decrypt(currentUser.info.name, 'utf8')
+									: currentUser.info.name;
+							coordinatorsList.push(currentUser);
+						});
+					});
 				User.find({ role: 'Admin' })
 					.select('_id info.name')
 					.exec((err, foundAdmins) => {
 						if (err) return res.status(400).json({ message: err.message });
 
 						if (foundAdmins.length === 0) return res.status(404).json({ message: 'No admins exists!' });
+
+						const adminsList = [];
+						foundAdmins.forEach(currentUser => {
+							currentUser.info.name =
+								currentUser.info.name.length > 60
+									? key_private.decrypt(currentUser.info.name, 'utf8')
+									: currentUser.info.name;
+							adminsList.push(currentUser);
+						});
+
+						const patientsList = [];
+						foundUser.patients.forEach(currentUser => {
+							currentUser.info.name =
+								currentUser.info.name.length > 60
+									? key_private.decrypt(currentUser.info.name, 'utf8')
+									: currentUser.info.name;
+							patientsList.push(currentUser);
+						});
+
+						const volunteersList = [];
+						foundUser.workers.forEach(currentUser => {
+							currentUser.info.name =
+								currentUser.info.name.length > 60
+									? key_private.decrypt(currentUser.info.name, 'utf8')
+									: currentUser.info.name;
+							volunteersList.push(currentUser);
+						});
 
 						const dataToSend = {
 							_id: foundUser._id,
@@ -1467,23 +1561,49 @@ exports.getAllUsers = (req, res, next) => {
 									? key_private.decrypt(foundUser.info.name, 'utf8')
 									: foundUser.info.name,
 							role: foundUser.role,
-							admins: foundAdmins,
-							volunteers: foundUser.workers,
-							patients: foundUser.patients,
-							coordinators: []
+							admins: adminsList,
+							volunteers: volunteersList,
+							patients: patientsList,
+							// volunteers: [],
+							// patients: [],
+							// volunteers: foundUser.workers,
+							// patients: foundUser.patients,
+							// coordinators: []
+							coordinators: coordinatorsList
 						};
 
 						return res.status(200).json({ user: dataToSend });
 					});
 			} else if (foundUser.role === 'Volunteer') {
 				// Volunteer: can send notes to their corresponding client and staff
+
+				const patientsList = [];
+				foundUser.patients.forEach(currentUser => {
+					currentUser.info.name =
+						currentUser.info.name.length > 60
+							? key_private.decrypt(currentUser.info.name, 'utf8')
+							: currentUser.info.name;
+					patientsList.push(currentUser);
+				});
+
+				const volunteersList = [];
+				foundUser.workers.forEach(currentUser => {
+					currentUser.info.name =
+						currentUser.info.name.length > 60
+							? key_private.decrypt(currentUser.info.name, 'utf8')
+							: currentUser.info.name;
+					volunteersList.push(currentUser);
+				});
+
 				const dataToSend = {
 					_id: foundUser._id,
 					name:
 						foundUser.info.name.length > 60 ? key_private.decrypt(foundUser.info.name, 'utf8') : foundUser.info.name,
 					role: foundUser.role,
-					coordinators: foundUser.workers,
-					patients: foundUser.patients,
+					coordinators: volunteersList,
+					// coordinators: foundUser.workers,
+					// patients: foundUser.patients,
+					patients: patientsList,
 					volunteers: [],
 					admins: []
 				};
@@ -1491,12 +1611,23 @@ exports.getAllUsers = (req, res, next) => {
 				return res.status(200).json({ user: dataToSend });
 			} else if (foundUser.role === 'Patient') {
 				// Client/Patient: can only send notes to their assigned volunteer.'
+
+				const volunteersList = [];
+				foundUser.workers.forEach(currentUser => {
+					currentUser.info.name =
+						currentUser.info.name.length > 60
+							? key_private.decrypt(currentUser.info.name, 'utf8')
+							: currentUser.info.name;
+					volunteersList.push(currentUser);
+				});
+
 				const dataToSend = {
 					_id: foundUser._id,
 					name:
 						foundUser.info.name.length > 60 ? key_private.decrypt(foundUser.info.name, 'utf8') : foundUser.info.name,
 					role: foundUser.role,
-					volunteers: foundUser.workers,
+					// volunteers: foundUser.workers,
+					volunteers: volunteersList,
 					coordinators: [],
 					admins: [],
 					patients: []
