@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
 
 import LineChart from './LineChart'
@@ -12,20 +12,20 @@ import Goals from './Summary/Goals';
 // import SocialHealth from './Summary/SocialHealth';
 
 export default class Summary extends Component {
-	render() {
-		return (
+    render() {
+        return (
             <>
                 <Box m={1}>
-                    <Interests reports = {this.props.reports} collection = {this.props.collection}/>
-                    <FamilyFriendsNeighbours reports = {this.props.reports} collection = {this.props.collection}/>
-                    <CommunityParticipation reports = {this.props.reports} collection = {this.props.collection}/>
-                    <HealthStatus reports = {this.props.reports} collection = {this.props.collection}/>
-                    <HealthSupportServices reports = {this.props.reports} collection = {this.props.collection}/>
-                    <PersonalWellBeing reports = {this.props.reports} collection = {this.props.collection}/>
-                    <Goals reports = {this.props.reports} collection = {this.props.collection}/>
+                    <Interests reports={this.props.reports} collection={this.props.collection} />
+                    <FamilyFriendsNeighbours reports={this.props.reports} collection={this.props.collection} />
+                    {/* <CommunityParticipation reports = {this.props.reports} collection = {this.props.collection}/> */}
+                    <HealthStatus reports={this.props.reports} collection={this.props.collection} />
+                    <HealthSupportServices reports={this.props.reports} collection={this.props.collection} />
+                    <PersonalWellBeing reports={this.props.reports} collection={this.props.collection} />
+                    <Goals reports={this.props.reports} collection={this.props.collection} />
                     {/* <SocialHealth reports = {this.props.reports} collection = {this.props.collection}/> */}
                 </Box>
             </>
-			)
-	}
+        )
+    }
 }

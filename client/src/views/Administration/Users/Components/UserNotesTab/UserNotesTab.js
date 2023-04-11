@@ -145,7 +145,7 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
         if (userID != null) {
             get("users/getAllUsers/" + userID, appState.token, (err, res) => {
 
-                var arr = [];                
+                var arr = [];
                 for (var i = 0; i < res.data.user.patients.length; i++) {
                     var obj = {
                         "name": res.data.user.patients[i].info.name,
@@ -178,7 +178,7 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
                     arr.push(obj);
                 }
 
-                
+
                 setUserData(arr);
             });
         }
@@ -194,7 +194,7 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
         for (var i = 0; i < notesList.length; i++) {
             if (noteId === notesList[i].id)
                 notesList[i].id.status = "read";
-                setParentAlert(new AlertType('Note read. ', "success"));       
+            setParentAlert(new AlertType('Note read. ', "success"));
         }
         put("notes/", appState.token, { 'noteID': noteId }, (err, res) => {
         });
@@ -239,13 +239,13 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
     const getNotes = useCallback((event) => {
         if (userID != null) {
             get("notes/" + userID, appState.token, (err, res) => {
-                if(err == null ) {
+                if (err == null) {
                     for (var i = 0; i < res.data.foundNotes.length; i++) {
                         var obj = res.data.foundNotes[i];
                         obj.createdAt = getFormattedDate(obj.createdAt);
-                        notesList.push(obj);                    
-                    } 
-                } 
+                        notesList.push(obj);
+                    }
+                }
             });
         }
     }, [appState]);
@@ -256,7 +256,7 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
         return (
             <>
                 <div>
-                    <Card variant="outlined" style={{marginTop: 15}}>
+                    <Card variant="outlined" style={{ marginTop: 15 }}>
                         <List subheader={
                             <ListSubheader component="div" id="nested-list-subheader">
                                 {note.senderId.info.name}
@@ -288,7 +288,7 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
         setUserEdit(userOriginal);
     }, [userOriginal]);
 
-    useEffect( () => {
+    useEffect(() => {
         getUsers();
         if (notesList.length == 0)
             getNotes();
@@ -418,7 +418,7 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
                                     </Tooltip>
                                 </Grid>
                             </Grid>
-                            
+
                             <Grid item >
                                 {
                                     notesList.length != 0 ? renderRow : "There are no notes available for you!"

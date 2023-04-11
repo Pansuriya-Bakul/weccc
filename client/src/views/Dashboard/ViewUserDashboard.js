@@ -25,7 +25,7 @@ const styles = theme => ({
 	}
 });
 
-class Main extends Component {
+class ViewUserDashboard extends Component {
 	constructor(props) {
 		super(props);
 
@@ -67,9 +67,7 @@ class Main extends Component {
 	checkClientSurveys = (callback) => {
 		let { appState } = this.props;
 		let url = ''
-		if (appState.role == 'Patient') {
-			url = `users/client/${appState._id}`;
-		}
+		url = `users/client/${this.props.match.params.userID}`;
 
 
 		const token = appState.token;
@@ -83,6 +81,8 @@ class Main extends Component {
 				this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
 				this.setState({ collectionNames: response.data.collectionNames });
 				this.setState({ collections: response.data.collections });
+				this.setState({ userName: response.data.userName });
+				this.setState({ facilityName: response.data.facilityName });
 
 
 				const toggle = {}
@@ -135,7 +135,7 @@ class Main extends Component {
 		this.classes = styles();
 		this.bull = <span className={this.classes.bullet}>•</span>;
 
-		if (appState.role === 'Patient') {
+		if (appState.role === 'Volunteer') {
 			this.checkClientSurveys(() => {
 				this.checkComplete();
 			});
@@ -190,9 +190,9 @@ class Main extends Component {
 									<Grid container direction="column" justifyContent="flex-start" alignItems="stretch" >
 										<Grid item xs={12}>
 											<Typography variant="h5" component="h1">
-												Welcome back, {appState.name}
+												Viewing {this.state.userName}'s dashboard
 											</Typography>
-											<Typography style={{ fontSize: "16px", color: "grey", marginLeft: "2px", marginTop: "3px" }}>Member of {appState.facilityName}</Typography>
+											<Typography style={{ fontSize: "16px", color: "grey", marginLeft: "2px", marginTop: "3px" }}>Member of {this.state.facilityName}</Typography>
 										</Grid>
 										<br />
 										{/* {(this.state.clientCompletedSurvey !== undefined && this.state.clientCompletedSurvey !== []) ?
@@ -237,7 +237,7 @@ class Main extends Component {
 							</CardContent>
 						</Card>
 					</Grid>
-					{(appState.role === 'Patient') && (
+					{(appState.role === 'Volunteer') && (
 						<Grid item xs={12}>
 							<Card raised={true}>
 								<CardContent className='dashboard-card'>
@@ -372,4 +372,4 @@ class Main extends Component {
 	}
 }
 
-export default withStyles(styles)(Main);
+export default withStyles(styles)(ViewUserDashboard);

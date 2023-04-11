@@ -88,7 +88,7 @@ const Reports = (props) => {
   );
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
 
-  
+
   // Functions ===
 
   const getPatients = useCallback(() => {
@@ -125,11 +125,11 @@ const Reports = (props) => {
           );
         } else {
           if (res.status === 200) {
-            
+
             setPatientData(res.data.response.users);
           } else {
             //Bad HTTP Response
-            
+
             setAlert(
               new AlertType(
                 "Unable to retrieve Patients. Please refresh and try again.",
@@ -142,7 +142,7 @@ const Reports = (props) => {
     }
   }, [appState]);
 
-  
+
 
   // const getScreen = useCallback(
   //   (userId) => {
@@ -235,7 +235,7 @@ const Reports = (props) => {
     if (currentPatient != "") {
       // getNeighbours(currentPatient);
       getScreen(currentPatient);
-      
+
     }
   }, [currentPatient]);
 
@@ -339,31 +339,31 @@ const Reports = (props) => {
                         </Select> */}
                       </FormControl>
                       <Typography
-                              variant="h45"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Patient's name:  
-                        </Typography>
-                      
+                        variant="h45"
+                        color="textSecondary"
+                        align="left"
+                        gutterBottom
+                      >
+                        Member's name:
+                      </Typography>
+
                       {patientData.map((item, index) => {
-                        if (item._id == currentPatient){
-                
-                          return(
+                        if (item._id == currentPatient) {
+
+                          return (
                             <Box mx={1} my={2} boxShadow={1}>
                               <Typography
-                                    variant="h4"
-                                    color="textPrimary"
-                                    align="left"
-                                    gutterBottom
-                                  >
-                                    {item.info.name}   
+                                variant="h4"
+                                color="textPrimary"
+                                align="left"
+                                gutterBottom
+                              >
+                                {item.info.name}
                               </Typography>
-                              </Box>
+                            </Box>
                           );
                         }
-                    })}
+                      })}
                     </Grid>
                     {/*<Grid item xs={12}>*/}
                     {/*  {reportsData ? (*/}
@@ -396,8 +396,8 @@ const Reports = (props) => {
                     spacing={1}
                   >
                     {reportsData &&
-                    Object.keys(reportsData).length != 0 &&
-                    Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                      Object.keys(reportsData).length != 0 &&
+                      Object.getPrototypeOf(reportsData) === Object.prototype ? (
                       <>
                         <Grid item xs={12}>
                           <Typography variant="h4" color="textPrimary">
@@ -428,7 +428,7 @@ const Reports = (props) => {
                             align="left"
                             gutterBottom
                           >
-                            Summary of your screening report 
+                            Summary of your screening report
                           </Typography>
                           <Summary
                             reports={reportsData}
@@ -512,8 +512,8 @@ Reports.propTypes = {
 
 Reports.defaultProps = {
   appState: {},
-  ToggleDrawerClose: () => {},
-  CheckAuthenticationValidity: () => {},
+  ToggleDrawerClose: () => { },
+  CheckAuthenticationValidity: () => { },
 };
 
 export default Reports; // You can even shorthand this line by adding this at the function [Component] declaration stage

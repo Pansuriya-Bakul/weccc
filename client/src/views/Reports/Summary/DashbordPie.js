@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Chart from 'chart.js/auto';
 
 export default class DashboardPie extends Component {
@@ -6,37 +6,37 @@ export default class DashboardPie extends Component {
 	chartRef = React.createRef();
 
 	findColour = (score) => {
-		if (score < 0){	//identity and handle reverse scoring reflected in colour gauge
+		if (score < 0) {	//identity and handle reverse scoring reflected in colour gauge
 			score = score * - 1;
 			score = 100 - score;
 		}
 
-		if (score == 0){
-			return ("#7D3C98");
+		if (score == 0) {
+			return ("#7D3C98"); //purple / incomplete / missing
 		}
-		else if (score < 24){
-			return ("#E74C3C");
+		else if (score < 25) {
+			return ("#E74C3C"); //red
 		}
-		else if (score < 50){
-			return ("#F4D03F");
+		else if (score < 50) {
+			return ("#F4D03F"); //orange
 		}
-		else if (score < 75){
-			return ("#F39C12");
+		else if (score < 75) {
+			return ("#F39C12"); //yellow
 		}
-		else if(score < 101){
-			return ("#27AE60");
+		else if (score < 101) {
+			return ("#27AE60"); //green 
 		}
 		else {
-			return ("#7D3C98");
+			return ("#7D3C98"); //purple / incomplete / missing
 		}
 	}
 
-	isComplete = (score ) => {
+	isComplete = (score) => {
 		if (score < -100 || score > 100) return false;
 		return true;
 	}
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 
 		this.state = {
@@ -49,7 +49,7 @@ export default class DashboardPie extends Component {
 
 			//set score numeric value or incomplete
 			health_zero: this.isComplete(this.props.data[0]) ? this.props.data[0] : "Incomplete",
-			mentalHealth: this.isComplete((this.props.data[1])) ? this.props.data[1] * -1 : "Incomplete", // multiply -1 to display without reverse score flag
+			mentalHealth: this.isComplete((this.props.data[1])) ? this.props.data[1] : "Incomplete",
 			wellBeing: this.isComplete(this.props.data[2]) ? this.props.data[2] : "Incomplete",
 			lifeSatisfaction: this.isComplete(this.props.data[3]) ? this.props.data[3] : "Incomplete",
 			loneliness: this.props.data[4],
@@ -59,62 +59,64 @@ export default class DashboardPie extends Component {
 
 	componentDidMount() {
 		const ctx = this.chartRef.current.getContext("2d");
-		
+
 		new Chart(ctx, {
 			type: "doughnut",
-      options: {
-		plugins: {
-			legend: {
-				display: true,
-				position: 'top',
-				labels: {
-					font: {
-						size: 12
-					}
-				}
-			  },
-			title: {
-				display: true,
-				text: "At a glance"
+			options: {
+				plugins: {
+					legend: {
+						display: true,
+						position: 'top',
+						labels: {
+							font: {
+								size: 12
+							}
+						}
+					},
+					title: {
+						display: true,
+						text: "At a glance"
+					},
+					tooltip: {
+						enabled: false
+					},
+				},
+				// scales: {
+				// 	x: {
+				// 		min: 0,
+				// 		max: 5
+				// 	}
+				// }
 			},
-			tooltip: {
-				enabled: false,
-			}
-		},
-        scales: {
-			x: {
-				min: 0,
-				max: 5
-			}
-		}
-      },
-			
+
 			data: {
-				labels: ["Health score: " + this.state.health_zero,
-						 "Mental health score: " + this.state.mentalHealth,
-						 "Well-being score: " + this.state.wellBeing, 
-						 "Life satisfaction score: " + this.state.lifeSatisfaction,
-						  "Loneliness"],	//no numeric score for loneliness
-				datasets: [{ 
+				labels: [
+					"Health score: " + this.state.health_zero,
+					"Mental health score: " + this.state.mentalHealth,
+					"Well-being score: " + this.state.wellBeing,
+					"Life satisfaction score: " + this.state.lifeSatisfaction,
+					"Loneliness"
+				],	//no numeric score for loneliness
+				datasets: [{
 					data: [1, 1, 1, 1, 1],
 					borderColor: "#0",
-					backgroundColor: [this.state.health_colour, this.state.mentalHealth_colour, this.state.wellBeing_colour, 
-										this.state.lifeSatisfaction_colour, this.state.loneliness_colour],
+					backgroundColor: [this.state.health_colour, this.state.mentalHealth_colour, this.state.wellBeing_colour,
+					this.state.lifeSatisfaction_colour, this.state.loneliness_colour],
 					fill: false,
 				}
 				]
 			},
-      
+
 		});
 	}
 	render() {
 		return (
 			<div>
 				<canvas
-				id="myChart"
-				ref={this.chartRef}
+					id="myChart"
+					ref={this.chartRef}
 				/>
 			</div>
-			)
+		)
 	}
 }

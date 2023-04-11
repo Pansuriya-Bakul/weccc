@@ -37,7 +37,7 @@ import { colors } from "@material-ui/core";
 
 function App() {
     return (
-                // BrowserRouter to wrap all
+        // BrowserRouter to wrap all
         // the other components
 
         <Router>
@@ -47,17 +47,17 @@ function App() {
 	than rendering all matching routes. */}
             <Switch>
                 <Route exact path="/ClientReports1"
-                       component={SecondComponent}>
+                    component={SecondComponent}>
                 </Route>
                 <Route exact path="/ClientReports"
-                       component={FirstComponent}>
+                    component={FirstComponent}>
                 </Route>
                 <ul>
-                <div>
-                    
-                    
-                
-                    {/* <li> */}
+                    <div>
+
+
+
+                        {/* <li> */}
 
                         {/* Link component uses the to prop
 			to describe the location where the
@@ -65,45 +65,39 @@ function App() {
                         {/* <Link to={"/ClientReports1"} >
                             Social Health
                         </Link> */}
-                    {/* </li> */}
-                   
-                        
-                    <br>
-                    </br>
-                    <br>
-                    </br>    
-                    <br>
-                    </br>
-                    <br>
-                    </br>
-                    <br>
-                    </br>
-                    
+                        {/* </li> */}
 
-                    <table cellspacing="2" bgcolor="#000000" align="center">
-                        <tr bgcolor="#ffffff">
-                            <th><Link to={"/ClientReports1"}>
-                                    <Typography 
-                                    text-decoration="None"
-                                    >
-                                        Social Health Report
+
+                        <br>
+                        </br>
+                        <br>
+                        </br>
+                        <br>
+                        </br>
+                        <br>
+                        </br>
+                        <br>
+                        </br>
+
+
+                        <table cellspacing="2" bgcolor="#000000" align="center">
+                            <tr bgcolor="#ffffff">
+                                <th><Link to={"/ClientReports1"}>
+                                    <Typography style={{ padding: '5px' }}>
+                                        Social Health Screener Report
                                     </Typography>
-                                    <img height="200" width="200"  src={SocialHealth} />
-                                
-                              
-                            </Link></th>
-                            <th><Link to={"/ClientReports"} >
-                                    <Typography>
-                                        Neighbour's Report
+                                    <img height="200" width="200" src={SocialHealth} />
+                                </Link></th>
+                                <th><Link to={"/ClientReports"}>
+                                    <Typography style={{ padding: '5px' }}>
+                                        Community Connections Report
                                     </Typography>
-                                    <img height="200"  src={NeighboursImg} />
-                                
-                              
-                            </Link></th>
-                        </tr>
-                    </table>  
-                    
-                </div>
+                                    <img height="200" width="200" src={NeighboursImg} />
+                                </Link></th>
+                            </tr>
+                        </table>
+
+                    </div>
                 </ul>
             </Switch>
         </Router>
