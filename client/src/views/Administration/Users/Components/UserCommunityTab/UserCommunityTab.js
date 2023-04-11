@@ -393,7 +393,8 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                             <>
                                                 <Grid item xs={12}>
                                                     <Typography variant="subtitle2" component="h6" color="textPrimary">
-                                                        Assigned Clients
+                                                        {/* Assigned Clients */}
+                                                        Assigned Members
                                                     </Typography>
                                                     <Divider light />
                                                 </Grid>
@@ -450,7 +451,8 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                                             </ListItemAvatar>
                                                                             <ListItemText id={labelId}
                                                                                 primary={item.info ? item.info.name : ""}
-                                                                                secondary={item.role ? item.role : ""}
+                                                                                // secondary={item.role ? item.role : ""}
+                                                                                secondary={item.role ? (item.role === 'Patient' ? 'Member' : "") : ""}
                                                                             />
                                                                             <ListItemSecondaryAction>
 

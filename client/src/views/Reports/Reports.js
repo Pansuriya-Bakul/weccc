@@ -90,29 +90,34 @@ const Reports = (props) => {
   );
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
 
-  
-  // Functions ===s
-  
-
-
-  function GeneratePDF(){
-    console.log("Generated PDF");
-    const doc = new jsPDF();
-    doc.text("Hello world!", 10, 10);
-    patientData.map((item, index) => {
-                        if (item._id == currentPatient){
-                          doc.save(item.info.name+" Report.pdf")
-                        }
-})
-  }
+  // Functions ===
 
   const getPatients = useCallback(() => {
+
     if (appState.role == "Patient") {
       setAlert(
         new AlertType("You do not have Permission to recieve Patients", "error")
       );
       return;
     } else {
+      if (appState.role == "Admin" || appState.role == "Coordinator") {
+        get("users/" + currentPatient, appState.token, (error, response) => {
+          if (error) {
+            setAlert(new AlertType('Unable to retrieve User. Please refresh and try again.', "error"));
+          }
+          else {
+            if (response.status === 200) {
+              setPatientData([response.data.user]);
+              return;
+              // setAlert(new AlertType('Successfully pulled user.', "success"));
+            }
+            else {
+              setAlert(new AlertType('Unable to retrieve User. Please refresh and try again.', "error"));
+            }
+          }
+        });
+      }
+
       if (appState.patients.length <= 0) {
         setAlert(
           new AlertType(
@@ -140,11 +145,11 @@ const Reports = (props) => {
           );
         } else {
           if (res.status === 200) {
-            
+            console.log(res.data.response.users)
             setPatientData(res.data.response.users);
           } else {
             //Bad HTTP Response
-            
+
             setAlert(
               new AlertType(
                 "Unable to retrieve Patients. Please refresh and try again.",
@@ -203,7 +208,7 @@ const Reports = (props) => {
   //         );
   //       } else {
   //         if (res.status === 200) {
-            
+
   //           if (Object.keys(res.data).length === 0) {
   //             setReportsData(null);
   //           } else {
@@ -345,30 +350,30 @@ const Reports = (props) => {
                         </Select> */}
                       </FormControl>
 
-                        <Typography
-                              variant="h45"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Patient's name:  
-                        </Typography>
+                      <Typography
+                        variant="h45"
+                        color="textSecondary"
+                        align="left"
+                        gutterBottom
+                      >
+                        Member's name:
+                      </Typography>
                       {patientData.map((item, index) => {
-                        if (item._id == currentPatient){
-                          return(
+                        if (item._id == currentPatient) {
+                          return (
                             <Box mx={1} my={2} boxShadow={1}>
                               <Typography
-                                    variant="h4"
-                                    color="textPrimary"
-                                    align="left"
-                                    gutterBottom
-                                  >
-                                    {item.info.name}   
+                                variant="h4"
+                                color="textPrimary"
+                                align="left"
+                                gutterBottom
+                              >
+                                {item.info.name}
                               </Typography>
-                              </Box>
+                            </Box>
                           );
                         }
-                    })}
+                      })}
                     </Grid>
                     {/* <Grid item xs={12}>
                       {reportsData ? (
@@ -400,8 +405,8 @@ const Reports = (props) => {
                     spacing={1}
                   >
                     {reportsData &&
-                    Object.keys(reportsData).length != 0 &&
-                    Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                      Object.keys(reportsData).length != 0 &&
+                      Object.getPrototypeOf(reportsData) === Object.prototype ? (
                       <>
                         <Grid item xs={12}>
                           <Typography variant="h4" color="textPrimary">
@@ -520,8 +525,8 @@ Reports.propTypes = {
 
 Reports.defaultProps = {
   appState: {},
-  ToggleDrawerClose: () => {},
-  CheckAuthenticationValidity: () => {},
+  ToggleDrawerClose: () => { },
+  CheckAuthenticationValidity: () => { },
 };
 
 export default Reports; // You can even shorthand this line by adding this at the function [Component] declaration stage
