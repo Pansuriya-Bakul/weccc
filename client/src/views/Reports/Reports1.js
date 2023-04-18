@@ -85,7 +85,7 @@ const Reports = (props) => {
   const [patientData, setPatientData] = useState([]);
   const [currentPatient, setCurrentPatient] = useState(userID);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
-  const [memberName, setMemeberName] = useState('');
+  const [memberName, setMemberName] = useState('');
 
 
   // Functions ===
@@ -193,7 +193,7 @@ const Reports = (props) => {
             if (Object.keys(otherData).length === 0) {
               setReportsData(null);
             } else {
-              setMemeberName(memberName);
+              setMemberName(memberName);
               setReportsData(otherData);
             }
           } else {
