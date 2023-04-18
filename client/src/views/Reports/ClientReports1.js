@@ -368,7 +368,7 @@ const ClientReports = (props) => {
                       <>
                         <Grid item xs={12}>
                           <Typography variant="h4" color="textPrimary">
-                            Compassion Care Community Social Health Report
+                            Social Risk Screener Report
                           </Typography>
                           <Divider light />
                         </Grid>
