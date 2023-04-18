@@ -8,6 +8,8 @@ Methods:
 */
 
 const mongoose = require("mongoose");
+const fs = require('fs');
+const NodeRSA = require('node-rsa');
 
 const User = require("../models/user");
 const Collection = require("../models/collection");
@@ -22,6 +24,22 @@ const neighbourFunctions = require("../utils/neighboursFunctions");
 const { error } = require("joi/lib/types/lazy");
 const { errors } = require("joi/lib/language");
 const memberCollection = require("../models/memberCollection");
+
+// ====================================================
+// Encryption routes for keys and extracting keys
+// ====================================================
+
+let key_private = new NodeRSA();
+let key_public = new NodeRSA();
+
+var public = fs.readFileSync('./Keys/public.pem', 'utf8');
+var private = fs.readFileSync('./Keys/private.pem', 'utf8');
+
+key_private.importKey(private);
+key_public.importKey(public);
+
+// ======================================================
+
 
 exports.standardAccountId = async (req, res) =>
 {
@@ -100,6 +118,7 @@ exports.Neighbour = async (req, res) =>
                         let account_involvement = neighbourFunctions.formatInvolvement(memberCollectionList[0].member.role || "");
                         
                         let account_name = memberCollectionList[0].member.info.name || "";
+                        account_name = account_name.length >= 60 ? key_private.decrypt(account_name, 'utf8') : account_name;
                         
                         let account_gender = neighbourFunctions.formatGender(memberCollectionList[0].member.info.gender || "");
 
@@ -831,6 +850,7 @@ exports.Neighbour = async (req, res) =>
                         // life_satisfaction2: life_satisfaction2,
                         // community_activity_participate: community_activity_participate,
                         // household2_size: household2_size,
+                        memberName: account_name,
                         request: { 
                             type: 'GET',
                             url: config.server.protocol + '://' + config.server.hostname +':' + config.server.port + '/api/reports/neighbours/user/' + req.params.userId

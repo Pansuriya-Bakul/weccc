@@ -31,6 +31,7 @@ class Main extends Component {
 
 		this.state = {
 			render: false,
+			isLoading: true,
 			clientData: [],
 			clientSurvey: '',
 			quote: '',
@@ -41,11 +42,11 @@ class Main extends Component {
 	}
 
 	checkAuth = () => {
-		setTimeout(() => {
+		// setTimeout(() => {
 			this.props.ToggleDrawerClose();
-			this.setState({
-				render: true
-			});
+			// this.setState({
+			// 	render: true
+			// });
 			this.props.CheckAuthenticationValidity(tokenValid => {
 				if (tokenValid) {
 					this.setState({
@@ -53,7 +54,7 @@ class Main extends Component {
 					});
 				}
 			});
-		}, 200);
+		// }, 200);
 	};
 
 	setToggle = (key) => {
@@ -90,6 +91,7 @@ class Main extends Component {
 					toggle[key] = false;
 				})
 				this.setState({ toggle: toggle });
+				this.setState({isLoading: false});
 				callback();
 			}
 		}); // call the get request.
@@ -249,92 +251,94 @@ class Main extends Component {
 												</Typography>
 											</Grid>
 											<Grid item xs={12}>
-												<Typography variant="body2" component="h2">
+												{this.state.isLoading 
+												? (<CircularProgress />)
+												: <Typography variant="body2" component="h2">
 
-													{/* {this.state.clientData.message ? (
-														<p>{this.state.clientData.message}</p>
-													) : ('')} */}
-													{(this.state.collectionNames !== [] && this.state.collectionNames !== undefined) ? (
-														(this.state.collectionNames).map((key, index) => {
-															return (
-																<>
-																	{(this.state.collectionCompleteness[index] == false) && <Grid item xs={12}>
-																		{/* <Tooltip
-																			placement="bottom"
-																			title="Edit Collection"
-																		> */}
-																		<div >
-																			<Box mt={1.5} p={1.5} className='box-container' onClick={() => this.setToggle(key)}>
-																				<div
-																					size="small"
-																					variant="contained"
-																					color="primary"
-																					startIcon={<EditIcon />}
-																					component={Link}
-																					to={`/administration/booklets/user/view`}
-																				>
-																					{/* View Survey {parseInt(key, 10)+1} :  */}
-																					<h3>{key}</h3>
-																				</div>
+												{/* {this.state.clientData.message ? (
+													<p>{this.state.clientData.message}</p>
+												) : ('')} */}
+												{(this.state.collectionNames !== [] && this.state.collectionNames !== undefined) ? (
+													(this.state.collectionNames).map((key, index) => {
+														return (
+															<>
+																{(this.state.collectionCompleteness[index] == false) && <Grid item xs={12}>
+																	{/* <Tooltip
+																		placement="bottom"
+																		title="Edit Collection"
+																	> */}
+																	<div >
+																		<Box mt={1.5} p={1.5} className='box-container' onClick={() => this.setToggle(key)}>
+																			<div
+																				size="small"
+																				variant="contained"
+																				color="primary"
+																				// startIcon={<EditIcon />}
+																				component={Link}
+																				to={`/administration/booklets/user/view`}
+																			>
+																				{/* View Survey {parseInt(key, 10)+1} :  */}
+																				<h3>{key}</h3>
+																			</div>
 
 
-																			</Box>
-																			{this.state.toggle[key] && (<Box m={0} p={1.5} className='bottom-container'>
-																				<div className="survey-div">
-																					{
-																						(this.state.collections !== '' && this.state.collections !== undefined)
+																		</Box>
+																		{this.state.toggle[key] && (<Box m={0} p={1.5} className='bottom-container'>
+																			<div className="survey-div">
+																				{
+																					(this.state.collections !== '' && this.state.collections !== undefined)
 
-																							? (
-																								this.state.collections[index].map(value => {
-																									return (
-																										<>
-																											<Grid item xs={12}>
-																												<Tooltip
-																													placement="bottom"
-																													title="Edit Chapter"
-																												>
-																													<Box m={1} pt={1} className='survey-box'>
-																														<Button className='survey-name'
-																															size="small"
-																															variant="contained"
-																															color="primary"
-																															startIcon={<EditIcon />}
-																															component={Link}
-																															to={`/administration/booklets/user/view/${value[0]}`}
-																														>
-																															{value[2]}
-																														</Button>
-																														{(value[1] == 0) && <div className="status-div not-started">
-																															<span>Not Started</span>
-																														</div>}
-																														{(value[1] > 0 && value[1] < 100) && <div className="status-div in-progress">
-																															<span>In Progress</span>
-																														</div>}
-																														{(value[1] == 100) && <div className="status-div completed">
-																															<span>Completed</span>
-																														</div>}
-																													</Box>
-																												</Tooltip>
-																											</Grid>
-																										</>
-																									);
-																								})
-																							) : (
-																								''
-																							)}
-																				</div>
-																			</Box>)}
-																		</div>
-																		{/* </Tooltip> */}
-																	</Grid>}
+																						? (
+																							this.state.collections[index].map(value => {
+																								return (
+																									<>
+																										<Grid item xs={12}>
+																											<Tooltip
+																												placement="bottom"
+																												title="Edit Chapter"
+																											>
+																												<Box m={1} pt={1} className='survey-box'>
+																													<Button className='survey-name'
+																														size="small"
+																														variant="contained"
+																														color="primary"
+																														startIcon={<EditIcon />}
+																														component={Link}
+																														to={`/administration/booklets/user/view/${value[0]}`}
+																													>
+																														{value[2]}
+																													</Button>
+																													{(value[1] == 0) && <div className="status-div not-started">
+																														<span>Not Started</span>
+																													</div>}
+																													{(value[1] > 0 && value[1] < 100) && <div className="status-div in-progress">
+																														<span>In Progress</span>
+																													</div>}
+																													{(value[1] == 100) && <div className="status-div completed">
+																														<span>Completed</span>
+																													</div>}
+																												</Box>
+																											</Tooltip>
+																										</Grid>
+																									</>
+																								);
+																							})
+																						) : (
+																							''
+																						)}
+																			</div>
+																		</Box>)}
+																	</div>
+																	{/* </Tooltip> */}
+																</Grid>}
 
-																</>
-															);
-														})
-													) : (
-														''
-													)}
-												</Typography>
+															</>
+														);
+													})
+												) : (
+													''
+												)}
+												</Typography>}
 											</Grid>
 										</Grid>
 									</Box>
