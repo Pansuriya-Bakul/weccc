@@ -295,8 +295,8 @@ const ClientReports = (props) => {
                                         </Button> */}
               </Box>
             </Grid>
-            <Grid item xs={12}>
-              <Card raised={true}>
+            {/* <Grid item xs={12}>
+              <Card raised={true}> */}
                 {/* <Box mx={1} my={1} boxShadow={0}>
                   {/* <Grid
                     container
@@ -350,10 +350,10 @@ const ClientReports = (props) => {
                     </Grid> 
                   </Grid> *
                 </Box> */}
-              </Card>
-            </Grid>
+              {/* </Card>
+            </Grid> */}
             <Grid item xs={12}>
-              <Card raised={true}>
+              <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
                   <Grid
                     container
@@ -368,7 +368,7 @@ const ClientReports = (props) => {
                       <>
                         <Grid item xs={12}>
                           <Typography variant="h4" color="textPrimary">
-                            Compassion Care Community Social Health Report
+                            Social Risk Screener Report
                           </Typography>
                           <Divider light />
                         </Grid>

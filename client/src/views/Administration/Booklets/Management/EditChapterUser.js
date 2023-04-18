@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';                     //Development Package to
 // ==================== Components ==================
 import PullChapterDialog from '../Dialog/PullChapterDialog';
 import SaveChapterDialog from '../Dialog/SaveChapterDialog';
+import MarkCompleteChapterDialog from '../Dialog/MarkCompleteChapterDialog';
 import AlertMessage from '../../../../components/AlertMessage';
 
 // import 'nouislider/dist/nouislider.css'; This is the newer 15.5.0 version
@@ -27,7 +28,7 @@ import * as Survey from "survey-react";
 import "survey-react/survey.css";
 
 // ==================== Helpers =====================
-import get from  '../../../../helpers/common/get';
+import get from '../../../../helpers/common/get';
 import AlertType from '../../../../helpers/models/AlertType';
 
 import calculateCompleteness from '../../../../helpers/reports/reports';
@@ -61,6 +62,7 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import ReplayIcon from '@material-ui/icons/Replay';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import DoneIcon from '@material-ui/icons/Done'
 
 // ================= Static Variables ================
 const backLink = "/administration/booklets/management";
@@ -81,20 +83,20 @@ Survey.StylesManager.applyTheme(surveyStyle);
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            flexGrow: 1,     // CSS determined this way, flexbox properties
-            height: '100%'
-        },
-        rootGrid: {
-            height: '100%'
-        },
-        FormControlLabel: {
-            marginLeft: "1rem",
-            marginRight: "1rem"
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        flexGrow: 1,     // CSS determined this way, flexbox properties
+        height: '100%'
+    },
+    rootGrid: {
+        height: '100%'
+    },
+    FormControlLabel: {
+        marginLeft: "1rem",
+        marginRight: "1rem"
+    }
+}));
 
 
 // ======================== React Modern | Functional Component ========================
@@ -103,290 +105,269 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, ChapterID, ToggleDrawerClose, CheckAuthenticationValidity, mode } = props;
+    // Declaration of Stateful Variables ===
+    const { appState, ChapterID, ToggleDrawerClose, CheckAuthenticationValidity, mode } = props;
 
-        const [chapterOriginal, setChapterOriginal] = useState(null);
+    const [chapterOriginal, setChapterOriginal] = useState(null);
 
-        const [chapterCopy, setChapterCopy] = useState(null);
+    const [chapterCopy, setChapterCopy] = useState(null);
 
-        const [surveyJSloading, setSurveyJSLoading] = useState(true);
+    const [surveyJSloading, setSurveyJSLoading] = useState(true);
 
-        const survey = useRef(null);
+    const survey = useRef(null);
 
-        const [progress, setProgress] = useState(false);
+    const [progress, setProgress] = useState(false);
 
-        const [saveChapterDialog, setSaveChapterDialog] = useState(false);
-        const [saveChapterDialogExecuting, setSaveChapterDialogExecuting] = useState(false);
+    const [editable, setEditable] = useState(true);
 
-        const [pullChapterDialog, setPullChapterDialog] = useState(false);
-        const [pullChapterDialogExecuting, setPullChapterDialogExecuting] = useState(false);
+    const [saveChapterDialog, setSaveChapterDialog] = useState(false);
+    const [saveChapterDialogExecuting, setSaveChapterDialogExecuting] = useState(false);
 
-        // Alert variable
-        const [alert, setAlert] = useState(new AlertType());
+    const [pullChapterDialog, setPullChapterDialog] = useState(false);
+    const [pullChapterDialogExecuting, setPullChapterDialogExecuting] = useState(false);
+
+    const [markCompleteChapterDialog, setMarkCompleteChapterDialog] = useState(false);
+    const [markCompleteChapterDialogExecuting, setMarkCompleteChapterDialogExecuting] = useState(false);
+
+    // Alert variable
+    const [alert, setAlert] = useState(new AlertType());
 
     // Functions ===
 
-        // Loads existing booklet chosen by user from the database
-        const loadChapter = useCallback(() =>
-        {
+    // Loads existing booklet chosen by user from the database
+    const loadChapter = useCallback(() => {
 
-            if(ChapterID != null)
-            {
-                get("membersurveys/" + ChapterID, appState.token, (error, response) => 
-                {
-                    if(error)
-                    {
+        if (ChapterID != null) {
+            get("membersurveys/" + ChapterID, appState.token, (error, response) => {
+                if (error) {
+                    setAlert(new AlertType('Unable to retrieve User Chapter. Please refresh and try again.', "error"));
+                }
+                else {
+                    if (response.status === 200 || response.status === 304) {
+                        setSurveyJSLoading(true);
+                        setChapterOriginal(response.data.memberSurvey);
+                    }
+                    else {
                         setAlert(new AlertType('Unable to retrieve User Chapter. Please refresh and try again.', "error"));
                     }
-                    else
-                    {
-                        if(response.status === 200 || response.status === 304)
-                        {
-                            setSurveyJSLoading(true);
-                            setChapterOriginal(response.data.memberSurvey);
-                        }
-                        else
-                        {
-                            setAlert(new AlertType('Unable to retrieve User Chapter. Please refresh and try again.', "error"));
-                        }
-                    }
-                });
-            }
-            else
-            {
-                setAlert(new AlertType('Unable to retrieve User Chapter. Please refresh and try again.', "error")); 
-            }
-
-        }, [ ChapterID, appState ]);
-
-        const completeHandler = useCallback((result) =>
-        {
-            
-            if(chapterCopy)
-            {
-                if(!survey.current.hasErrors())
-                {
-                    setChapterCopy({...chapterCopy, completeness: calculateCompleteness(survey.current), responseJSON: JSON.stringify(result.data)});            
                 }
+            });
+        }
+        else {
+            setAlert(new AlertType('Unable to retrieve User Chapter. Please refresh and try again.', "error"));
+        }
+
+    }, [ChapterID, appState]);
+
+    const completeHandler = useCallback((result) => {
+
+        if (chapterCopy) {
+            if (!survey.current.hasErrors()) {
+                setChapterCopy({ ...chapterCopy, completeness: calculateCompleteness(survey.current), responseJSON: JSON.stringify(result.data) });
             }
-            
-        }, [ chapterCopy ]);
+        }
 
-        const pageChangeHandler = useCallback((result) =>
-        {
-            
-            if(chapterCopy)
-            {
-                if(!survey.current.hasPageErrors())
-                {
-                    setChapterCopy({...chapterCopy, responseJSON: JSON.stringify(result.data)});  
-                }
+    }, [chapterCopy]);
+
+    const pageChangeHandler = useCallback((result) => {
+
+        if (chapterCopy) {
+            if (!survey.current.hasPageErrors()) {
+                setChapterCopy({ ...chapterCopy, responseJSON: JSON.stringify(result.data) });
             }
+        }
 
-        }, [ chapterCopy ]);
-        
-        const pullHandler = useCallback(() => 
-        {
-            setPullChapterDialog(true);
-        }, [ ]);
+    }, [chapterCopy]);
 
-        
-        // const restoreHandler = useCallback(() => 
-        // {
-        //     setChapterCopy(chapterOriginal);
+    const pullHandler = useCallback(() => {
+        setPullChapterDialog(true);
+    }, []);
 
-        //     survey.current.clear();
-    
-        //     survey.current.mergeData(JSON.parse(chapterOriginal.responseJSON));
+    const markCompleteHandler = useCallback(() => {
+        if (chapterCopy != null) {
+            setMarkCompleteChapterDialog(true);
+        }
+    }, [chapterCopy]);
 
-        //     survey.current.render();
+    // const restoreHandler = useCallback(() => 
+    // {
+    //     setChapterCopy(chapterOriginal);
 
-        //     setAlert(new AlertType('Restored chapter back to previous saved state. You can continue editing if you wish.', "info"));
+    //     survey.current.clear();
 
-        // }, [ chapterOriginal ]);
+    //     survey.current.mergeData(JSON.parse(chapterOriginal.responseJSON));
 
-        const restartHandler = useCallback(() => 
-        {
+    //     survey.current.render();
 
-            survey.current.clear();
+    //     setAlert(new AlertType('Restored chapter back to previous saved state. You can continue editing if you wish.', "info"));
 
-            survey.current.mergeData(JSON.parse(chapterCopy.responseJSON));
+    // }, [ chapterOriginal ]);
 
-            survey.current.render();
-            
-            setAlert(new AlertType('Restarted chapter survey to most recently completed page. You can continue to modify if you wish.', "info")); 
+    const restartHandler = useCallback(() => {
 
-        }, [ chapterCopy ]);
+        survey.current.clear();
 
-        const saveHandler = useCallback(() => 
-        {
-            if(chapterCopy != null)
-            {
-                // let currentSurveyObject = survey.current.data;
-                // let completedSurveyObject = JSON.parse(chapterCopy.responseJSON);
+        survey.current.mergeData(JSON.parse(chapterCopy.responseJSON));
 
-                // for (const [key, value] of Object.entries(completedSurveyObject))
-                // {
-                //     if(currentSurveyObject[key] !== value)
-                //     {
-                //         setAlert(new AlertType('In-completed Survey Modifications. Please complete current changes to save.', "info"));
-                //         return;
-                //     }
-                //
-                
-                setSaveChapterDialog(true);
-            }
-            
-        }, [ chapterCopy ]);
+        survey.current.render();
 
-        // const approvedHandler = useCallback((event) => 
-        // {
-        //     setChapterCopy({...chapterCopy, approved: event.target.checked});
+        setAlert(new AlertType('Restarted chapter survey to most recently completed page. You can continue to modify if you wish.', "info"));
 
-        // }, [ chapterCopy ]);
+    }, [chapterCopy]);
 
-        
-        const valueChangeHandler = (result, options) =>
-        {
-            // console.log(result.data);
+    const saveHandler = useCallback(() => {
+        if (chapterCopy != null) {
+            // let currentSurveyObject = survey.current.data;
+            // let completedSurveyObject = JSON.parse(chapterCopy.responseJSON);
 
-            if (chapterCopy.responseJSON != JSON.stringify(result.data))
-            {
-                setProgress(true);
-            }
-            else
-            {
-                setProgress(false);
-            }
+            // for (const [key, value] of Object.entries(completedSurveyObject))
+            // {
+            //     if(currentSurveyObject[key] !== value)
+            //     {
+            //         setAlert(new AlertType('In-completed Survey Modifications. Please complete current changes to save.', "info"));
+            //         return;
+            //     }
+            //
 
-            setChapterCopy({...chapterCopy, completeness: calculateCompleteness(survey.current), responseJSON: JSON.stringify(result.data)});
-            //We can use this to check change of specific inputs
-        };
-    
-        const progressHandler = useCallback(() => 
-        {
-            if(chapterCopy.responseJSON !== chapterOriginal.responseJSON)
-            {
-                setProgress(true);
-            }
+            setSaveChapterDialog(true);
+        }
 
-        }, [ chapterOriginal, chapterCopy ]);
+    }, [chapterCopy]);
+
+    // const approvedHandler = useCallback((event) => 
+    // {
+    //     setChapterCopy({...chapterCopy, approved: event.target.checked});
+
+    // }, [ chapterCopy ]);
+
+
+    const valueChangeHandler = (result, options) => {
+        // console.log(result.data);
+
+        if (chapterCopy.responseJSON != JSON.stringify(result.data)) {
+            setProgress(true);
+        }
+        else {
+            setProgress(false);
+        }
+
+        setChapterCopy({ ...chapterCopy, completeness: calculateCompleteness(survey.current), responseJSON: JSON.stringify(result.data) });
+        //We can use this to check change of specific inputs
+    };
+
+    const progressHandler = useCallback(() => {
+        if (chapterCopy.responseJSON !== chapterOriginal.responseJSON) {
+            setProgress(true);
+        }
+
+    }, [chapterOriginal, chapterCopy]);
 
     // Hooks ===
 
-        // First Render only because of the [ ] empty array tracking with the useEffect
-        useEffect( () =>
-        {
-            ToggleDrawerClose();
-            setTimeout(() => {
-                CheckAuthenticationValidity( (tokenValid) => 
-                {
-                    if(tokenValid)
-                    {
-                        // Load or Do Something
-                        loadChapter();
-                    }
-                    else {
-
-                        // Bad Response
-                        setAlert(null);
-                    }
-                });
-            }, 200);    //
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ ]);
-
-        useEffect( () => 
-        {
-
-            if(chapterOriginal) {
-
-                setChapterCopy({...chapterOriginal});
-
-                if(chapterOriginal.surveyTemplate.surveyJSON !== "")
-                {
-                    let surveyJSON = JSON.parse(chapterOriginal.surveyTemplate.surveyJSON);
-                    let responseJSON = JSON.parse(chapterOriginal.responseJSON);
-
-                    let tempSurvey = new Survey.Model(surveyJSON);
-                    tempSurvey.data = responseJSON;
-                    
-                    tempSurvey.showProgressBar = "top";
-                    tempSurvey.sendResultOnPageNext = true;
-
-                    survey.current = tempSurvey;
-
+    // First Render only because of the [ ] empty array tracking with the useEffect
+    useEffect(() => {
+        ToggleDrawerClose();
+        setTimeout(() => {
+            CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
+                    // Load or Do Something
+                    loadChapter();
                 }
-                else
-                {
-                    survey.current = null;
-                    setAlert(new AlertType('Chapter survey is empty.', "info"));
+                else {
+
+                    // Bad Response
+                    setAlert(null);
                 }
-                
-                setSurveyJSLoading(false);
+            });
+        }, 200);    //
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+
+        if (chapterOriginal) {
+
+            setChapterCopy({ ...chapterOriginal });
+
+            if (chapterOriginal.surveyTemplate.surveyJSON !== "") {
+                let surveyJSON = JSON.parse(chapterOriginal.surveyTemplate.surveyJSON);
+                let responseJSON = JSON.parse(chapterOriginal.responseJSON);
+
+                let tempSurvey = new Survey.Model(surveyJSON);
+                tempSurvey.data = responseJSON;
+
+                tempSurvey.showProgressBar = "top";
+                tempSurvey.sendResultOnPageNext = true;
+
+                survey.current = tempSurvey;
+
+            }
+            else {
+                survey.current = null;
+                setAlert(new AlertType('Chapter survey is empty.', "info"));
             }
 
-        }, [ chapterOriginal ]);
+            setSurveyJSLoading(false);
+        }
 
-        useEffect( () =>
-        {
-            if(chapterCopy)
-            {
-              progressHandler();
-            }
-            
-        }, [ chapterCopy, progressHandler ]);
+    }, [chapterOriginal]);
+
+    useEffect(() => {
+        if (chapterCopy) {
+            progressHandler();
+        }
+
+    }, [chapterCopy, progressHandler]);
 
     // Render Section ===
 
-        return (
-            alert != null? (
+    return (
+        alert != null ? (
 
-                // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
-                <div className={classes.root}>
-                    <Grid container
+            // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
+            <div className={classes.root}>
+                <Grid container
                     className={classes.rootGrid}
                     direction="row"
                     justifyContent="flex-start"
                     alignItems="stretch"
                     spacing={1}
-                    >
-                        <Grid item xs={5}>
-                            <Box mx={1} my={1}>
-                                <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>
-                                    {/* <Grid item>
+                >
+                    <Grid item xs={5}>
+                        <Box mx={1} my={1}>
+                            <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>
+                                {/* <Grid item>
                                         <IconButton component={Link} to={backLink}>
                                             <ArrowBackIosIcon />
                                         </IconButton>
                                     </Grid> */}
-                                    <Grid item xs>
-                                        <Typography variant="h4" color="inherit" align="left" gutterBottom>
-                                            Filling in {chapterOriginal? `"${chapterOriginal.surveyTemplate.name}"` : null}
-                                        </Typography>
-                                    </Grid>
+                                <Grid item xs>
+                                    <Typography variant="h4" color="inherit" align="left" gutterBottom>
+                                        Filling in {chapterOriginal ? `"${chapterOriginal.surveyTemplate.name}"` : null}
+                                    </Typography>
                                 </Grid>
-                            </Box> 
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box mx={1} my={1}>
-                                <AlertMessage alert={alert} setParentAlert={setAlert} />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Card raised={true}>
-                                <Box mx={2} my={1} boxShadow={0}>
-                                    <Grid
-                                        container
-                                        direction="column"
-                                        justifyContent="flex-start"
-                                        alignItems="stretch"
-                                        spacing={1}
-                                    >
-                                        {chapterCopy?
+                            </Grid>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Box mx={1} my={1}>
+                            <AlertMessage alert={alert} setParentAlert={setAlert} />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Card raised={true}>
+                            <Box mx={2} my={1} boxShadow={0}>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justifyContent="flex-start"
+                                    alignItems="stretch"
+                                    spacing={1}
+                                >
+                                    {chapterCopy ?
                                         (
                                             <>
                                                 <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
@@ -404,12 +385,13 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                         placement="bottom"
                                                                         title="View Chapter"
                                                                     >
-                                                                        {mode === "Admin"? (
-                                                                            <Button 
-                                                                                size="small" 
-                                                                                variant="contained" 
+                                                                        {mode === "Admin" ? (
+                                                                            <Button
+                                                                                size="small"
+                                                                                variant="contained"
                                                                                 color="secondary"
                                                                                 startIcon={<VisibilityIcon />}
+                                                                                disabled={!editable}
                                                                                 component={Link}
                                                                                 to={`/administration/booklets/user/view/${ChapterID}`}
                                                                             >
@@ -419,7 +401,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                             <>
                                                                             </>
                                                                         )}
-                                                                        
+
                                                                     </Tooltip>
                                                                 </Grid>
                                                                 <Grid item>
@@ -427,43 +409,29 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                         placement="bottom"
                                                                         title="Refresh Online Chapter"
                                                                     >
-                                                                        <Button 
-                                                                            size="small" 
-                                                                            variant="contained" 
+                                                                        <Button
+                                                                            size="small"
+                                                                            variant="contained"
                                                                             color="primary"
                                                                             startIcon={<RefreshIcon />}
+                                                                            disabled={!editable}
                                                                             onClick={() => { pullHandler(); }}
                                                                         >
                                                                             Refresh
                                                                         </Button>
-                                                                    </Tooltip> 
-                                                                </Grid>
-                                                                {/* <Grid item>
-                                                                    <Tooltip
-                                                                        placement="bottom"
-                                                                        title="Restore Chapter"
-                                                                    >
-                                                                        <Button 
-                                                                            size="small" 
-                                                                            variant="contained" 
-                                                                            color="primary"
-                                                                            startIcon={<RestoreIcon />}
-                                                                            onClick={() => { restoreHandler(); }}
-                                                                        >
-                                                                            Restore
-                                                                        </Button>
                                                                     </Tooltip>
-                                                                </Grid> */}
+                                                                </Grid>
                                                                 <Grid item>
                                                                     <Tooltip
                                                                         placement="bottom"
                                                                         title="Restart Survey Progress"
                                                                     >
-                                                                        <Button 
-                                                                            size="small" 
-                                                                            variant="contained" 
+                                                                        <Button
+                                                                            size="small"
+                                                                            variant="contained"
                                                                             color="primary"
                                                                             startIcon={<ReplayIcon />}
+                                                                            disabled={!editable}
                                                                             onClick={() => { restartHandler(); }}
                                                                         >
                                                                             Restart
@@ -471,29 +439,46 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                     </Tooltip>
                                                                 </Grid>
                                                                 <Grid item>
-                                                                    {progress? (
+                                                                    <Tooltip
+                                                                        placement="bottom"
+                                                                        title="Mark as Complete Chapter"
+                                                                    >
+                                                                        <Button
+                                                                            size="small"
+                                                                            variant="contained"
+                                                                            color="secondary"
+                                                                            disabled={!editable}
+                                                                            startIcon={<DoneIcon />}
+                                                                            onClick={() => { markCompleteHandler(); }}
+                                                                        >
+                                                                            Mark Complete
+                                                                        </Button>
+                                                                    </Tooltip>
+                                                                </Grid>
+                                                                <Grid item>
+                                                                    {progress ? (
                                                                         <Tooltip
                                                                             placement="bottom"
                                                                             title="Save Chapter"
                                                                         >
-                                                                            <Button 
-                                                                                size="small" 
-                                                                                variant="contained" 
+                                                                            <Button
+                                                                                size="small"
+                                                                                variant="contained"
                                                                                 color="primary"
                                                                                 startIcon={<SaveIcon />}
-                                                                                disabled={!progress}
+                                                                                disabled={!editable}
                                                                                 onClick={() => { saveHandler(); }}
                                                                             >
                                                                                 Save
                                                                             </Button>
-                                                                        </Tooltip> 
+                                                                        </Tooltip>
                                                                     ) : (
-                                                                        <Button 
-                                                                            size="small" 
-                                                                            variant="contained" 
+                                                                        <Button
+                                                                            size="small"
+                                                                            variant="contained"
                                                                             color="primary"
                                                                             startIcon={<SaveIcon />}
-                                                                            disabled={!progress}
+                                                                            disabled={true}
                                                                             onClick={() => { saveHandler(); }}
                                                                         >
                                                                             Save
@@ -524,7 +509,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                 </Grid>
                                                 <Grid item xs={12}>
                                                     <Box mx={1} my={1} boxShadow={0}>
-                                                        <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>            
+                                                        <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>
                                                             <Grid item xs={3}>
                                                                 <TextField label="Name"
                                                                     disabled
@@ -578,7 +563,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                     disabled
                                                                     size="small"
                                                                     fullWidth
-                                                                    variant="filled" 
+                                                                    variant="filled"
                                                                     value={new Date(chapterOriginal.createdAt).toLocaleString()}
                                                                     InputProps={{
                                                                         readOnly: true,
@@ -590,7 +575,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                     disabled
                                                                     size="small"
                                                                     fullWidth
-                                                                    variant="filled" 
+                                                                    variant="filled"
                                                                     value={chapterOriginal.createdBy}
                                                                     InputProps={{
                                                                         readOnly: true,
@@ -617,60 +602,121 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                     </Box>
                                                 </Grid>
                                             </Grid>
-                                        )}   
-                                        <Grid item xs={12}>
-                                            <Box mx={1} my={1} boxShadow={0}>
-                                                <Collapse in={!surveyJSloading}>
-                                                    {survey.current != null?
+                                        )}
+                                    <Grid item xs={12}>
+                                        <Box mx={1} my={1} boxShadow={0}>
+                                            <Collapse in={!surveyJSloading}>
+                                                {survey.current != null ?
                                                     (
-                                                        <Survey.Survey id={surveyContainerID} model={survey.current}
-                                                            onComplete={  (result) => { completeHandler(result); }}
-                                                            onCurrentPageChanged={ (result) => { pageChangeHandler(result); }}
-                                                            onValueChanged={(result, options) => { valueChangeHandler(result, options); }} 
-                                                        />
+                                                        <>
+                                                            <Survey.Survey id={surveyContainerID} model={survey.current}
+                                                                // onComplete={(result) => { completeHandler(result); }}
+                                                                // onComplete={() => { markCompleteHandler(); }}
+                                                                showNavigationButtons={false}
+                                                                onCurrentPageChanged={(result) => { pageChangeHandler(result); }}
+                                                                onValueChanged={(result, options) => { valueChangeHandler(result, options); }}
+                                                            />
+                                                            <div style={{ float: 'right' }}>
+                                                                {progress ? (
+                                                                    <>
+                                                                        <Button style={{ marginRight: '5px' }}
+                                                                            size="small"
+                                                                            variant="contained"
+                                                                            color="primary"
+                                                                            startIcon={<SaveIcon />}
+                                                                            disabled={!editable}
+                                                                            onClick={() => { saveHandler(); }}
+                                                                        >
+                                                                            Save
+                                                                        </Button>
+
+                                                                    </>
+
+                                                                ) : (<>
+                                                                    <Button style={{ marginRight: '5px' }}
+                                                                        size="small"
+                                                                        variant="contained"
+                                                                        color="primary"
+                                                                        startIcon={<SaveIcon />}
+                                                                        disabled={true}
+                                                                        onClick={() => { saveHandler(); }}
+                                                                    >
+                                                                        Save
+                                                                    </Button>
+                                                                </>)}
+                                                                <Button
+                                                                    size="small"
+                                                                    variant="contained"
+                                                                    color="secondary"
+                                                                    disabled={!editable}
+                                                                    startIcon={<DoneIcon />}
+                                                                    onClick={() => { markCompleteHandler(); }}
+                                                                >
+                                                                    Mark Complete
+                                                                </Button>
+
+                                                            </div>
+
+
+                                                        </>
+
+
                                                     ) : (
                                                         null
                                                     )}
-                                                </Collapse>
-                                            </Box>
-                                        </Grid>
+                                            </Collapse>
+                                        </Box>
                                     </Grid>
-                                </Box>
-                            </Card>
-                        </Grid>
+                                </Grid>
+                            </Box>
+                        </Card>
                     </Grid>
-                    <SaveChapterDialog
-                        saveChapterDialog={saveChapterDialog}
-                        setSaveChapterDialog={setSaveChapterDialog}
-                        saveChapterDialogExecuting={saveChapterDialogExecuting}
-                        setSaveChapterDialogExecuting={setSaveChapterDialogExecuting}
-                        setParentAlert={setAlert}
-                        appState={appState}
-                        isTemplate={false}
-                        chapter={chapterCopy}
-                        chapterID={ChapterID}
-                    />
-                    <PullChapterDialog
-                        chapter={chapterOriginal}
-                        setParentAlert={setAlert}
-                        setParentLoadChapter={loadChapter}
-                        pullChapterDialog={pullChapterDialog}
-                        setPullChapterDialog={setPullChapterDialog}
-                        pullChapterDialogExecuting={pullChapterDialogExecuting}
-                        setPullChapterDialogExecuting={setPullChapterDialogExecuting}
-                    />
-                </div>
-            ) : (
-                <Typography variant="h6" color="inherit" align="center" gutterBottom>
-                    Not Authorized. Please refresh and try again.
-                </Typography>
-            )
-            
-        );
+                </Grid>
+                <SaveChapterDialog
+                    saveChapterDialog={saveChapterDialog}
+                    setSaveChapterDialog={setSaveChapterDialog}
+                    saveChapterDialogExecuting={saveChapterDialogExecuting}
+                    setSaveChapterDialogExecuting={setSaveChapterDialogExecuting}
+                    setParentAlert={setAlert}
+                    appState={appState}
+                    isTemplate={false}
+                    chapter={chapterCopy}
+                    chapterID={ChapterID}
+                />
+                <PullChapterDialog
+                    chapter={chapterOriginal}
+                    setParentAlert={setAlert}
+                    setParentLoadChapter={loadChapter}
+                    pullChapterDialog={pullChapterDialog}
+                    setPullChapterDialog={setPullChapterDialog}
+                    pullChapterDialogExecuting={pullChapterDialogExecuting}
+                    setPullChapterDialogExecuting={setPullChapterDialogExecuting}
+                />
+                <MarkCompleteChapterDialog
+                    markCompleteChapterDialog={markCompleteChapterDialog}
+                    setMarkCompleteChapterDialog={setMarkCompleteChapterDialog}
+                    markCompleteChapterDialogExecuting={markCompleteChapterDialogExecuting}
+                    setMarkCompleteChapterDialogExecuting={setMarkCompleteChapterDialogExecuting}
+                    setParentAlert={setAlert}
+                    appState={appState}
+                    isTemplate={false}
+                    chapter={chapterCopy}
+                    chapterID={ChapterID}
+                    // editable={editable}
+                    setEditable={setEditable}
+                />
+            </div >
+        ) : (
+            <Typography variant="h6" color="inherit" align="center" gutterBottom>
+                Not Authorized. Please refresh and try again.
+            </Typography>
+        )
+
+    );
 }
 
 // ======================== Component PropType Check ========================
-EditChapterUser.propTypes = 
+EditChapterUser.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -680,12 +726,12 @@ EditChapterUser.propTypes =
     mode: PropTypes.string,
 }
 
-EditChapterUser.defaultProps = 
+EditChapterUser.defaultProps =
 {
     appState: {},
     ChapterID: {},
-    ToggleDrawerClose: () => {},
-    CheckAuthenticationValidity: () => {},
+    ToggleDrawerClose: () => { },
+    CheckAuthenticationValidity: () => { },
     mode: null
 }
 

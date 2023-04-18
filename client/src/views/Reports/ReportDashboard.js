@@ -8,19 +8,26 @@ import DashboardCombo from "./Summary/DashboardCombo";
 
 export default class ReportDashboard extends Component {
     findDashboardValues = (reports, collection) => {
-        var health = (reports.HT_QofL2_SD[collection] + reports.PH_QofL2_SD[collection])/2;
+        var health = (reports.HT_QofL2_SD[collection] + (reports.PH_QofL2_SD[collection] * 25) + (reports.YH_QofL3_SD[collection] * 10)) / 3;
 
-        var mentalHealth = (reports.MH_QofL2_SD[collection] + (reports.AD_QofL2_SD[collection] * 4)) / 2;
-        mentalHealth = mentalHealth * -1; //reverseScored  
-        
+        var mentalHealth = ((reports.MH_QofL2_SD[collection] * 25) + (reports.AD_QofL2_SD[collection] * 25)) / 2;
+
         var wellBeing = reports.PWI_QofL3_COMB[collection];
 
         var lifeSatisfaction = reports.LS_QofL3_SD[collection] * 10;
 
-        //to convert to a score/100 from score/3 && reverse scored
-        var loneliness = (reports.PL_QofL1_COMB[collection] / 3) * 100;
-        loneliness = loneliness * -1; //reverse scored
-        
+        var loneliness = reports.PL_QofL1_COMB[collection]; // average score
+
+        if (reports.PL_QofL1_COMB_often_count[collection] >= 1) { // if atleast one often --> red
+            loneliness = 20;
+        }
+        else if (loneliness >= 1.6 && reports.PL_QofL1_COMB_sometimes_count[collection] >= 1) { // score >= 1.66 and sometimes_count >= 1 --> Yellow
+            loneliness = 60;
+        }
+        else { // score <= 1.33 --> Green
+            loneliness = 100;
+        }
+
         return [health, mentalHealth, wellBeing, lifeSatisfaction, loneliness];
     }
 

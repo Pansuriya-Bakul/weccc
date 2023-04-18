@@ -97,8 +97,7 @@ module.exports = {
     con_que
 }
 
-function collectionIds(list)
-{
+function collectionIds(list) {
     let newList = new Array();
 
     list.map(collection => {
@@ -108,8 +107,7 @@ function collectionIds(list)
     return newList;
 }
 
-function collectionDates(list)
-{
+function collectionDates(list) {
     let newList = new Array();
 
     list.map(collection => {
@@ -123,21 +121,19 @@ function collectionDates(list)
     return newList;
 }
 
-function neighbourChapterIds(collection_list)
-{
+function neighbourChapterIds(collection_list) {
     let newList = new Array();
 
     collection_list.map(collection => {
         collection.memberSurveyList.forEach(chapter => {
-            newList.push(chapter._id)|| newList.push("");
+            newList.push(chapter._id) || newList.push("");
         });
     });
 
     return newList;
 }
 
-function neighbourChapterDates(collection_list)
-{
+function neighbourChapterDates(collection_list) {
     let newList = new Array();
 
     collection_list.map(collection => {
@@ -153,35 +149,31 @@ function neighbourChapterDates(collection_list)
     return newList;
 }
 
-function formatDate(date)
-{
-        let newDate = new Date(date);
-        let yyyy = date.getFullYear();
-        let mm = String(date.getMonth() + 1).padStart(2, '0');
-        let dd = String(date.getDate()).padStart(2, '0');
-        
-        if(!newDate || !yyyy || !mm || !dd)
-            return "";
-        else
-            return `${dd}/${mm}/${yyyy}`;
+function formatDate(date) {
+    let newDate = new Date(date);
+    let yyyy = date.getFullYear();
+    let mm = String(date.getMonth() + 1).padStart(2, '0');
+    let dd = String(date.getDate()).padStart(2, '0');
+
+    if (!newDate || !yyyy || !mm || !dd)
+        return "";
+    else
+        return `${dd}/${mm}/${yyyy}`;
 }
 
-function formatPostalCode(postalCode)
-{   
+function formatPostalCode(postalCode) {
     let newPostalCode = postalCode.substring(0, 3) || "";
     return newPostalCode;
 }
 
-function formatInvolvement(role)
-{
+function formatInvolvement(role) {
     // 1. - Student intern
     // 2. - Volunteer
     // 3. - Community partner
     // 4. - Community Connections - Member
     // 5. - CCC group or education program
 
-    switch(role)
-    {
+    switch (role) {
         case "Admin":
             return 999;
         case "Coordinator":
@@ -196,14 +188,12 @@ function formatInvolvement(role)
     }
 }
 
-function formatGender(gender)
-{
+function formatGender(gender) {
     // 1 = Male
     // 2 = Female
     // 3 = (Non-Binary) / Other
 
-    switch(gender)
-    {
+    switch (gender) {
         case "Male":
             return 1;
         case "Female":
@@ -216,31 +206,26 @@ function formatGender(gender)
     }
 }
 
-function formatLanguage(language)
-{
+function formatLanguage(language) {
     // 1 = English
     // 2 = [Text]
     // 99 = Missing
 
-   if(language == "English")
-   {
+    if (language == "English") {
         return 1;
-   }
-   else if(language == "" || !language)
-   {
+    }
+    else if (language == "" || !language) {
         return 999
-   }
-   else
-   {
+    }
+    else {
         return 2;
-   }
+    }
 
 }
 
-function frequency_of_community_participation(question)
-{
+function frequency_of_community_participation(question) {
     //Unavailable Question
-    if(!question)
+    if (!question)
         return 999;
 
     let DF1 = parseInt(question.DF1);
@@ -256,8 +241,7 @@ function frequency_of_community_participation(question)
     sum_array = new Array();
 
     DF_array.forEach(item => {
-        if(!isNaN(item) && item >= 0)
-        {
+        if (!isNaN(item) && item >= 0) {
             sum_array.push(item);
         }
     });
@@ -269,8 +253,7 @@ function frequency_of_community_participation(question)
 
 }
 
-function infrequent_participation_in_social_activities(question)
-{
+function infrequent_participation_in_social_activities(question) {
 
     // Value Chart per sub question
     // 999  Total invalid or blank answer
@@ -282,7 +265,7 @@ function infrequent_participation_in_social_activities(question)
     // 0    Never
 
     //Unavailable Question
-    if(!question)
+    if (!question)
         return 999;
 
     let DF1 = parseInt(question.DF1);
@@ -293,7 +276,7 @@ function infrequent_participation_in_social_activities(question)
     let DF6 = parseInt(question.DF6);
     let DF7 = parseInt(question.DF7);
     let DF8 = parseInt(question.DF8);
-    
+
     // Three different criteria sections ordered from 1-3
     let availableSections = [true, true, true];
     let infrequentResults = [false, false, false];
@@ -303,55 +286,45 @@ function infrequent_participation_in_social_activities(question)
     let criteria1 = [];
 
     section1.forEach(item => {
-        if(!isNaN(item) && item != 999)
-        {
+        if (!isNaN(item) && item != 999) {
             criteria1.push(item);
         }
     });
 
-    if(criteria1.length != 0)
-    {
+    if (criteria1.length != 0) {
         criteria1.forEach(item => {
-            if(infrequentResults[0] == false)
-            {
-                if(item == 12 || item == 4 || item == 1 || item == 0)
-                {
+            if (infrequentResults[0] == false) {
+                if (item == 12 || item == 4 || item == 1 || item == 0) {
                     infrequentResults[0] = true;
                 }
             }
         });
     }
-    else
-    {
+    else {
         availableSections[0] = false;
     }
-    
+
 
     //Criteria 2 NO if: Monthly / Weekly / Daily participation for one of DF4-7
     let section2 = [DF4, DF5, DF6, DF7];
     let criteria2 = [];
 
     section2.forEach(item => {
-        if(!isNaN(item) && item != 999)
-        {
+        if (!isNaN(item) && item != 999) {
             criteria2.push(item);
         }
     });
 
-    if(criteria2.length != 0)
-    {
+    if (criteria2.length != 0) {
         criteria2.forEach(item => {
-            if(infrequentResults[1] == false)
-            {
-                if(item == 4 || item == 1 || item == 0)
-                {
+            if (infrequentResults[1] == false) {
+                if (item == 4 || item == 1 || item == 0) {
                     infrequentResults[1] = true;
                 }
             }
         });
     }
-    else
-    {
+    else {
         availableSections[1] = false;
     }
 
@@ -360,65 +333,54 @@ function infrequent_participation_in_social_activities(question)
     let criteria3 = [];
 
     section3.forEach(item => {
-        if(!isNaN(item) && item != 999)
-        {
+        if (!isNaN(item) && item != 999) {
             criteria3.push(item);
         }
     });
 
-    if(criteria3.length != 0)
-    {
+    if (criteria3.length != 0) {
         criteria3.forEach(item => {
-            if(infrequentResults[2] == false)
-            {
-                if(item == 12 || item == 4 || item == 1 || item == 0)
-                {
+            if (infrequentResults[2] == false) {
+                if (item == 12 || item == 4 || item == 1 || item == 0) {
                     infrequentResults[2] = true;
-                } 
+                }
             }
         });
     }
-    else
-    {
+    else {
         availableSections[2] = false;
     }
 
-    if(availableSections.findIndex(item => item == true) == -1)
-    {
+    if (availableSections.findIndex(item => item == true) == -1) {
         //  If there are no available sections
         return 999;
     }
 
     let infrequent_participation = true;
 
-    for(let i = 0 ; i < infrequentResults.length ; i++)
-    {
-        if(availableSections[i])
-        {
+    for (let i = 0; i < infrequentResults.length; i++) {
+        if (availableSections[i]) {
             infrequent_participation = infrequent_participation && infrequentResults[i];
         }
     }
 
-    if(infrequent_participation)
-    {
+    if (infrequent_participation) {
         // Result is infrequent participation
         return 2;
     }
-    else
-    {
+    else {
         // Result is not infrequent participation
         return 1;
     }
 }
 
-function social_isolation_index(question)
-{
+function social_isolation_index(question) {
     // Value Chart per sub question
     // 1    Yes
     // 0    No
 
     //Unavailable Question
-    if(!question)
+    if (!question)
         return 999;
 
     let DF1 = parseInt(question.DF1);
@@ -431,51 +393,46 @@ function social_isolation_index(question)
     sum_array = new Array();
 
     DF_array.forEach(item => {
-        if(!isNaN(item))
-        {
+        if (!isNaN(item)) {
             sum_array.push(item);
         }
     });
 
-    if(sum_array.length == 0)
-    {
+    if (sum_array.length == 0) {
         return 999;
     }
 
     let sum = sum_array.reduce((a, b) => a + b, 0);
 
-    if(sum >= 2)
-    {
+    if (sum >= 2) {
         // Socially Isolated
         return 2;
     }
-    else
-    {
+    else {
         // Not Socially Isolated
         return 1;
     }
 }
 
-function size_of_personal_network(question)
-{
+function size_of_personal_network(question) {
     // Value Chart per sub question
     // Any range of numbers >= 0
 
     //Unavailable Question
-    if(!question)
+    if (!question)
         return 999;
 
+    let DF1 = parseInt(question[0].DF1);
     let DF2 = parseInt(question[0].DF2);
     let DF3 = parseInt(question[0].DF3);
     let DF4 = parseInt(question[0].DF4);
     let DF5 = parseInt(question[0].DF5);
 
-    DF_array = [DF2, DF3, DF4, DF5];
+    DF_array = [DF1, DF2, DF3, DF4, DF5];
     sum_array = new Array();
 
     DF_array.forEach(item => {
-        if(!isNaN(item) && item >= 0)
-        {
+        if (!isNaN(item) && item >= 0) {
             sum_array.push(item);
         }
     });
@@ -485,8 +442,7 @@ function size_of_personal_network(question)
     return sum;
 }
 
-function frequency_of_social_contacts(support_question_A, support_question_B, support_question_C)
-{
+function frequency_of_social_contacts(support_question_A, support_question_B, support_question_C) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -504,7 +460,7 @@ function frequency_of_social_contacts(support_question_A, support_question_B, su
     // 0 No
 
     //Unavailable Question
-    if(!support_question_A || !support_question_B || !support_question_C)
+    if (!support_question_A || !support_question_B || !support_question_C)
         return 999;
 
     let DF1 = parseInt(support_question_A.DF1);
@@ -513,30 +469,26 @@ function frequency_of_social_contacts(support_question_A, support_question_B, su
     let DF4 = parseInt(support_question_A.DF4);
     let DF5 = parseInt(support_question_A.DF5);
     let DF6 = parseInt(support_question_B);
-    
-    if(!isNaN(DF6) && DF6 != 999 && DF6 >= 0 && DF6 <= 7)
-    {
+
+    if (!isNaN(DF6) && DF6 != 999 && DF6 >= 0 && DF6 <= 7) {
         DF6 *= 52;
     }
-    else
-    {
+    else {
         DF6 = NaN;
     }
 
     let DF7 = parseInt(support_question_C);
 
-    if(!isNaN(DF6) && DF6 > 0)
-    {
+    if (!isNaN(DF6) && DF6 > 0) {
         // If DF6 is a postive result, disregard DF7
         DF7 = NaN;
     }
 
     DF_array = [DF1, DF2, DF3, DF4, DF5, DF6, DF7];
     sum_array = new Array();
-    
+
     DF_array.forEach(item => {
-        if(!isNaN(item) && item != 999)
-        {
+        if (!isNaN(item) && item != 999) {
             sum_array.push(item);
         }
     });
@@ -547,13 +499,12 @@ function frequency_of_social_contacts(support_question_A, support_question_B, su
 
 }
 
-function satisfaction_with_social_contact(question)
-{
+function satisfaction_with_social_contact(question) {
     // Value Chart of question
     // 1 Yes
     // 0 No
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF1 = parseInt(question.DF1);
@@ -562,81 +513,71 @@ function satisfaction_with_social_contact(question)
 
     DF_array = [DF1, DF2, DF3];
     sum_array = new Array();
-    
+
     DF_array.forEach(item => {
-        if(!isNaN(item))
-        {
+        if (!isNaN(item)) {
             sum_array.push(item);
         }
     });
 
-    if(sum_array.length == 0)
-    {
+    if (sum_array.length == 0) {
         return 999;
     }
 
     let sum = sum_array.reduce((a, b) => a + b, 0);
 
-    if(sum >= 2)
-    {
+    if (sum >= 2) {
         return 2;
     }
-    else if(sum >= 0 && sum < 2)
-    {
-        return  1;
+    else if (sum >= 0 && sum < 2) {
+        return 1;
     }
 
 }
 
-function quality_of_social_contact(question)
-{
+function quality_of_social_contact(question) {
     // Value Chart of question
     // 1 Yes
     // 0 No
 
-    if(!question)
+    if (!question)
         return 999;
 
-    let DF1 = parseInt(question.DF1) || 999;
-    let DF2 = parseInt(question.DF2) || 999;
-    let DF3 = parseInt(question.DF3) || 999;
+    let DF1 = parseInt(question.DF6) || 999;
+    let DF2 = parseInt(question.DF7) || 999;
+    let DF3 = parseInt(question.DF8) || 999;
 
-    DF_array = [DF1, DF2, DF3];
+    DF_array = [DF6, DF7, DF8];
     sum_array = new Array();
-    
+
     DF_array.forEach(item => {
-        if(!isNaN(item))
-        {
+        if (!isNaN(item)) {
             sum_array.push(item);
         }
     });
 
-    if(sum_array.length == 0)
-    {
+    if (sum_array.length == 0) {
         return 999;
     }
 
     let sum = sum_array.reduce((a, b) => a + b, 0);
 
-    if(sum >= 2)
-    {
+    if (sum >= 2) {
         return 2;
     }
-    else if(sum >= 0 && sum < 2)
-    {
-        return  1;
+    else if (sum >= 0 && sum < 2) {
+        return 1;
     }
 }
 
-function perceived_social_support(question)
-{
+function perceived_social_support(question) {
     // Value Chart of question
     // 1 Often
     // 2 Sometimes
     // 3 Hardly Ever
     // 999 Not applicable
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF1 = parseInt(question.DF1);
@@ -648,36 +589,32 @@ function perceived_social_support(question)
 
     DF_array = [DF1, DF2, DF3, DF4, DF5, DF6];
     sum_array = new Array();
-    
+
     DF_array.forEach(item => {
-        if(!isNaN(item) && item != 999)
-        {
+        if (!isNaN(item) && item != 999) {
             sum_array.push(item);
         }
     });
 
-    let average = sum_array.reduce((a, b) => a + b, 0)/sum_array.length;
-    
-    if(average <= 0)
-    {
+    let average = sum_array.reduce((a, b) => a + b, 0) / sum_array.length;
+
+    if (average <= 0) {
         return 999;
     }
-    else
-    {
-       return parseFloat(parseFloat(average).toFixed(4)); 
+    else {
+        return parseFloat(parseFloat(average).toFixed(4));
     }
-    
+
 }
 
-function perceived_loneliness(question)
-{
+function perceived_loneliness(question) {
     // Value Chart of question
     // 3 Often
     // 2 Sometimes
     // 1 Hardly Ever
     // 999 Not applicable
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF1 = parseInt(question.DF1);
@@ -686,105 +623,92 @@ function perceived_loneliness(question)
 
     DF_array = [DF1, DF2, DF3];
     sum_array = new Array();
-    
+
     DF_array.forEach(item => {
-        if(!isNaN(item) && item != 999)
-        {
+        if (!isNaN(item) && item != 999) {
             sum_array.push(item);
         }
     });
 
-    let average = sum_array.reduce((a, b) => a + b, 0)/sum_array.length;
-    
-    if(average <= 0)
-    {
+    let average = sum_array.reduce((a, b) => a + b, 0) / sum_array.length;
+
+    if (average <= 0) {
         return 999;
     }
-    else
-    {
-       return parseFloat(parseFloat(average).toFixed(4)); 
+    else {
+        return parseFloat(parseFloat(average).toFixed(2));
     }
 }
 
-function asking_for_help(question)
-{
+function asking_for_help(question) {
     // Value Chart of question
     // 1 Often
     // 2 Sometimes
     // 3 Hardly Ever
     // 999 Not applicable
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF >= 1 && DF <=3)
-    {
+
+    if (DF >= 1 && DF <= 3) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
-    
-    
+
+
 }
 
-function progress_achieving_goals(question)
-{
+function progress_achieving_goals(question) {
     // Value Chart of question
     // 1 Often
     // 2 Sometimes
     // 3 Hardly Ever
     // 999 Not applicable
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF >= 1 && DF <=3)
-    {
+
+    if (DF >= 1 && DF <= 3) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function health_today(question)
-{
+function health_today(question) {
     // Value Chart of question
     // [0 , 100] range
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF >= 0 && DF <= 100)
-    {
+
+    if (DF >= 0 && DF <= 100) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function physical_health(question)
-{
+function physical_health(question) {
 
     // Value Chart of question
     // 0 Poor
@@ -792,28 +716,25 @@ function physical_health(question)
     // 2 Good
     // 3 Very Good
     // 4 Excellent
-    
-    if(!question && !Array.isArray(question))
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF >= 0 && DF <= 4)
-    {
+
+    if (DF >= 0 && DF <= 4) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
 
-function physical_health_string(question)
-{
+function physical_health_string(question) {
 
     // Value Chart of question
     // 0 Poor
@@ -821,648 +742,565 @@ function physical_health_string(question)
     // 2 Good
     // 3 Very Good
     // 4 Excellent
-    
-    if(!question && !Array.isArray(question))
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
-    {
+    if (isNaN(question)) {
         return 999;
     }
-    
-    if(DF == 0)
-    {
+
+    if (DF == 0) {
         DF = "Poor";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Fair";
     }
-    else if(DF == 2)
-    {
+    else if (DF == 2) {
         DF = "Good";
     }
-    else if(DF == 3)
-    {
+    else if (DF == 3) {
         DF = "Very Good";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "Excellent";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function mental_health(question)
-{
+function mental_health(question) {
     // Value Chart of question
     // 0 Poor
     // 1 Fair
     // 2 Good
     // 3 Very Good
     // 4 Excellent
-    
-    if(!question && !Array.isArray(question))
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF >= 0 && DF <= 4)
-    {
+
+    if (DF >= 0 && DF <= 4) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function mental_health_string(question)
-{
-    
+function mental_health_string(question) {
+
     // Value Chart of question
     // 0 Poor
     // 1 Fair
     // 2 Good
     // 3 Very Good
     // 4 Excellent
-    
-    if(!question && !Array.isArray(question))
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
-    {
+    if (isNaN(question)) {
         return 999;
     }
-    
-    if(DF == 0)
-    {
+
+    if (DF == 0) {
         DF = "Poor";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Fair";
     }
-    else if(DF == 2)
-    {
+    else if (DF == 2) {
         DF = "Good";
     }
-    else if(DF == 3)
-    {
+    else if (DF == 3) {
         DF = "Very Good";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "Excellent";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function mobility(question)
-{
+function mobility(question) {
     // Value Chart of question
     // 0 No Problem
     // 1 Slight Problem
     // 2 Moderate Problem
     // 3 Severe Problem
     // 4 Inability
-    
-    if(!question)
+
+    if (!question)
         return 999;
-    
+
     let DF = parseInt(question);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF >= 0 && DF <= 4)
-    {
+
+    if (DF >= 0 && DF <= 4) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 
 }
 
-function personal_care(question)
-{
+function personal_care(question) {
     // Value Chart of question
     // 0 No Problem
     // 1 Slight Problem
     // 2 Moderate Problem
     // 3 Severe Problem
     // 4 Inability
-    
-    if(!question)
+
+    if (!question)
         return 999;
-    
+
     let DF = parseInt(question);
 
-    if(isNaN(question))
-    return 999;
+    if (isNaN(question))
+        return 999;
 
-    if(DF >= 0 && DF <= 4)
-    {
+    if (DF >= 0 && DF <= 4) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function usual_activities(question)
-{
+function usual_activities(question) {
     // Value Chart of question
     // 0 No Problem
     // 1 Slight Problem
     // 2 Moderate Problem
     // 3 Severe Problem
     // 4 Inability
-    
-    if(!question)
+
+    if (!question)
         return 999;
-    
+
     let DF = parseInt(question);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF >= 0 && DF <= 4)
-    {
+
+    if (DF >= 0 && DF <= 4) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function pain_discomfort(question)
-{
+function pain_discomfort(question) {
     // Value Chart of question
     // 0 No Problem
     // 1 Slight Problem
     // 2 Moderate Problem
     // 3 Severe Problem
     // 4 Extreme Problem
-    
-    if(!question)
+
+    if (!question)
         return 999;
-    
+
     let DF = parseInt(question);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF >= 0 && DF <= 4)
-    {
+
+    if (DF >= 0 && DF <= 4) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function anxiety_depression(question)
-{
+function anxiety_depression(question) {
     // Value Chart of question
     // 0 No Problem
     // 1 Slight Problem
     // 2 Moderate Problem
     // 3 Severe Problem
     // 4 Extreme Problem
-    
-    if(!question)
+
+    if (!question)
         return 999;
-    
+
     let DF = parseInt(question);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
 
-    if(DF >= 0 && DF <= 4)
-    {
+    if (DF >= 0 && DF <= 4) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function ed_visit(question)
-{
+function ed_visit(question) {
     // Value Chart of question
     // [0 -> )  || It is fairly resonable to assume max 999 in one year || already accounts for twice a day
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF < 999)
-    {
+
+    if (DF >= 0 && DF < 999) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function hospitalization(question)
-{
+function hospitalization(question) {
     // Value Chart of question
-        // [0 -> )  || It is fairly resonable to assume max 999 in one year || already accounts for twice a day
+    // [0 -> )  || It is fairly resonable to assume max 999 in one year || already accounts for twice a day
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF < 999)
-    {
+
+    if (DF >= 0 && DF < 999) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function days_in_hospital(question)
-{
+function days_in_hospital(question) {
     // Value Chart of question
     // [0 -> )
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF <= 365)
-    {
+
+    if (DF >= 0 && DF <= 365) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 
 }
 
-function ems(question)
-{
+function ems(question) {
     // Value Chart of question
     // [0 -> )
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
-    
-    if(isNaN(DF))
+
+    if (isNaN(DF))
         return 999;
 
-    if(DF >= 0 && DF < 999)
-    {
+    if (DF >= 0 && DF < 999) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function urgent_care(question)
-{
+function urgent_care(question) {
     // Value Chart of question
     // [0 -> )
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF < 999)
-    {
+
+    if (DF >= 0 && DF < 999) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function sought_treatment(question)
-{
+function sought_treatment(question) {
     // Value Chart of question
     // [0 -> )
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF >= 0 && DF < 999)
-    {
+    if (DF >= 0 && DF < 999) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function accident(question)
-{
+function accident(question) {
     // Value Chart of question
     // [0 -> )
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF < 999)
-    {
+
+    if (DF >= 0 && DF < 999) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function life_satisfaction(question)
-{
+function life_satisfaction(question) {
     // Value Chart of question
     // [0 -> 10]
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF <= 10)
-    {
+
+    if (DF >= 0 && DF <= 10) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
 
-function your_standard_of_living(question)
-{
+function your_standard_of_living(question) {
     // Value Chart of question
     // [0 -> 10]
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF <= 10)
-    {
+
+    if (DF >= 0 && DF <= 10) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function your_health(question)
-{
+function your_health(question) {
     // Value Chart of question
     // [0 -> 10]
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF <= 10)
-    {
+
+    if (DF >= 0 && DF <= 10) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 
 }
 
-function feeling_part_of_the_community(question)
-{
+function feeling_part_of_the_community(question) {
     // Value Chart of question
     // [0 -> 10]
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF <= 10)
-    {
+
+    if (DF >= 0 && DF <= 10) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 
 }
 
-function what_you_are_achieving_in_life(question)
-{
+function what_you_are_achieving_in_life(question) {
     // Value Chart of question
     // [0 -> 10]
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF <= 10)
-    {
+
+    if (DF >= 0 && DF <= 10) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 
 }
 
-function personal_relationships(question)
-{
+function personal_relationships(question) {
     // Value Chart of question
     // [0 -> 10]
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF <= 10)
-    {
+
+    if (DF >= 0 && DF <= 10) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function how_safe_you_feel(question)
-{
+function how_safe_you_feel(question) {
     // Value Chart of question
     // [0 -> 10]
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF <= 10)
-    {
+
+    if (DF >= 0 && DF <= 10) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function future_security(question)
-{
+function future_security(question) {
     // Value Chart of question
     // [0 -> 10]
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF <= 10)
-    {
+
+    if (DF >= 0 && DF <= 10) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function your_spirituality_or_religion(question)
-{
+function your_spirituality_or_religion(question) {
     // Value Chart of question
     // [0 -> 10]
 
-    if(question == null || question == undefined)
+    if (question == null || question == undefined)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0 && DF <= 10)
-    {
+
+    if (DF >= 0 && DF <= 10) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 
 }
 
 function pwi_overall_score(question_LS_QofL3_SD,
-    question_SL_QofL3_SD, question_YH_QofL3_SD, question_FPC_QofL3_SD, question_AL_QofL3_SD, 
-    question_PR_QofL3_SD, question_HSF_QofL3_SD, question_FS_QofL3_SD, question_SR_QofL3_SD)
-{
+    question_SL_QofL3_SD, question_YH_QofL3_SD, question_FPC_QofL3_SD, question_AL_QofL3_SD,
+    question_PR_QofL3_SD, question_HSF_QofL3_SD, question_FS_QofL3_SD, question_SR_QofL3_SD) {
     // Value Chart of question
     // [0 -> 10]
 
-    if(!question_LS_QofL3_SD && !question_SL_QofL3_SD && !question_YH_QofL3_SD && 
+    if (!question_LS_QofL3_SD && !question_SL_QofL3_SD && !question_YH_QofL3_SD &&
         !question_FPC_QofL3_SD && !question_AL_QofL3_SD && !question_PR_QofL3_SD &&
-        !question_HSF_QofL3_SD && !question_FS_QofL3_SD && !question_SR_QofL3_SD)
-    {
-        return 999;  
+        !question_HSF_QofL3_SD && !question_FS_QofL3_SD && !question_SR_QofL3_SD) {
+        return 999;
     }
-        
+
     let DF1 = parseInt(question_LS_QofL3_SD);
     let DF2 = parseInt(question_SL_QofL3_SD);
     let DF3 = parseInt(question_YH_QofL3_SD);
-    let DF4 = parseInt(question_LS_QofL3_SD);
+    // let DF4 = parseInt(question_LS_QofL3_SD);
     let DF5 = parseInt(question_FPC_QofL3_SD);
     let DF6 = parseInt(question_AL_QofL3_SD);
     let DF7 = parseInt(question_PR_QofL3_SD);
@@ -1470,132 +1308,109 @@ function pwi_overall_score(question_LS_QofL3_SD,
     let DF9 = parseInt(question_FS_QofL3_SD);
     let DF10 = parseInt(question_SR_QofL3_SD);
 
-    DF_array = [DF1, DF2, DF3, DF4, DF5, DF6, DF7, DF8, DF9, DF10];
+    DF_array = [DF1, DF2, DF3, DF5, DF6, DF7, DF8, DF9, DF10];
     sum_array = new Array();
-    
+
     DF_array.forEach(item => {
-        if(!isNaN(item) && item != 999 && item >= 0 && item <= 10)
-        {
+        if (!isNaN(item) && item != 999 && item >= 0 && item <= 10) {
             sum_array.push(item);
         }
     });
 
-    let average = sum_array.reduce((a, b) => a + b, 0)/sum_array.length*10;
-    
-    if(average <= 0)
-    {
+    let average = sum_array.reduce((a, b) => a + b, 0) / sum_array.length * 10;
+
+    if (average <= 0) {
         return 999;
     }
-    else
-    {
-       return parseFloat(parseFloat(average).toFixed(4)); 
+    else {
+        return parseFloat(parseFloat(average).toFixed(2));
     }
 
 }
 
-function activities(question_activities, question_activities_others)
-{
-    if(!question_activities && !question_activities_others)
+function activities(question_activities, question_activities_others) {
+    if (!question_activities && !question_activities_others)
         return 999;
-   
+
     let answer_array = new Array();
 
     // Checkbox containing Array of Objects
 
-    if(question_activities && Array.isArray(question_activities))
-    {
-        question_activities.forEach(item =>
-        {
+    if (question_activities && Array.isArray(question_activities)) {
+        question_activities.forEach(item => {
             answer_array.push(String(item).toLowerCase().trim());
         });
     }
 
     // Dynamic Matrix containing Array of Objects
 
-    if(question_activities_others && Array.isArray(question_activities_others))
-    {
-        question_activities_others.forEach(item =>
-        {
-            if(item.hasOwnProperty('Activities'))
-            {
-                answer_array.push(String(item.Activities).toLowerCase().trim());
-            };  
+    if (question_activities_others && Array.isArray(question_activities_others)) {
+        question_activities_others.forEach(item => {
+            if (item.hasOwnProperty('column1')) {
+                answer_array.push(String(item.column1).toLowerCase().trim());
+            };
         });
     }
 
-    if(answer_array.length == 0)
-    {
+    if (answer_array.length == 0) {
         return 999;
     }
-    else
-    {
+    else {
         return answer_array;
     }
-    
+
 }
 
-function meaningful_activities(question)
-{
-    if(!question)
+function meaningful_activities(question) {
+    if (!question)
         return 999;
 
     let answer_array = new Array();
 
     // Dynamic Matrix containing Array of Objects
 
-    if(question && Array.isArray(question))
-    {
-        question.forEach(item =>
-        {
-            if(item.hasOwnProperty('Activities'))
-            {
-                answer_array.push(String(item.Activities).toLowerCase().trim());
-            };  
+    if (question && Array.isArray(question)) {
+        question.forEach(item => {
+            if (item.hasOwnProperty('column1')) {
+                answer_array.push(String(item.column1).toLowerCase().trim());
+            };
         });
     }
 
-    if(answer_array.length == 0)
-    {
+    if (answer_array.length == 0) {
         return 999;
     }
-    else
-    {
-       return answer_array; 
+    else {
+        return answer_array;
     }
 
 }
 
-function challenging_activities(question)
-{
-    if(!question)
+function challenging_activities(question) {
+    if (!question)
         return 999;
 
     let answer_array = new Array();
 
     // Dynamic Matrix containing Array of Objects
 
-    if(question && Array.isArray(question))
-    {
-        question.forEach(item =>
-        {
-            if(item.hasOwnProperty('Challenges'))
-            {
-                answer_array.push(String(item.Challenges).toLowerCase().trim());
-            };  
+    if (question && Array.isArray(question)) {
+        question.forEach(item => {
+            if (item.hasOwnProperty('column1')) {
+                answer_array.push(String(item.column1).toLowerCase().trim());
+            };
         });
     }
 
-    if(answer_array.length == 0)
-    {
+    if (answer_array.length == 0) {
         return 999;
     }
 
     return answer_array;
 }
 
-function FCP_STRINGS_COMB(question)
-{
-    if(!question)
+function FCP_STRINGS_COMB(question) {
+    if (!question)
         return 999;
 
     let DF1 = parseInt(question.DF1);
@@ -1606,6 +1421,7 @@ function FCP_STRINGS_COMB(question)
     let DF6 = parseInt(question.DF6);
     let DF7 = parseInt(question.DF7);
     let DF8 = parseInt(question.DF8);
+    let DF9 = parseInt(question.DF9);
 
     let DF1String = "";
     let DF2String = "";
@@ -1615,64 +1431,56 @@ function FCP_STRINGS_COMB(question)
     let DF6String = "";
     let DF7String = "";
     let DF8String = "";
+    let DF9String = "";
 
-    if(!isNaN(DF1) && DF1 != 999 && DF1 == 1)
-    {
+    if (!isNaN(DF1) && DF1 != 999 && DF1 == 1) {
         DF1String = "Religious activities";
     }
-    if(!isNaN(DF2) && DF2 != 999 && DF2 == 1)
-    {
+    if (!isNaN(DF2) && DF2 != 999 && DF2 == 1) {
         DF2String = "Recreational activities (e.g. hobbies, games, bingo, gardening, reading club)";
     }
-    if(!isNaN(DF3) && DF3 != 999 && DF3 == 1)
-    {
+    if (!isNaN(DF3) && DF3 != 999 && DF3 == 1) {
         DF3String = "Education or cultural activities (e.g. attending classes, concerts, plays, visiting museums, watching movies)";
     }
-    if(!isNaN(DF4) && DF4 != 999 && DF4 == 1)
-    {
+    if (!isNaN(DF4) && DF4 != 999 && DF4 == 1) {
         DF4String = "Formal or informal neighbourhood, community or professional associations, or service clubs (in person)";
     }
-    if(!isNaN(DF5) && DF5 != 999 && DF5 == 1)
-    {
+    if (!isNaN(DF5) && DF5 != 999 && DF5 == 1) {
         DF5String = "Volunteer or charity work for a group or organization";
     }
-    if(!isNaN(DF6) && DF6 != 999 && DF6 == 1)
-    {
+    if (!isNaN(DF6) && DF6 != 999 && DF6 == 1) {
         DF6String = "Without being paid, providing informal support for friends, family or neighbours (e.g. cooking, shopping, errands, home help, visits, emotional care)";
     }
-    if(!isNaN(DF7) && DF7 != 999 && DF7 == 1)
-    {
+    if (!isNaN(DF7) && DF7 != 999 && DF7 == 1) {
         DF7String = "Playing a musical instrument or singing";
     }
-    if(!isNaN(DF8) && DF8 != 999 && DF8 == 1)
-    {
+    if (!isNaN(DF8) && DF8 != 999 && DF8 == 1) {
         DF8String = "Sports, exercise, or physical activities";
     }
+    if (!isNaN(DF9) && DF9 != 999 && DF9 == 1) {
+        DF9String = "Small, random but purposeful acts of kindness – (e.g. bring a coffee to a friend, pay for a coffee for a stranger, smile and talk to people on the street or in the grocery line, give food or socks to someone who is homeless etc)";
+    }
 
-    DF_StringArray = [DF1String, DF2String, DF3String, DF4String, DF5String, DF6String, DF7String, DF8String];
+    DF_StringArray = [DF1String, DF2String, DF3String, DF4String, DF5String, DF6String, DF7String, DF8String, DF9String];
     answer_array = new Array();
 
     DF_StringArray.forEach(item => {
-        if(typeof item == "string" && item != "")
-        {
+        if (typeof item == "string" && item != "") {
             answer_array.push(item);
         }
     });
 
-    if(answer_array.length == 0)
-    {
+    if (answer_array.length == 0) {
         return 999;
     }
-    else
-    {
+    else {
         return answer_array;
     }
 
 }
 
-function ISA_DM_STRINGS(question)
-{
-    if(!question)
+function ISA_DM_STRINGS(question) {
+    if (!question)
         return 999;
 
     let DF1 = parseInt(question.DF1);
@@ -1699,48 +1507,37 @@ function ISA_DM_STRINGS(question)
     let DF10String = "";
     let DF11String = "";
 
-    if(!isNaN(DF1) && DF1 != 999 && DF1 == 1)
-    {
+    if (!isNaN(DF1) && DF1 != 999 && DF1 == 1) {
         DF1String = "Church or religious activities such as services, committees or choirs";
     }
-    if(!isNaN(DF2) && DF2 != 999 && DF2 == 1)
-    {
+    if (!isNaN(DF2) && DF2 != 999 && DF2 == 1) {
         DF2String = "Sports or physical activities with other people";
     }
-    if(!isNaN(DF3) && DF3 != 999 && DF3 == 1)
-    {
+    if (!isNaN(DF3) && DF3 != 999 && DF3 == 1) {
         DF3String = "Other recreational activities involving other people, including hobbies, bingo and other games";
     }
-    if(!isNaN(DF4) && DF4 != 999 && DF4 == 1)
-    {
+    if (!isNaN(DF4) && DF4 != 999 && DF4 == 1) {
         DF4String = "Educational and cultural activities involving other people such as attending courses, concerts or visiting museums";
     }
-    if(!isNaN(DF5) && DF5 != 999 && DF5 == 1)
-    {
+    if (!isNaN(DF5) && DF5 != 999 && DF5 == 1) {
         DF5String = "Service club or fraternal organization activities";
     }
-    if(!isNaN(DF6) && DF6 != 999 && DF6 == 1)
-    {
+    if (!isNaN(DF6) && DF6 != 999 && DF6 == 1) {
         DF6String = "Neighbourhood, community or professional association activities";
     }
-    if(!isNaN(DF7) && DF7 != 999 && DF7 == 1)
-    {
+    if (!isNaN(DF7) && DF7 != 999 && DF7 == 1) {
         DF7String = "Volunteer or charity work";
     }
-    if(!isNaN(DF8) && DF8 != 999 && DF8 == 1)
-    {
+    if (!isNaN(DF8) && DF8 != 999 && DF8 == 1) {
         DF8String = "Seeing family or friends (not including people in your household)";
     }
-    if(!isNaN(DF9) && DF9 != 999 && DF9 == 1)
-    {
+    if (!isNaN(DF9) && DF9 != 999 && DF9 == 1) {
         DF9String = "Using the computer or internet to connect with other people socially";
     }
-    if(!isNaN(DF10) && DF10 != 999 && DF10 == 1)
-    {
+    if (!isNaN(DF10) && DF10 != 999 && DF10 == 1) {
         DF10String = "Providing informal support for friends, family or neighbours (e.g. cooking, shopping, errands, home help, visits, emotional care) without being paid";
     }
-    if(!isNaN(DF11) && DF11 != 999 && DF11 == 1)
-    {
+    if (!isNaN(DF11) && DF11 != 999 && DF11 == 1) {
         DF11String = "Musical activites (e.g. playing, singing, listening)";
     }
 
@@ -1748,126 +1545,107 @@ function ISA_DM_STRINGS(question)
     answer_array = new Array();
 
     DF_StringArray.forEach(item => {
-        if(typeof item == "string" && item != "")
-        {
+        if (typeof item == "string" && item != "") {
             answer_array.push(item);
         }
     });
 
-    if(answer_array.length == 0)
-    {
+    if (answer_array.length == 0) {
         return 999;
     }
-    else
-    {
+    else {
         return answer_array;
     }
 
 }
 
-function household_size(question)
-{
-    if(!question)
+function household_size(question) {
+    if (!question)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF >= 0)
-    {
+
+    if (DF >= 0) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 
 }
 
-function total_children(question)
-{
-    if(!question && !Array.isArray(question))
+function total_children(question) {
+    if (!question)
         return 999;
 
-    let DF = parseInt(question[0].DF3);
+    let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF >= 0)
-    {
+    if (DF >= 0) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function total_relatives(question)
-{
-    if(!question && !Array.isArray(question))
+function total_relatives(question) {
+    if (!question)
         return 999;
 
-    let DF = parseInt(question[0].DF4);
+    let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF >= 0)
-    {
+    if (DF >= 0) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function total_close_friends(question)
-{
-    if(!question && !Array.isArray(question))
+function total_close_friends(question) {
+    if (!question)
         return 999;
 
-    let DF = parseInt(question[0].DF2);
+    let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF >= 0)
-    {
+    if (DF >= 0) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function total_well_known_neighbours(question)
-{
-    if(!question && !Array.isArray(question))
+function total_well_known_neighbours(question) {
+    if (!question)
         return 999;
 
-    let DF = parseInt(question[0].DF5);
+    let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF >= 0)
-    {
+    if (DF >= 0) {
         return DF;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function frequency_of_contact_family(question)
-{
+function frequency_of_contact_family(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -1877,48 +1655,40 @@ function frequency_of_contact_family(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF1);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_contact_friends(question)
-{
+function frequency_of_contact_friends(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -1928,48 +1698,40 @@ function frequency_of_contact_friends(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF2);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_contact_neighbours(question)
-{
+function frequency_of_contact_neighbours(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -1979,48 +1741,40 @@ function frequency_of_contact_neighbours(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF3);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_participation_religion(question)
-{
+function frequency_of_participation_religion(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -2030,48 +1784,40 @@ function frequency_of_participation_religion(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF1);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_participation_recreation(question)
-{
+function frequency_of_participation_recreation(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -2081,48 +1827,40 @@ function frequency_of_participation_recreation(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF3);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_participation_education(question)
-{
+function frequency_of_participation_education(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -2132,48 +1870,40 @@ function frequency_of_participation_education(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF4);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_participation_associations(question)
-{
+function frequency_of_participation_associations(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -2183,48 +1913,40 @@ function frequency_of_participation_associations(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF6);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_participation_volunteering(question)
-{
+function frequency_of_participation_volunteering(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -2234,48 +1956,40 @@ function frequency_of_participation_volunteering(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF7);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_participation_informal_help(question)
-{
+function frequency_of_participation_informal_help(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -2285,48 +1999,40 @@ function frequency_of_participation_informal_help(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF10);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_participation_music(question)
-{
+function frequency_of_participation_music(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -2336,48 +2042,40 @@ function frequency_of_participation_music(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF11);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_participation_computer(question)
-{
+function frequency_of_participation_computer(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -2387,48 +2085,40 @@ function frequency_of_participation_computer(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF9);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function problem_walking(question)
-{
+function problem_walking(question) {
     // Value Chart of question
     // 0 No Problem
     // 1 Slight Problem
@@ -2436,44 +2126,37 @@ function problem_walking(question)
     // 3 Severe Problem
     // 4 Inability
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 0)
-    {
+    if (DF == 0) {
         DF = "Inability";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Severe Problem";
     }
-    else if(DF == 2)
-    {
+    else if (DF == 2) {
         DF = "Moderate Problem";
     }
-    else if(DF == 3)
-    {
+    else if (DF == 3) {
         DF = "Slight Problem";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "No Problem";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function problem_washing_dressing(question)
-{
+function problem_washing_dressing(question) {
     // Value Chart of question
     // 0 No Problem
     // 1 Slight Problem
@@ -2481,44 +2164,37 @@ function problem_washing_dressing(question)
     // 3 Severe Problem
     // 4 Inability
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 0)
-    {
+    if (DF == 0) {
         DF = "Inability";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Severe Problem";
     }
-    else if(DF == 2)
-    {
+    else if (DF == 2) {
         DF = "Moderate Problem";
     }
-    else if(DF == 3)
-    {
+    else if (DF == 3) {
         DF = "Slight Problem";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "No Problem";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function problem_usual_activities(question)
-{
+function problem_usual_activities(question) {
     // Value Chart of question
     // 0 No Problem
     // 1 Slight Problem
@@ -2526,89 +2202,37 @@ function problem_usual_activities(question)
     // 3 Severe Problem
     // 4 Inability
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 0)
-    {
+    if (DF == 0) {
         DF = "Inability";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Severe Problem";
     }
-    else if(DF == 2)
-    {
+    else if (DF == 2) {
         DF = "Moderate Problem";
     }
-    else if(DF == 3)
-    {
+    else if (DF == 3) {
         DF = "Slight Problem";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "No Problem";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function problem_pain_discomfort(question)
-{
-     // Value Chart of question
-    // 0 No Problem
-    // 1 Slight Problem
-    // 2 Moderate Problem
-    // 3 Severe Problem
-    // 4 Inability
-
-    if(!question)
-        return 999;
-
-    let DF = parseInt(question);
-
-    if(isNaN(DF))
-        return 999;
-
-    if(DF == 0)
-    {
-        DF = "Inability";
-    }
-    else if(DF == 1)
-    {
-        DF = "Severe Problem";
-    }
-    else if(DF == 2)
-    {
-        DF = "Moderate Problem";
-    }
-    else if(DF == 3)
-    {
-        DF = "Slight Problem";
-    }
-    else if(DF == 4)
-    {
-        DF = "No Problem";
-    }
-    else
-    {
-        DF = 999;
-    }
-
-    return DF;
-}
-
-function problem_anxious_depressed(question)
-{
+function problem_pain_discomfort(question) {
     // Value Chart of question
     // 0 No Problem
     // 1 Slight Problem
@@ -2616,44 +2240,75 @@ function problem_anxious_depressed(question)
     // 3 Severe Problem
     // 4 Inability
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 0)
-    {
+    if (DF == 0) {
         DF = "Inability";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Severe Problem";
     }
-    else if(DF == 2)
-    {
+    else if (DF == 2) {
         DF = "Moderate Problem";
     }
-    else if(DF == 3)
-    {
+    else if (DF == 3) {
         DF = "Slight Problem";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "No Problem";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function support_wellness_program(question)
-{
+function problem_anxious_depressed(question) {
+    // Value Chart of question
+    // 0 No Problem
+    // 1 Slight Problem
+    // 2 Moderate Problem
+    // 3 Severe Problem
+    // 4 Inability
+
+    if (!question)
+        return 999;
+
+    let DF = parseInt(question);
+
+    if (isNaN(DF))
+        return 999;
+
+    if (DF == 0) {
+        DF = "Inability";
+    }
+    else if (DF == 1) {
+        DF = "Severe Problem";
+    }
+    else if (DF == 2) {
+        DF = "Moderate Problem";
+    }
+    else if (DF == 3) {
+        DF = "Slight Problem";
+    }
+    else if (DF == 4) {
+        DF = "No Problem";
+    }
+    else {
+        DF = 999;
+    }
+
+    return DF;
+}
+
+function support_wellness_program(question) {
 
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
@@ -2664,48 +2319,40 @@ function support_wellness_program(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.E);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function support_healthcare(question)
-{
+function support_healthcare(question) {
 
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
@@ -2716,48 +2363,40 @@ function support_healthcare(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.A);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function support_home_healthcare(question)
-{
+function support_home_healthcare(question) {
 
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
@@ -2768,48 +2407,40 @@ function support_home_healthcare(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.B);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function support_private_healthcare(question)
-{
+function support_private_healthcare(question) {
 
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
@@ -2820,48 +2451,40 @@ function support_private_healthcare(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.C);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function support_informal(question)
-{
+function support_informal(question) {
 
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
@@ -2872,99 +2495,83 @@ function support_informal(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.D);
-    
-    if(isNaN(DF))
+
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function goals(question)
-{
-    if(!question && !Array.isArray(question))
+function goals(question) {
+    if (!question && !Array.isArray(question))
         return 999;
 
     let answer_array = new Array();
 
     question.forEach(item => {
-        if(item.hasOwnProperty('goal') && item.hasOwnProperty('first_step'))
-        {
+        if (item.hasOwnProperty('goal') && item.hasOwnProperty('first_step')) {
             answer_array.push(String(item.goal).toLowerCase().trim());
         }
     });
 
-    if(answer_array.length == 0)
-    {
+    if (answer_array.length == 0) {
         return 999;
     }
-    else
-    {
+    else {
         return answer_array;
     }
-    
+
 }
 
-function access_to_family_doctor(question)
-{
-    if(!question)
+function access_to_family_doctor(question) {
+    if (!question)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 1)
-    {
+    if (DF == 1) {
         DF = "Yes";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "No";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_get_together_family(question)
-{
+function frequency_get_together_family(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -2974,48 +2581,40 @@ function frequency_get_together_family(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF1);
-    
-    if(isNaN(DF))
+
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_get_together_friends(question)
-{
+function frequency_get_together_friends(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -3025,48 +2624,40 @@ function frequency_get_together_friends(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF2);
-    
-    if(isNaN(DF))
+
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_get_together_neighbours(question)
-{
+function frequency_get_together_neighbours(question) {
     // Value Chart per sub question of Question
     // 999  Total invalid or blank answer
     // 300  Daily
@@ -3076,89 +2667,75 @@ function frequency_get_together_neighbours(question)
     // 1    Yearly
     // 0    Never
 
-    if(!question)
+    if (!question)
         return 999;
 
     let DF = parseInt(question.DF3);
-    
-    if(isNaN(DF))
+
+    if (isNaN(DF))
         return 999;
 
-    if(DF == 300)
-    {
+    if (DF == 300) {
         DF = "Daily";
     }
-    else if(DF == 50)
-    {
+    else if (DF == 50) {
         DF = "Weekly";
     }
-    else if(DF == 12)
-    {
+    else if (DF == 12) {
         DF = "Monthly";
     }
-    else if(DF == 4)
-    {
+    else if (DF == 4) {
         DF = "3-4 Times a year";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "Yearly";
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         DF = "Never";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function frequency_of_social_contacts_month_phone_computer(question)
-{
-    if(!question)
+function frequency_of_social_contacts_month_phone_computer(question) {
+    if (!question)
         return 999;
 
     let DF = parseInt(question);
 
-    if(isNaN(DF))
+    if (isNaN(DF))
         return 999;
-    
-    if(DF == 12)
-    {
+
+    if (DF == 12) {
         return 1;
     }
-    else if(DF == 0)
-    {
+    else if (DF == 0) {
         return 0;
     }
-    else
-    {
+    else {
         return 999;
     }
 }
 
-function perceived_loneliness_sometimes_count(question)
-{
+function perceived_loneliness_sometimes_count(question) {
 
     // Value Chart
     // 1 = Hardly ever 
     // 2 = Sometimes
     // 3 = Often
 
-    if(!question)
+    if (!question)
         return 999;
 
     let sum = 0;
 
-    for (const [key, value] of Object.entries(question))
-    {
+    for (const [key, value] of Object.entries(question)) {
         let number = parseInt(value);
 
-        if(!isNaN(number) && number == 2)
-        {
+        if (!isNaN(number) && number == 2) {
             sum += 1;
         }
     }
@@ -3167,123 +2744,113 @@ function perceived_loneliness_sometimes_count(question)
 
 }
 
-function perceived_loneliness_often_count(question)
-{
-   
+function perceived_loneliness_often_count(question) {
+
     // Value Chart
     // 1 = Hardly ever 
     // 2 = Sometimes
     // 3 = Often
 
-    if(!question)
+    if (!question)
         return 999;
 
     let sum = 0;
 
-    for (const [key, value] of Object.entries(question))
-    {
+    for (const [key, value] of Object.entries(question)) {
         let number = parseInt(value);
 
-        if(!isNaN(number) && number == 3)
-        {
+        if (!isNaN(number) && number == 3) {
             sum += 1;
         }
     }
-    
+
     return sum;
 }
 
-function household2_size(question)
-{
+function household2_size(question) {
     // Value Chart of question
     // 0 Lives alone
     // 1 1 person
     // 2 2 people
     // 3 3 people
     // 4 4 or more people
-    
-    if(!question && !Array.isArray(question))
+
+    if (!question && !Array.isArray(question))
         return 999;
 
-    
+
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF == 0)
-    {
+
+    if (DF == 0) {
         DF = "Lives alone";
     }
-    else if(DF == 1)
-    {
+    else if (DF == 1) {
         DF = "1 person";
     }
-    else if(DF == 2){
+    else if (DF == 2) {
         DF = "2 people";
     }
-    else if(DF == 3){
+    else if (DF == 3) {
         DF = "3 people";
     }
-    else if(DF == 4){
+    else if (DF == 4) {
         DF = "4 or more people";
     }
-    else{
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function community_activity_participate(question)
-{
+function community_activity_participate(question) {
     // Value Chart of question
     // 0 Yes
     // 1 No
-    
-    
-    if(!question && !Array.isArray(question))
+
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF == 0)
-    {
+
+    if (DF == 0) {
         DF = "No";
     }
-    else if(DF == 1){
+    else if (DF == 1) {
         DF = "Yes";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function life_satisfaction2(question)
-{
+function life_satisfaction2(question) {
     // Value Chart of question
     // satisfaction ranges from 1 to 10
-    
-    
-    if(!question && !Array.isArray(question))
+
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF>0 && DF<=10){
+
+    if (DF > 0 && DF <= 10) {
         return DF;
     }
-    else{
+    else {
         return 999;
     }
     // if(DF == 10)
@@ -3325,166 +2892,151 @@ function life_satisfaction2(question)
     // return DF;
 }
 
-function local_community_belonging(question)
-{
+function local_community_belonging(question) {
     // Value Chart of question
     // 3 very strong
     // 2 somewhat strong
     // 1 somewhat weak
     // 0 very weak
-    
-    if(!question && !Array.isArray(question))
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF == 0)
-    {
-         DF = "very weak";
+
+    if (DF == 0) {
+        DF = "Very weak";
     }
-    else if(DF == 1){
-        DF = "somewhat weak";
+    else if (DF == 1) {
+        DF = "Somewhat weak";
     }
-    else if(DF == 2){
-        DF = "somewhat strong";
+    else if (DF == 2) {
+        DF = "Somewhat strong";
     }
-    else if(DF == 3){
-        DF = "very strong";
+    else if (DF == 3) {
+        DF = "Very strong";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function lack_companionship(question)
-{
+function lack_companionship(question) {
     // Value Chart of question
     // 0 Hardly Ever
     // 1 Sometimes
     // 2 Often
-    
-    if(!question && !Array.isArray(question))
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF == 2)
-    {
+
+    if (DF == 2) {
         DF = "Often";
     }
-    else if(DF == 1){
+    else if (DF == 1) {
         DF = "Sometimes";
     }
-    else if(DF == 0){
+    else if (DF == 0) {
         DF = "Hardly Ever";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function feel_leftout(question)
-{
+function feel_leftout(question) {
     // Value Chart of question
     // 0 Hardly Ever
     // 1 Sometimes
     // 2 Often
-    
-    if(!question && !Array.isArray(question))
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF == 2)
-    {
+
+    if (DF == 2) {
         DF = "Often";
     }
-    else if(DF == 1){
+    else if (DF == 1) {
         DF = "Sometimes";
     }
-    else if(DF == 0){
+    else if (DF == 0) {
         DF = "Hardly Ever";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function feel_isolated(question)
-{
+function feel_isolated(question) {
     // Value Chart of question
     // 0 Hardly Ever
     // 1 Sometimes
     // 2 Often
-    
-    if(!question && !Array.isArray(question))
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF == 2)
-    {
+
+    if (DF == 2) {
         DF = "Often";
     }
-    else if(DF == 1){
+    else if (DF == 1) {
         DF = "Sometimes";
     }
-    else if(DF == 0){
+    else if (DF == 0) {
         DF = "Hardly Ever";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
     return DF;
 }
 
-function con_que(question)
-{
+function con_que(question) {
     // Value Chart of question
     // 0 Yes
     // 1 No
-    
-    
-    if(!question && !Array.isArray(question))
+
+
+    if (!question && !Array.isArray(question))
         return 999;
 
     let DF = parseInt(question[0]);
 
-    if(isNaN(question))
+    if (isNaN(question))
         return 999;
-    
-    if(DF == 0)
-    {
+
+    if (DF == 0) {
         DF = "No";
     }
-    else if(DF == 1){
+    else if (DF == 1) {
         DF = "Yes";
     }
-    else
-    {
+    else {
         DF = 999;
     }
 
