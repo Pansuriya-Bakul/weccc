@@ -122,8 +122,8 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                 setViewUrl(viewUserBaseLinkStaff + "view/" + selectedDataItemsList[0]._id);
                 localStorage.setItem('_id', selectedDataItemsList[0]._id);
             }
-            setReportUrl('/reports');
-            setReportUrl1('/ScreenReports');
+            setReportUrl('/reports/' + selectedDataItemsList[0]._id);
+            setReportUrl1('/ScreenReports/' + selectedDataItemsList[0]._id);
         } else {
             setViewUrl("");
             setReportUrl("");

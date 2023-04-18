@@ -2908,16 +2908,16 @@ function local_community_belonging(question) {
         return 999;
 
     if (DF == 0) {
-        DF = "very weak";
+        DF = "Very weak";
     }
     else if (DF == 1) {
-        DF = "somewhat weak";
+        DF = "Somewhat weak";
     }
     else if (DF == 2) {
-        DF = "somewhat strong";
+        DF = "Somewhat strong";
     }
     else if (DF == 3) {
-        DF = "very strong";
+        DF = "Very strong";
     }
     else {
         DF = 999;

@@ -36,12 +36,13 @@ class ViewUserDashboard extends Component {
 			quote: '',
 			author: '',
 			toggle: {},
-			collectionCompleteness: []
+			collectionCompleteness: [],
+			isLoading: true,
 		};
 	}
 
 	checkAuth = () => {
-		setTimeout(() => {
+		// setTimeout(() => {
 			this.props.ToggleDrawerClose();
 			this.setState({
 				render: true
@@ -53,7 +54,7 @@ class ViewUserDashboard extends Component {
 					});
 				}
 			});
-		}, 200);
+		// }, 200);
 	};
 
 	setToggle = (key) => {
@@ -90,6 +91,7 @@ class ViewUserDashboard extends Component {
 					toggle[key] = false;
 				})
 				this.setState({ toggle: toggle });
+				this.setState({ isLoading: false });
 				callback();
 			}
 		}); // call the get request.
@@ -249,7 +251,9 @@ class ViewUserDashboard extends Component {
 												</Typography>
 											</Grid>
 											<Grid item xs={12}>
-												<Typography variant="body2" component="h2">
+											{this.state.isLoading 
+												? (<CircularProgress />)
+												:<Typography variant="body2" component="h2">
 
 													{/* {this.state.clientData.message ? (
 														<p>{this.state.clientData.message}</p>
@@ -335,6 +339,7 @@ class ViewUserDashboard extends Component {
 														''
 													)}
 												</Typography>
+											}
 											</Grid>
 										</Grid>
 									</Box>

@@ -102,6 +102,12 @@ class Login extends Component
         });
     }
 
+    handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            this.handleLogin();
+          }
+    }
+
     // Normal login scenario
     handleLogin = () =>
     {
@@ -340,6 +346,7 @@ class Login extends Component
                                 value={email} 
                                 onChange={this.handleEmailChange} 
                                 autoFocus
+                                onKeyDown={this.handleKeyDown}
                             />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
@@ -351,6 +358,7 @@ class Login extends Component
                                 value={password} 
                                 onChange={this.handlePasswordChange} 
                                 autoComplete="current-password"
+                                onKeyDown={this.handleKeyDown}
                             />
                         </FormControl>
                         {loginValidText !== "" &&

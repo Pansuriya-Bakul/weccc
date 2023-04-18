@@ -25,11 +25,11 @@ export default class SocialHealthAlert extends Component {
                     </ul>
                 </Typography> : null 
                 }
-                {this.props.reports.community_activity_participate[this.props.collection] !== 999 && this.props.reports.community_activity_participate[this.props.collection] == "Yes" ?
+                {this.props.reports.community_activity_participate[this.props.collection] !== 999 && this.props.reports.community_activity_participate[this.props.collection] == "No" ?
 				(null_flag = null_flag + 1) &&
                 <Typography>
                     <ul>
-                        <li>Not participating in community activities as much as you would like is a concern. Positive social relationships are associated with health and well-being. Low social levels of social participation is linked to increased risk of early death.</li>
+                        <li>Not participating in community activities as much as you would like is a concern. Positive social relationships are associated with health and well-being. Low levels of social participation is associated with poorer physical health, depression, disease, low quality of life, and even risk of early death.</li>
                     </ul>
                 </Typography> : null 
                 }
@@ -41,7 +41,7 @@ export default class SocialHealthAlert extends Component {
                     </ul>
                 </Typography>  : null
                 }
-                {(this.props.reports.local_community_belonging[this.props.collection] == "somewhat weak" || this.props.reports.local_community_belonging[this.props.collection] == "strong") && this.props.reports.local_community_belonging[this.props.collection] !== 999 ?
+                {(this.props.reports.local_community_belonging[this.props.collection] == "Somewhat weak" || this.props.reports.local_community_belonging[this.props.collection] == "Very weak") && this.props.reports.local_community_belonging[this.props.collection] !== 999 ?
 				(null_flag = null_flag + 1) &&
                 <Typography>
                     <ul>

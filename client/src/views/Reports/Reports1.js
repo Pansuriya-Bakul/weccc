@@ -72,7 +72,7 @@ const Reports = (props) => {
   const classes = useStyles();
 
   // Declaration of Stateful Variables ===
-  const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+  const { userID, appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
   // Alert variable
   const [alert, setAlert] = useState(new AlertType());
@@ -83,64 +83,63 @@ const Reports = (props) => {
 
   const [reportsData, setReportsData] = useState(null);
   const [patientData, setPatientData] = useState([]);
-  const [currentPatient, setCurrentPatient] = useState(
-    localStorage.getItem("_id")
-  );
+  const [currentPatient, setCurrentPatient] = useState(userID);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
+  const [memberName, setMemberName] = useState('');
 
 
   // Functions ===
 
-  const getPatients = useCallback(() => {
-    if (appState.role == "Patient") {
-      setAlert(
-        new AlertType("You do not have Permission to recieve Patients", "error")
-      );
-      return;
-    } else {
-      if (appState.patients.length <= 0) {
-        setAlert(
-          new AlertType(
-            "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
-            "error"
-          )
-        );
-        return;
-      }
+  // const getPatients = useCallback(() => {
+  //   if (appState.role == "Patient") {
+  //     setAlert(
+  //       new AlertType("You do not have Permission to recieve Patients", "error")
+  //     );
+  //     return;
+  //   } else {
+  //     if (appState.patients.length <= 0) {
+  //       setAlert(
+  //         new AlertType(
+  //           "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
+  //           "error"
+  //         )
+  //       );
+  //       return;
+  //     }
 
-      let http_query = {
-        _id: {
-          $in: appState.patients,
-        },
-      };
+  //     let http_query = {
+  //       _id: {
+  //         $in: appState.patients,
+  //       },
+  //     };
 
-      post("users/query", appState.token, http_query, (err, res) => {
-        if (err) {
-          //Bad callback
-          setAlert(
-            new AlertType(
-              "Unable to retrieve Patients. Please refresh and try again.",
-              "error"
-            )
-          );
-        } else {
-          if (res.status === 200) {
+  //     post("users/query", appState.token, http_query, (err, res) => {
+  //       if (err) {
+  //         //Bad callback
+  //         setAlert(
+  //           new AlertType(
+  //             "Unable to retrieve Patients. Please refresh and try again.",
+  //             "error"
+  //           )
+  //         );
+  //       } else {
+  //         if (res.status === 200) {
 
-            setPatientData(res.data.response.users);
-          } else {
-            //Bad HTTP Response
+  //           setPatientData(res.data.response.users);
+  //         } else {
+  //           //Bad HTTP Response
 
-            setAlert(
-              new AlertType(
-                "Unable to retrieve Patients. Please refresh and try again.",
-                "error"
-              )
-            );
-          }
-        }
-      });
-    }
-  }, [appState]);
+  //           setAlert(
+  //             new AlertType(
+  //               "Unable to retrieve Patients. Please refresh and try again.",
+  //               "error"
+  //             )
+  //           );
+  //         }
+  //       }
+  //     });
+  //   }
+  // }, [appState]);
 
 
 
@@ -176,7 +175,7 @@ const Reports = (props) => {
   //   },
   //   [appState]
   // );
-
+ 
   const getScreen = useCallback(
     (userId) => {
       get("reports/Screen/user/" + userId, appState.token, (err, res) => {
@@ -190,10 +189,12 @@ const Reports = (props) => {
           );
         } else {
           if (res.status === 200) {
-            if (Object.keys(res.data).length === 0) {
+            const { memberName, ...otherData } = res.data;
+            if (Object.keys(otherData).length === 0) {
               setReportsData(null);
             } else {
-              setReportsData(res.data);
+              setMemberName(memberName);
+              setReportsData(otherData);
             }
           } else {
             //Bad HTTP Response
@@ -223,11 +224,11 @@ const Reports = (props) => {
   // First Render only because of the [ ] empty array tracking with the useEffect
   useEffect(() => {
     ToggleDrawerClose();
-    setTimeout(() => {
-      CheckAuthenticationValidity((tokenValid) => {
-        getPatients(currentPatient);
-      });
-    }, 200); //
+    // setTimeout(() => {
+    //   CheckAuthenticationValidity((tokenValid) => {
+    //     getPatients(currentPatient);
+    //   });
+    // }, 200); //
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -292,17 +293,18 @@ const Reports = (props) => {
                 </Grid>
               </Box>
             </Grid>
-            <Grid item xs={4}>
-              <Box mx={1} my={1}>
+            {/* <Grid item xs={4}>
+              <Box mx={1} my={1}> */}
                 {/* <AlertMessage alert={alert} setParentAlert={setAlert} /> */}
                 {/* <Button
                                             onClick = { () => {console.log((collectionIndex + 1)%reportsData.SRVNum_PRF_SD.length);}} >
                                             Viewing data from collection {collectionIndex + 1} out of {reportsData.SRVNum_PRF_SD.length}
                                         </Button> */}
-              </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <Card raised={true}>
+              {/* </Box>
+            </Grid> */}
+            
+            <Grid item xs={12} >
+              <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
                   <Grid
                     container
@@ -312,12 +314,12 @@ const Reports = (props) => {
                     spacing={1}
                   >
                     <Grid item xs={12}>
-                      <FormControl
+                      {/* <FormControl
                         fullWidth
                         variant="filled"
                         size="small"
                         className={classes.formControl}
-                      >
+                      > */}
                         {/* <InputLabel id="select-label-Member">Member</InputLabel>
                         <Select
                           className={classes.selectEmpty}
@@ -337,9 +339,9 @@ const Reports = (props) => {
                             );
                           })}
                         </Select> */}
-                      </FormControl>
+                      {/* </FormControl> */}
                       <Typography
-                        variant="h45"
+                        // variant="h6"
                         color="textSecondary"
                         align="left"
                         gutterBottom
@@ -347,23 +349,15 @@ const Reports = (props) => {
                         Member's name:
                       </Typography>
 
-                      {patientData.map((item, index) => {
-                        if (item._id == currentPatient) {
-
-                          return (
-                            <Box mx={1} my={2} boxShadow={1}>
-                              <Typography
-                                variant="h4"
-                                color="textPrimary"
-                                align="left"
-                                gutterBottom
-                              >
-                                {item.info.name}
-                              </Typography>
-                            </Box>
-                          );
-                        }
-                      })}
+                        <Typography
+                          variant="h5"
+                          color="textPrimary"
+                          align="left"
+                          gutterBottom
+                        >
+                          {memberName}
+                        </Typography>
+    
                     </Grid>
                     {/*<Grid item xs={12}>*/}
                     {/*  {reportsData ? (*/}
@@ -385,8 +379,9 @@ const Reports = (props) => {
                 </Box>
               </Card>
             </Grid>
+
             <Grid item xs={12}>
-              <Card raised={true}>
+              <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
                   <Grid
                     container
