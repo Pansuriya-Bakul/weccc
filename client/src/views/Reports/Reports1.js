@@ -175,7 +175,7 @@ const Reports = (props) => {
   //   },
   //   [appState]
   // );
- 
+
   const getScreen = useCallback(
     (userId) => {
       get("reports/Screen/user/" + userId, appState.token, (err, res) => {
@@ -295,14 +295,14 @@ const Reports = (props) => {
             </Grid>
             {/* <Grid item xs={4}>
               <Box mx={1} my={1}> */}
-                {/* <AlertMessage alert={alert} setParentAlert={setAlert} /> */}
-                {/* <Button
+            {/* <AlertMessage alert={alert} setParentAlert={setAlert} /> */}
+            {/* <Button
                                             onClick = { () => {console.log((collectionIndex + 1)%reportsData.SRVNum_PRF_SD.length);}} >
                                             Viewing data from collection {collectionIndex + 1} out of {reportsData.SRVNum_PRF_SD.length}
                                         </Button> */}
-              {/* </Box>
+            {/* </Box>
             </Grid> */}
-            
+
             <Grid item xs={12} >
               <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
@@ -320,7 +320,7 @@ const Reports = (props) => {
                         size="small"
                         className={classes.formControl}
                       > */}
-                        {/* <InputLabel id="select-label-Member">Member</InputLabel>
+                      {/* <InputLabel id="select-label-Member">Member</InputLabel>
                         <Select
                           className={classes.selectEmpty}
                           labelId="select-label-Member"
@@ -349,15 +349,15 @@ const Reports = (props) => {
                         Member's name:
                       </Typography>
 
-                        <Typography
-                          variant="h5"
-                          color="textPrimary"
-                          align="left"
-                          gutterBottom
-                        >
-                          {memberName}
-                        </Typography>
-    
+                      <Typography
+                        variant="h5"
+                        color="textPrimary"
+                        align="left"
+                        gutterBottom
+                      >
+                        {memberName}
+                      </Typography>
+
                     </Grid>
                     {/*<Grid item xs={12}>*/}
                     {/*  {reportsData ? (*/}
@@ -396,7 +396,7 @@ const Reports = (props) => {
                       <>
                         <Grid item xs={12}>
                           <Typography variant="h4" color="textPrimary">
-                            Compassion Care Community Social Health Screening Report
+                            Social Risk Screener Report
                           </Typography>
                           <Divider light />
                         </Grid>

@@ -35,7 +35,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 
 const styles = theme => ({
 	nested: {
-	  	paddingLeft: theme.spacing(4),
+		paddingLeft: theme.spacing(4),
 	},
 	usersColors: {
 		color: theme.colorGreen
@@ -48,12 +48,10 @@ const styles = theme => ({
 	}
 });
 
-class DrawerContents extends Component 
-{
-	constructor(props)
-	{
+class DrawerContents extends Component {
+	constructor(props) {
 		super(props);
-		
+
 		this.state = {
 			managementCollapseMenuOpen: false,
 			chaptersCollapseMenuOpen: false,
@@ -62,44 +60,39 @@ class DrawerContents extends Component
 		};
 	}
 
-	toggleUsersCollapseMenuOpen = () =>
-	{
+	toggleUsersCollapseMenuOpen = () => {
 		this.setState({
 			managementCollapseMenuOpen: !this.state.managementCollapseMenuOpen
 		});
 	}
 
-	toggleChaptersCollapseMenuOpen = () =>
-	{
+	toggleChaptersCollapseMenuOpen = () => {
 		this.setState({
 			chaptersCollapseMenuOpen: !this.state.chaptersCollapseMenuOpen
 		});
 	}
 
-	toggleCollectionsCollapseMenuOpen = () =>
-	{
+	toggleCollectionsCollapseMenuOpen = () => {
 		this.setState({
 			collectionsCollapseMenuOpen: !this.state.collectionsCollapseMenuOpen
 		});
 	}
 
-	toggleReportsCollapseMenuOpen = () =>
-	{
+	toggleReportsCollapseMenuOpen = () => {
 		this.setState({
 			reportsCollapseMenuOpen: !this.state.reportsCollapseMenuOpen
 		});
 	}
 
-	render() 
-	{
+	render() {
 		let { appState, classes } = this.props;
 
-        return (
+		return (
 			<div>
 				<List>
 					<ListItem button component={Link} to="/">
-						<ListItemIcon><Dashboard color="primary"/></ListItemIcon>
-						<ListItemText primary="Dashboard"/>
+						<ListItemIcon><Dashboard color="primary" /></ListItemIcon>
+						<ListItemText primary="Dashboard" />
 					</ListItem>
 					{/* {appState.role !== "Patient" &&
 					<ListItem button component={Link} to="/reports">
@@ -120,21 +113,21 @@ class DrawerContents extends Component
 						<ListItemText primary="Screen Reports" />
 					</ListItem>
 					} */}
-					{appState.role == "Patient" &&
-					<ListItem button component={Link} to="/MainReports">
-						<ListItemIcon><AssessmentIcon color="primary"/></ListItemIcon>
-						<ListItemText primary="Your Reports" />
-					</ListItem>
+					{(appState.role == "Patient" || appState.role == "Volunteer") &&
+						<ListItem button component={Link} to="/MainReports">
+							<ListItemIcon><AssessmentIcon color="primary" /></ListItemIcon>
+							<ListItemText primary="Your Reports" />
+						</ListItem>
 					}
 					<ListItem button component={Link} to="/profile">
-						<ListItemIcon><AccountBoxIcon color="primary"/></ListItemIcon>
+						<ListItemIcon><AccountBoxIcon color="primary" /></ListItemIcon>
 						<ListItemText>Your Profile</ListItemText>
 					</ListItem>
 					{appState.role !== "Patient" &&
-					<ListItem button component={Link} to="/members">
-						<ListItemIcon><PeopleIcon color="primary"/></ListItemIcon>
-						<ListItemText primary="Your Members" />
-					</ListItem>
+						<ListItem button component={Link} to="/members">
+							<ListItemIcon><PeopleIcon color="primary" /></ListItemIcon>
+							<ListItemText primary="Your Members" />
+						</ListItem>
 					}
 					{/* <ListItem button component={Link} to="/search" divider>
 						<ListItemIcon><SearchIcon /></ListItemIcon>
@@ -142,45 +135,45 @@ class DrawerContents extends Component
 					</ListItem> */}
 				</List>
 				{(appState.role === "Admin" || appState.role === "Coordinator") &&
-				<List>
-					<ListItem button onClick={this.toggleUsersCollapseMenuOpen}>
-						<ListItemIcon><EventNote color="secondary" /></ListItemIcon>
-						<ListItemText primary="Management" />
-						{this.state.managementCollapseMenuOpen ? <ExpandLess /> : <ExpandMore />}
-					</ListItem>
-					<Collapse in={this.state.managementCollapseMenuOpen} timeout="auto" unmountOnExit>
-						<List component="div" disablePadding>
-							<ListItem button component={Link} to="/administration/users/management" className={classes.nested}>
-								<ListItemIcon><PeopleIcon /></ListItemIcon>
-								<ListItemText secondary="Users" />
-							</ListItem>
-							{appState.role === "Admin" && 
-							<ListItem button component={Link} to="/administration/booklets/management" className={classes.nested}>
-								<ListItemIcon><Ballot /></ListItemIcon>
-								<ListItemText secondary="Chapters" />
-							</ListItem>
-							}
-							<ListItem button component={Link} to="/administration/services/management" className={classes.nested}>
-								<ListItemIcon><LibraryBooksIcon /></ListItemIcon>
-								<ListItemText secondary="Services" />
-							</ListItem>
-							{appState.role === "Admin" && 
-							<ListItem button component={Link} to="/administration/projects/management" className={classes.nested}>
-								<ListItemIcon><ListAltIcon /></ListItemIcon>
-								<ListItemText secondary="Projects" />
-							</ListItem>
-							}
-							<ListItem button component={Link} to="/administration/reports/management" className={classes.nested}>
-								<ListItemIcon><AssessmentIcon /></ListItemIcon>
-								<ListItemText secondary="Reports" />
-							</ListItem>
-						</List>
-        			</Collapse>
-				</List>
+					<List>
+						<ListItem button onClick={this.toggleUsersCollapseMenuOpen}>
+							<ListItemIcon><EventNote color="secondary" /></ListItemIcon>
+							<ListItemText primary="Management" />
+							{this.state.managementCollapseMenuOpen ? <ExpandLess /> : <ExpandMore />}
+						</ListItem>
+						<Collapse in={this.state.managementCollapseMenuOpen} timeout="auto" unmountOnExit>
+							<List component="div" disablePadding>
+								<ListItem button component={Link} to="/administration/users/management" className={classes.nested}>
+									<ListItemIcon><PeopleIcon /></ListItemIcon>
+									<ListItemText secondary="Users" />
+								</ListItem>
+								{appState.role === "Admin" &&
+									<ListItem button component={Link} to="/administration/booklets/management" className={classes.nested}>
+										<ListItemIcon><Ballot /></ListItemIcon>
+										<ListItemText secondary="Chapters" />
+									</ListItem>
+								}
+								<ListItem button component={Link} to="/administration/services/management" className={classes.nested}>
+									<ListItemIcon><LibraryBooksIcon /></ListItemIcon>
+									<ListItemText secondary="Services" />
+								</ListItem>
+								{appState.role === "Admin" &&
+									<ListItem button component={Link} to="/administration/projects/management" className={classes.nested}>
+										<ListItemIcon><ListAltIcon /></ListItemIcon>
+										<ListItemText secondary="Projects" />
+									</ListItem>
+								}
+								<ListItem button component={Link} to="/administration/reports/management" className={classes.nested}>
+									<ListItemIcon><AssessmentIcon /></ListItemIcon>
+									<ListItemText secondary="Reports" />
+								</ListItem>
+							</List>
+						</Collapse>
+					</List>
 				}
 			</div>
-        );
-    }
+		);
+	}
 }
 
 export default withStyles(styles)(DrawerContents);
