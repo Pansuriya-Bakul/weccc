@@ -1006,20 +1006,17 @@ const CreateUserDialog = (props) => {
                               helperText={errorMessages.role}
                               variant="outlined"
                             >
-                              <MenuItem key={"Admin"} value={"Admin"}>
+                              {appState.role == "Admin" && <MenuItem key={"Admin"} value={"Admin"}>
                                 Admin
-                              </MenuItem>
-                              <MenuItem
-                                key={"Coordinator"}
-                                value={"Coordinator"}
-                              >
+                              </MenuItem>}
+                              {appState.role == "Admin" && <MenuItem key={"Coordinator"} value={"Coordinator"}>
                                 Coordinator
-                              </MenuItem>
+                              </MenuItem>}
                               <MenuItem key={"Volunteer"} value={"Volunteer"}>
                                 Volunteer
                               </MenuItem>
                               <MenuItem key={"Patient"} value={"Patient"}>
-                                Patient
+                                Member
                               </MenuItem>
                             </TextField>
                           </Box>
@@ -1344,10 +1341,10 @@ CreateUserDialog.propTypes = {
 
 CreateUserDialog.defaultProps = {
   appState: {},
-  setParentAlert: () => {},
-  getParentData: () => {},
-  setCreateUserDialog: () => {},
-  setCreateUserDialogExecuting: () => {},
+  setParentAlert: () => { },
+  getParentData: () => { },
+  setCreateUserDialog: () => { },
+  setCreateUserDialogExecuting: () => { },
 };
 
 export default CreateUserDialog; // You can even shorthand this line by adding this at the function [Component] declaration stage

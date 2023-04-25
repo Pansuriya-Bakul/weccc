@@ -28,7 +28,7 @@ import get from "../../helpers/common/get";
 import post from "../../helpers/common/post";
 // ==================== MUI =========================
 import { makeStyles } from "@material-ui/core/styles"; // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
-
+import { CircularProgress } from '@material-ui/core';
 import Grid from "@material-ui/core/Grid"; // Normal Markup with MUI is layout -> Container -> Grid -> Paper etc...
 import Box from "@material-ui/core/Box"; // Padding and margins
 import Card from "@material-ui/core/Card"; //Like the paper module, a visual sheet to place things
@@ -86,6 +86,7 @@ const Reports = (props) => {
   const [currentPatient, setCurrentPatient] = useState(userID);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [memberName, setMemberName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
 
   // Functions ===
@@ -175,7 +176,7 @@ const Reports = (props) => {
   //   },
   //   [appState]
   // );
- 
+
   const getScreen = useCallback(
     (userId) => {
       get("reports/Screen/user/" + userId, appState.token, (err, res) => {
@@ -196,6 +197,7 @@ const Reports = (props) => {
               setMemberName(memberName);
               setReportsData(otherData);
             }
+            setIsLoading(false);
           } else {
             //Bad HTTP Response
             setAlert(
@@ -295,14 +297,14 @@ const Reports = (props) => {
             </Grid>
             {/* <Grid item xs={4}>
               <Box mx={1} my={1}> */}
-                {/* <AlertMessage alert={alert} setParentAlert={setAlert} /> */}
-                {/* <Button
+            {/* <AlertMessage alert={alert} setParentAlert={setAlert} /> */}
+            {/* <Button
                                             onClick = { () => {console.log((collectionIndex + 1)%reportsData.SRVNum_PRF_SD.length);}} >
                                             Viewing data from collection {collectionIndex + 1} out of {reportsData.SRVNum_PRF_SD.length}
                                         </Button> */}
-              {/* </Box>
+            {/* </Box>
             </Grid> */}
-            
+
             <Grid item xs={12} >
               <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
@@ -320,7 +322,7 @@ const Reports = (props) => {
                         size="small"
                         className={classes.formControl}
                       > */}
-                        {/* <InputLabel id="select-label-Member">Member</InputLabel>
+                      {/* <InputLabel id="select-label-Member">Member</InputLabel>
                         <Select
                           className={classes.selectEmpty}
                           labelId="select-label-Member"
@@ -349,15 +351,15 @@ const Reports = (props) => {
                         Member's name:
                       </Typography>
 
-                        <Typography
-                          variant="h5"
-                          color="textPrimary"
-                          align="left"
-                          gutterBottom
-                        >
-                          {memberName}
-                        </Typography>
-    
+                      <Typography
+                        variant="h5"
+                        color="textPrimary"
+                        align="left"
+                        gutterBottom
+                      >
+                        {memberName}
+                      </Typography>
+
                     </Grid>
                     {/*<Grid item xs={12}>*/}
                     {/*  {reportsData ? (*/}
@@ -383,97 +385,99 @@ const Reports = (props) => {
             <Grid item xs={12}>
               <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
-                  <Grid
-                    container
-                    direction="column"
-                    justifyContent="flex-start"
-                    alignItems="stretch"
-                    spacing={1}
-                  >
-                    {reportsData &&
-                      Object.keys(reportsData).length != 0 &&
-                      Object.getPrototypeOf(reportsData) === Object.prototype ? (
-                      <>
-                        <Grid item xs={12}>
-                          <Typography variant="h4" color="textPrimary">
-                            Compassion Care Community Social Health Screening Report
-                          </Typography>
-                          <Divider light />
-                        </Grid>
+                {isLoading ? (<CircularProgress />)
+                  : <Grid
+                      container
+                      direction="column"
+                      justifyContent="flex-start"
+                      alignItems="stretch"
+                      spacing={1}
+                    >
+                      {reportsData &&
+                        Object.keys(reportsData).length != 0 &&
+                        Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                        <>
+                          <Grid item xs={12}>
+                            <Typography variant="h4" color="textPrimary">
+                              Social Risk Screener Report
+                            </Typography>
+                            <Divider light />
+                          </Grid>
 
-                        {/*<Grid item xs={12} id="dashboard">*/}
-                        {/*  <Typography*/}
-                        {/*    variant="h5"*/}
-                        {/*    color="textSecondary"*/}
-                        {/*    align="left"*/}
-                        {/*    gutterBottom*/}
-                        {/*  >*/}
-                        {/*    Dashboard*/}
-                        {/*  </Typography>*/}
-                        {/*  <ReportDashboard*/}
-                        {/*    reports={reportsData}*/}
-                        {/*    collection={currentReportIndex}*/}
-                        {/*  ></ReportDashboard>*/}
-                        {/*</Grid>*/}
+                          {/*<Grid item xs={12} id="dashboard">*/}
+                          {/*  <Typography*/}
+                          {/*    variant="h5"*/}
+                          {/*    color="textSecondary"*/}
+                          {/*    align="left"*/}
+                          {/*    gutterBottom*/}
+                          {/*  >*/}
+                          {/*    Dashboard*/}
+                          {/*  </Typography>*/}
+                          {/*  <ReportDashboard*/}
+                          {/*    reports={reportsData}*/}
+                          {/*    collection={currentReportIndex}*/}
+                          {/*  ></ReportDashboard>*/}
+                          {/*</Grid>*/}
 
-                        <Grid item xs={12} id="summary">
+                          <Grid item xs={12} id="summary">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Summary of your screening report
+                            </Typography>
+                            <Summary
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+
+                          <Grid item xs={12} id="possible concerns1">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Possible Concerns
+                            </Typography>
+                            <PossibleConcerns
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+
+                          <Grid item xs={12} id="suggestions1">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Suggestions
+                            </Typography>
+                            <Suggestions
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+                        </>
+                      ) : (
+                        <>
                           <Typography
-                            variant="h5"
+                            variant="subtitle2"
                             color="textSecondary"
                             align="left"
                             gutterBottom
                           >
-                            Summary of your screening report
+                            No available reports.
                           </Typography>
-                          <Summary
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} id="possible concerns1">
-                          <Typography
-                            variant="h5"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          >
-                            Possible Concerns
-                          </Typography>
-                          <PossibleConcerns
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} id="suggestions1">
-                          <Typography
-                            variant="h5"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          >
-                            Suggestions
-                          </Typography>
-                          <Suggestions
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          />
-                        </Grid>
-                      </>
-                    ) : (
-                      <>
-                        <Typography
-                          variant="subtitle2"
-                          color="textSecondary"
-                          align="left"
-                          gutterBottom
-                        >
-                          No available reports.
-                        </Typography>
-                      </>
-                    )}
-                  </Grid>
+                        </>
+                      )}
+                    </Grid>
+                  }
                 </Box>
               </Card>
             </Grid>

@@ -43,17 +43,17 @@ class Main extends Component {
 
 	checkAuth = () => {
 		// setTimeout(() => {
-			this.props.ToggleDrawerClose();
-			// this.setState({
-			// 	render: true
-			// });
-			this.props.CheckAuthenticationValidity(tokenValid => {
-				if (tokenValid) {
-					this.setState({
-						render: true
-					});
-				}
-			});
+		this.props.ToggleDrawerClose();
+		// this.setState({
+		// 	render: true
+		// });
+		this.props.CheckAuthenticationValidity(tokenValid => {
+			if (tokenValid) {
+				this.setState({
+					render: true
+				});
+			}
+		});
 		// }, 200);
 	};
 
@@ -67,31 +67,27 @@ class Main extends Component {
 
 	checkClientSurveys = (callback) => {
 		let { appState } = this.props;
-		let url = ''
-		if (appState.role == 'Patient') {
-			url = `users/client/${appState._id}`;
-		}
-
+		let url = `users/client/${appState._id}`;
 
 		const token = appState.token;
 		get(url, token, (error, response) => {
 			if (error) return;
 
 			if (response.status === 200) {
-				this.setState({ clientData: response.data });
-				this.setState({ clientSurvey: response.data.surveys });
-				this.setState({ clientCompletedSurvey: response.data.completedSurveys });
-				this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
+				// this.setState({ clientData: response.data });
+				// this.setState({ clientSurvey: response.data.surveys });
+				// this.setState({ clientCompletedSurvey: response.data.completedSurveys });
+				// this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
 				this.setState({ collectionNames: response.data.collectionNames });
 				this.setState({ collections: response.data.collections });
-
-
-				const toggle = {}
-				this.state.collectionNames.map(key => {
-					toggle[key] = false;
-				})
-				this.setState({ toggle: toggle });
-				this.setState({isLoading: false});
+				if (this.state.collectionNames != undefined && this.state.collections != undefined) {
+					const toggle = {}
+					this.state.collectionNames.map(key => {
+						toggle[key] = false;
+					})
+					this.setState({ toggle: toggle });
+				}
+				this.setState({ isLoading: false });
 				callback();
 			}
 		}); // call the get request.
@@ -137,7 +133,7 @@ class Main extends Component {
 		this.classes = styles();
 		this.bull = <span className={this.classes.bullet}>•</span>;
 
-		if (appState.role === 'Patient') {
+		if (appState.role === 'Patient' || appState.role === 'Volunteer') {
 			this.checkClientSurveys(() => {
 				this.checkComplete();
 			});
@@ -239,7 +235,7 @@ class Main extends Component {
 							</CardContent>
 						</Card>
 					</Grid>
-					{(appState.role === 'Patient') && (
+					{(appState.role === 'Patient' || appState.role === 'Volunteer') && (
 						<Grid item xs={12}>
 							<Card raised={true}>
 								<CardContent className='dashboard-card'>
@@ -251,94 +247,94 @@ class Main extends Component {
 												</Typography>
 											</Grid>
 											<Grid item xs={12}>
-												{this.state.isLoading 
-												? (<CircularProgress />)
-												: <Typography variant="body2" component="h2">
+												{this.state.isLoading
+													? (<CircularProgress />)
+													: <Typography variant="body2" component="h2">
 
-												{/* {this.state.clientData.message ? (
+														{/* {this.state.clientData.message ? (
 													<p>{this.state.clientData.message}</p>
 												) : ('')} */}
-												{(this.state.collectionNames !== [] && this.state.collectionNames !== undefined) ? (
-													(this.state.collectionNames).map((key, index) => {
-														return (
-															<>
-																{(this.state.collectionCompleteness[index] == false) && <Grid item xs={12}>
-																	{/* <Tooltip
+														{(this.state.collectionNames !== [] && this.state.collectionNames !== undefined) ? (
+															(this.state.collectionNames).map((key, index) => {
+																return (
+																	<>
+																		{(this.state.collectionCompleteness[index] == false) && <Grid item xs={12}>
+																			{/* <Tooltip
 																		placement="bottom"
 																		title="Edit Collection"
 																	> */}
-																	<div >
-																		<Box mt={1.5} p={1.5} className='box-container' onClick={() => this.setToggle(key)}>
-																			<div
-																				size="small"
-																				variant="contained"
-																				color="primary"
-																				// startIcon={<EditIcon />}
-																				component={Link}
-																				to={`/administration/booklets/user/view`}
-																			>
-																				{/* View Survey {parseInt(key, 10)+1} :  */}
-																				<h3>{key}</h3>
-																			</div>
+																			<div >
+																				<Box mt={1.5} p={1.5} className='box-container' onClick={() => this.setToggle(key)}>
+																					<div
+																						size="small"
+																						variant="contained"
+																						color="primary"
+																						// startIcon={<EditIcon />}
+																						component={Link}
+																						to={`/administration/booklets/user/view`}
+																					>
+																						{/* View Survey {parseInt(key, 10)+1} :  */}
+																						<h3>{key}</h3>
+																					</div>
 
 
-																		</Box>
-																		{this.state.toggle[key] && (<Box m={0} p={1.5} className='bottom-container'>
-																			<div className="survey-div">
-																				{
-																					(this.state.collections !== '' && this.state.collections !== undefined)
+																				</Box>
+																				{this.state.toggle[key] && (<Box m={0} p={1.5} className='bottom-container'>
+																					<div className="survey-div">
+																						{
+																							(this.state.collections !== '' && this.state.collections !== undefined)
 
-																						? (
-																							this.state.collections[index].map(value => {
-																								return (
-																									<>
-																										<Grid item xs={12}>
-																											<Tooltip
-																												placement="bottom"
-																												title="Edit Chapter"
-																											>
-																												<Box m={1} pt={1} className='survey-box'>
-																													<Button className='survey-name'
-																														size="small"
-																														variant="contained"
-																														color="primary"
-																														startIcon={<EditIcon />}
-																														component={Link}
-																														to={`/administration/booklets/user/view/${value[0]}`}
+																								? (
+																									this.state.collections[index].map(value => {
+																										return (
+																											<>
+																												<Grid item xs={12}>
+																													<Tooltip
+																														placement="bottom"
+																														title="Edit Chapter"
 																													>
-																														{value[2]}
-																													</Button>
-																													{(value[1] == 0) && <div className="status-div not-started">
-																														<span>Not Started</span>
-																													</div>}
-																													{(value[1] > 0 && value[1] < 100) && <div className="status-div in-progress">
-																														<span>In Progress</span>
-																													</div>}
-																													{(value[1] == 100) && <div className="status-div completed">
-																														<span>Completed</span>
-																													</div>}
-																												</Box>
-																											</Tooltip>
-																										</Grid>
-																									</>
-																								);
-																							})
-																						) : (
-																							''
-																						)}
+																														<Box m={1} pt={1} className='survey-box'>
+																															<Button className='survey-name'
+																																size="small"
+																																variant="contained"
+																																color="primary"
+																																startIcon={<EditIcon />}
+																																component={Link}
+																																to={`/administration/booklets/user/view/${value[0]}`}
+																															>
+																																{value[2]}
+																															</Button>
+																															{(value[1] == 0) && <div className="status-div not-started">
+																																<span>Not Started</span>
+																															</div>}
+																															{(value[1] > 0 && value[1] < 100) && <div className="status-div in-progress">
+																																<span>In Progress</span>
+																															</div>}
+																															{(value[1] == 100) && <div className="status-div completed">
+																																<span>Completed</span>
+																															</div>}
+																														</Box>
+																													</Tooltip>
+																												</Grid>
+																											</>
+																										);
+																									})
+																								) : (
+																									''
+																								)}
+																					</div>
+																				</Box>)}
 																			</div>
-																		</Box>)}
-																	</div>
-																	{/* </Tooltip> */}
-																</Grid>}
+																			{/* </Tooltip> */}
+																		</Grid>}
 
-															</>
-														);
-													})
-												) : (
-													''
-												)}
-												</Typography>}
+																	</>
+																);
+															})
+														) : (
+															'No services assigned'
+														)}
+													</Typography>}
 											</Grid>
 										</Grid>
 									</Box>

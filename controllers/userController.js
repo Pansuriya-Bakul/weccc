@@ -1254,7 +1254,7 @@ exports.findClientSurveys = async (req, res, next) => {
 		.populate('facilityId')
 		.exec()
 		.then(async user => {
-			if (user.role === 'Patient') {
+			if (user.role === 'Patient' || user.role === 'Volunteer') {
 				if (!user) throw new Error('Client does not exist');
 
 				const clientSurveys = user.memberSurveyList;
@@ -1301,7 +1301,6 @@ exports.findClientSurveys = async (req, res, next) => {
 					collections.push(temp);
 
 				}
-
 
 				// for (let surveyIndex in clientSurveys) {
 				// 	log.info(`${surveyIndex}: Completeness score: ${clientSurveys[surveyIndex].completeness}`);
