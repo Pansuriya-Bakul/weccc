@@ -81,10 +81,10 @@ const SaveChapterDialog = (props) => { // Notice the arrow function... regular f
                     }
                 }
                 else
-                {
+                {   
                     updateBody =
                     {
-                        completeness: chapter.completeness,
+                        completeness: chapter.completeness == 100 ? 100-1 : chapter.completeness,
                         responseJSON: chapter.responseJSON,
                         // memberCollection: chapter.memberCollection
                     }

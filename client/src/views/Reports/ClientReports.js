@@ -39,6 +39,7 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
+import { CircularProgress } from '@material-ui/core';
 
 // ==================== MUI Icons ====================
 
@@ -89,6 +90,7 @@ const ClientReports = (props) => {
     localStorage.getItem("_id")
   );
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Functions ===
 
@@ -160,6 +162,7 @@ const ClientReports = (props) => {
             } else {
               setReportsData(res.data);
             }
+            setIsLoading(false);
           } else {
             //Bad HTTP Response
             setAlert(
@@ -349,114 +352,117 @@ const ClientReports = (props) => {
             <Grid item xs={12}>
               <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
-                  <Grid
-                    container
-                    direction="column"
-                    justifyContent="flex-start"
-                    alignItems="stretch"
-                    spacing={1}
-                  >
-                    {reportsData &&
-                      Object.keys(reportsData).length != 0 &&
-                      Object.getPrototypeOf(reportsData) === Object.prototype ? (
-                      <>
-                        <Grid item xs={12}>
-                          <Typography variant="h4" color="textPrimary">
-                            Compassion Care Community Connections Report
-                          </Typography>
-                          <Divider light />
-                        </Grid>
 
-                        <Grid item xs={12} id="dashboard">
+                  {isLoading ? (<CircularProgress />)
+                  :  <Grid
+                      container
+                      direction="column"
+                      justifyContent="flex-start"
+                      alignItems="stretch"
+                      spacing={1}
+                    >
+                      {reportsData &&
+                        Object.keys(reportsData).length != 0 &&
+                        Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                        <>
+                          <Grid item xs={12}>
+                            <Typography variant="h4" color="textPrimary">
+                              Compassion Care Community Connections Report
+                            </Typography>
+                            <Divider light />
+                          </Grid>
+
+                          <Grid item xs={12} id="dashboard">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Dashboard
+                            </Typography>
+                            <ReportDashboard
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            ></ReportDashboard>
+                          </Grid>
+
+                          <Grid item xs={12} id="summary">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Summary
+                            </Typography>
+                            <Summary
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+
+                          {/* <Grid item xs={12} id="summary1">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            > */}
+                          {/* Summary 1
+                            </Typography>
+                            <Summary1
+                              reports={reports1Data}
+                              collection={currentReportIndex}
+                            />
+                          </Grid> */}
+
+                          <Grid item xs={12} id="possible concerns">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Possible Concerns
+                            </Typography>
+                            <PossibleConcerns
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+
+                          <Grid item xs={12} id="suggestions">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Suggestions
+                            </Typography>
+                            <Suggestions
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+                        </>
+                      ) : (
+
+                        <>
                           <Typography
-                            variant="h5"
+                            variant="subtitle2"
                             color="textSecondary"
                             align="left"
                             gutterBottom
                           >
-                            Dashboard
+                            No available reports.
+
                           </Typography>
-                          <ReportDashboard
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          ></ReportDashboard>
-                        </Grid>
-
-                        <Grid item xs={12} id="summary">
-                          <Typography
-                            variant="h5"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          >
-                            Summary
-                          </Typography>
-                          <Summary
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          />
-                        </Grid>
-
-                        {/* <Grid item xs={12} id="summary1">
-                          <Typography
-                            variant="h5"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          > */}
-                        {/* Summary 1
-                          </Typography>
-                          <Summary1
-                            reports={reports1Data}
-                            collection={currentReportIndex}
-                          />
-                        </Grid> */}
-
-                        <Grid item xs={12} id="possible concerns">
-                          <Typography
-                            variant="h5"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          >
-                            Possible Concerns
-                          </Typography>
-                          <PossibleConcerns
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} id="suggestions">
-                          <Typography
-                            variant="h5"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          >
-                            Suggestions
-                          </Typography>
-                          <Suggestions
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          />
-                        </Grid>
-                      </>
-                    ) : (
-
-                      <>
-                        <Typography
-                          variant="subtitle2"
-                          color="textSecondary"
-                          align="left"
-                          gutterBottom
-                        >
-                          No available reports.
-
-                        </Typography>
-                      </>
-                    )}
-                  </Grid>
+                        </>
+                      )}
+                    </Grid>
+                  }
                 </Box>
               </Card>
             </Grid>

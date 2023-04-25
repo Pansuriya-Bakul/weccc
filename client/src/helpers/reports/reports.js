@@ -4,6 +4,7 @@ const calculateCompleteness = (survey) => {
     let totalQuestions = 0; 
     let finishedQuestions = 0;
     let partiallyFinishedQuestions = 0;
+    let dMatrixpercent = 0;
 
     survey.getAllQuestions().forEach( (question) => {
         if(question.getType() != 'html' && !question.isReadOnly)    // SurveyJS Question types; we currently use HTML for Titles / Sub titles
@@ -62,7 +63,7 @@ const calculateCompleteness = (survey) => {
             else if(question.getType() == 'matrixdynamic')
             {
                 // console.log('Matrix Dynamic Item: ' + question.getType());
-                // console.log(question);
+                console.log(question);
 
                 if(question.hasOwnProperty('propertyHash') && question.propertyHash)
                 {
@@ -72,34 +73,38 @@ const calculateCompleteness = (survey) => {
                     {
                         // Odd behaviour from dynamic questions
                         let subQuestionCellLength = question.propertyHash.columns.length;
-                        let subQuestionsLength = question.propertyHash.rowCount;
-                        let answeredSubQuestions = 0;
+                        let totalCells = (question.propertyHash.rowCount ? question.propertyHash.rowCount : question.initialRowCount) * subQuestionCellLength;
+                        let answeredCells = 0;
 
+                        
                         //Has an available row
-                        if(subQuestionsLength > 0)
+                        if(totalCells > 0)
                         {
                              // This calculation is based on if row fully fills cells within it's row. Does not take into account cell is required
                             question.propertyHash.value.forEach(row => {
-                                if(Object.keys(row).length == subQuestionCellLength)
-                                    answeredSubQuestions += 1;
+                                if(Object.keys(row).length >= 1)
+                                    answeredCells += Object.keys(row).length;
                             });
 
-                            if(answeredSubQuestions < subQuestionsLength)
+
+                            if(answeredCells < totalCells)
                             {
                                 // console.log('Partially-Completed Dynamic Matrix Question');
                                 // console.log(question);
-                                partiallyFinishedQuestions += 1;
+                                dMatrixpercent = (answeredCells/totalCells)*100;
                             }
-                            else if(answeredSubQuestions == subQuestionsLength)
+                            else if(answeredCells == totalCells)
                             {
                                 // console.log('Finished Dynamic Matrix Question');
                                 finishedQuestions += 1;
+                                dMatrixpercent = 0;
                             }
                         }
                         else
                         {
                             // console.log('Finished Dynamic Matrix Question');
                             finishedQuestions += 1;
+                            dMatrixpercent = 0;
                         }
                        
                     }    
@@ -263,8 +268,9 @@ const calculateCompleteness = (survey) => {
     // console.log( 'Partially finished Survey Questions: ' + partiallyFinishedQuestions);
 
     let completePercentage = Math.round(((finishedQuestions/totalQuestions)*100) * 100)/100;
+    completePercentage += dMatrixpercent;
 
-    // console.log( 'Complete Percentage: ' + completePercentage);
+    console.log( 'Complete Percentage: ' + completePercentage);
     
     if(!completePercentage)
         return 0;
