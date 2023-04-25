@@ -704,8 +704,11 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                         // city: userEdit.info.currentAddress.city || "",
                         // code: userEdit.info.currentAddress.code || "",
                         // state: userEdit.info.currentAddress.state || "",
-                        country: userEdit.info.currentAddress.country
-                    }
+                        country: userEdit.info.currentAddress.country,
+                    },
+                    gender: userEdit.info.gender,
+                    language: userEdit.info.language,
+                    phone: userEdit.info.phone
                 }
             };
 

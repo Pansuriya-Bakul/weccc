@@ -35,78 +35,75 @@ import { colors } from "@material-ui/core";
 
 // import { View, Image, StyleSheet, Text } from "react-native";
 
-function App() {
+function MainReports() {
+    // const screenerLink = '/ClientReports1';
+    // const neighboursLink = '/ClientReports';
+
     return (
-                // BrowserRouter to wrap all
+        // BrowserRouter to wrap all
         // the other components
 
-        <Router>
+        //     <Router>
 
-            {/*switch used to render only the first
-	route that matches the location rather
-	than rendering all matching routes. */}
-            <Switch>
-                <Route exact path="/ClientReports1"
-                       component={SecondComponent}>
-                </Route>
-                <Route exact path="/ClientReports"
-                       component={FirstComponent}>
-                </Route>
-                <ul>
+        //         {/*switch used to render only the first
+        // route that matches the location rather
+        // than rendering all matching routes. */}
+        //         <Switch>
+        //             <Route exact path="/" component={MainReports} />
+        //             <Route exact path="/ClientReports1" component={SecondComponent} />
+        //             <Route exact path="/ClientReports" component={FirstComponent} />
+
+        //         </Switch>
+        //     </Router>
+        <>
+            <ul>
                 <div>
-                    
-                    
-                
+
+
+
                     {/* <li> */}
 
-                        {/* Link component uses the to prop
-			to describe the location where the
-			links should navigate to. */}
-                        {/* <Link to={"/ClientReports1"} >
-                            Social Health
-                        </Link> */}
+                    {/* Link component uses the to prop
+                to describe the location where the
+                links should navigate to. */}
+                    {/* <Link to={"/ClientReports1"} >
+                                Social Health
+                            </Link> */}
                     {/* </li> */}
-                   
-                        
-                    <br>
-                    </br>
-                    <br>
-                    </br>    
-                    <br>
-                    </br>
-                    <br>
-                    </br>
-                    <br>
-                    </br>
-                    
 
-                    <table cellspacing="2" bgcolor="#000000" align="center">
+
+                    <br>
+                    </br>
+                    <br>
+                    </br>
+                    <br>
+                    </br>
+                    <br>
+                    </br>
+                    <br>
+                    </br>
+
+
+                    <table cellSpacing="2" bgcolor="#000000" align="center">
                         <tr bgcolor="#ffffff">
                             <th><Link to={"/ClientReports1"}>
-                                    <Typography 
-                                    text-decoration="None"
-                                    >
-                                        Social Health Report
-                                    </Typography>
-                                    <img height="200" width="200"  src={SocialHealth} />
-                                
-                              
+                                <Typography style={{ padding: '5px' }}>
+                                    Social Health Screener Report
+                                </Typography>
+                                <img height="200" width="200" src={SocialHealth} />
                             </Link></th>
-                            <th><Link to={"/ClientReports"} >
-                                    <Typography>
-                                        Neighbour's Report
-                                    </Typography>
-                                    <img height="200"  src={NeighboursImg} />
-                                
-                              
+                            <th><Link to={"/ClientReports"}>
+                                <Typography style={{ padding: '5px' }}>
+                                    Community Connections Report
+                                </Typography>
+                                <img height="200" width="200" src={NeighboursImg} />
                             </Link></th>
                         </tr>
-                    </table>  
-                    
+                    </table>
+
                 </div>
-                </ul>
-            </Switch>
-        </Router>
+            </ul>
+        </>
     );
 }
-export default App;
+export default MainReports;

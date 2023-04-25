@@ -1,0 +1,71 @@
+.box-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 70px;
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 7px;
+    cursor: pointer;
+    background-color: #e91e63;
+    color: white;
+}
+
+.box-container:hover {
+    background-color: #cd1754;
+    box-shadow: 0px 2px 2px -1px rgba(0, 0, 0, 0.2), 0px 2px 12px 0px rgba(0, 0, 0, 0.12);
+
+    /* #e91e63, 9c27b0 */
+}
+
+.box-container h3 {
+    font-weight: 400;
+}
+
+.bottom-container {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid;
+    border-radius: 5px;
+    box-shadow: 0px 2px 2px -1px rgba(0, 0, 0, 0.2), 0px 2px 12px 0px rgba(0, 0, 0, 0.12);
+}
+
+.survey-div {
+    display: flex;
+    flex-direction: column;
+}
+
+.survey-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.survey-name {
+    word-wrap: break-word;
+    width: 700px;
+    justify-content: left !important;
+}
+
+.status-div {
+    margin-left: 10px;
+    border: 1px solid;
+    border-radius: 5px;
+    font-size: 13px;
+    padding: 4px 10px;
+    /* background-color: #9b27b0e1; */
+    width: 90px;
+    text-align: center;
+    color: white;
+}
+
+.not-started {
+    background-color: red;
+}
+
+.in-progress {
+    background-color: orange;
+}
+
+.completed {
+    background-color: green;
+}

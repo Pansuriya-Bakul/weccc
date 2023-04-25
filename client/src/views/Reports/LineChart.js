@@ -1,18 +1,19 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Chart from 'chart.js/auto';
 
 export default class LineChart extends Component {
 
 	chartRef = React.createRef();
 
-	findValue = (str) =>{
-		if(str == "No Problem") {return 0}
-		if(str == "Slight Problem") {return 1;}
-		if(str == "Moderate Problem") {return 2;}
-		if(str == "Severe Problem") {return 3;}
+	findValue = (str) => {
+		if (str == "No Problem") { return 0 }
+		if (str == "Slight Problem") { return 1; }
+		if (str == "Moderate Problem") { return 2; }
+		if (str == "Severe Problem") { return 3; }
+		if (str == "Inability") { return 4; }
 	}
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 
 		this.state = {
@@ -32,7 +33,7 @@ export default class LineChart extends Component {
 
 	componentDidMount() {
 		const ctx = this.chartRef.current.getContext("2d");
-		
+
 		new Chart(ctx, {
 			type: "bar",
 			options: {
@@ -45,14 +46,14 @@ export default class LineChart extends Component {
 				scales: {
 					y: {
 						min: 0,
-						max: 3
+						max: 4
 					}
 				}
 			},
 			data: {
 				labels: ["Walking around", "Personal Care", "Usual Activities", "Pain/Discomfort", "Anxiety/Depression"],
-				datasets: [{ 
-					data: [this.state.walking,this.state.care,this.state.activities,this.state.pain,this.state.anxiety],
+				datasets: [{
+					data: [this.state.walking, this.state.care, this.state.activities, this.state.pain, this.state.anxiety],
 					label: "I have problems with",
 					borderColor: "#3e95cd",
 					backgroundColor: "#e91e62",
@@ -64,12 +65,12 @@ export default class LineChart extends Component {
 	}
 	render() {
 		return (
-			<div style={{"width" : "50%"}}>
+			<div style={{ "width": "50%" }}>
 				<canvas
-				id="myChart"
-				ref={this.chartRef}
+					id="myChart"
+					ref={this.chartRef}
 				/>
 			</div>
-			)
+		)
 	}
 }

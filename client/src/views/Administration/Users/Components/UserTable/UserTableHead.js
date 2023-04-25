@@ -23,31 +23,31 @@ import { Checkbox } from '@material-ui/core';
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        visuallyHidden: {
-            border: 0,
-            clip: 'rect(0 0 0 0)',
-            height: 1,
-            margin: -1,
-            overflow: 'hidden',
-            padding: 0,
-            position: 'absolute',
-            top: 20,
-            width: 1,
-          }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    visuallyHidden: {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
+    }
+}));
 
 
 // ================= Static Variables ================
 
-    const headCellsUserChapters = [ //This is a user specified array is used to populate the table header cells. Notice the Template Specifications
-        { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-        { id: 'sequenceId', numeric: false, disablePadding: false, label: 'Sequence ID' },
-        { id: 'enabled', numeric: false, disablePadding: true, label: 'Enabled' },
-        { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
-        { id: 'role', numeric: false, disablePadding: true, label: 'Role' }
-    ];
+const headCellsUserChapters = [ //This is a user specified array is used to populate the table header cells. Notice the Template Specifications
+    { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
+    // { id: 'sequenceId', numeric: false, disablePadding: false, label: 'Sequence ID' },
+    { id: 'enabled', numeric: false, disablePadding: true, label: 'Status' },
+    { id: 'email', numeric: false, disablePadding: true, label: 'Email' },
+    { id: 'role', numeric: false, disablePadding: true, label: 'Role' }
+];
 
 // ================= Static Functions ================
 
@@ -58,68 +58,68 @@ const UserTableHead = (props) => { // Notice the arrow function... regular funct
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+    // Declaration of Stateful Variables ===
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
 
-        const [headCells, setHeadCells] = useState(headCellsUserChapters);
+    const [headCells, setHeadCells] = useState(headCellsUserChapters);
 
-        
+
     // Functions ===
 
-        const createSortHandler = useCallback((property) => (event) => {
-            onRequestSort(event, property);
-        }, [ onRequestSort ]);
+    const createSortHandler = useCallback((property) => (event) => {
+        onRequestSort(event, property);
+    }, [onRequestSort]);
 
     // Hooks ===
 
     // Render Section ===
 
-        return (
-            <TableHead>
-                <TableRow>
-                    <TableCell padding="checkbox">
-                        <Checkbox
-                            indeterminate={numSelected > 0 && numSelected < rowCount}
-                            checked={rowCount > 0 && numSelected === rowCount}
-                            onChange={onSelectAllClick}
-                            inputProps={{ 'aria-label': 'select all' }}
-                        />
-                    </TableCell>
-                    {headCells? ( 
-                        headCells.map((headCell) => (
-                            <TableCell
-                                key={headCell.id}
-                                align={headCell.numeric ? 'right' : 'left'}
-                                padding={headCell.disablePadding ? 'none' : 'normal'}
-                                sortDirection={orderBy === headCell.id ? order : false}
+    return (
+        <TableHead>
+            <TableRow>
+                <TableCell padding="checkbox">
+                    <Checkbox
+                        indeterminate={numSelected > 0 && numSelected < rowCount}
+                        checked={rowCount > 0 && numSelected === rowCount}
+                        onChange={onSelectAllClick}
+                        inputProps={{ 'aria-label': 'select all' }}
+                    />
+                </TableCell>
+                {headCells ? (
+                    headCells.map((headCell) => (
+                        <TableCell
+                            key={headCell.id}
+                            align={headCell.numeric ? 'right' : 'left'}
+                            padding={headCell.disablePadding ? 'none' : 'normal'}
+                            sortDirection={orderBy === headCell.id ? order : false}
+                        >
+                            <TableSortLabel
+                                active={orderBy === headCell.id}
+                                direction={orderBy === headCell.id ? order : 'asc'}
+                                onClick={createSortHandler(headCell.id)}
                             >
-                                <TableSortLabel
-                                    active={orderBy === headCell.id}
-                                    direction={orderBy === headCell.id ? order : 'asc'}
-                                    onClick={createSortHandler(headCell.id)}
-                                >
                                 {headCell.label}
                                 {orderBy === headCell.id ? (
                                     <span className={classes.visuallyHidden}>
-                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                     </span>
                                 ) : null}
-                                </TableSortLabel>
-                            </TableCell>
-                        ))
-                    ) : ( 
-                        null
-                    )}
-                </TableRow>
-            </TableHead>
-        );
+                            </TableSortLabel>
+                        </TableCell>
+                    ))
+                ) : (
+                    null
+                )}
+            </TableRow>
+        </TableHead>
+    );
 }
 
 // ======================== Component PropType Check ========================
-UserTableHead.propTypes = 
+UserTableHead.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     numSelected: PropTypes.number.isRequired,
@@ -130,11 +130,11 @@ UserTableHead.propTypes =
     rowCount: PropTypes.number.isRequired,
 }
 
-UserTableHead.defaultProps = 
+UserTableHead.defaultProps =
 {
     numSelected: {},
-    onRequestSort: () => {},
-    onSelectAllClick: () => {},
+    onRequestSort: () => { },
+    onSelectAllClick: () => { },
     order: {},
     orderBy: {},
     rowCount: {},

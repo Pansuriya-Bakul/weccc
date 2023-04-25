@@ -3,6 +3,8 @@
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
+import { jsPDF } from "jspdf";
+
 
 // ==================== Modules =====================
 import Pagination from "@material-ui/lab/Pagination";
@@ -34,7 +36,7 @@ import Box from "@material-ui/core/Box"; // Padding and margins
 import Card from "@material-ui/core/Card"; //Like the paper module, a visual sheet to place things
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
-
+import { CircularProgress } from '@material-ui/core';
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
@@ -72,7 +74,7 @@ const Reports = (props) => {
   const classes = useStyles();
 
   // Declaration of Stateful Variables ===
-  const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+  const { userID, appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
   // Alert variable
   const [alert, setAlert] = useState(new AlertType());
@@ -83,64 +85,82 @@ const Reports = (props) => {
 
   const [reportsData, setReportsData] = useState(null);
   const [patientData, setPatientData] = useState([]);
-  const [currentPatient, setCurrentPatient] = useState(
-    localStorage.getItem("_id")
-  );
+  const [currentPatient, setCurrentPatient] = useState(userID);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
+  const [memberName, setMemberName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
-  
   // Functions ===
 
-  const getPatients = useCallback(() => {
-    if (appState.role == "Patient") {
-      setAlert(
-        new AlertType("You do not have Permission to recieve Patients", "error")
-      );
-      return;
-    } else {
-      if (appState.patients.length <= 0) {
-        setAlert(
-          new AlertType(
-            "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
-            "error"
-          )
-        );
-        return;
-      }
+  // const getPatients = useCallback(() => {
 
-      let http_query = {
-        _id: {
-          $in: appState.patients,
-        },
-      };
+  //   if (appState.role == "Patient") {
+  //     setAlert(
+  //       new AlertType("You do not have Permission to recieve Patients", "error")
+  //     );
+  //     return;
+  //   } else {
+  //     if (appState.role == "Admin" || appState.role == "Coordinator") {
+  //       get("users/" + currentPatient, appState.token, (error, response) => {
+  //         if (error) {
+  //           setAlert(new AlertType('Unable to retrieve User. Please refresh and try again.', "error"));
+  //         }
+  //         else {
+  //           if (response.status === 200) {
+  //             setPatientData([response.data.user]);
+  //             return;
+  //             // setAlert(new AlertType('Successfully pulled user.', "success"));
+  //           }
+  //           else {
+  //             setAlert(new AlertType('Unable to retrieve User. Please refresh and try again.', "error"));
+  //           }
+  //         }
+  //       });
+  //     }
 
-      post("users/query", appState.token, http_query, (err, res) => {
-        if (err) {
-          //Bad callback
-          setAlert(
-            new AlertType(
-              "Unable to retrieve Patients. Please refresh and try again.",
-              "error"
-            )
-          );
-        } else {
-          if (res.status === 200) {
-            
-            setPatientData(res.data.response.users);
-          } else {
-            //Bad HTTP Response
-            
-            setAlert(
-              new AlertType(
-                "Unable to retrieve Patients. Please refresh and try again.",
-                "error"
-              )
-            );
-          }
-        }
-      });
-    }
-  }, [appState]);
+  //     if (appState.patients.length <= 0) {
+  //       setAlert(
+  //         new AlertType(
+  //           "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
+  //           "error"
+  //         )
+  //       );
+  //       return;
+  //     }
+
+  //     let http_query = {
+  //       _id: {
+  //         $in: appState.patients,
+  //       },
+  //     };
+
+  //     post("users/query", appState.token, http_query, (err, res) => {
+  //       if (err) {
+  //         //Bad callback
+  //         setAlert(
+  //           new AlertType(
+  //             "Unable to retrieve Patients. Please refresh and try again.",
+  //             "error"
+  //           )
+  //         );
+  //       } else {
+  //         if (res.status === 200) {
+  //           console.log(res.data.response.users)
+  //           setPatientData(res.data.response.users);
+  //         } else {
+  //           //Bad HTTP Response
+
+  //           setAlert(
+  //             new AlertType(
+  //               "Unable to retrieve Patients. Please refresh and try again.",
+  //               "error"
+  //             )
+  //           );
+  //         }
+  //       }
+  //     });
+  //   }
+  // }, [appState]);
 
   const getNeighbours = useCallback(
     (userId) => {
@@ -155,11 +175,16 @@ const Reports = (props) => {
           );
         } else {
           if (res.status === 200) {
-            if (Object.keys(res.data).length === 0) {
+            const { memberName, ...otherData} = res.data;
+
+            if (Object.keys(otherData).length === 0) {
               setReportsData(null);
             } else {
-              setReportsData(res.data);
+              // console.log(n);
+              setMemberName(memberName);
+              setReportsData(otherData);
             }
+            setIsLoading(false);
           } else {
             //Bad HTTP Response
             setAlert(
@@ -188,7 +213,7 @@ const Reports = (props) => {
   //         );
   //       } else {
   //         if (res.status === 200) {
-            
+
   //           if (Object.keys(res.data).length === 0) {
   //             setReportsData(null);
   //           } else {
@@ -222,19 +247,20 @@ const Reports = (props) => {
   // First Render only because of the [ ] empty array tracking with the useEffect
   useEffect(() => {
     ToggleDrawerClose();
-    setTimeout(() => {
-      CheckAuthenticationValidity((tokenValid) => {
-        getPatients(currentPatient);
-      });
-    }, 200); //
+    // setTimeout(() => {
+    //   CheckAuthenticationValidity((tokenValid) => {
+    //     getPatients(currentPatient);
+    //   });
+    // }, 200); //
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (currentPatient != "") {
-      getNeighbours(currentPatient);
-      // getScreen(currentPatient);
-    }
+      if (currentPatient != "") {
+        getNeighbours(currentPatient);
+        // getScreen(currentPatient);
+      }
+  
   }, [currentPatient]);
 
 
@@ -292,8 +318,9 @@ const Reports = (props) => {
                                         </Button> */}
               </Box>
             </Grid>
+
             <Grid item xs={12}>
-              <Card raised={true}>
+              <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
                   <Grid
                     container
@@ -303,12 +330,12 @@ const Reports = (props) => {
                     spacing={1}
                   >
                     <Grid item xs={12}>
-                      <FormControl
+                      {/* <FormControl
                         fullWidth
                         variant="filled"
                         size="small"
                         className={classes.formControl}
-                      >
+                      > */}
                         {/* <InputLabel id="select-label-Member">Member</InputLabel>
                         <Select
                           className={classes.selectEmpty}
@@ -328,32 +355,28 @@ const Reports = (props) => {
                             );
                           })}
                         </Select> */}
-                      </FormControl>
+                      {/* </FormControl> */}
 
+                      <Typography
+                        // variant="h6"
+                        // paddingLeft="5px"
+                        color="textSecondary"
+                        align="left"
+                        gutterBottom
+                      >
+                        Member's name:
+                      </Typography>
+                      {/* <Box mx={1} my={2} boxShadow={1}> */}
                         <Typography
-                              variant="h45"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Patient's name:  
+                          variant="h5"
+                          color="textPrimary"
+                          align="left"
+                          gutterBottom
+                        >
+                          {memberName}
                         </Typography>
-                      {patientData.map((item, index) => {
-                        if (item._id == currentPatient){
-                          return(
-                            <Box mx={1} my={2} boxShadow={1}>
-                              <Typography
-                                    variant="h4"
-                                    color="textPrimary"
-                                    align="left"
-                                    gutterBottom
-                                  >
-                                    {item.info.name}   
-                              </Typography>
-                              </Box>
-                          );
-                        }
-                    })}
+                      {/* </Box> */}
+
                     </Grid>
                     {/* <Grid item xs={12}>
                       {reportsData ? (
@@ -374,100 +397,104 @@ const Reports = (props) => {
                 </Box>
               </Card>
             </Grid>
+
             <Grid item xs={12}>
-              <Card raised={true}>
+              <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
-                  <Grid
-                    container
-                    direction="column"
-                    justifyContent="flex-start"
-                    alignItems="stretch"
-                    spacing={1}
-                  >
-                    {reportsData &&
-                    Object.keys(reportsData).length != 0 &&
-                    Object.getPrototypeOf(reportsData) === Object.prototype ? (
-                      <>
-                        <Grid item xs={12}>
-                          <Typography variant="h4" color="textPrimary">
-                            Compassion Care Community Neighbours Report
-                          </Typography>
-                          <Divider light />
-                        </Grid>
+                {isLoading ? (<CircularProgress />)
+                  : <Grid
+                      container
+                      direction="column"
+                      justifyContent="flex-start"
+                      alignItems="stretch"
+                      spacing={1}
+                    >
+                      {reportsData &&
+                        Object.keys(reportsData).length != 0 &&
+                        Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                        <>
+                          <Grid item xs={12}>
+                            <Typography variant="h4" color="textPrimary">
+                              Compassion Care Community Connections Report
+                            </Typography>
+                            <Divider light />
+                          </Grid>
 
-                        <Grid item xs={12} id="dashboard">
+                          <Grid item xs={12} id="dashboard">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Dashboard
+                            </Typography>
+
+                            <ReportDashboard
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            ></ReportDashboard>
+                          </Grid>
+
+                          <Grid item xs={12} id="summary">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Summary of your report
+                            </Typography>
+                            <Summary
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+
+                          <Grid item xs={12} id="possible concerns">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Possible Concerns
+                            </Typography>
+                            <PossibleConcerns
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+
+                          <Grid item xs={12} id="suggestions">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Suggestions
+                            </Typography>
+                            <Suggestions
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+                        </>
+                      ) : (
+                        <>
                           <Typography
-                            variant="h5"
+                            variant="subtitle2"
                             color="textSecondary"
                             align="left"
                             gutterBottom
                           >
-                            Dashboard
+                            No available reports.
                           </Typography>
-                          <ReportDashboard
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          ></ReportDashboard>
-                        </Grid>
-
-                        <Grid item xs={12} id="summary">
-                          <Typography
-                            variant="h5"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          >
-                            Summary of your report
-                          </Typography>
-                          <Summary
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} id="possible concerns">
-                          <Typography
-                            variant="h5"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          >
-                            Possible Concerns
-                          </Typography>
-                          <PossibleConcerns
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} id="suggestions">
-                          <Typography
-                            variant="h5"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          >
-                            Suggestions
-                          </Typography>
-                          <Suggestions
-                            reports={reportsData}
-                            collection={currentReportIndex}
-                          />
-                        </Grid>
-                      </>
-                    ) : (
-                      <>
-                        <Typography
-                          variant="subtitle2"
-                          color="textSecondary"
-                          align="left"
-                          gutterBottom
-                        >
-                          No available reports.
-                        </Typography>
-                      </>
-                    )}
-                  </Grid>
+                        </>
+                      )}
+                    </Grid>
+                  }
                 </Box>
               </Card>
             </Grid>
@@ -501,8 +528,8 @@ Reports.propTypes = {
 
 Reports.defaultProps = {
   appState: {},
-  ToggleDrawerClose: () => {},
-  CheckAuthenticationValidity: () => {},
+  ToggleDrawerClose: () => { },
+  CheckAuthenticationValidity: () => { },
 };
 
 export default Reports; // You can even shorthand this line by adding this at the function [Component] declaration stage

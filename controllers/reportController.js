@@ -8,6 +8,8 @@ Methods:
 */
 
 const mongoose = require("mongoose");
+const fs = require('fs');
+const NodeRSA = require('node-rsa');
 
 const User = require("../models/user");
 const Collection = require("../models/collection");
@@ -22,6 +24,22 @@ const neighbourFunctions = require("../utils/neighboursFunctions");
 const { error } = require("joi/lib/types/lazy");
 const { errors } = require("joi/lib/language");
 const memberCollection = require("../models/memberCollection");
+
+// ====================================================
+// Encryption routes for keys and extracting keys
+// ====================================================
+
+let key_private = new NodeRSA();
+let key_public = new NodeRSA();
+
+var public = fs.readFileSync('./Keys/public.pem', 'utf8');
+var private = fs.readFileSync('./Keys/private.pem', 'utf8');
+
+key_private.importKey(private);
+key_public.importKey(public);
+
+// ======================================================
+
 
 exports.standardAccountId = async (req, res) =>
 {
@@ -78,7 +96,7 @@ exports.Neighbour = async (req, res) =>
     // get user input collection (for example neighbours or screen)
     // if user input == neighbour => Neighbours
     // else social health
-    Collection.find({ name: "Neighbours"}) //Test_screen_neighbours
+    Collection.find({ name: "Community Connections"}) //Test_screen_neighbours Community_Connections_Test_2
     .then(verifiedCollection => {
         if(verifiedCollection.length == 0){
             
@@ -92,7 +110,6 @@ exports.Neighbour = async (req, res) =>
             .then(memberCollectionList => {                
                 if(memberCollectionList)
                 {
-
                     // START - Account info step ==================================================
 
                         let account_id = userFunctions.getStandardAccountId(memberCollectionList[0].member.role || "",
@@ -101,6 +118,7 @@ exports.Neighbour = async (req, res) =>
                         let account_involvement = neighbourFunctions.formatInvolvement(memberCollectionList[0].member.role || "");
                         
                         let account_name = memberCollectionList[0].member.info.name || "";
+                        account_name = account_name.length >= 60 ? key_private.decrypt(account_name, 'utf8') : account_name;
                         
                         let account_gender = neighbourFunctions.formatGender(memberCollectionList[0].member.info.gender || "");
 
@@ -109,6 +127,8 @@ exports.Neighbour = async (req, res) =>
                         let account_postalCode = neighbourFunctions.formatPostalCode(memberCollectionList[0].member.info.currentAddress.code || "");
 
                         let account_language = neighbourFunctions.formatLanguage(memberCollectionList[0].member.info.language || "");
+                        
+
 
                     // END - Account info step ==================================================
 
@@ -356,7 +376,7 @@ exports.Neighbour = async (req, res) =>
 
                         // PERCIEVED LONELINESS OFTEN COUNT
                         let PL_QofL1_COMB_often_count = new Array();
-
+                        
                         
                         // Number of people living with the person
                         let household2_size = new Array();
@@ -378,7 +398,7 @@ exports.Neighbour = async (req, res) =>
 
                         // Feeling isolated
                         let feel_isolated = new Array();
-
+                        
                         memberCollectionList.forEach(memberCollection => {
                             
                             if(memberCollection.memberSurveyList)
@@ -392,38 +412,54 @@ exports.Neighbour = async (req, res) =>
                                 let chapter5Values = null;
                                 let chapter6Values = null;
                                 let chapter7Values = null;
-
+                                let chapter8Values = null;
+                                let chapter9Values = null;
+                                let chapter10Values = null;
                                 
                                 
                                 let chapter1Results = neighboursArray.find(survey =>
-                                    survey.surveyTemplate.name == "Neighbours: [1] Activities and Interests"
+                                    survey.surveyTemplate.name == "Community_Connections: [1] Help Request Tracker"
                                 );
 
-                                
-
                                 let chapter2Results = neighboursArray.find(survey => 
-                                    survey.surveyTemplate.name == "Neighbours: [2] Social Connection"
+                                    survey.surveyTemplate.name == "Community_Connections: [2] My Story"
                                 );
 
                                 let chapter3Results = neighboursArray.find(survey => 
-                                    survey.surveyTemplate.name == "Neighbours: [3] Community Participation"
+                                    survey.surveyTemplate.name == "Community_Connections: [3] Who's in My Circle"
                                 );
 
                                 let chapter4Results = neighboursArray.find(survey => 
-                                    survey.surveyTemplate.name == "Neighbours: [4] Health"
+                                    survey.surveyTemplate.name == "Community_Connections: [4] Activities and Interests"
                                 );
-
+ 
                                 let chapter5Results = neighboursArray.find(survey => 
-                                    survey.surveyTemplate.name == "Neighbours: [5] Wellness"
+                                    survey.surveyTemplate.name == "Community_Connections: [5] Goals"
                                 );
 
                                 let chapter6Results = neighboursArray.find(survey => 
-                                    survey.surveyTemplate.name == "Neighbours: [6] Goals"
+                                    survey.surveyTemplate.name == "Community_Connections: [6] Health"
                                 );
 
                                 let chapter7Results = neighboursArray.find(survey => 
-                                    survey.surveyTemplate.name == "Social Health"
+                                    survey.surveyTemplate.name == "Community_Connections: [7] Wellness"
                                 );
+
+                                let chapter8Results = neighboursArray.find(survey => 
+                                    survey.surveyTemplate.name == "Community_Connections: [8] Action Tracker"
+                                );
+
+                                let chapter9Results = neighboursArray.find(survey => 
+                                    survey.surveyTemplate.name == "Community_Connections: [9] Meeting Expectations - Your Experience"
+                                );
+
+                                let chapter10Results = neighboursArray.find(survey => 
+                                    survey.surveyTemplate.name == "Community_Connections: [10] Post Survey: Health, Wellness and Social Outcomes Survey"
+                                );
+
+                                // let chapter7Results = neighboursArray.find(survey => 
+                                //     survey.surveyTemplate.name == "Social Health" 
+                                // );
 
                                 chapter1Values = JSON.parse(chapter1Results.responseJSON);
                                 chapter2Values = JSON.parse(chapter2Results.responseJSON);
@@ -431,125 +467,230 @@ exports.Neighbour = async (req, res) =>
                                 chapter4Values = JSON.parse(chapter4Results.responseJSON);
                                 chapter5Values = JSON.parse(chapter5Results.responseJSON);
                                 chapter6Values = JSON.parse(chapter6Results.responseJSON);
+                                chapter7Values = JSON.parse(chapter7Results.responseJSON);
+                                chapter8Values = JSON.parse(chapter8Results.responseJSON);
+                                chapter9Values = JSON.parse(chapter9Results.responseJSON);
+                                chapter10Values = JSON.parse(chapter10Results.responseJSON);
 
-                                if(chapter7Results !==undefined)
+
+                                // if(chapter7Results !==undefined)
                                 
-                                    chapter7Values = JSON.parse(chapter7Results.responseJSON);
+                                //     chapter7Values = JSON.parse(chapter7Results.responseJSON);
 
                                 
                                 
 
-                                if(chapter1Values)  // ===  Results Checked  ===
-                                {
-                                    activities.push(neighbourFunctions.activities(chapter1Values.activities_A, chapter1Values.activities_B));
-                                    meaningful_activities.push(neighbourFunctions.meaningful_activities(chapter1Values.meaningful_activities));
-                                    challenging_activities.push(neighbourFunctions.challenging_activities(chapter1Values.challenging_activities));
-                                    FCP_INT_COMB.push(neighbourFunctions.frequency_of_community_participation(chapter1Values.FCP_INT_COMB_A));
-                                    FCP_STRINGS_COMB.push(neighbourFunctions.FCP_STRINGS_COMB(chapter1Values.FCP_INT_COMB_B));
+                                // if(chapter1Values)  // ===  Results Checked  ===
+                                // {
+                                //     activities.push(neighbourFunctions.activities(chapter1Values.activities_A, chapter1Values.activities_B));
+                                //     meaningful_activities.push(neighbourFunctions.meaningful_activities(chapter1Values.meaningful_activities));
+                                //     challenging_activities.push(neighbourFunctions.challenging_activities(chapter1Values.challenging_activities));
+                                //     FCP_INT_COMB.push(neighbourFunctions.frequency_of_community_participation(chapter1Values.FCP_INT_COMB_A));
+                                //     FCP_STRINGS_COMB.push(neighbourFunctions.FCP_STRINGS_COMB(chapter1Values.FCP_INT_COMB_B));
                                     
-                                    //  NOT USED SURVEY QUESTION: activities_interests_join
-                                }
+                                //     //  NOT USED SURVEY QUESTION: activities_interests_join
+                                // }
 
-                                if(chapter2Values)  // ===  Results Checked  ===
+                                if(chapter3Values)  // Who's in my circle
                                 {  
                                     //  NOT USED SURVEY QUESTION: meaningful_people_animals
 
-                                    PN_QofL1_COMB.push(neighbourFunctions.size_of_personal_network(chapter2Values.PN_QofL1_COMB));
-                                    total_children.push(neighbourFunctions.total_children(chapter2Values.PN_QofL1_COMB));
-                                    total_relatives.push(neighbourFunctions.total_relatives(chapter2Values.PN_QofL1_COMB));
-                                    total_close_friends.push(neighbourFunctions.total_close_friends(chapter2Values.PN_QofL1_COMB));
-                                    total_well_known_neighbours.push(neighbourFunctions.total_well_known_neighbours(chapter2Values.PN_QofL1_COMB));
-
+                                    PN_QofL1_COMB.push(neighbourFunctions.size_of_personal_network(chapter3Values.PN_QofL1_COMB));
+                                    total_children.push(neighbourFunctions.total_children(chapter3Values.total_children));
+                                    total_relatives.push(neighbourFunctions.total_relatives(chapter3Values.total_relatives));
+                                    total_close_friends.push(neighbourFunctions.total_close_friends(chapter3Values.total_close_friends));
+                                    total_well_known_neighbours.push(neighbourFunctions.total_well_known_neighbours(chapter3Values.well_known_neighbours));
+                                    
                                     // NOT USED SURVEY QUESTION: marital_status
                                     // NOT USED SURVEY QUESTION: current_living_situation
                                     
-                                    household_size.push(neighbourFunctions.household_size(chapter2Values.household_size));
+                                    household_size.push(neighbourFunctions.household_size(chapter3Values.household_size));
                                     
                                     // NOT USED SURVEY QUESTION: regular_contact_family_relatives
                                     
-                                    QSC_QofL1_COMB.push(neighbourFunctions.quality_of_social_contact(chapter2Values.QSC_QofL1_COMB));
+                                    QSC_QofL1_COMB.push(neighbourFunctions.quality_of_social_contact(chapter3Values.QSC_QofL1_COMB));
                                     
                                     // NOT USED SURVEY QUESTION: important_discussion_number_of_people_A
                                     // NOT USED SURVEY QUESTION: important_discussion_number_of_people_B
                                     // NOT USED SURVEY QUESTION: important_discussion_people_type_A
                                     // NOT USED SURVEY QUESTION: important_discussion_people_type_B
                                     
-                                    PSS_QofL1_COMB.push(neighbourFunctions.perceived_social_support(chapter2Values.PSS_QofL1_COMB));
-                                    PL_QofL1_COMB.push(neighbourFunctions.perceived_loneliness(chapter2Values.PL_QofL1_COMB));
-                                    PL_QofL1_COMB_sometimes_count.push(neighbourFunctions.perceived_loneliness_sometimes_count(chapter2Values.PL_QofL1_COMB));
-                                    PL_QofL1_COMB_often_count.push(neighbourFunctions.perceived_loneliness_often_count(chapter2Values.PL_QofL1_COMB));
-                                    AFH_QofL1_SD.push(neighbourFunctions.asking_for_help(chapter2Values.AFH_QofL1_SD));
+                                    PSS_QofL1_COMB.push(neighbourFunctions.perceived_social_support(chapter3Values.PSS_QofL1_COMB));
+                                    PL_QofL1_COMB.push(neighbourFunctions.perceived_loneliness(chapter3Values.PL_QofL1_COMB));
+                                    PL_QofL1_COMB_sometimes_count.push(neighbourFunctions.perceived_loneliness_sometimes_count(chapter3Values.PL_QofL1_COMB));
+                                    PL_QofL1_COMB_often_count.push(neighbourFunctions.perceived_loneliness_often_count(chapter3Values.PL_QofL1_COMB));
+                                    // AFH_QofL1_SD.push(neighbourFunctions.asking_for_help(chapter2Values.AFH_QofL1_SD));
 
-                                }
-
-                                if(chapter3Values)  // ===  Results Checked  ===
-                                {  
-
-                                    ISA_INT.push(neighbourFunctions.infrequent_participation_in_social_activities(chapter3Values.ISA_INT_A));
-                                    frequency_of_participation_religion.push(neighbourFunctions.frequency_of_participation_religion(chapter3Values.ISA_INT_A));
-                                    frequency_of_participation_recreation.push(neighbourFunctions.frequency_of_participation_recreation(chapter3Values.ISA_INT_A));
-                                    frequency_of_participation_education.push(neighbourFunctions.frequency_of_participation_education(chapter3Values.ISA_INT_A));
-                                    frequency_of_participation_associations.push(neighbourFunctions.frequency_of_participation_associations(chapter3Values.ISA_INT_A));
-                                    frequency_of_participation_volunteering.push(neighbourFunctions.frequency_of_participation_volunteering(chapter3Values.ISA_INT_A));
-                                    frequency_of_participation_computer.push(neighbourFunctions.frequency_of_participation_computer(chapter3Values.ISA_INT_A));
-                                    frequency_of_participation_informal_help.push(neighbourFunctions.frequency_of_participation_informal_help(chapter3Values.ISA_INT_A));
-                                    frequency_of_participation_music.push(neighbourFunctions.frequency_of_participation_music(chapter3Values.ISA_INT_A));
                                     
-                                    ISA_DM_STRINGS.push(neighbourFunctions.ISA_DM_STRINGS(chapter3Values.ISA_INT_B));
-                                
-                                    SII_QofL1.push(neighbourFunctions.social_isolation_index(chapter3Values.SII_QofL1));
-
-                                    FSC_QofL1_COMB.push(neighbourFunctions.frequency_of_social_contacts(chapter3Values.FSC_QofL1_COMB_A, chapter3Values.FSC_QofL1_COMB_B, chapter3Values.FSC_QofL1_COMB_C));
+                                    frequency_of_contact_family.push(neighbourFunctions.frequency_of_contact_family(chapter3Values.FSC_QofL1_COMB_A));        
+                                    frequency_of_contact_friends.push(neighbourFunctions.frequency_of_contact_friends(chapter3Values.FSC_QofL1_COMB_A));        
+                                    frequency_of_contact_neighbours.push(neighbourFunctions.frequency_of_contact_neighbours(chapter3Values.FSC_QofL1_COMB_A));  
                                     
                                     frequency_get_together_family.push(neighbourFunctions.frequency_get_together_family(chapter3Values.FSC_QofL1_COMB_A));
                                     frequency_get_together_friends.push(neighbourFunctions.frequency_get_together_friends(chapter3Values.FSC_QofL1_COMB_A));
                                     frequency_get_together_neighbours.push(neighbourFunctions.frequency_get_together_neighbours(chapter3Values.FSC_QofL1_COMB_A));
 
-                                    frequency_of_contact_family.push(neighbourFunctions.frequency_of_contact_family(chapter3Values.FSC_QofL1_COMB_A));          //  Copy of answers above ?
-                                    frequency_of_contact_friends.push(neighbourFunctions.frequency_of_contact_friends(chapter3Values.FSC_QofL1_COMB_A));        //  Copy of answers above ?
-                                    frequency_of_contact_neighbours.push(neighbourFunctions.frequency_of_contact_neighbours(chapter3Values.FSC_QofL1_COMB_A));  //  Copy of answers above ?
+                                }
 
-                                    frequency_of_social_contacts_month_phone_computer.push(neighbourFunctions.frequency_of_social_contacts_month_phone_computer(chapter3Values.FSC_QofL1_COMB_C));
+                                if(chapter4Values)  // Activities and interests
+                                {
+                                    activities.push(neighbourFunctions.activities(chapter4Values.activities_A, chapter4Values.activities_B));
+                                    meaningful_activities.push(neighbourFunctions.meaningful_activities(chapter4Values.meaningful_activities));
+                                    challenging_activities.push(neighbourFunctions.challenging_activities(chapter4Values.challenging_activities));
+                                    FCP_INT_COMB.push(neighbourFunctions.frequency_of_community_participation(chapter4Values.FCP_INT_COMB_A));
+                                    // FCP_STRINGS_COMB.push(neighbourFunctions.FCP_STRINGS_COMB(chapter4Values.FCP_INT_COMB_B));
+                                    FCP_STRINGS_COMB.push(neighbourFunctions.FCP_STRINGS_COMB(chapter4Values.FCP_INT_COMB_A));
+                                    
+                                    //  NOT USED SURVEY QUESTION: activities_interests_join
+                                }
 
-                                    // NOT USED SURVEY QUESTION: FSC_QofL1_COMB_D
+                                // if(chapter3Values)  // ===  Results Checked  ===
+                                // {  
 
-                                    SSC_QofL1_COMB.push(neighbourFunctions.satisfaction_with_social_contact(chapter3Values.SSC_QofL1_COMB));
+                                //     ISA_INT.push(neighbourFunctions.infrequent_participation_in_social_activities(chapter3Values.ISA_INT_A));
+                                //     frequency_of_participation_religion.push(neighbourFunctions.frequency_of_participation_religion(chapter3Values.ISA_INT_A));
+                                //     frequency_of_participation_recreation.push(neighbourFunctions.frequency_of_participation_recreation(chapter3Values.ISA_INT_A));
+                                //     frequency_of_participation_education.push(neighbourFunctions.frequency_of_participation_education(chapter3Values.ISA_INT_A));
+                                //     frequency_of_participation_associations.push(neighbourFunctions.frequency_of_participation_associations(chapter3Values.ISA_INT_A));
+                                //     frequency_of_participation_volunteering.push(neighbourFunctions.frequency_of_participation_volunteering(chapter3Values.ISA_INT_A));
+                                //     frequency_of_participation_computer.push(neighbourFunctions.frequency_of_participation_computer(chapter3Values.ISA_INT_A));
+                                //     frequency_of_participation_informal_help.push(neighbourFunctions.frequency_of_participation_informal_help(chapter3Values.ISA_INT_A));
+                                //     frequency_of_participation_music.push(neighbourFunctions.frequency_of_participation_music(chapter3Values.ISA_INT_A));
+                                    
+                                //     ISA_DM_STRINGS.push(neighbourFunctions.ISA_DM_STRINGS(chapter3Values.ISA_INT_B));
+                                
+                                //     SII_QofL1.push(neighbourFunctions.social_isolation_index(chapter3Values.SII_QofL1));
+
+                                //     FSC_QofL1_COMB.push(neighbourFunctions.frequency_of_social_contacts(chapter3Values.FSC_QofL1_COMB_A, chapter3Values.FSC_QofL1_COMB_B, chapter3Values.FSC_QofL1_COMB_C));
+                                    
+                                //     frequency_get_together_family.push(neighbourFunctions.frequency_get_together_family(chapter3Values.FSC_QofL1_COMB_A));
+                                //     frequency_get_together_friends.push(neighbourFunctions.frequency_get_together_friends(chapter3Values.FSC_QofL1_COMB_A));
+                                //     frequency_get_together_neighbours.push(neighbourFunctions.frequency_get_together_neighbours(chapter3Values.FSC_QofL1_COMB_A));
+
+                                //     frequency_of_contact_family.push(neighbourFunctions.frequency_of_contact_family(chapter3Values.FSC_QofL1_COMB_A));          //  Copy of answers above ?
+                                //     frequency_of_contact_friends.push(neighbourFunctions.frequency_of_contact_friends(chapter3Values.FSC_QofL1_COMB_A));        //  Copy of answers above ?
+                                //     frequency_of_contact_neighbours.push(neighbourFunctions.frequency_of_contact_neighbours(chapter3Values.FSC_QofL1_COMB_A));  //  Copy of answers above ?
+
+                                //     frequency_of_social_contacts_month_phone_computer.push(neighbourFunctions.frequency_of_social_contacts_month_phone_computer(chapter3Values.FSC_QofL1_COMB_C));
+
+                                //     // NOT USED SURVEY QUESTION: FSC_QofL1_COMB_D
+
+                                //     SSC_QofL1_COMB.push(neighbourFunctions.satisfaction_with_social_contact(chapter3Values.SSC_QofL1_COMB));
+
+                                // }
+
+                                // if(chapter4Values)  // ===  Results Checked  ===
+                                // {
+                                //     PH_QofL2_SD.push(neighbourFunctions.physical_health(chapter4Values.PH_QofL2_SD));
+                                //     PH_QofL2_SD_STRING.push(neighbourFunctions.physical_health_string(chapter4Values.PH_QofL2_SD));
+                                //     MH_QofL2_SD.push(neighbourFunctions.mental_health(chapter4Values.MH_QofL2_SD));
+                                //     MH_QofL2_SD_STRING.push(neighbourFunctions.mental_health_string(chapter4Values.MH_QofL2_SD));
+                                //     HT_QofL2_SD.push(neighbourFunctions.health_today(chapter4Values.HT_QofL2_SD));
+
+                                //     M_QofL2_SD.push(neighbourFunctions.mobility(chapter4Values.mobility_today));
+                                //     PC_QofL2_SD.push(neighbourFunctions.personal_care(chapter4Values.self_care_today));
+                                //     UA_QofL2_SD.push(neighbourFunctions.usual_activities(chapter4Values.usual_activities_today));
+                                //     PD_QofL2_SD.push(neighbourFunctions.pain_discomfort(chapter4Values.pain_discomfort_today));
+                                //     AD_QofL2_SD.push(neighbourFunctions.anxiety_depression(chapter4Values.anxiety_depression_today));
+
+                                //     problem_walking.push(neighbourFunctions.problem_walking(chapter4Values.mobility_today));
+                                //     problem_washing_dressing.push(neighbourFunctions.problem_washing_dressing(chapter4Values.self_care_today));
+                                //     problem_usual_activities.push(neighbourFunctions.problem_usual_activities(chapter4Values.usual_activities_today));
+                                //     problem_pain_discomfort.push(neighbourFunctions.problem_pain_discomfort(chapter4Values.pain_discomfort_today));
+                                //     problem_anxious_depressed.push(neighbourFunctions.problem_anxious_depressed(chapter4Values.anxiety_depression_today));
+
+                                //     support_wellness_program.push(neighbourFunctions.support_wellness_program(chapter4Values.FC_3C_COMB));
+                                //     support_healthcare.push(neighbourFunctions.support_healthcare(chapter4Values.FC_3C_COMB));
+                                //     support_home_healthcare.push(neighbourFunctions.support_home_healthcare(chapter4Values.FC_3C_COMB));
+                                //     support_private_healthcare.push(neighbourFunctions.support_private_healthcare(chapter4Values.FC_3C_COMB));
+                                //     support_informal.push(neighbourFunctions.support_informal(chapter4Values.FC_3C_COMB));
+                                //     HU_ED_QofL2_SD.push(neighbourFunctions.ed_visit(chapter4Values.HU_ED_QofL2_SD));
+                                //     HU_HNum_QofL2_SD.push(neighbourFunctions.hospitalization(chapter4Values.HU_HNum_QofL2_SD));
+                                //     HU_HD_QofL2_SD.push(neighbourFunctions.days_in_hospital(chapter4Values.HU_HD_QofL2_SD));
+                                //     HU_EMS_QofL2_SD.push(neighbourFunctions.ems(chapter4Values.HU_EMS_QofL2_SD));
+                                //     HU_UC_QofL2_SD.push(neighbourFunctions.urgent_care(chapter4Values.HU_UC_QofL2_SD));
+                                //     HU_ST_QofL2_SD.push(neighbourFunctions.sought_treatment(chapter4Values.HU_ST_QofL2_SD));
+                                //     HU_A_QofL2_SD.push(neighbourFunctions.accident(chapter4Values.HU_A_QofL2_SD));
+                                //     access_to_family_doctor.push(neighbourFunctions.access_to_family_doctor(chapter4Values.access_to_family_doctor));
+
+                                //     // NOT USED SURVEY QUESTION: care_plan
+                                //     // NOT USED SURVEY QUESTION: care_plan_name
+                                //     // NOT USED SURVEY QUESTION: care_plan_location
+                                //     // NOT USED SURVEY QUESTION: prescription_medication_num
+                                //     // NOT USED SURVEY QUESTION: prescription_medication_location
+                                //     // NOT USED SURVEY QUESTION: health_awareness_knowledge
+                                //     // NOT USED SURVEY QUESTION: consumption
+                                //     // NOT USED SURVEY QUESTION: intense_physical_activity_minutes
+                                //     // NOT USED SURVEY QUESTION: moderate_physical_activity_minutes
+                                //     // NOT USED SURVEY QUESTION: light_physical_activity_minutes
+                                // }
+
+                                // if(chapter5Values)  // ===  Results Checked  ===
+                                // {
+                                //     LS_QofL3_SD.push(neighbourFunctions.life_satisfaction(chapter5Values.LS_QofL3_SD));
+                                //     SL_QofL3_SD.push(neighbourFunctions.your_standard_of_living(chapter5Values.SL_QofL3_SD));
+                                //     YH_QofL3_SD.push(neighbourFunctions.your_health(chapter5Values.YH_QofL3_SD));
+                                //     FPC_QofL3_SD.push(neighbourFunctions.feeling_part_of_the_community(chapter5Values.FPC_QofL3_SD));
+                                //     AL_QofL3_SD.push(neighbourFunctions.what_you_are_achieving_in_life(chapter5Values.AL_QofL3_SD));
+                                //     PR_QofL3_SD.push(neighbourFunctions.personal_relationships(chapter5Values.PR_QofL3_SD));
+                                //     HSF_QofL3_SD.push(neighbourFunctions.how_safe_you_feel(chapter5Values.HSF_QofL3_SD));
+                                //     FS_QofL3_SD.push(neighbourFunctions.future_security(chapter5Values.FS_QofL3_SD));
+                                //     SR_QofL3_SD.push(neighbourFunctions.your_spirituality_or_religion(chapter5Values.SR_QofL3_SD));
+
+                                //     PWI_QofL3_COMB.push(neighbourFunctions.pwi_overall_score(
+                                //         chapter5Values.LS_QofL3_SD,
+                                //         chapter5Values.SL_QofL3_SD,
+                                //         chapter5Values.YH_QofL3_SD,
+                                //         chapter5Values.FPC_QofL3_SD,
+                                //         chapter5Values.AL_QofL3_SD,
+                                //         chapter5Values.PR_QofL3_SD,
+                                //         chapter5Values.HSF_QofL3_SD,
+                                //         chapter5Values.FS_QofL3_SD,
+                                //         chapter5Values.SR_QofL3_SD)
+                                //     );
+
+                                // }
+
+                                if(chapter5Values) //Goals
+                                {
+                                    goals.push(neighbourFunctions.goals(chapter5Values.goals));
+                                    PAG_QofL1_SD.push(neighbourFunctions.progress_achieving_goals(chapter5Values.PAG_QofL1_SD));
 
                                 }
 
-                                if(chapter4Values)  // ===  Results Checked  ===
+                                if(chapter6Values)  // Health
                                 {
-                                    PH_QofL2_SD.push(neighbourFunctions.physical_health(chapter4Values.PH_QofL2_SD));
-                                    PH_QofL2_SD_STRING.push(neighbourFunctions.physical_health_string(chapter4Values.PH_QofL2_SD));
-                                    MH_QofL2_SD.push(neighbourFunctions.mental_health(chapter4Values.MH_QofL2_SD));
-                                    MH_QofL2_SD_STRING.push(neighbourFunctions.mental_health_string(chapter4Values.MH_QofL2_SD));
-                                    HT_QofL2_SD.push(neighbourFunctions.health_today(chapter4Values.HT_QofL2_SD));
+                                    PH_QofL2_SD.push(neighbourFunctions.physical_health(chapter6Values.PH_QofL2_SD));
+                                    PH_QofL2_SD_STRING.push(neighbourFunctions.physical_health_string(chapter6Values.PH_QofL2_SD));
+                                    MH_QofL2_SD.push(neighbourFunctions.mental_health(chapter6Values.MH_QofL2_SD));
+                                    MH_QofL2_SD_STRING.push(neighbourFunctions.mental_health_string(chapter6Values.MH_QofL2_SD));
+                                    HT_QofL2_SD.push(neighbourFunctions.health_today(chapter6Values.HT_QofL2_SD));
 
-                                    M_QofL2_SD.push(neighbourFunctions.mobility(chapter4Values.mobility_today));
-                                    PC_QofL2_SD.push(neighbourFunctions.personal_care(chapter4Values.self_care_today));
-                                    UA_QofL2_SD.push(neighbourFunctions.usual_activities(chapter4Values.usual_activities_today));
-                                    PD_QofL2_SD.push(neighbourFunctions.pain_discomfort(chapter4Values.pain_discomfort_today));
-                                    AD_QofL2_SD.push(neighbourFunctions.anxiety_depression(chapter4Values.anxiety_depression_today));
+                                    M_QofL2_SD.push(neighbourFunctions.mobility(chapter6Values.mobility_today));
+                                    PC_QofL2_SD.push(neighbourFunctions.personal_care(chapter6Values.self_care_today));
+                                    UA_QofL2_SD.push(neighbourFunctions.usual_activities(chapter6Values.usual_activities_today));
+                                    PD_QofL2_SD.push(neighbourFunctions.pain_discomfort(chapter6Values.pain_discomfort_today));
+                                    AD_QofL2_SD.push(neighbourFunctions.anxiety_depression(chapter6Values.anxiety_depression_today));
 
-                                    problem_walking.push(neighbourFunctions.problem_walking(chapter4Values.mobility_today));
-                                    problem_washing_dressing.push(neighbourFunctions.problem_washing_dressing(chapter4Values.self_care_today));
-                                    problem_usual_activities.push(neighbourFunctions.problem_usual_activities(chapter4Values.usual_activities_today));
-                                    problem_pain_discomfort.push(neighbourFunctions.problem_pain_discomfort(chapter4Values.pain_discomfort_today));
-                                    problem_anxious_depressed.push(neighbourFunctions.problem_anxious_depressed(chapter4Values.anxiety_depression_today));
+                                    problem_walking.push(neighbourFunctions.problem_walking(chapter6Values.mobility_today));
+                                    problem_washing_dressing.push(neighbourFunctions.problem_washing_dressing(chapter6Values.self_care_today));
+                                    problem_usual_activities.push(neighbourFunctions.problem_usual_activities(chapter6Values.usual_activities_today));
+                                    problem_pain_discomfort.push(neighbourFunctions.problem_pain_discomfort(chapter6Values.pain_discomfort_today));
+                                    problem_anxious_depressed.push(neighbourFunctions.problem_anxious_depressed(chapter6Values.anxiety_depression_today));
 
-                                    support_wellness_program.push(neighbourFunctions.support_wellness_program(chapter4Values.FC_3C_COMB));
-                                    support_healthcare.push(neighbourFunctions.support_healthcare(chapter4Values.FC_3C_COMB));
-                                    support_home_healthcare.push(neighbourFunctions.support_home_healthcare(chapter4Values.FC_3C_COMB));
-                                    support_private_healthcare.push(neighbourFunctions.support_private_healthcare(chapter4Values.FC_3C_COMB));
-                                    support_informal.push(neighbourFunctions.support_informal(chapter4Values.FC_3C_COMB));
-                                    HU_ED_QofL2_SD.push(neighbourFunctions.ed_visit(chapter4Values.HU_ED_QofL2_SD));
-                                    HU_HNum_QofL2_SD.push(neighbourFunctions.hospitalization(chapter4Values.HU_HNum_QofL2_SD));
-                                    HU_HD_QofL2_SD.push(neighbourFunctions.days_in_hospital(chapter4Values.HU_HD_QofL2_SD));
-                                    HU_EMS_QofL2_SD.push(neighbourFunctions.ems(chapter4Values.HU_EMS_QofL2_SD));
-                                    HU_UC_QofL2_SD.push(neighbourFunctions.urgent_care(chapter4Values.HU_UC_QofL2_SD));
-                                    HU_ST_QofL2_SD.push(neighbourFunctions.sought_treatment(chapter4Values.HU_ST_QofL2_SD));
-                                    HU_A_QofL2_SD.push(neighbourFunctions.accident(chapter4Values.HU_A_QofL2_SD));
-                                    access_to_family_doctor.push(neighbourFunctions.access_to_family_doctor(chapter4Values.access_to_family_doctor));
+                                    support_wellness_program.push(neighbourFunctions.support_wellness_program(chapter6Values.FC_3C_COMB));
+                                    support_healthcare.push(neighbourFunctions.support_healthcare(chapter6Values.FC_3C_COMB));
+                                    support_home_healthcare.push(neighbourFunctions.support_home_healthcare(chapter6Values.FC_3C_COMB));
+                                    support_private_healthcare.push(neighbourFunctions.support_private_healthcare(chapter6Values.FC_3C_COMB));
+                                    support_informal.push(neighbourFunctions.support_informal(chapter6Values.FC_3C_COMB));
+                                    HU_ED_QofL2_SD.push(neighbourFunctions.ed_visit(chapter6Values.HU_ED_QofL2_SD));
+                                    HU_HNum_QofL2_SD.push(neighbourFunctions.hospitalization(chapter6Values.HU_HNum_QofL2_SD));
+                                    HU_HD_QofL2_SD.push(neighbourFunctions.days_in_hospital(chapter6Values.HU_HD_QofL2_SD));
+                                    HU_EMS_QofL2_SD.push(neighbourFunctions.ems(chapter6Values.HU_EMS_QofL2_SD));
+                                    HU_UC_QofL2_SD.push(neighbourFunctions.urgent_care(chapter6Values.HU_UC_QofL2_SD));
+                                    HU_ST_QofL2_SD.push(neighbourFunctions.sought_treatment(chapter6Values.HU_ST_QofL2_SD));
+                                    HU_A_QofL2_SD.push(neighbourFunctions.accident(chapter6Values.HU_A_QofL2_SD));
+                                    access_to_family_doctor.push(neighbourFunctions.access_to_family_doctor(chapter6Values.access_to_family_doctor));
 
                                     // NOT USED SURVEY QUESTION: care_plan
                                     // NOT USED SURVEY QUESTION: care_plan_name
@@ -563,50 +704,41 @@ exports.Neighbour = async (req, res) =>
                                     // NOT USED SURVEY QUESTION: light_physical_activity_minutes
                                 }
 
-                                if(chapter5Values)  // ===  Results Checked  ===
+
+
+                                if(chapter7Values) // Wellness
                                 {
-                                    LS_QofL3_SD.push(neighbourFunctions.life_satisfaction(chapter5Values.LS_QofL3_SD));
-                                    SL_QofL3_SD.push(neighbourFunctions.your_standard_of_living(chapter5Values.SL_QofL3_SD));
-                                    YH_QofL3_SD.push(neighbourFunctions.your_health(chapter5Values.YH_QofL3_SD));
-                                    FPC_QofL3_SD.push(neighbourFunctions.feeling_part_of_the_community(chapter5Values.FPC_QofL3_SD));
-                                    AL_QofL3_SD.push(neighbourFunctions.what_you_are_achieving_in_life(chapter5Values.AL_QofL3_SD));
-                                    PR_QofL3_SD.push(neighbourFunctions.personal_relationships(chapter5Values.PR_QofL3_SD));
-                                    HSF_QofL3_SD.push(neighbourFunctions.how_safe_you_feel(chapter5Values.HSF_QofL3_SD));
-                                    FS_QofL3_SD.push(neighbourFunctions.future_security(chapter5Values.FS_QofL3_SD));
-                                    SR_QofL3_SD.push(neighbourFunctions.your_spirituality_or_religion(chapter5Values.SR_QofL3_SD));
+
+                                    // household2_size.push(neighbourFunctions.household2_size(chapter7Values.household2_size));
+                                    // community_activity_participate.push(neighbourFunctions.community_activity_participate(chapter7Values.community_activity_participate));
+                                    // life_satisfaction2.push(neighbourFunctions.life_satisfaction2(chapter7Values.life_satisfaction2));
+                                    // local_community_belonging.push(neighbourFunctions.local_community_belonging(chapter7Values.local_community_belonging));
+                                    // lack_companionship.push(neighbourFunctions.lack_companionship(chapter7Values.lack_companionship));
+                                    // feel_leftout.push(neighbourFunctions.feel_isolated(chapter7Values.feel_isolated));
+                                    // feel_isolated.push(neighbourFunctions.feel_isolated(chapter7Values.feel_leftout));
+                                    // log.info(neighbourFunctions.feel_isolated(chapter7Values.feel_leftout));
+
+                                    LS_QofL3_SD.push(neighbourFunctions.life_satisfaction(chapter7Values.LS_QofL3_SD));
+                                    SL_QofL3_SD.push(neighbourFunctions.your_standard_of_living(chapter7Values.SL_QofL3_SD));
+                                    YH_QofL3_SD.push(neighbourFunctions.your_health(chapter7Values.YH_QofL3_SD));
+                                    FPC_QofL3_SD.push(neighbourFunctions.feeling_part_of_the_community(chapter7Values.FPC_QofL3_SD));
+                                    AL_QofL3_SD.push(neighbourFunctions.what_you_are_achieving_in_life(chapter7Values.AL_QofL3_SD));
+                                    PR_QofL3_SD.push(neighbourFunctions.personal_relationships(chapter7Values.PR_QofL3_SD));
+                                    HSF_QofL3_SD.push(neighbourFunctions.how_safe_you_feel(chapter7Values.HSF_QofL3_SD));
+                                    FS_QofL3_SD.push(neighbourFunctions.future_security(chapter7Values.FS_QofL3_SD));
+                                    SR_QofL3_SD.push(neighbourFunctions.your_spirituality_or_religion(chapter7Values.SR_QofL3_SD));
 
                                     PWI_QofL3_COMB.push(neighbourFunctions.pwi_overall_score(
-                                        chapter5Values.LS_QofL3_SD,
-                                        chapter5Values.SL_QofL3_SD,
-                                        chapter5Values.YH_QofL3_SD,
-                                        chapter5Values.FPC_QofL3_SD,
-                                        chapter5Values.AL_QofL3_SD,
-                                        chapter5Values.PR_QofL3_SD,
-                                        chapter5Values.HSF_QofL3_SD,
-                                        chapter5Values.FS_QofL3_SD,
-                                        chapter5Values.SR_QofL3_SD)
+                                        chapter7Values.LS_QofL3_SD,
+                                        chapter7Values.SL_QofL3_SD,
+                                        chapter7Values.YH_QofL3_SD,
+                                        chapter7Values.FPC_QofL3_SD,
+                                        chapter7Values.AL_QofL3_SD,
+                                        chapter7Values.PR_QofL3_SD,
+                                        chapter7Values.HSF_QofL3_SD,
+                                        chapter7Values.FS_QofL3_SD,
+                                        chapter7Values.SR_QofL3_SD)
                                     );
-
-                                }
-
-                                if(chapter6Values)
-                                {
-                                    goals.push(neighbourFunctions.goals(chapter6Values.goals));
-                                    PAG_QofL1_SD.push(neighbourFunctions.progress_achieving_goals(chapter6Values.PAG_QofL1_SD));
-
-                                }
-
-                                if(chapter7Values){
-
-                                    
-                                    household2_size.push(neighbourFunctions.household2_size(chapter7Values.household2_size));
-                                    community_activity_participate.push(neighbourFunctions.community_activity_participate(chapter7Values.community_activity_participate));
-                                    life_satisfaction2.push(neighbourFunctions.life_satisfaction2(chapter7Values.life_satisfaction2));
-                                    local_community_belonging.push(neighbourFunctions.local_community_belonging(chapter7Values.local_community_belonging));
-                                    lack_companionship.push(neighbourFunctions.lack_companionship(chapter7Values.lack_companionship));
-                                    feel_leftout.push(neighbourFunctions.feel_isolated(chapter7Values.feel_isolated));
-                                    feel_isolated.push(neighbourFunctions.feel_isolated(chapter7Values.feel_leftout));
-                                    // log.info(neighbourFunctions.feel_isolated(chapter7Values.feel_leftout));
 
                                 }
                                 
@@ -626,24 +758,24 @@ exports.Neighbour = async (req, res) =>
 
 //End Screen report
                     return res.status(200).json({
-                        ID_PRF_SD: account_id,
-                        SRVNum_PRF_SD: neighboursChapter_ids,
-                        SRVD_PRF_SD: neighboursChapter_dates,
-                        TINV_PRF_SD: account_involvement,
-                        GEN_PRF_SD: account_gender,
-                        DOB_PRF_SD: account_dob,
-                        PC_PRF_SD: account_postalCode,
-                        L_PRF_SD: account_language,
+                        // ID_PRF_SD: account_id,
+                        // SRVNum_PRF_SD: neighboursChapter_ids,
+                        // SRVD_PRF_SD: neighboursChapter_dates,
+                        // TINV_PRF_SD: account_involvement,
+                        // GEN_PRF_SD: account_gender,
+                        // DOB_PRF_SD: account_dob,
+                        // PC_PRF_SD: account_postalCode,
+                        // L_PRF_SD: account_language,
                         FCP_INT_COMB: FCP_INT_COMB,
-                        ISA_INT: ISA_INT,
-                        SII_QofL1: SII_QofL1,
+                        // ISA_INT: ISA_INT,
+                        // SII_QofL1: SII_QofL1,
                         PN_QofL1_COMB: PN_QofL1_COMB,
-                        FSC_QofL1_COMB: FSC_QofL1_COMB,
-                        SSC_QofL1_COMB: SSC_QofL1_COMB,
+                        // FSC_QofL1_COMB: FSC_QofL1_COMB,
+                        // SSC_QofL1_COMB: SSC_QofL1_COMB,
                         QSC_QofL1_COMB: QSC_QofL1_COMB,
                         PSS_QofL1_COMB: PSS_QofL1_COMB,
                         PL_QofL1_COMB: PL_QofL1_COMB,
-                        AFH_QofL1_SD: AFH_QofL1_SD,
+                        // AFH_QofL1_SD: AFH_QofL1_SD,
                         PAG_QofL1_SD: PAG_QofL1_SD,
                         HT_QofL2_SD: HT_QofL2_SD,
                         PH_QofL2_SD: PH_QofL2_SD,
@@ -676,7 +808,7 @@ exports.Neighbour = async (req, res) =>
                         meaningful_activities: meaningful_activities,
                         challenging_activities: challenging_activities,
                         FCP_STRINGS_COMB: FCP_STRINGS_COMB,
-                        ISA_DM_STRINGS: ISA_DM_STRINGS,
+                        // ISA_DM_STRINGS: ISA_DM_STRINGS,
                         household_size: household_size,
                         total_children: total_children,
                         total_relatives: total_relatives,
@@ -685,14 +817,14 @@ exports.Neighbour = async (req, res) =>
                         frequency_of_contact_family: frequency_of_contact_family,
                         frequency_of_contact_friends: frequency_of_contact_friends,
                         frequency_of_contact_neighbours: frequency_of_contact_neighbours,
-                        frequency_of_participation_religion: frequency_of_participation_religion,
-                        frequency_of_participation_recreation: frequency_of_participation_recreation,
-                        frequency_of_participation_education: frequency_of_participation_education,
-                        frequency_of_participation_associations: frequency_of_participation_associations,
-                        frequency_of_participation_volunteering: frequency_of_participation_volunteering,
-                        frequency_of_participation_informal_help: frequency_of_participation_informal_help,
-                        frequency_of_participation_music: frequency_of_participation_music,
-                        frequency_of_participation_computer: frequency_of_participation_computer,
+                        // frequency_of_participation_religion: frequency_of_participation_religion,
+                        // frequency_of_participation_recreation: frequency_of_participation_recreation,
+                        // frequency_of_participation_education: frequency_of_participation_education,
+                        // frequency_of_participation_associations: frequency_of_participation_associations,
+                        // frequency_of_participation_volunteering: frequency_of_participation_volunteering,
+                        // frequency_of_participation_informal_help: frequency_of_participation_informal_help,
+                        // frequency_of_participation_music: frequency_of_participation_music,
+                        // frequency_of_participation_computer: frequency_of_participation_computer,
                         problem_walking: problem_walking,
                         problem_washing_dressing: problem_washing_dressing,
                         problem_usual_activities: problem_usual_activities,
@@ -708,16 +840,17 @@ exports.Neighbour = async (req, res) =>
                         frequency_get_together_family: frequency_get_together_family,
                         frequency_get_together_friends: frequency_get_together_friends,
                         frequency_get_together_neighbours: frequency_get_together_neighbours,
-                        frequency_of_social_contacts_month_phone_computer: frequency_of_social_contacts_month_phone_computer,
+                        // frequency_of_social_contacts_month_phone_computer: frequency_of_social_contacts_month_phone_computer,
                         PL_QofL1_COMB_sometimes_count: PL_QofL1_COMB_sometimes_count,
                         PL_QofL1_COMB_often_count: PL_QofL1_COMB_often_count,
-                        feel_isolated: feel_isolated,
-                        feel_leftout: feel_leftout,
-                        lack_companionship: lack_companionship,
-                        local_community_belonging: local_community_belonging,
-                        life_satisfaction2: life_satisfaction2,
-                        community_activity_participate: community_activity_participate,
-                        household2_size: household2_size,
+                        // feel_isolated: feel_isolated,
+                        // feel_leftout: feel_leftout,
+                        // lack_companionship: lack_companionship,
+                        // local_community_belonging: local_community_belonging,
+                        // life_satisfaction2: life_satisfaction2,
+                        // community_activity_participate: community_activity_participate,
+                        // household2_size: household2_size,
+                        memberName: account_name,
                         request: { 
                             type: 'GET',
                             url: config.server.protocol + '://' + config.server.hostname +':' + config.server.port + '/api/reports/neighbours/user/' + req.params.userId

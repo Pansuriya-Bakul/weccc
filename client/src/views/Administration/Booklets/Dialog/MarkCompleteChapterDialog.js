@@ -1,5 +1,5 @@
 // ================================================
-// Code associated with SaveChapterDialog
+// Code associated with MarkCompleteChapterDialog
 // ================================================
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';                     //Development Package to validate prop types [Type Checking] passed down
@@ -27,7 +27,7 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 // ==================== MUI Icons ====================
-import SaveIcon from '@material-ui/icons/Save';
+import DoneIcon from '@material-ui/icons/Done';
 
 // ==================== MUI Styles ===================
 
@@ -50,7 +50,7 @@ import SaveIcon from '@material-ui/icons/Save';
 
 // ======================== React Modern | Functional Component ========================
 
-const SaveChapterDialog = (props) => { // Notice the arrow function... regular function()  works too
+const MarkCompleteChapterDialog = (props) => { // Notice the arrow function... regular function()  works too
 
     // Variables ===
 
@@ -59,13 +59,13 @@ const SaveChapterDialog = (props) => { // Notice the arrow function... regular f
 
         // Declaration of Stateful Variables ===
         const { appState, setParentAlert, isTemplate, chapter, chapterID,
-            saveChapterDialog, setSaveChapterDialog,
-            saveChapterDialogExecuting, setSaveChapterDialogExecuting } = props;
+            markCompleteChapterDialog, setMarkCompleteChapterDialog,
+            markCompleteChapterDialogExecuting, setMarkCompleteChapterDialogExecuting, setEditable } = props;
 
     // Functions ===
 
-        // Saves current state of chapter and updates it in the database
-        const saveChapter = useCallback(() =>
+        // Mark the chapter as complete and updates it in the database
+        const markCompleteChapter = useCallback(() =>
         {
 
             if(chapter)
@@ -81,10 +81,10 @@ const SaveChapterDialog = (props) => { // Notice the arrow function... regular f
                     }
                 }
                 else
-                {   
+                {
                     updateBody =
                     {
-                        completeness: chapter.completeness == 100 ? 100-1 : chapter.completeness,
+                        completeness: 100,
                         responseJSON: chapter.responseJSON,
                         // memberCollection: chapter.memberCollection
                     }
@@ -94,8 +94,8 @@ const SaveChapterDialog = (props) => { // Notice the arrow function... regular f
                 {
                     if(error)
                     {
-                        setSaveChapterDialog(false);
-                        setParentAlert(new AlertType('Unable to retrieve save chapter. Please try again.', "error"));
+                        setMarkCompleteChapterDialog(false);
+                        setParentAlert(new AlertType('Unable to mark the chapter as complete. Please try again.', "error"));
                     }
                     else
                     {
@@ -105,38 +105,39 @@ const SaveChapterDialog = (props) => { // Notice the arrow function... regular f
                         }
                         else
                         {
-                            setSaveChapterDialog(false);
-                            setParentAlert(new AlertType('Unable to retrieve save chapter. Please try again.', "error"));
+                            setMarkCompleteChapterDialog(false);
+                            setParentAlert(new AlertType('Unable to mark the chapter as complete. Please try again.', "error"));
                         }
                     }
                 });
             }
             else
             {
-                setSaveChapterDialog(false);
-                setParentAlert(new AlertType('Unable to retrieve save chapter. Please try again.', "error"));
+                setMarkCompleteChapterDialog(false);
+                setParentAlert(new AlertType('Unable to mark the chapter as complete. Please try again.', "error"));
             }
             
-        }, [ setSaveChapterDialog, setParentAlert, chapter, chapterID, appState, isTemplate ]);
+        }, [ setMarkCompleteChapterDialog, setParentAlert, chapter, chapterID, appState, isTemplate ]);
 
         
         const closeHandler = useCallback(() => {
-            setSaveChapterDialog(false);
-        }, [ setSaveChapterDialog ]);
+            setMarkCompleteChapterDialog(false);
+        }, [ setMarkCompleteChapterDialog ]);
 
 
-        const saveHandler = useCallback(() => {
+        const markCompleteHandler = useCallback(() => {
             try{
-                setSaveChapterDialogExecuting(true);
-                saveChapter();
-                setSaveChapterDialogExecuting(false);
-                setSaveChapterDialog(false);
-                setParentAlert(new AlertType('Successfully Saved. You can continue editing if you wish.', "success")); 
+                setMarkCompleteChapterDialogExecuting(true);
+                markCompleteChapter();
+                setMarkCompleteChapterDialogExecuting(false);
+                setMarkCompleteChapterDialog(false);
+                setEditable(false);
+                setParentAlert(new AlertType('Successfully the chapter is marked complete.', "success")); 
             }
             catch{
 
             }
-        }, [ setSaveChapterDialogExecuting, saveChapter, setSaveChapterDialog, setParentAlert]);
+        }, [ setMarkCompleteChapterDialogExecuting, markCompleteChapter, setMarkCompleteChapterDialog, setParentAlert, setEditable]);
 
 
     // Hooks ===
@@ -147,31 +148,31 @@ const SaveChapterDialog = (props) => { // Notice the arrow function... regular f
         return (
             <>
                 {chapter? (
-                    <Dialog id="save-chapter-dialog"
+                    <Dialog id="markComplete-chapter-dialog"
                         fullWidth
                         maxWidth="md"
-                        open={saveChapterDialog}
+                        open={markCompleteChapterDialog}
                         onClose={() => { closeHandler(); }}
                     >
                         <DialogTitle>
-                            Save chapter {chapter.name? `"${chapter.name}"` : null}
+                        Mark Complete {chapter.name? `"${chapter.name}"` : null}
                         </DialogTitle>
                         <DialogContent>
-                            {saveChapterDialogExecuting? (
+                            {markCompleteChapterDialogExecuting? (
                                 <CircularProgress />
                             ) : (
                                 <DialogContentText>
-                                    Are you sure you would like to save the chapter?
+                                    Are you sure you would like to mark the chapter complete?
                                 </DialogContentText>
                             )}
                         
                         </DialogContent>
                         <DialogActions>
-                            <Button color="primary" variant="contained" onClick={() => { closeHandler(); }} disabled={saveChapterDialogExecuting}>
+                            <Button color="primary" variant="contained" onClick={() => { closeHandler(); }} disabled={markCompleteChapterDialogExecuting}>
                                 Cancel
                             </Button>
-                            <Button color="primary" variant="contained" startIcon={<SaveIcon />} onClick={() => { saveHandler(); }} disabled={saveChapterDialogExecuting}>
-                                Save
+                            <Button color="primary" variant="contained" startIcon={<DoneIcon />} onClick={() => { markCompleteHandler(); }} disabled={markCompleteChapterDialogExecuting}>
+                                Mark Complete
                             </Button>
                         </DialogActions>
                     </Dialog>
@@ -184,7 +185,7 @@ const SaveChapterDialog = (props) => { // Notice the arrow function... regular f
 }
 
 // ======================== Component PropType Check ========================
-SaveChapterDialog.propTypes = 
+MarkCompleteChapterDialog.propTypes = 
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -192,24 +193,26 @@ SaveChapterDialog.propTypes =
     isTemplate: PropTypes.bool.isRequired,
     chapter: PropTypes.object,
     chapterID: PropTypes.string.isRequired,
-    saveChapterDialog: PropTypes.bool.isRequired,
-    setSaveChapterDialog: PropTypes.func.isRequired,
-    saveChapterDialogExecuting: PropTypes.bool.isRequired, 
-    setSaveChapterDialogExecuting: PropTypes.func.isRequired
+    markCompleteChapterDialog: PropTypes.bool.isRequired,
+    setMarkCompleteChapterDialog: PropTypes.func.isRequired,
+    markCompleteChapterDialogExecuting: PropTypes.bool.isRequired, 
+    setMarkCompleteChapterDialogExecuting: PropTypes.func.isRequired,
+    setEditable:  PropTypes.func.isRequired
 
 }
 
-SaveChapterDialog.defaultProps = 
+MarkCompleteChapterDialog.defaultProps = 
 {
     appState: {},
     setParentAlert: () => {},
     isTemplate: {},
     chapter: {},
     chapterID: {},
-    saveChapterDialog: {},
-    setSaveChapterDialog: () => {},
-    saveChapterDialogExecuting: {}, 
-    setSaveChapterDialogExecuting: () => {}
+    markCompleteChapterDialog: {},
+    setMarkCompleteChapterDialog: () => {},
+    markCompleteChapterDialogExecuting: {}, 
+    setMarkCompleteChapterDialogExecuting: () => {},
+    setEditable: {}
 }
 
-export default SaveChapterDialog;  // You can even shorthand this line by adding this at the function [Component] declaration stage
+export default MarkCompleteChapterDialog;  // You can even shorthand this line by adding this at the function [Component] declaration stage
