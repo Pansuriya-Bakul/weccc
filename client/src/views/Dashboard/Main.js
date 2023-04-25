@@ -80,12 +80,13 @@ class Main extends Component {
 				// this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
 				this.setState({ collectionNames: response.data.collectionNames });
 				this.setState({ collections: response.data.collections });
-
-				const toggle = {}
-				this.state.collectionNames.map(key => {
-					toggle[key] = false;
-				})
-				this.setState({ toggle: toggle });
+				if (this.state.collectionNames != undefined && this.state.collections != undefined) {
+					const toggle = {}
+					this.state.collectionNames.map(key => {
+						toggle[key] = false;
+					})
+					this.setState({ toggle: toggle });
+				}
 				this.setState({ isLoading: false });
 				callback();
 			}
@@ -331,7 +332,7 @@ class Main extends Component {
 																);
 															})
 														) : (
-															''
+															'No services assigned'
 														)}
 													</Typography>}
 											</Grid>
