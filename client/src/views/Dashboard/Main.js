@@ -1,6 +1,7 @@
 import React, { Component, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import get from '../../helpers/common/get';
+import post from "../../helpers/common/post";
 import { Link } from 'react-router-dom';
 // ==================== MUI ====================
 import Tooltip from '@material-ui/core/Tooltip';
@@ -31,13 +32,17 @@ class Main extends Component {
 
 		this.state = {
 			render: false,
-			isLoading: true,
+			isLoading: [true,true],
 			clientData: [],
 			clientSurvey: '',
 			quote: '',
 			author: '',
 			toggle: {},
-			collectionCompleteness: []
+			pToggle: {},
+			collectionCompleteness: [],
+			patientCollectionCompleteness: [],
+			patientsList: [],
+			pMapping: {}
 		};
 	}
 
@@ -65,6 +70,133 @@ class Main extends Component {
 		})
 	}
 
+	setPToggle = (key) => {
+		const temp = this.state.pToggle
+		temp[key] = !(temp[key])
+		this.setState({
+			pToggle: temp
+		})
+	}
+
+
+	// getPatients = async () => { 
+	// 	let { appState } = this.props;
+
+	// 	if (appState.role == "Patient") {
+	// 	  // setAlert(
+	// 	  //   new AlertType("You do not have Permission to recieve Patients", "error")
+	// 	  // );
+	// 	  return;
+	// 	} else {
+	// 	  if (appState.patients.length <= 0) {
+	// 		// setAlert(
+	// 		//   new AlertType(
+	// 		// 	"You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
+	// 		// 	"error"
+	// 		//   )
+	// 		// );
+	// 		return;
+	// 	  }
+
+	// 	//   let http_query = {
+	// 	// 	_id: {
+	// 	// 	  $in: appState.patients,
+	// 	// 	},
+	// 	//   };
+	// 	get("users/" + appState._id, appState.token, (err, res) => 
+	//                 {
+	//                     if(err)
+	//                     {   
+	//                         //Bad callback call
+	//                         //setAlert(new AlertType(err.message, "error"));
+	//                         // setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
+	//                     }
+	//                     else
+	//                     {
+	//                         if(res.status === 200)
+	//                         {
+	//                             // this.setState({patientsList: res.data.user.patients});
+	// 							console.log(res.data.user.patients);
+	// 							return res.data.user.patients
+	//                         }
+	//                         else
+	//                         {
+	//                             //Bad HTTP Response
+	//                             // setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
+	//                         }
+	//                     }
+
+	//                 }); 
+
+	// 	//   post("users/query", appState.token, http_query, (err, res) => {
+	// 	// 	if (err) {
+	// 	// 	  //Bad callback
+	// 	// 	//   setAlert(
+	// 	// 	// 	new AlertType(
+	// 	// 	// 	  "Unable to retrieve Patients. Please refresh and try again.",
+	// 	// 	// 	  "error"
+	// 	// 	// 	)
+	// 	// 	//   );
+	// 	// 	} else {
+	// 	// 	  if (res.status === 200) {
+	// 	// 		this.setState({patientsList : res.data.users});
+	// 	// 		console.log(res.data.users);
+	// 	// 	  } else {
+	// 	// 		//Bad HTTP Response
+	// 	// 		// setAlert(
+	// 	// 		//   new AlertType(
+	// 	// 		// 	"Unable to retrieve Patients. Please refresh and try again.",
+	// 	// 		// 	"error"
+	// 	// 		//   )
+	// 	// 		// );
+	// 	// 	  }
+	// 	// 	}
+	// 	//   });
+	// 	}
+	// };
+
+	getPatients = async () => {
+		let { appState } = this.props;
+
+		if (appState.role == "Patient") {
+			// setAlert(
+			//   new AlertType("You do not have Permission to recieve Patients", "error")
+			// );
+			return;
+		} else {
+			if (appState.patients.length <= 0) {
+				// setAlert(
+				//   new AlertType(
+				//     "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
+				//     "error"
+				//   )
+				// );
+				return;
+			}
+
+			return new Promise((resolve, reject) => {
+				get("users/" + appState._id, appState.token, (err, res) => {
+					if (err) {
+						//Bad callback call
+						//setAlert(new AlertType(err.message, "error"));
+						// setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
+						reject(err);
+					} else {
+						if (res.status === 200) {
+							// this.setState({patientsList: res.data.user.patients});
+							//   console.log(res.data.user.patients);
+							resolve(res.data.user.patients);
+						} else {
+							//Bad HTTP Response
+							// setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
+							reject(new Error('Unable to retrieve Users. Please refresh and try again.'));
+						}
+					}
+				});
+			});
+		}
+	}
+
 	checkClientSurveys = (callback) => {
 		let { appState } = this.props;
 		let url = `users/client/${appState._id}`;
@@ -87,10 +219,70 @@ class Main extends Component {
 					})
 					this.setState({ toggle: toggle });
 				}
-				this.setState({ isLoading: false });
+				const temploading = this.state.isLoading;
+				temploading[0] = false;
+				this.setState({ isLoading: temploading });
 				callback();
 			}
 		}); // call the get request.
+	};
+
+	// getPatientSurveys = async (patientId) => {
+	// 	let { appState } = this.props;
+	// 	let url = ''
+	// 	url = `users/client/${patientId}`;
+
+
+	// 	const token = appState.token;
+	// 	get(url, token, (error, response) => {
+	// 		if (error) return;
+
+	// 		if (response.status === 200) {
+	// 			// this.setState({ clientData: response.data });
+	// 			// this.setState({ clientSurvey: response.data.surveys });
+	// 			// this.setState({ clientCompletedSurvey: response.data.completedSurveys });
+	// 			// this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
+	// 			this.setState({ patientCollectionNames: response.data.collectionNames });
+	// 			this.setState({ patientCollections: response.data.collections });
+	// 			// this.setState({ userName: response.data.userName });
+	// 			// this.setState({ facilityName: response.data.facilityName });
+
+
+	// 			if (this.state.patientCollectionNames != undefined && this.state.patientCollections != undefined) {
+	// 				const pToggle = {}
+	// 				this.state.patientCollectionNames.map(key => {
+	// 					pToggle[key] = false;
+	// 				})
+	// 				this.setState({ pToggle: pToggle });
+	// 			}
+	// 			this.setState({ isLoading: false });
+	// 		}
+	// 	}); // call the get request.
+	// };
+
+	getPatientSurveys = async (patientId) => {
+		let { appState } = this.props;
+		let url = 'users/client/' + patientId;
+		const token = appState.token;
+
+		try {
+			const response = await new Promise((resolve, reject) => {
+				get(url, token, (error, response) => {
+					if (error) {
+						reject(error);
+					} else {
+						resolve(response);
+					}
+				});
+			});
+
+			// handle the response here
+			await new Promise(resolve => this.setState({ patientCollectionNames: response.data.collectionNames }, resolve));
+			await new Promise(resolve => this.setState({ patientCollections: response.data.collections }, resolve));
+			// ...
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	getQuote = () => {
@@ -128,15 +320,57 @@ class Main extends Component {
 		}
 	}
 
+	patientCheckComplete = () => {
+		return new Promise(resolve => {
+			if (this.state.patientCollectionNames !== '' && this.state.patientCollectionNames !== undefined) {
+				(this.state.patientCollectionNames).map((key, index) => {
+					let temp = true
+					if (this.state.patientCollections !== '' && this.state.patientCollections !== undefined) {
+						this.state.patientCollections[index].map(value => {
+							if (value[1] != 100) {
+								temp = false
+							}
+						})
+						let tempArr = this.state.patientCollectionCompleteness
+						console.log(tempArr);
+						this.setState({ patientCollectionCompleteness: [...tempArr, temp] })
+					}
+				})
+			}
+			resolve();
+		});
+	}
+
+	createMapping = async () => {
+		const templist = await this.getPatients()
+		this.setState({ patientsList: templist });
+		const temp = this.state.pMapping;
+		
+		for (let user of this.state.patientsList) {
+			await this.getPatientSurveys(user._id);
+			await this.patientCheckComplete();
+			temp[user._id] = [this.state.patientCollectionNames, this.state.patientCollections, this.state.patientCollectionCompleteness];
+			this.setState({ patientCheckComplete: [] });
+
+		}
+
+		this.setState({ pMapping: temp });
+		const temploading = this.state.isLoading;
+		temploading[1] = false;
+		this.setState({ isLoading: temploading });
+	}
+
 	componentDidMount = () => {
 		let { appState } = this.props;
 		this.classes = styles();
 		this.bull = <span className={this.classes.bullet}>•</span>;
 
 		if (appState.role === 'Patient' || appState.role === 'Volunteer') {
+			this.createMapping();
 			this.checkClientSurveys(() => {
 				this.checkComplete();
 			});
+
 		}
 
 		this.checkAuth();
@@ -246,96 +480,191 @@ class Main extends Component {
 													Current Services: Requested Information
 												</Typography>
 											</Grid>
-											<Grid item xs={12}>
-												{this.state.isLoading
-													? (<CircularProgress />)
-													: <Typography variant="body2" component="h2">
+											{(this.state.isLoading[0] && this.state.isLoading[1])
+												? (<CircularProgress />)
+												: <Grid item xs={12}>
+													<Grid item xs={12}>
 
-														{/* {this.state.clientData.message ? (
-													<p>{this.state.clientData.message}</p>
-												) : ('')} */}
-														{(this.state.collectionNames !== [] && this.state.collectionNames !== undefined) ? (
-															(this.state.collectionNames).map((key, index) => {
-																return (
-																	<>
-																		{(this.state.collectionCompleteness[index] == false) && <Grid item xs={12}>
-																			{/* <Tooltip
-																		placement="bottom"
-																		title="Edit Collection"
-																	> */}
-																			<div >
-																				<Box mt={1.5} p={1.5} className='box-container' onClick={() => this.setToggle(key)}>
-																					<div
-																						size="small"
-																						variant="contained"
-																						color="primary"
-																						// startIcon={<EditIcon />}
-																						component={Link}
-																						to={`/administration/booklets/user/view`}
-																					>
-																						{/* View Survey {parseInt(key, 10)+1} :  */}
-																						<h3>{key}</h3>
-																					</div>
+														<Typography variant="body2" component="h2">
+
+															{/* {this.state.clientData.message ? (
+															<p>{this.state.clientData.message}</p>
+														) : ('')} */}
+															{(this.state.pMapping !== {})
+																? (
+																	Object.keys(this.state.pMapping).map((pkey, pindex) => (
+																		(this.state.pMapping[pkey][0] && this.state.pMapping[pkey][1])
+																			? (
+																				this.state.pMapping[pkey][0].map((key, index) => {
+																					return (
+																						<>
+																							{(this.state.pMapping[pkey][2][index] == false) && <Grid item xs={12}>
+																								<div>
+																									<Box mt={1.5} p={1.5} className='box-container' onClick={() => this.setPToggle(key)}>
+																										<div
+																											size="small"
+																											variant="contained"
+																											color="primary"
+																											// startIcon={<EditIcon />}
+																											component={Link}
+																											to={`/administration/booklets/user/view`}
+																										>
+																											{/* View Survey {parseInt(key, 10)+1} :  */}
+																											<h3>{key} - {this.state.patientsList[pindex].info.name}</h3>
+																										</div>
+																									</Box>
+																									{this.state.pToggle[key] &&
+																										(<
+																											Box m={0} p={1.5} className='bottom-container'>
+																											<div className="survey-div">
+																												{
+																													(this.state.pMapping[pkey][1] !== [] && this.state.pMapping[pkey][1] !== undefined)
+																														? (
+																															this.state.pMapping[pkey][1][index].map(value => {
+																																return (
+																																	<>
+																																		<Grid item xs={12}>
+																																			<Tooltip
+																																				placement="bottom"
+																																				title="Edit Chapter"
+																																			>
+																																				<Box m={1} pt={1} className='survey-box'>
+																																					<Button className='survey-name'
+																																						size="small"
+																																						variant="contained"
+																																						color="primary"
+																																						startIcon={<EditIcon />}
+																																						component={Link}
+																																						to={`/administration/booklets/user/view/${value[0]}`}
+																																					>
+																																						{value[2]}
+																																					</Button>
+																																					{(value[1] == 0) && <div className="status-div not-started">
+																																						<span>Not Started</span>
+																																					</div>}
+																																					{(value[1] > 0 && value[1] < 100) && <div className="status-div in-progress">
+																																						<span>In Progress</span>
+																																					</div>}
+																																					{(value[1] == 100) && <div className="status-div completed">
+																																						<span>Completed</span>
+																																					</div>}
+																																				</Box>
+																																			</Tooltip>
+																																		</Grid>
+																																	</>
+																																);
+																															})
+																														)
+																														: ('')
+																												}
+																											</div>
+																										</Box>
+																										)}
+																								</div>
+																							</Grid>}
+																						</>
+																					);
+																				})
+																			)
+																			: ('')
+
+																	))
+
+																)
+																: ('')}
+
+														</Typography>
+													</Grid>
+													<Grid item xs={12}>
+
+														<Typography variant="body2" component="h2">
+
+															{/* {this.state.clientData.message ? (
+															<p>{this.state.clientData.message}</p>
+														) : ('')} */}
+															{(this.state.collectionNames !== [] && this.state.collectionNames !== undefined) ? (
+																(this.state.collectionNames).map((key, index) => {
+																	return (
+																		<>
+																			{(this.state.collectionCompleteness[index] == false) && <Grid item xs={12}>
+																				{/* <Tooltip
+																				placement="bottom"
+																				title="Edit Collection"
+																			> */}
+																				<div >
+																					<Box mt={1.5} p={1.5} className='box-container' onClick={() => this.setToggle(key)}>
+																						<div
+																							size="small"
+																							variant="contained"
+																							color="primary"
+																							// startIcon={<EditIcon />}
+																							component={Link}
+																							to={`/administration/booklets/user/view`}
+																						>
+																							{/* View Survey {parseInt(key, 10)+1} :  */}
+																							<h3>{key}</h3>
+																						</div>
 
 
-																				</Box>
-																				{this.state.toggle[key] && (<Box m={0} p={1.5} className='bottom-container'>
-																					<div className="survey-div">
-																						{
-																							(this.state.collections !== '' && this.state.collections !== undefined)
+																					</Box>
+																					{this.state.toggle[key] && (<Box m={0} p={1.5} className='bottom-container'>
+																						<div className="survey-div">
+																							{
+																								(this.state.collections !== '' && this.state.collections !== undefined)
 
-																								? (
-																									this.state.collections[index].map(value => {
-																										return (
-																											<>
-																												<Grid item xs={12}>
-																													<Tooltip
-																														placement="bottom"
-																														title="Edit Chapter"
-																													>
-																														<Box m={1} pt={1} className='survey-box'>
-																															<Button className='survey-name'
-																																size="small"
-																																variant="contained"
-																																color="primary"
-																																startIcon={<EditIcon />}
-																																component={Link}
-																																to={`/administration/booklets/user/view/${value[0]}`}
-																															>
-																																{value[2]}
-																															</Button>
-																															{(value[1] == 0) && <div className="status-div not-started">
-																																<span>Not Started</span>
-																															</div>}
-																															{(value[1] > 0 && value[1] < 100) && <div className="status-div in-progress">
-																																<span>In Progress</span>
-																															</div>}
-																															{(value[1] == 100) && <div className="status-div completed">
-																																<span>Completed</span>
-																															</div>}
-																														</Box>
-																													</Tooltip>
-																												</Grid>
-																											</>
-																										);
-																									})
-																								) : (
-																									''
-																								)}
-																					</div>
-																				</Box>)}
-																			</div>
-																			{/* </Tooltip> */}
-																		</Grid>}
+																									? (
+																										this.state.collections[index].map(value => {
+																											return (
+																												<>
+																													<Grid item xs={12}>
+																														<Tooltip
+																															placement="bottom"
+																															title="Edit Chapter"
+																														>
+																															<Box m={1} pt={1} className='survey-box'>
+																																<Button className='survey-name'
+																																	size="small"
+																																	variant="contained"
+																																	color="primary"
+																																	startIcon={<EditIcon />}
+																																	component={Link}
+																																	to={`/administration/booklets/user/view/${value[0]}`}
+																																>
+																																	{value[2]}
+																																</Button>
+																																{(value[1] == 0) && <div className="status-div not-started">
+																																	<span>Not Started</span>
+																																</div>}
+																																{(value[1] > 0 && value[1] < 100) && <div className="status-div in-progress">
+																																	<span>In Progress</span>
+																																</div>}
+																																{(value[1] == 100) && <div className="status-div completed">
+																																	<span>Completed</span>
+																																</div>}
+																															</Box>
+																														</Tooltip>
+																													</Grid>
+																												</>
+																											);
+																										})
+																									) : (
+																										''
+																									)}
+																						</div>
+																					</Box>)}
+																				</div>
+																				{/* </Tooltip> */}
+																			</Grid>}
 
-																	</>
-																);
-															})
-														) : (
-															'No services assigned'
-														)}
-													</Typography>}
-											</Grid>
+																		</>
+																	);
+																})
+															) : (
+																'No services assigned'
+															)}
+														</Typography>
+													</Grid>
+												</Grid>}
 										</Grid>
 									</Box>
 								</CardContent>
