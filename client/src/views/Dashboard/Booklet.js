@@ -54,10 +54,8 @@ const styles = theme => ({
     }
 });
 
-class Booklet extends Component 
-{
-	constructor(props)
-    {
+class Booklet extends Component {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -65,59 +63,49 @@ class Booklet extends Component
             saveError: "",
             saveSuccess: "",
             surveyApproved: false,
-			render: false,
+            render: false,
             currentSurveyJSON: null,
             currentSurveyResponseJSON: null
         };
     }
 
-    componentDidMount = () =>
-    {
+    componentDidMount = () => {
         this.surveyJSON = {};
         this.responseJSON = {};
 
         setTimeout(() => {
-            this.props.CheckAuthenticationValidity((tokenValid) => 
-            {
-                if(tokenValid)
-                {
+            this.props.CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
                     this.loadSurvey();
                 }
             });
         }, 200);
-        
+
         Survey.StylesManager.applyTheme('default');
     }
 
-    handleBackToMemberButton = () =>
-    {
+    handleBackToMemberButton = () => {
         this.props.history.goBack();
     }
 
     // Loads an existing survey from the database
-    loadSurvey = () =>
-    {
+    loadSurvey = () => {
         let { appState } = this.props;
 
         const memberSurveyID = this.props.match.params.memberSurveyID;
 
-        if(memberSurveyID != null)
-        {
-            get("membersurveys/" + memberSurveyID, appState.token, (error, response) => 
-            {
-                if(error)
-                {
+        if (memberSurveyID != null) {
+            get("membersurveys/" + memberSurveyID, appState.token, (error, response) => {
+                if (error) {
                     this.setState({
                         loadError: "Unable to load the survey.  Please make sure your Booklet ID is correct and you have proper permissions.",
                         render: true
                     });
                 }
-                else
-                {
-                    if(response.status === 200 || response.status === 304)
-                    {
+                else {
+                    if (response.status === 200 || response.status === 304) {
                         var booklet = response.data.memberSurvey;
-                        
+
                         this.setState({
                             currentSurveyJSON: booklet.surveyJSON,
                             currentSurveyResponseJSON: booklet.responseJSON
@@ -147,8 +135,7 @@ class Booklet extends Component
                             render: true
                         });
                     }
-                    else
-                    {
+                    else {
                         this.setState({
                             loadError: "Unable to load the survey.  Please make sure your Booklet ID is correct and you have proper permissions.",
                             render: true
@@ -159,8 +146,7 @@ class Booklet extends Component
                 this.removeMessages();
             });
         }
-        else
-        {
+        else {
             this.setState({
                 loadError: "Unable to load the survey.  Please make sure your Booklet ID is correct and you have proper permissions.",
                 render: true
@@ -171,8 +157,7 @@ class Booklet extends Component
     }
 
     // Saves the current state of the survey into the "membersurveys" collection in database
-    saveSurvey = (survey) =>
-    {
+    saveSurvey = (survey) => {
         let { appState } = this.props;
 
         const memberSurveyID = this.props.match.params.memberSurveyID;
@@ -186,28 +171,23 @@ class Booklet extends Component
             currentSurveyResponseJSON: JSON.stringify(survey.data)
         });
 
-        patch("membersurveys/" + memberSurveyID, appState.token, data, (error, response) => 
-        {
-            if(error)
-            {
+        patch("membersurveys/" + memberSurveyID, appState.token, data, (error, response) => {
+            if (error) {
                 this.setState({
                     saveError: "Cannot save survey.  Please try agian later.",
                     saveSuccess: "",
                     render: true
                 });
             }
-            else
-            {
-                if(response.status === 200 || response.status === 304)
-                {
+            else {
+                if (response.status === 200 || response.status === 304) {
                     this.setState({
                         saveError: "",
                         saveSuccess: "Survey has been saved.",
                         render: true
                     });
                 }
-                else
-                {
+                else {
                     this.setState({
                         saveError: "Cannot save survey.  Please try agian later.",
                         saveSuccess: "",
@@ -221,15 +201,13 @@ class Booklet extends Component
     }
 
     // Changes approval state for a completed survey by an administrator
-    approveSurvey = () =>
-    {
+    approveSurvey = () => {
         let { surveyApproved } = this.state;
         let { appState } = this.props;
-        
+
         const memberSurveyID = this.props.match.params.memberSurveyID;
 
-        if(surveyApproved)
-        {
+        if (surveyApproved) {
             return;
         }
 
@@ -237,20 +215,16 @@ class Booklet extends Component
             approved: true
         };
 
-        patch("membersurveys/" + memberSurveyID, appState.token, data, (error, response) => 
-        {
-            if(error)
-            {
+        patch("membersurveys/" + memberSurveyID, appState.token, data, (error, response) => {
+            if (error) {
                 this.setState({
                     saveError: "Cannot approve survey.  Please try agian later.",
                     saveSuccess: "",
                     render: true
                 });
             }
-            else
-            {
-                if(response.status === 200 || response.status === 304)
-                {
+            else {
+                if (response.status === 200 || response.status === 304) {
                     this.setState({
                         saveError: "",
                         saveSuccess: "This survey has been approved.",
@@ -258,8 +232,7 @@ class Booklet extends Component
                         render: true
                     });
                 }
-                else
-                {
+                else {
                     this.setState({
                         saveError: "Cannot approve survey.  Please try agian later.",
                         saveSuccess: "",
@@ -273,22 +246,19 @@ class Booklet extends Component
     }
 
     // Exports saved/completed survey to be downloaded into a PDF
-    exportToPDF = () =>
-    {
+    exportToPDF = () => {
         // const memberSurveyID = this.props.match.params.memberSurveyID;
 
         // window.exportWindow = window.open("/pdf/" + memberSurveyID, "_blank", "toolbar=no,scrollbars=yes,resizable=no,top=20,width=850,height=900");
 
         let surveyJSON = "";
         let responseJSON = "{}";
-        
-        if(this.state.currentSurveyJSON)
-        {
+
+        if (this.state.currentSurveyJSON) {
             surveyJSON = JSON.parse(this.state.currentSurveyJSON);
         }
-        
-        if(this.state.currentSurveyResponseJSON)
-        {
+
+        if (this.state.currentSurveyResponseJSON) {
             responseJSON = JSON.parse(this.state.currentSurveyResponseJSON);
         }
 
@@ -304,15 +274,14 @@ class Booklet extends Component
         };
 
         let surveyPDF = new SurveyPDF.SurveyPDF(surveyJSON, pdfOptions);
-        
+
         surveyPDF.data = responseJSON;
 
         let name = this.props.match.url.replace("/", "-");
         surveyPDF.save(name + ".pdf");
-    }    
+    }
 
-    removeMessages = () =>
-    {
+    removeMessages = () => {
         setTimeout(() => {
             this.setState({
                 saveError: "",
@@ -321,34 +290,30 @@ class Booklet extends Component
         }, 7500);
     }
 
-    render()
-    {
+    render() {
         let { appState, classes } = this.props;
         let { loadError, saveError, saveSuccess, render, surveyApproved } = this.state;
-        
+
         var canApprove = true;
-        if(appState.role === "Patient") { 
+        if (appState.role === "Patient") {
             canApprove = false; //Summer 2021: block approval by patient users
         }
 
         var tooltip = "This survey has already been approved.";
 
-        if(appState.role === "Volunteer")
-        {
+        if (appState.role === "Volunteer") {
             canApprove = false;
         }
 
-        if(!surveyApproved)
-        {
+        if (!surveyApproved) {
             tooltip = "This survey is pending approval.";
         }
 
-        if(window.survey != null)
-        {
-            return(
+        if (window.survey != null) {
+            return (
                 <div>
-                    { render ?
-                       <Grid container
+                    {render ?
+                        <Grid container
                             className={classes.rootGrid}
                             direction="row"
                             justifyContent="flex-start"
@@ -359,11 +324,11 @@ class Booklet extends Component
                                 <Box mx={1} my={1}>
                                     <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
                                         <Grid item>
-                                            <ListAltIcon color="primary"/>
+                                            <ListAltIcon color="primary" />
                                         </Grid>
                                         <Grid item xs>
                                             <Typography variant="h5" color="secondary" align="left" gutterBottom={false}>
-                                                Completing Chapter
+                                                Completing Module
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12}>
@@ -375,8 +340,8 @@ class Booklet extends Component
                                                 Back to Member
                                             </Button>
                                         </Grid>
-                                    </Grid>                
-                                </Box> 
+                                    </Grid>
+                                </Box>
                             </Grid>
                             <Grid item xs={9}>
                                 <Box mx={1} my={1}>
@@ -400,14 +365,14 @@ class Booklet extends Component
                                             <div className={classes.alignLeftSpacer}>
                                                 {canApprove &&
                                                     <Tooltip title={tooltip} placement="left">
-                                                        <Button 
+                                                        <Button
                                                             className={classes.buttonMargin}
-                                                            size="small" 
-                                                            variant="contained" 
+                                                            size="small"
+                                                            variant="contained"
                                                             color="secondary"
                                                             onClick={this.approveSurvey}
                                                         >
-                                                            Approve this Chapter
+                                                            Approve this Module
                                                         </Button>
                                                     </Tooltip>
                                                 }
@@ -417,7 +382,7 @@ class Booklet extends Component
                                                     </Button>
                                                 </Tooltip>
                                             </div>
-                                        </Box> 
+                                        </Box>
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -425,25 +390,24 @@ class Booklet extends Component
                                 <Card raised={true}>
                                     <CardContent>
                                         <Box mx={1} my={1} boxShadow={0}>
-                                            <Survey.Survey 
+                                            <Survey.Survey
                                                 model={window.survey}
                                             />
-                                        </Box> 
+                                        </Box>
                                     </CardContent>
                                 </Card>
-                            </Grid>           
+                            </Grid>
                         </Grid>
-                    :
+                        :
                         <CircularProgress />
                     }
                 </div>
             );
         }
-        else
-        {
-            return(
+        else {
+            return (
                 <div>
-                    { render &&
+                    {render &&
                         <Card>
                             {loadError !== "" &&
                                 <StatusMessage color={classes.error}>

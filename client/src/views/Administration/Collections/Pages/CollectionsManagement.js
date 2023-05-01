@@ -170,19 +170,19 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
             }
             else {
                 if (res.status === 200) {
-                    if (appState.role == "Admin"){
+                    if (appState.role == "Admin") {
                         populateList(res.data.collectionList);
-                        }
-                        else {
-                            var datatemp=[];
-                            res.data.collectionList.forEach (k => {
-                                //console.log(k.memberList);
-                                if ( k.memberList.includes(appState._id)) {
-                                    datatemp.push(k);
-                                }
-                                })
-                            populateList(datatemp);  // Edited by P., Restricting Service View by membership
-                        }
+                    }
+                    else {
+                        var datatemp = [];
+                        res.data.collectionList.forEach(k => {
+                            //console.log(k.memberList);
+                            if (k.memberList.includes(appState._id)) {
+                                datatemp.push(k);
+                            }
+                        })
+                        populateList(datatemp);  // Edited by P., Restricting Series View by membership
+                    }
                 }
                 else {
                     //Bad HTTP Response
@@ -192,7 +192,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
 
         });
     }, [populateList, appState.token]);
-    
+
     // Retrieve the list of Collections
     const getMemberCollections = useCallback(() => {
 
@@ -206,19 +206,19 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
             }
             else {
                 if (res.status === 200) {
-                    if (appState.role == "Admin"){
+                    if (appState.role == "Admin") {
                         populateList(res.data.memberCollectionList);
-                        }
-                        else {
-                            var datatemp=[];
-                            res.data.memberCollectionList.forEach(k => {
-                                if (k.member.facilityId === appState.facilityId){
-                                   datatemp.push(k);
-                                }
+                    }
+                    else {
+                        var datatemp = [];
+                        res.data.memberCollectionList.forEach(k => {
+                            if (k.member.facilityId === appState.facilityId) {
+                                datatemp.push(k);
                             }
-                            )
-                            populateList(datatemp); // Edited by P., filtering the service view by facilityId except Admin
                         }
+                        )
+                        populateList(datatemp); // Edited by P., filtering the Series view by facilityId except Admin
+                    }
                 }
                 else {
                     //Bad HTTP Response
@@ -280,7 +280,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                     <Grid item xs={5}>
                         <Box mx={1} my={1}>
                             <Typography variant="h5" color="inherit" align="left" gutterBottom>
-                                Manage Services
+                                Manage Series
                             </Typography>
                         </Box>
                     </Grid>

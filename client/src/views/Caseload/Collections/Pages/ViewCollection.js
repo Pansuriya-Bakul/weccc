@@ -16,7 +16,7 @@ import * as Survey from "survey-react";
 import "survey-react/survey.css";
 
 // ==================== Helpers =====================
-import get from  '../../../../helpers/common/get';
+import get from '../../../../helpers/common/get';
 import AlertType from '../../../../helpers/models/AlertType';
 
 // ==================== MUI =========================
@@ -58,23 +58,23 @@ const editUserChapterBaseLinkClient = "/client/booklets/";
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            flexGrow: 1,     // CSS determined this way, flexbox properties
-            height: '100%'
-        },
-        rootGrid: {
-            height: '100%'
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        flexGrow: 1,     // CSS determined this way, flexbox properties
+        height: '100%'
+    },
+    rootGrid: {
+        height: '100%'
+    }
+}));
 
 
 // ================= Static Variables ================
 const backLink = "/administration/collections/management";
 
 const surveyStyle = "default";
- 
+
 // const surveyOptions = {
 
 // };
@@ -88,128 +88,116 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, CollectionID, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+    // Declaration of Stateful Variables ===
+    const { appState, CollectionID, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
-        const [collectionOriginal, setCollectionOriginal] = useState(null);
+    const [collectionOriginal, setCollectionOriginal] = useState(null);
 
-        const [collectionEdit, setCollectionEdit] = useState(null);
+    const [collectionEdit, setCollectionEdit] = useState(null);
 
-        // Alert variable
-        const [alert, setAlert] = useState(new AlertType());
+    // Alert variable
+    const [alert, setAlert] = useState(new AlertType());
 
     // Functions ===
 
-        // Loads existing booklet chosen by user from the database
-        const getCollection = useCallback(() =>
-        {
+    // Loads existing booklet chosen by user from the database
+    const getCollection = useCallback(() => {
 
-            if(CollectionID != null)
-            {
-                get("collections/" + CollectionID, appState.token, (error, response) => 
-                {
-                    if(error)
-                    {
+        if (CollectionID != null) {
+            get("collections/" + CollectionID, appState.token, (error, response) => {
+                if (error) {
+                    setAlert(new AlertType('Unable to retrieve Collection. Please refresh and try again.', "error"));
+                }
+                else {
+                    if (response.status === 200 || response.status === 304) {
+                        setCollectionOriginal(response.data.collection);
+                        setAlert(new AlertType('Successfully pulled Collection.', "success"));
+                    }
+                    else {
                         setAlert(new AlertType('Unable to retrieve Collection. Please refresh and try again.', "error"));
                     }
-                    else
-                    {
-                        if(response.status === 200 || response.status === 304)
-                        {
-                            setCollectionOriginal(response.data.collection);
-                            setAlert(new AlertType('Successfully pulled Collection.', "success"));
-                        }
-                        else
-                        {
-                            setAlert(new AlertType('Unable to retrieve Collection. Please refresh and try again.', "error"));
-                        }
-                    }
-                });
-            }
-            else
-            {
-                setAlert(new AlertType('Unable to retrieve Collection. Please refresh and try again.', "error"));
-            }
-        }, [ CollectionID, appState ]);
+                }
+            });
+        }
+        else {
+            setAlert(new AlertType('Unable to retrieve Collection. Please refresh and try again.', "error"));
+        }
+    }, [CollectionID, appState]);
 
     // Hooks ===
 
-        // First Render only because of the [ ] empty array tracking with the useEffect
-        useEffect( () =>
-        {
-            ToggleDrawerClose();
-            setTimeout(() => {
-                CheckAuthenticationValidity( (tokenValid) => 
-                {
-                    if(tokenValid)
-                    {
-                        // Load or Do Something
-                        getCollection();
-                    }
-                    else {
+    // First Render only because of the [ ] empty array tracking with the useEffect
+    useEffect(() => {
+        ToggleDrawerClose();
+        setTimeout(() => {
+            CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
+                    // Load or Do Something
+                    getCollection();
+                }
+                else {
 
-                        // Bad Response
-                        setAlert(null);
-                    }
-                });
-            }, 200);    //
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ ]);
+                    // Bad Response
+                    setAlert(null);
+                }
+            });
+        }, 200);    //
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-        useEffect( () => 
-        {
-            setCollectionEdit(collectionOriginal);
-        }, [ collectionOriginal ]);
+    useEffect(() => {
+        setCollectionEdit(collectionOriginal);
+    }, [collectionOriginal]);
 
     // Render Section ===
 
-        return (
-            alert != null? (
+    return (
+        alert != null ? (
 
-                // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
-                <div className={classes.root}>
-                    <Grid container
+            // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
+            <div className={classes.root}>
+                <Grid container
                     className={classes.rootGrid}
                     direction="row"
                     justifyContent="flex-start"
                     alignItems="stretch"
                     spacing={1}
-                    >
-                        <Grid item xs={5}>
-                            <Box mx={1} my={1}>
-                                <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>
-                                    {/* <Grid item>
+                >
+                    <Grid item xs={5}>
+                        <Box mx={1} my={1}>
+                            <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>
+                                {/* <Grid item>
                                         <IconButton component={Link} to={backLink}>
                                             <ArrowBackIosIcon />
                                         </IconButton>
                                     </Grid> */}
-                                    <Grid item xs>
-                                        <Typography variant="h4" color="inherit" align="left" gutterBottom>
-                                            Viewing Collection {collectionOriginal? `"${collectionOriginal._id}"` : null}
-                                        </Typography>
-                                    </Grid>
+                                <Grid item xs>
+                                    <Typography variant="h4" color="inherit" align="left" gutterBottom>
+                                        Viewing Collection {collectionOriginal ? `"${collectionOriginal._id}"` : null}
+                                    </Typography>
                                 </Grid>
-                            </Box> 
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box mx={1} my={1}>
-                                <AlertMessage alert={alert} setParentAlert={setAlert} />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Card raised={true}>
-                                <Box mx={2} my={1} boxShadow={0}>
-                                    <Grid
-                                        container
-                                        direction="column"
-                                        justifyContent="flex-start"
-                                        alignItems="stretch"
-                                        spacing={1}
-                                    >
-                                        {collectionEdit?
+                            </Grid>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Box mx={1} my={1}>
+                            <AlertMessage alert={alert} setParentAlert={setAlert} />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Card raised={true}>
+                            <Box mx={2} my={1} boxShadow={0}>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justifyContent="flex-start"
+                                    alignItems="stretch"
+                                    spacing={1}
+                                >
+                                    {collectionEdit ?
                                         (
                                             <>
                                                 <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
@@ -239,7 +227,7 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                                         </Button>
                                                                     </Tooltip>
                                                                 </Grid> */}
-                                                                 <Grid item>
+                                                                <Grid item>
                                                                     <Typography display="block" component="div" align="left" gutterBottom>
                                                                         <Typography display="inline" variant="body1" component="div" color="secondary" align="left" gutterBottom>
                                                                             Patient:&nbsp;
@@ -275,7 +263,7 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                 </Grid>
                                                 <Grid item xs={12}>
                                                     <Box mx={1} my={1} boxShadow={0}>
-                                                        <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>            
+                                                        <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>
                                                             {/* <Grid item xs={2}>
                                                                 <TextField label="Collection ID"
                                                                     size="small"
@@ -324,7 +312,7 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                                     disabled
                                                                     size="small"
                                                                     fullWidth
-                                                                    variant="filled" 
+                                                                    variant="filled"
                                                                     value={new Date(collectionEdit.createdAt).toLocaleString()}
                                                                     InputProps={{
                                                                         readOnly: true,
@@ -336,27 +324,27 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                                     disabled
                                                                     size="small"
                                                                     fullWidth
-                                                                    variant="filled" 
+                                                                    variant="filled"
                                                                     value={collectionEdit.createdBy}
                                                                     InputProps={{
                                                                         readOnly: true,
                                                                     }}
                                                                 />
-                                                            </Grid>       
+                                                            </Grid>
                                                         </Grid>
                                                     </Box>
                                                 </Grid>
                                                 <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
                                                     <Grid item>
                                                         <Typography variant="h6" component="h6" className={classes.button}>
-                                                            Collection chapters
+                                                            Collection Modules
                                                         </Typography>
                                                         <Divider />
                                                     </Grid>
                                                     <Grid item xs>
                                                         <Box mx={3} my={1} boxShadow={0}>
                                                             <Typography variant="body2" color="textSecondary">
-                                                                {`${collectionEdit.chapterTemplates.length} total chapter${(collectionEdit.chapterTemplates.length > 1)? 's' : ''}`}
+                                                                {`${collectionEdit.chapterTemplates.length} total chapter${(collectionEdit.chapterTemplates.length > 1) ? 's' : ''}`}
                                                             </Typography>
                                                             <LinearProgressWithLabel value={collectionEdit.overallCompleteness} />
                                                         </Box>
@@ -375,10 +363,10 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                         <List dense={false}>
                                                             {collectionEdit.memberChapters.map(item => {
 
-                                                                let link = appState.role === "Admin"? editUserChapterBaseLinkAdministration : "";
-                                                                link = appState.role === "Coordinator"? editUserChapterBaseLinkStaff : link;
-                                                                link = appState.role === "Volunteer"? editUserChapterBaseLinkStaff : link;
-                                                                link = appState.role === "Patient"? editUserChapterBaseLinkClient : link;
+                                                                let link = appState.role === "Admin" ? editUserChapterBaseLinkAdministration : "";
+                                                                link = appState.role === "Coordinator" ? editUserChapterBaseLinkStaff : link;
+                                                                link = appState.role === "Volunteer" ? editUserChapterBaseLinkStaff : link;
+                                                                link = appState.role === "Patient" ? editUserChapterBaseLinkClient : link;
 
                                                                 return (
                                                                     <ListItem key={item._id} dense={false} divider={true}>
@@ -386,7 +374,7 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                                             {/* <Avatar>
                                                                                 <Ballot />
                                                                             </Avatar> */}
-                                                                            <CircularProgressWithLabel value={item.completeStatus}/>
+                                                                            <CircularProgressWithLabel value={item.completeStatus} />
                                                                         </ListItemAvatar>
                                                                         <ListItemText
                                                                             primary={item.name}
@@ -396,14 +384,14 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                                         <ListItemSecondaryAction>
                                                                             <Tooltip
                                                                                 placement="right"
-                                                                                title="Fill in Chapter"
+                                                                                title="Fill in Module"
                                                                             >
                                                                                 <IconButton edge="end" aria-label="edit" size="small" component={Link} to={link + "user/edit/" + item._id} >
                                                                                     <EditIcon />
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                         </ListItemSecondaryAction>
-                                                                    </ListItem> 
+                                                                    </ListItem>
                                                                 );
                                                             })}
                                                         </List>
@@ -418,8 +406,8 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                     </Box>
                                                 </Grid>
                                             </Grid>
-                                        )}   
-                                        {/* <Grid item xs={12}>
+                                        )}
+                                    {/* <Grid item xs={12}>
                                             <Box mx={1} my={1} boxShadow={0}>
                                                 <Collapse in={!surveyJSloading}>
                                                     {survey != null?
@@ -431,23 +419,23 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                 </Collapse>
                                             </Box>
                                         </Grid> */}
-                                    </Grid>
-                                </Box>
-                            </Card>
-                        </Grid>
+                                </Grid>
+                            </Box>
+                        </Card>
                     </Grid>
-                </div>
-            ) : (
-                <Typography variant="h6" color="inherit" align="center" gutterBottom>
-                    Not Authorized. Please refresh and try again.
-                </Typography>
-            )
-            
-        );
+                </Grid>
+            </div>
+        ) : (
+            <Typography variant="h6" color="inherit" align="center" gutterBottom>
+                Not Authorized. Please refresh and try again.
+            </Typography>
+        )
+
+    );
 }
 
 // ======================== Component PropType Check ========================
-ViewCollection.propTypes = 
+ViewCollection.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -456,12 +444,12 @@ ViewCollection.propTypes =
     CheckAuthenticationValidity: PropTypes.func.isRequired
 }
 
-ViewCollection.defaultProps = 
+ViewCollection.defaultProps =
 {
     appState: {},
     CollectionID: {},
-    ToggleDrawerClose: () => {},
-    CheckAuthenticationValidity: () => {}
+    ToggleDrawerClose: () => { },
+    CheckAuthenticationValidity: () => { }
 }
 
 export default ViewCollection;  // You can even shorthand this line by adding this at the function [Component] declaration stage

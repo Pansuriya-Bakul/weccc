@@ -150,12 +150,12 @@ class DrawerContents extends Component {
 								{appState.role === "Admin" &&
 									<ListItem button component={Link} to="/administration/booklets/management" className={classes.nested}>
 										<ListItemIcon><Ballot /></ListItemIcon>
-										<ListItemText secondary="Chapters" />
+										<ListItemText secondary="Modules" />
 									</ListItem>
 								}
 								<ListItem button component={Link} to="/administration/services/management" className={classes.nested}>
 									<ListItemIcon><LibraryBooksIcon /></ListItemIcon>
-									<ListItemText secondary="Services" />
+									<ListItemText secondary="Series" />
 								</ListItem>
 								{appState.role === "Admin" &&
 									<ListItem button component={Link} to="/administration/projects/management" className={classes.nested}>

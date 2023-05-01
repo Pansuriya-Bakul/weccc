@@ -474,14 +474,14 @@ class ViewProfile extends Component {
 
 
         if (length === 0) {
-            return (<Typography>There are no chapters for this user yet.</Typography>);
+            return (<Typography>There are no Modules for this user yet.</Typography>);
         }
         else {
             return (
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Chapter Name</TableCell>
+                            <TableCell>Module Name</TableCell>
                             <TableCell align="right">Date Started</TableCell>
                             <TableCell align="right">Status</TableCell>
                             <TableCell align="right">Previous Versions</TableCell>
@@ -815,13 +815,13 @@ class ViewProfile extends Component {
                         </Typography>
                         <br />
                         <Typography gutterBottom>
-                            Chapter Started: {this.currentBooklet.dateCreated}
+                            Module Started: {this.currentBooklet.dateCreated}
                         </Typography>
                         <Typography gutterBottom>
                             Started By: {this.currentBooklet.createdByName}
                         </Typography>
                         <Typography gutterBottom>
-                            Chapter Last Modified: {this.currentBooklet.dateLastModified}
+                            Module Last Modified: {this.currentBooklet.dateLastModified}
                         </Typography>
                         <Typography gutterBottom>
                             Last Modified By: {this.currentBooklet.lastMofifiedByName}
@@ -829,11 +829,11 @@ class ViewProfile extends Component {
                         <br />
                         {this.currentBooklet.approved ?
                             <Typography gutterBottom>
-                                This Chapter has been approved by {this.currentBooklet.approvedByName}.
+                                This Module has been approved by {this.currentBooklet.approvedByName}.
                             </Typography>
                             :
                             <Typography gutterBottom>
-                                This Chapter has not been approved yet.
+                                This Module has not been approved yet.
                             </Typography>
                         }
                     </DialogContent>
@@ -1007,7 +1007,7 @@ class ViewProfile extends Component {
                                                 <div className={classes.tabRoot}>
                                                     <AppBar position="static">
                                                         <Tabs value={tabValue} onChange={this.handleTabChange}>
-                                                            <Tab label="Chapters" />
+                                                            <Tab label="Modules" />
                                                             <Tab label="Sticky Notes" />
                                                             <Tab label="Profile" />
                                                         </Tabs>

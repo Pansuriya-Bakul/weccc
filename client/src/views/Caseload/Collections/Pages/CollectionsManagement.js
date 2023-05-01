@@ -34,7 +34,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Typography from '@material-ui/core/Typography';  //h1, p replacement Tag
 // ==================== Styles ====================
-const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
 ({
     root: {
         flexGrow: 1     // CSS determined this way, flexbox properties
@@ -47,68 +47,66 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+    // Declaration of Stateful Variables ===
+    const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
-        // Template or User Chapters boolean
-        const [isTemplates, setIsTemplates] = useState(true);
-        
-        // IsDense ; is the template table in compact form
-        const [isDense, setIsDense] = useState(true);
+    // Template or User Chapters boolean
+    const [isTemplates, setIsTemplates] = useState(true);
 
-        // Current dataList variable
-        const [dataList, setDataList] = useState(null);
+    // IsDense ; is the template table in compact form
+    const [isDense, setIsDense] = useState(true);
 
-        // Current dataList variable
-        const [searchFilteredDataList, setSearchFilteredDataList] = useState(null);
+    // Current dataList variable
+    const [dataList, setDataList] = useState(null);
 
-        // Current selected items dataList variable
-        const [selectedDataItemsList, setSelectedDataItemsList] = useState(null);
+    // Current dataList variable
+    const [searchFilteredDataList, setSearchFilteredDataList] = useState(null);
 
-        // Create Collection Template Dialog Logic variables
-        const [createCollectionTemplateDialog, setCreateCollectionTemplateDialog] = useState(false);
-        const [createCollectionTemplateDialogExecuting, setCreateCollectionTemplateDialogExecuting] = useState(false);
+    // Current selected items dataList variable
+    const [selectedDataItemsList, setSelectedDataItemsList] = useState(null);
 
-        // Create Member Collection Dialog Logic variables
-        const [createMemberCollectionDialog, setCreateMemberCollectionDialog] = useState(false);
-        const [createMemberCollectionDialogExecuting, setCreateMemberCollectionDialogExecuting] = useState(false);
+    // Create Collection Template Dialog Logic variables
+    const [createCollectionTemplateDialog, setCreateCollectionTemplateDialog] = useState(false);
+    const [createCollectionTemplateDialogExecuting, setCreateCollectionTemplateDialogExecuting] = useState(false);
 
-        // Export Collection Chapter Dialog Logic variables
-        const [exportCollectionDialog, setExportCollectionDialog] = useState(false);
-        const [exportCollectionDialogExecuting, setExportCollectionDialogExecuting] = useState(false);
+    // Create Member Collection Dialog Logic variables
+    const [createMemberCollectionDialog, setCreateMemberCollectionDialog] = useState(false);
+    const [createMemberCollectionDialogExecuting, setCreateMemberCollectionDialogExecuting] = useState(false);
 
-        // Delete Collection Dialog Logic variables
-        const [deleteCollectionDialog, setDeleteCollectionDialog] = useState(false);
-        const [deleteCollectionDialogExecuting, setDeleteCollectionDialogExecuting] = useState(false);
+    // Export Collection Chapter Dialog Logic variables
+    const [exportCollectionDialog, setExportCollectionDialog] = useState(false);
+    const [exportCollectionDialogExecuting, setExportCollectionDialogExecuting] = useState(false);
 
-        // Assign Member Collection Dialog Logic variables
-        const [assignMemberDialog, setAssignMemberDialog] = useState(false);
-        const [assignMemberDialogExecuting, setAssignMemberDialogExecuting] = useState(false);
+    // Delete Collection Dialog Logic variables
+    const [deleteCollectionDialog, setDeleteCollectionDialog] = useState(false);
+    const [deleteCollectionDialogExecuting, setDeleteCollectionDialogExecuting] = useState(false);
 
-        // Assign Project Collection Dialog Logic variables
-        const [assignProjectDialog, setAssignProjectDialog] = useState(false);
-        const [assignProjectDialogExecuting, setAssignProjectDialogExecuting] = useState(false);
+    // Assign Member Collection Dialog Logic variables
+    const [assignMemberDialog, setAssignMemberDialog] = useState(false);
+    const [assignMemberDialogExecuting, setAssignMemberDialogExecuting] = useState(false);
+
+    // Assign Project Collection Dialog Logic variables
+    const [assignProjectDialog, setAssignProjectDialog] = useState(false);
+    const [assignProjectDialogExecuting, setAssignProjectDialogExecuting] = useState(false);
 
 
-        // Alert variable
-        const [alert, setAlert] = useState(new AlertType());
+    // Alert variable
+    const [alert, setAlert] = useState(new AlertType());
 
     // Functions ===
 
-        const populateList = useCallback((data) => 
-        {
-            let tempArray = new Array();
+    const populateList = useCallback((data) => {
+        let tempArray = new Array();
 
-            if(data && Array.isArray(data))
-            {
-                if(isTemplates) {
-                    
-                    data.forEach(item => {
+        if (data && Array.isArray(data)) {
+            if (isTemplates) {
 
-                        tempArray.push(
+                data.forEach(item => {
+
+                    tempArray.push(
                         {
                             _id: item._id,
                             name: item.name,
@@ -122,13 +120,12 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                             updatedAt: item.updatedAt
                         });
 
-                    });
-                }
-                else
-                {
-                    data.forEach(item => {
+                });
+            }
+            else {
+                data.forEach(item => {
 
-                        tempArray.push(
+                    tempArray.push(
                         {
                             _id: item._id,
                             collectionTemplate: item.collectionTemplate,
@@ -140,133 +137,120 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                             modifiedBy: item.modifiedBy,
                             updatedAt: item.updatedAt
                         });
-                        
-                    });
-                }
-                
+
+                });
             }
 
-                
-            setDataList([...tempArray]);
-            setSearchFilteredDataList([...tempArray]);
-            setSelectedDataItemsList([]);
+        }
 
-        }, [ isTemplates ] );
 
-        // Retrieve the list of Collections
-        const getCollectionTemplates = useCallback(() => {
+        setDataList([...tempArray]);
+        setSearchFilteredDataList([...tempArray]);
+        setSelectedDataItemsList([]);
 
-            setDataList(null);
+    }, [isTemplates]);
 
-            get("collections/", appState.token, (err, res) => 
-            {
-                if(err)
-                {   
-                    //Bad callback call
-                    //setAlert(new AlertType(err.message, "error"));
+    // Retrieve the list of Collections
+    const getCollectionTemplates = useCallback(() => {
+
+        setDataList(null);
+
+        get("collections/", appState.token, (err, res) => {
+            if (err) {
+                //Bad callback call
+                //setAlert(new AlertType(err.message, "error"));
+                setAlert(new AlertType('Unable to retrieve Collections Templates. Please refresh and try again.', "error"));
+            }
+            else {
+                if (res.status === 200) {
+                    populateList(res.data.collectionList);
+                }
+                else {
+                    //Bad HTTP Response
                     setAlert(new AlertType('Unable to retrieve Collections Templates. Please refresh and try again.', "error"));
                 }
-                else
-                {
-                    if(res.status === 200)
-                    {
-                        populateList(res.data.collectionList);
-                    }
-                    else
-                    {
-                        //Bad HTTP Response
-                        setAlert(new AlertType('Unable to retrieve Collections Templates. Please refresh and try again.', "error"));
-                    }
+            }
+
+        });
+    }, [populateList, appState.token]);
+
+    // Retrieve the list of Collections
+    const getMemberCollections = useCallback(() => {
+
+        setDataList(null);
+
+        get("membercollections/", appState.token, (err, res) => {
+            if (err) {
+                //Bad callback call
+                //setAlert(new AlertType(err.message, "error"));
+                setAlert(new AlertType('Unable to retrieve Member Collections. Please refresh and try again.', "error"));
+            }
+            else {
+                if (res.status === 200) {
+                    populateList(res.data.memberCollectionList);
                 }
-
-            });
-        }, [ populateList, appState.token ] );
-
-        // Retrieve the list of Collections
-        const getMemberCollections = useCallback(() => {
-
-            setDataList(null);
-
-            get("membercollections/", appState.token, (err, res) => 
-            {
-                if(err)
-                {   
-                    //Bad callback call
-                    //setAlert(new AlertType(err.message, "error"));
+                else {
+                    //Bad HTTP Response
                     setAlert(new AlertType('Unable to retrieve Member Collections. Please refresh and try again.', "error"));
                 }
-                else
-                {
-                    if(res.status === 200)
-                    {
-                        populateList(res.data.memberCollectionList);
-                    }
-                    else
-                    {
-                        //Bad HTTP Response
-                        setAlert(new AlertType('Unable to retrieve Member Collections. Please refresh and try again.', "error"));
-                    }
-                }
+            }
 
-            });
-        }, [ populateList, appState.token ] );
+        });
+    }, [populateList, appState.token]);
 
-        const getData = useCallback(() => {
-            isTemplates? getCollectionTemplates() : getMemberCollections();
-        }, [ isTemplates, getCollectionTemplates, getMemberCollections ] );
+    const getData = useCallback(() => {
+        isTemplates ? getCollectionTemplates() : getMemberCollections();
+    }, [isTemplates, getCollectionTemplates, getMemberCollections]);
 
     // Hooks ===
 
-        // Fetch DataList | First Render Only
-        useEffect( () =>
-        {
-            ToggleDrawerClose();
-            setTimeout(() => {
-                CheckAuthenticationValidity( (tokenValid) => 
-                {
-                    if(tokenValid)
-                    {
-                        getData();
-                    }
-                    else {
-                        //Bad HTTP Response
-                        setAlert(null);
-                    }
-                });
-            }, 200);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ ]);
+    // Fetch DataList | First Render Only
+    useEffect(() => {
+        ToggleDrawerClose();
+        setTimeout(() => {
+            CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
+                    getData();
+                }
+                else {
+                    //Bad HTTP Response
+                    setAlert(null);
+                }
+            });
+        }, 200);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-        useEffect( () => {
-            getData();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ isTemplates ] );
+    useEffect(() => {
+        getData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isTemplates]);
 
-        useEffect( () => {
-            
-            setSearchFilteredDataList(dataList);
-            setSelectedDataItemsList([]);
+    useEffect(() => {
 
-        }, [ dataList ] );
+        setSearchFilteredDataList(dataList);
+        setSelectedDataItemsList([]);
+
+    }, [dataList]);
 
     // Component Render Section ===
     return (
-        alert != null? (
+        alert != null ? (
             // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
             <div className={classes.root}>
                 <Grid container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="stretch"
-                style={ {"height": "100%"} }
-                spacing={1}
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="stretch"
+                    style={{ "height": "100%" }}
+                    spacing={1}
                 >
                     <Grid item xs={5}>
                         <Box mx={1} my={1}>
                             <Typography variant="h5" color="inherit" align="left" gutterBottom>
-                                Manage Services
+                                Manage Series
                             </Typography>
-                        </Box> 
+                        </Box>
                     </Grid>
                     <Grid item xs={6}>
                         <Box mx={1} my={1}>
@@ -283,7 +267,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                                     alignItems="stretch"
                                     spacing={0}
                                 >
-                                    {dataList && searchFilteredDataList && selectedDataItemsList? (
+                                    {dataList && searchFilteredDataList && selectedDataItemsList ? (
                                         <Grid item xs={12}>
                                             <CollectionsManagementControlPanel
                                                 isDense={isDense}
@@ -320,7 +304,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                                     )}
                                 </Grid>
                             </Card>
-                        </Box>    
+                        </Box>
                     </Grid>
                 </Grid>
                 <CreateCollectionTemplateDialog
@@ -389,12 +373,12 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                 Not Authorized. Please refresh and try again.
             </Typography>
         )
-        
+
     );
 }
 
 // ======================== Component PropType Check ========================
-CollectionsManagement.propTypes = 
+CollectionsManagement.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -404,8 +388,8 @@ CollectionsManagement.propTypes =
 
 CollectionsManagement.defaultProps = {
     appState: {},
-    ToggleDrawerClose: () => {},
-    CheckAuthenticationValidity: () => {}
+    ToggleDrawerClose: () => { },
+    CheckAuthenticationValidity: () => { }
 }
 
 export default CollectionsManagement;  // You can even shorthand this line by adding this at the function [Component] declaration stage

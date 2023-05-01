@@ -152,7 +152,7 @@ const ClientReports = (props) => {
           //Bad callback
           setAlert(
             new AlertType(
-              "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again."
+              "Unable to retrieve Neighbour Module Reports. Please refresh and try again."
             )
           );
         } else {
@@ -167,7 +167,7 @@ const ClientReports = (props) => {
             //Bad HTTP Response
             setAlert(
               new AlertType(
-                "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.",
+                "Unable to retrieve Neighbour Module Reports. Please refresh and try again.",
                 "error"
               )
             );

@@ -244,12 +244,12 @@ const ManagementControlPanel = (props) => { // Notice the arrow function... regu
                     spacing={1}
                 >
                     <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
-                        <Grid item>
+                        {/* <Grid item>
                             <Typography variant="h6" component="h6">
                                 Manage
                             </Typography>
                             <Divider />
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs>
                             <Box mx={3} my={1} boxShadow={0}>
                                 <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
@@ -260,21 +260,21 @@ const ManagementControlPanel = (props) => { // Notice the arrow function... regu
                                                 disabled={isTemplates}
                                                 onClick={() => { chapterTemplatesButtonHandler(); }}
                                             >
-                                                Chapter Templates
+                                                Module Templates
                                             </Button>
                                             <Button
                                                 startIcon={<ListAltOutlinedIcon />}
                                                 disabled={!isTemplates}
                                                 onClick={() => { userChaptersButtonHandler(); }}
                                             >
-                                                User Chapters
+                                                User Modules
                                             </Button>
                                         </ButtonGroup>
                                     </Grid>
                                     <Grid item>
                                         <Tooltip
                                             placement="bottom"
-                                            title="Refresh Online Chapters"
+                                            title="Refresh Online Modules"
                                         >
                                             <Button
                                                 size="small"
@@ -292,7 +292,7 @@ const ManagementControlPanel = (props) => { // Notice the arrow function... regu
                                             <Grid item>
                                                 <Tooltip
                                                     placement="bottom"
-                                                    title="Create Chapter Template"
+                                                    title="Create Module Template"
                                                 >
                                                     <Button
                                                         size="small"
@@ -312,7 +312,7 @@ const ManagementControlPanel = (props) => { // Notice the arrow function... regu
                                             <Grid item>
                                                 <Tooltip
                                                     placement="bottom"
-                                                    title="Start Member Chapter"
+                                                    title="Start Member Module"
                                                 >
                                                     <Button
                                                         size="small"
@@ -322,7 +322,7 @@ const ManagementControlPanel = (props) => { // Notice the arrow function... regu
                                                         startIcon={<AddBoxOutlinedIcon />}
                                                         onClick={() => { createUserHandler(); }}
                                                     >
-                                                        Start Member Chapter
+                                                        Start Member Module
                                                     </Button>
                                                 </Tooltip>
                                             </Grid>
@@ -335,7 +335,7 @@ const ManagementControlPanel = (props) => { // Notice the arrow function... regu
                         <Grid item>
                             <Tooltip
                                 placement="left"
-                                title="Use this page to manage your chapters. Any information that a patient has answered in a chapter along with its versions exist in the Chapter Tab. Otherwise, created chapter Templates exists in its own tab."
+                                title="Use this page to manage your Modules. Any information that a patient has answered in a Module along with its versions exist in the Module Tab. Otherwise, created Module Templates exists in its own tab."
                             >
                                 <IconButton>
                                     <HelpOutlineIcon />
@@ -407,14 +407,14 @@ const ManagementControlPanel = (props) => { // Notice the arrow function... regu
                             </Card>
                         </Box>
                     </Grid>
-                    <Grid item xs={12} container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
+                    {/* <Grid item xs={12} container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
                         <Grid item>
                             <Typography variant="h6" component="h6">
                                 Table
                             </Typography>
                             <Divider />
                         </Grid>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Box>
         </>

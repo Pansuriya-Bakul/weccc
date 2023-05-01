@@ -25,16 +25,16 @@ import Typography from '@material-ui/core/Typography';  //h1, p replacement Tag
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            flexGrow: 1,     // CSS determined this way, flexbox properties
-            height: '100%'
-        },
-        rootGrid: {
-            height: '100%'
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        flexGrow: 1,     // CSS determined this way, flexbox properties
+        height: '100%'
+    },
+    rootGrid: {
+        height: '100%'
+    }
+}));
 
 
 // ================= Static Variables ================
@@ -48,98 +48,95 @@ const ReactPageTemplate = (props) => { // Notice the arrow function... regular f
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+    // Declaration of Stateful Variables ===
+    const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
-        // Alert variable
-        const [alert, setAlert] = useState(new AlertType());
+    // Alert variable
+    const [alert, setAlert] = useState(new AlertType());
 
     // Functions ===
 
 
     // Hooks ===
 
-        // First Render only because of the [ ] empty array tracking with the useEffect
-        useEffect( () =>
-        {
-            ToggleDrawerClose();
-            setTimeout(() => {
-                CheckAuthenticationValidity( (tokenValid) => 
-                {
-                    if(tokenValid)
-                    {
-                        // Load or Do Something
-                    }
-                    else {
+    // First Render only because of the [ ] empty array tracking with the useEffect
+    useEffect(() => {
+        ToggleDrawerClose();
+        setTimeout(() => {
+            CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
+                    // Load or Do Something
+                }
+                else {
 
-                        // Bad Response
-                        setAlert(null);
-                    }
-                });
-            }, 200);    //
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ ]);
+                    // Bad Response
+                    setAlert(null);
+                }
+            });
+        }, 200);    //
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
 
     // Render Section ===
 
-        return (
-            alert != null? (
+    return (
+        alert != null ? (
 
-                // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
-                <div className={classes.root}>
-                    <Grid container
+            // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
+            <div className={classes.root}>
+                <Grid container
                     className={classes.rootGrid}
                     direction="row"
                     justifyContent="flex-start"
                     alignItems="stretch"
                     spacing={1}
-                    >
-                        <Grid item xs={3}>
-                            <Box mx={1} my={1}>
-                                <Typography variant="h5" color="inherit" align="left" gutterBottom>
-                                    Manage Chapters
-                                </Typography>
-                            </Box> 
-                        </Grid>
-                        <Grid item xs={9}>
-                            <Box mx={1} my={1}>
-                                <AlertMessage alert={alert} setParentAlert={setAlert} />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Card raised={true}>
-                                <Box mx={1} my={1} boxShadow={0}>
-                                    <Grid
-                                        container
-                                        direction="column"
-                                        justifyContent="flex-start"
-                                        alignItems="stretch"
-                                        spacing={1}
-                                    >
-                                        <Grid item xs={12}>
-                                        
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                            </Card>
-                        </Grid>
+                >
+                    <Grid item xs={3}>
+                        <Box mx={1} my={1}>
+                            <Typography variant="h5" color="inherit" align="left" gutterBottom>
+                                Manage Modules
+                            </Typography>
+                        </Box>
                     </Grid>
-                </div>
-            ) : (
-                <Typography variant="h6" color="inherit" align="center" gutterBottom>
-                    Not Authorized. Please refresh and try again.
-                </Typography>
-            )
-            
-        );
+                    <Grid item xs={9}>
+                        <Box mx={1} my={1}>
+                            <AlertMessage alert={alert} setParentAlert={setAlert} />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Card raised={true}>
+                            <Box mx={1} my={1} boxShadow={0}>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justifyContent="flex-start"
+                                    alignItems="stretch"
+                                    spacing={1}
+                                >
+                                    <Grid item xs={12}>
+
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Card>
+                    </Grid>
+                </Grid>
+            </div>
+        ) : (
+            <Typography variant="h6" color="inherit" align="center" gutterBottom>
+                Not Authorized. Please refresh and try again.
+            </Typography>
+        )
+
+    );
 }
 
 // ======================== Component PropType Check ========================
-ReactPageTemplate.propTypes = 
+ReactPageTemplate.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -147,11 +144,11 @@ ReactPageTemplate.propTypes =
     CheckAuthenticationValidity: PropTypes.func.isRequired
 }
 
-ReactPageTemplate.defaultProps = 
+ReactPageTemplate.defaultProps =
 {
     appState: {},
-    ToggleDrawerClose: () => {},
-    CheckAuthenticationValidity: () => {}
+    ToggleDrawerClose: () => { },
+    CheckAuthenticationValidity: () => { }
 }
 
 export default ReactPageTemplate;  // You can even shorthand this line by adding this at the function [Component] declaration stage

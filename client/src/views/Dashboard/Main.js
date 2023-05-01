@@ -268,8 +268,12 @@ class Main extends Component {
 			});
 
 			// handle the response here
-			await new Promise(resolve => this.setState({ patientCollectionNames: response.data.collectionNames }, resolve));
-			await new Promise(resolve => this.setState({ patientCollections: response.data.collections }, resolve));
+			await new Promise(resolve => {
+				this.setState({
+					patientCollectionNames: response.data.collectionNames,
+					patientCollections: response.data.collections
+				}, resolve);
+			});
 
 		} catch (error) {
 			console.log(error);
@@ -521,7 +525,7 @@ class Main extends Component {
 																																		<Grid item xs={12}>
 																																			<Tooltip
 																																				placement="bottom"
-																																				title="Edit Chapter"
+																																				title="Edit Module"
 																																			>
 																																				<Box m={1} pt={1} className='survey-box'>
 																																					<Button className='survey-name'
@@ -614,7 +618,7 @@ class Main extends Component {
 																													<Grid item xs={12}>
 																														<Tooltip
 																															placement="bottom"
-																															title="Edit Chapter"
+																															title="Edit Module"
 																														>
 																															<Box m={1} pt={1} className='survey-box'>
 																																<Button className='survey-name'
@@ -655,7 +659,7 @@ class Main extends Component {
 																	);
 																})
 															) : (
-																'No services assigned'
+																'No series assigned'
 															)}
 														</Typography>
 													</Grid>

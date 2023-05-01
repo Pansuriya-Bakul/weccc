@@ -57,19 +57,19 @@ const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
 }));
 
 // ================= Static Variables ================
-const selectFilterOptionsTemplate = [{ key: "CollectionId", value: "collectionId", display: "Service ID" },
-{ key: "CollectionName", value: "collectionName", display: "Service Name" },
-{ key: "NumSurveyTemplates", value: "numSurveyTemplates", display: "# Chapter Templates" }];
+const selectFilterOptionsTemplate = [{ key: "CollectionId", value: "collectionId", display: "Series ID" },
+{ key: "CollectionName", value: "collectionName", display: "Series Name" },
+{ key: "NumSurveyTemplates", value: "numSurveyTemplates", display: "# Module Templates" }];
 
-const selectFilterOptionsMember = [{ key: "CollectionId", value: "collectionId", display: "Service ID" },
-{ key: "CollectionName", value: "collectionName", display: "Service Name" },
-{ key: "NumMemberSurveys", value: "numMemberSurveys", display: "# Member Chapters" },
+const selectFilterOptionsMember = [{ key: "CollectionId", value: "collectionId", display: "Series ID" },
+{ key: "CollectionName", value: "collectionName", display: "Series Name" },
+{ key: "NumMemberSurveys", value: "numMemberSurveys", display: "# Member Modules" },
 { key: "ClientId", value: "clientId", display: "Client ID" },
 { key: "ClientName", value: "clientName", display: "Client Name" },
 { key: "Completeness", value: "completeness", display: "Completeness" }];
 
-const selectFilterOptionsMemberClient = [{ key: "CollectionId", value: "collectionId", display: "Service ID" },
-{ key: "CollectionName", value: "collectionName", display: "Service Name" },
+const selectFilterOptionsMemberClient = [{ key: "CollectionId", value: "collectionId", display: "Series ID" },
+{ key: "CollectionName", value: "collectionName", display: "Series Name" },
 { key: "Completeness", value: "completeness", display: "Completeness" }]
 
 // ================= Static Functions ================
@@ -266,12 +266,12 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                     spacing={1}
                 >
                     <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
-                        <Grid item>
+                        {/* <Grid item>
                             <Typography variant="h6" component="h6">
                                 Manage
                             </Typography>
                             <Divider />
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs>
                             <Box mx={3} my={1} boxShadow={0}>
                                 <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
@@ -282,14 +282,14 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                 disabled={isTemplates}
                                                 onClick={() => { collectionTemplateButtonHandler(); }}
                                             >
-                                                Service Templates
+                                                Series Templates
                                             </Button>
                                             <Button
                                                 startIcon={<ListAltOutlinedIcon />}
                                                 disabled={!isTemplates}
                                                 onClick={() => { memberCollectionButtonHandler(); }}
                                             >
-                                                Service Instances
+                                                Series Instances
                                             </Button>
                                         </ButtonGroup>
                                     </Grid>
@@ -317,7 +317,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
-                                                        title="Create Service Template"
+                                                        title="Create Series Template"
                                                     >
                                                         <Button
                                                             size="small"
@@ -326,7 +326,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                             startIcon={<AddBoxOutlinedIcon />}
                                                             onClick={() => { createCollectionTemplateHandler(); }}
                                                         >
-                                                            Start a Service Template
+                                                            Start a Series Template
                                                         </Button>
                                                     </Tooltip>
                                                 </Grid>) : <></>}
@@ -334,7 +334,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
-                                                        title="Assign Coordinators to Service"
+                                                        title="Assign Coordinators to Series"
                                                     >
                                                         <Button
                                                             size="small"
@@ -351,7 +351,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                             <Grid item>
                                                 <Tooltip
                                                     placement="bottom"
-                                                    title="Assign Members to Service"
+                                                    title="Assign Members to Series"
                                                 >
                                                     <Button
                                                         size="small"
@@ -370,7 +370,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
-                                                        title="Assign Projects to Service"
+                                                        title="Assign Projects to Series"
                                                     >
                                                         <Button
                                                             size="small"
@@ -395,7 +395,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
-                                                        title="Create a Member Service Instance"
+                                                        title="Create a Member Series Instance"
                                                     >
                                                         <Button
                                                             size="small"
@@ -404,7 +404,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                             startIcon={<AddBoxOutlinedIcon />}
                                                             onClick={() => { createMemberCollectionHandler(); }}
                                                         >
-                                                            Start a Service Instance
+                                                            Start a Series Instance
                                                         </Button>
                                                     </Tooltip>
                                                 </Grid>) : <></>}
@@ -418,7 +418,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                         <Grid item>
                             <Tooltip
                                 placement="left"
-                                title="Use this page to manage your services."
+                                title="Use this page to manage your Series."
                             >
                                 <IconButton>
                                     <HelpOutlineIcon />
@@ -506,14 +506,14 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                             </Card>
                         </Box>
                     </Grid>
-                    <Grid item xs={12} container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
+                    {/* <Grid item xs={12} container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
                         <Grid item>
                             <Typography variant="h6" component="h6">
                                 Table
                             </Typography>
                             <Divider />
                         </Grid>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Box>
         </>

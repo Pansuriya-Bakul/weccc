@@ -297,7 +297,7 @@ const ProjectsManagementControlPanel = (props) => { // Notice the arrow function
                                                 startIcon={<AddBoxOutlinedIcon />}
                                                 onClick={() => { AssignServiceHandler(); }}
                                             >
-                                                Assign Services
+                                                Assign Series
                                             </Button>
                                         </Tooltip>
                                     </Grid>
@@ -349,7 +349,7 @@ const ProjectsManagementControlPanel = (props) => { // Notice the arrow function
                         <Grid item>
                             <Tooltip
                                 placement="left"
-                                title="Use this page to manage your projects. Any information that a patient has answered in a chapter along with its versions exist in the Chapter Tab. Otherwise, created chapter Templates exists in its own tab."
+                                title="Use this page to manage your projects. Any information that a patient has answered in a Module along with its versions exist in the Module Tab. Otherwise, created Module Templates exists in its own tab."
                             >
                                 <IconButton>
                                     <HelpOutlineIcon />

@@ -117,6 +117,12 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
 
     const searchHandler = useCallback((event) => {
         let tempFilter = event.target.value.toUpperCase();
+        let allen;
+        if (tempFilter.indexOf("ACTIVE")) {
+            allen = "TRUE"
+        } else if (tempFilter.indexOf("INACTIVE")) {
+            allen = "FALSE"
+        }
         let tempArray = [];
         dataList.forEach(item => {
             switch (selectSearchFilterOption) {
@@ -153,7 +159,7 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
                     break;
                 case "enabled":
                     let status = item.enabled ? "true" : "false";
-                    if (status.toUpperCase().indexOf(tempFilter) > -1) {
+                    if (status.toUpperCase().indexOf(allen) > -1) {
                         tempArray.push(item);
                     }
 
