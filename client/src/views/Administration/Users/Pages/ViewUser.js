@@ -264,17 +264,19 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                 {appState.role == "Volunteer" ? (
                                     <Tabs value={panelIndex} onChange={(event, newValue) => { panelHandler(event, newValue); }} aria-label="Account Tabs">
                                         {/* <Tab label="Collections" id={`Tab-${0}`} aria-controls={`Tab-${0}`} /> */}
-                                        {/* <Tab label="Community" id={`Tab-${0}`} aria-controls={`Tab-${0}`} /> */}
+
                                         <Tab label="Intake" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
                                         <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
-                                        <Tab label="Change password" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
+                                        <Tab label="Assigned Members" id={`Tab-${2}`} aria-controls={`Tab-${0}`} />
+                                        <Tab label="Change password" id={`Tab-${3}`} aria-controls={`Tab-${2}`} />
                                     </Tabs>
                                 ) : (
                                     <Tabs value={panelIndex} onChange={(event, newValue) => { panelHandler(event, newValue); }} aria-label="Account Tabs">
-                                        {/* <Tab label="Community" id={`Tab-${0}`} aria-controls={`Tab-${0}`} /> */}
+
                                         <Tab label="Intake" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
                                         <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
-                                        <Tab label="Change password" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
+                                        <Tab label="Assigned Members" id={`Tab-${2}`} aria-controls={`Tab-${0}`} />
+                                        <Tab label="Change password" id={`Tab-${3}`} aria-controls={`Tab-${2}`} />
                                     </Tabs>
                                 )}
                             </AppBar>
@@ -289,15 +291,15 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                                 panelIndex={panelIndex}
                                                 userOriginal={userOriginal}
                                             /> */}
-                                        {/* <UserCommunityTab
+                                        <UserCommunityTab
                                             appState={appState}
                                             userID={userID}
                                             setParentAlert={setAlert}
                                             getParentInfo={getUser}
-                                            panelId={0}
+                                            panelId={2}
                                             panelIndex={panelIndex}
                                             userOriginal={userOriginal}
-                                        /> */}
+                                        />
                                         <UserNotesTab
                                             appState={appState}
                                             userID={userID}
@@ -321,7 +323,7 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                             userID={userID}
                                             setParentAlert={setAlert}
                                             getParentInfo={getUser}
-                                            panelId={2}
+                                            panelId={3}
                                             panelIndex={panelIndex}
                                             userOriginal={userOriginal}
                                         />

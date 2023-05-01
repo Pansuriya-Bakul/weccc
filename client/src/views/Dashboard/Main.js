@@ -639,8 +639,7 @@ class Main extends Component {
 																							component={Link}
 																							to={`/administration/booklets/user/view`}
 																						>
-																							{/* View Survey {parseInt(key, 10)+1} :  */}
-																							<h3>{key}</h3>
+																							{appState.role == 'Volunteer' ? <h3>{key} - Self Care</h3> : <h3>{key}</h3>}
 																						</div>
 
 
