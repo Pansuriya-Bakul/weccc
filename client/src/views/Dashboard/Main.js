@@ -301,11 +301,15 @@ class Main extends Component {
 							// the state has been updated, now resolve the Promise with the response
 							resolve(response);
 						});
-					});
+					}
+				};
 
-			// handle the response here
-			await new Promise(resolve => this.setState({ patientCollectionNames: response.data.collectionNames }, resolve));
-			await new Promise(resolve => this.setState({ patientCollections: response.data.collections }, resolve));
+				// make the get request with the callback function
+				get(url, token, handleResponse);
+			});
+
+			// return the Promise
+			return promise;
 
 		} catch (error) {
 			console.log(error);

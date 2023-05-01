@@ -276,7 +276,7 @@ const CreateCollectionDialog = (props) => { // Notice the arrow function... regu
                     onClose={() => { closeHandler(); }}
                 >
                     <DialogTitle>
-                        Create Collection Template
+                        Create Series Template
                     </DialogTitle>
                     <DialogContent>
                         {createCollectionTemplateDialogExecuting ? (

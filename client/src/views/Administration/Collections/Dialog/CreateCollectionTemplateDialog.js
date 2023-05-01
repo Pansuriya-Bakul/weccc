@@ -277,7 +277,7 @@ const CreateCollectionDialog = (props) => { // Notice the arrow function... regu
                     onClose={() => { closeHandler(); }}
                 >
                     <DialogTitle>
-                        Create Collection Template
+                        Create Series Template
                     </DialogTitle>
                     <DialogContent>
                         {createCollectionTemplateDialogExecuting ? (
@@ -285,12 +285,12 @@ const CreateCollectionDialog = (props) => { // Notice the arrow function... regu
                         ) : (
                             <>
                                 <DialogContentText>
-                                    Please select <em><u>Chapter Templates</u></em> to be apart of this new <em><u>Collection Template</u></em>.
+                                    Please select <em><u>Module Templates</u></em> to be apart of this new <em><u>Series Template</u></em>.
                                 </DialogContentText>
                                 <Box mx={1} my={1} boxShadow={0}>
                                     <Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
                                         <Grid item>
-                                            <TextField label="Collection Name"
+                                            <TextField label="Series Name"
                                                 size="small"
                                                 variant="filled"
                                                 error={collectionTemplateName === "" ? true : false}

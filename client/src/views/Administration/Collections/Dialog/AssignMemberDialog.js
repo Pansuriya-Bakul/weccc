@@ -451,7 +451,7 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                     onClose={() => { closeHandler(); }}
                 >
                     <DialogTitle>
-                        Assign Member(s) to Collection(s)
+                        Assign Member(s) to Series
                     </DialogTitle>
                     <DialogContent>
                         {assignMemberDialogExecuting ? (
@@ -459,7 +459,7 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                         ) : (
                             <>
                                 <DialogContentText>
-                                    Please select <em><u>Members</u></em> to be assigned to each the following <em><u>Collections</u></em>.
+                                    Please select <em><u>Members</u></em> to be assigned to each the following <em><u>Series</u></em>.
                                 </DialogContentText>
                                 <Box mx={1} my={1} boxShadow={0}>
                                     <Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
@@ -469,7 +469,7 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                                                     <Grid item xs={11}>
                                                         <FormControl id="Collection-options-label" variant="filled" size="small" fullWidth disabled={!collectionList}>
                                                             <InputLabel>
-                                                                Collection
+                                                                Series
                                                             </InputLabel>
                                                             <Select
                                                                 fullWidth
