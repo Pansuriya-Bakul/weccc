@@ -296,7 +296,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                     <Grid item>
                                         <Tooltip
                                             placement="bottom"
-                                            title="Refresh Online Collections"
+                                            title="Refresh Online Series"
                                         >
                                             <Button
                                                 size="small"

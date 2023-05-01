@@ -168,7 +168,7 @@ const CreateCollectionDialog = (props) => { // Notice the arrow function... regu
 
     const createCollection = useCallback(() => {
         if (!collectionTemplateName || collectionTemplateName == "" || selectedSurveyTemplatesList.length == 0) {
-            setParentAlert(new AlertType('Unable create collection. Please make sure Template Name is and selected Chapter Templates are not empty.', "error"))
+            setParentAlert(new AlertType('Unable create series. Please make sure Template Name is and selected Chapter Templates are not empty.', "error"))
             return;
         }
 
@@ -284,7 +284,7 @@ const CreateCollectionDialog = (props) => { // Notice the arrow function... regu
                         ) : (
                             <>
                                 <DialogContentText>
-                                    Please select <em><u>Module Templates</u></em> to be apart of this new <em><u>Collection Template</u></em>.
+                                    Please select <em><u>Module Templates</u></em> to be apart of this new <em><u>Series Template</u></em>.
                                 </DialogContentText>
                                 <Box mx={1} my={1} boxShadow={0}>
                                     <Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>

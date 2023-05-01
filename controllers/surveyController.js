@@ -410,19 +410,19 @@ exports.delete = (req, res, next) =>
             }
             else
             {
-                log.info("Cannot remove Survey of Id " + id + " Because it is used in Collection(s)");
+                log.info("Cannot remove Survey of Id " + id + " Because it is used in Series");
 
                 res.status(200).json({
-                    message: "Cannot remove Survey of Id " + id + " Because it is used in Collection(s)"
+                    message: "Cannot remove Survey of Id " + id + " Because it is used in Series"
                 });
             }
         }
         else
         {
-            log.error("Error finding Collections with Survey of Id " + id);
+            log.error("Error finding Series with Survey of Id " + id);
 
             res.status(500).json({
-                message: "Error finding Collections with Survey of Id " + id
+                message: "Error finding Series with Survey of Id " + id
             });
         }
     })

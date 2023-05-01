@@ -120,14 +120,14 @@ const CreateMemberCollectionDialog = (props) => { // Notice the arrow function..
 
         get('collections/', appState.token, (error, response) => {
             if (error) {
-                setParentAlert(new AlertType('Unable to get collection Templates. Please refresh and try again.', "error"));
+                setParentAlert(new AlertType('Unable to get series Templates. Please refresh and try again.', "error"));
             }
             else {
                 if (response.status === 200) {
                     setCollectionTemplateList(response.data.collectionList);
                 }
                 else {
-                    setParentAlert(new AlertType('Unable to get collection Templates. Please refresh and try again.', "error"));
+                    setParentAlert(new AlertType('Unable to get series Templates. Please refresh and try again.', "error"));
 
                 }
             }
@@ -160,7 +160,7 @@ const CreateMemberCollectionDialog = (props) => { // Notice the arrow function..
 
     const createMemberCollection = useCallback(() => {
         if (selectedCollectionTemplateList.length == 0 || selectedMemberList.length == 0) {
-            setParentAlert(new AlertType('Unable create member Collection. Please make sure Series, and member are not empty.', "error"))
+            setParentAlert(new AlertType('Unable create member Collection. Please make sure Service, and member are not empty.', "error"))
             return;
         }
 

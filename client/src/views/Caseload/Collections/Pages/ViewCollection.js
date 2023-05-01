@@ -109,21 +109,21 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
         if (CollectionID != null) {
             get("collections/" + CollectionID, appState.token, (error, response) => {
                 if (error) {
-                    setAlert(new AlertType('Unable to retrieve Collection. Please refresh and try again.', "error"));
+                    setAlert(new AlertType('Unable to retrieve Series. Please refresh and try again.', "error"));
                 }
                 else {
                     if (response.status === 200 || response.status === 304) {
                         setCollectionOriginal(response.data.collection);
-                        setAlert(new AlertType('Successfully pulled Collection.', "success"));
+                        setAlert(new AlertType('Successfully pulled Series.', "success"));
                     }
                     else {
-                        setAlert(new AlertType('Unable to retrieve Collection. Please refresh and try again.', "error"));
+                        setAlert(new AlertType('Unable to retrieve Series. Please refresh and try again.', "error"));
                     }
                 }
             });
         }
         else {
-            setAlert(new AlertType('Unable to retrieve Collection. Please refresh and try again.', "error"));
+            setAlert(new AlertType('Unable to retrieve Series. Please refresh and try again.', "error"));
         }
     }, [CollectionID, appState]);
 
@@ -176,7 +176,7 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                     </Grid> */}
                                 <Grid item xs>
                                     <Typography variant="h4" color="inherit" align="left" gutterBottom>
-                                        Viewing Collection {collectionOriginal ? `"${collectionOriginal._id}"` : null}
+                                        Viewing Series {collectionOriginal ? `"${collectionOriginal._id}"` : null}
                                     </Typography>
                                 </Grid>
                             </Grid>
@@ -203,7 +203,7 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                 <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
                                                     <Grid item>
                                                         <Typography variant="h6" component="h6">
-                                                            Collection properties
+                                                            Series properties
                                                         </Typography>
                                                         <Divider />
                                                     </Grid>
@@ -253,7 +253,7 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                     <Grid item>
                                                         <Tooltip
                                                             placement="left"
-                                                            title="This page is to view the selected collection."
+                                                            title="This page is to view the selected series."
                                                         >
                                                             <IconButton>
                                                                 <HelpOutlineIcon />
@@ -275,7 +275,7 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                                 />
                                                             </Grid> */}
                                                             <Grid item xs={2}>
-                                                                <TextField label="Collection ID"
+                                                                <TextField label="Series ID"
                                                                     disabled
                                                                     size="small"
                                                                     variant="filled"
@@ -337,7 +337,7 @@ const ViewCollection = (props) => { // Notice the arrow function... regular func
                                                 <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
                                                     <Grid item>
                                                         <Typography variant="h6" component="h6" className={classes.button}>
-                                                            Collection Modules
+                                                            Series Modules
                                                         </Typography>
                                                         <Divider />
                                                     </Grid>

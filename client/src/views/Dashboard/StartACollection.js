@@ -91,7 +91,7 @@ class StartACollection extends Component {
 
         if (appState.patients.length <= 0 && appState.role !== 'Patient') {
             this.setState({
-                loadError: "You do not have any patients assigned.  In order to start a collection, you must first be assigned a member by an Administrator.",
+                loadError: "You do not have any patients assigned.  In order to start a series, you must first be assigned a member by an Administrator.",
                 render: true
             });
         }
@@ -224,7 +224,7 @@ class StartACollection extends Component {
                 }
                 else {
                     this.setState({
-                        startError: "Unable to start the collection. Please try again later.",
+                        startError: "Unable to start the series. Please try again later.",
                         starting: false
                     });
                 }
@@ -290,7 +290,7 @@ class StartACollection extends Component {
                     <Card className={classes.card}>
                         <CardContent>
                             <Typography component="p" variant="h5" className={classes.title}>
-                                Start a Collection
+                                Start a Series
                             </Typography>
                             {loadError !== "" &&
                                 <StatusMessage color={classes.error}>
@@ -319,7 +319,7 @@ class StartACollection extends Component {
                                     </Grid>
                                     <Grid item xs>
                                         <Typography variant="h5" color="secondary" align="left" gutterBottom={false}>
-                                            Start a Collection
+                                            Start a Series
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -343,12 +343,12 @@ class StartACollection extends Component {
                                         >
                                             <Grid item xs={12}>
                                                 <Typography variant="subtitle2" component="h2">
-                                                    Start a Collection
+                                                    Start a Series
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12}>
                                                 <Typography variant="body2" component="h2">
-                                                    Select a member to begin a collection of public Module templates.  If you wish to continue a fillable Module within a collection that has already been created, navigate to your members, click on the member profile and continue one of the 'In Progress' Modules.
+                                                    Select a member to begin a series of public Module templates.  If you wish to continue a fillable Module within a series that has already been created, navigate to your members, click on the member profile and continue one of the 'In Progress' Modules.
                                                 </Typography>
                                             </Grid>
                                         </Grid>

@@ -329,7 +329,7 @@ export default function CollectionTable(props) {
                                                                         );
                                                                     })}
                                                                 </ol> */}
-                                                                    <em>{"Member Collections apart of this"}</em> <b>{'Series Template'}</b>.{' '}
+                                                                    <em>{"Member Series apart of this"}</em> <b>{'Series Template'}</b>.{' '}
                                                                 </>
                                                             } placement="top">
                                                                 <Button>
@@ -370,7 +370,7 @@ export default function CollectionTable(props) {
                                                                     <TableCell align="right" padding="normal">
                                                                         <Tooltip title={
                                                                             <>
-                                                                                <Typography color="inherit">Member Chapters</Typography>
+                                                                                <Typography color="inherit">Member Modules</Typography>
                                                                                 <ol>
                                                                                     {item.memberSurveyList.map((subItem, index) => {
                                                                                         return (

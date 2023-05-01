@@ -194,7 +194,7 @@ const CreateProjectDialog = (props) => { // Notice the arrow function... regular
             else {
                 if (response.status === 201) {
                     getParentData();
-                    setParentAlert(new AlertType('Collection created.', "success"));
+                    setParentAlert(new AlertType('Series created.', "success"));
                 }
                 else {
                     setParentAlert(new AlertType('Unable create project. Please refresh and try again.', "error"));

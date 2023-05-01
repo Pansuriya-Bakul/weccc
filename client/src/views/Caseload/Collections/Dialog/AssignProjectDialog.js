@@ -193,24 +193,24 @@ const AssignProjectDialog = (props) => { // Notice the arrow function... regular
 
                 post("collections/assign/project", appState.token, patchBody, (error, response) => {
                     if (error) {
-                        setParentAlert(new AlertType('Unable to update collections. Please refresh and try again.', "error"));
+                        setParentAlert(new AlertType('Unable to update series. Please refresh and try again.', "error"));
                     }
                     else {
                         if (response.status === 200) {
                             // getParentData();
                             //  const _id = response.data.survey._id; The id to redirect to if you wish
                             getParentData();
-                            setParentAlert(new AlertType('Successfully updated collections.', "success"));
+                            setParentAlert(new AlertType('Successfully updated series.', "success"));
                         }
                         else {
-                            setParentAlert(new AlertType('Unable to update collections. Please refresh and try again.', "error"));
+                            setParentAlert(new AlertType('Unable to update series. Please refresh and try again.', "error"));
                         }
                     }
                 });
             });
         }
         else {
-            setParentAlert(new AlertType('Unable to assign Projects to collections. Please refresh and try again.', "error"));
+            setParentAlert(new AlertType('Unable to assign Projects to series. Please refresh and try again.', "error"));
         }
 
     }, [appState, getParentData, setParentAlert, selectedProjectList, selectedServiceList]);

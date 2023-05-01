@@ -120,14 +120,14 @@ const CreateMemberCollectionDialog = (props) => { // Notice the arrow function..
 
         get('collections/', appState.token, (error, response) => {
             if (error) {
-                setParentAlert(new AlertType('Unable to get collection Templates. Please refresh and try again.', "error"));
+                setParentAlert(new AlertType('Unable to get series Templates. Please refresh and try again.', "error"));
             }
             else {
                 if (response.status === 200) {
                     setCollectionTemplateList(response.data.collectionList);
                 }
                 else {
-                    setParentAlert(new AlertType('Unable to get collection Templates. Please refresh and try again.', "error"));
+                    setParentAlert(new AlertType('Unable to get series Templates. Please refresh and try again.', "error"));
 
                 }
             }
@@ -160,7 +160,7 @@ const CreateMemberCollectionDialog = (props) => { // Notice the arrow function..
 
     const createMemberCollection = useCallback(() => {
         if (selectedCollectionTemplateList.length == 0 || selectedMemberList.length == 0) {
-            setParentAlert(new AlertType('Unable create member Collection. Please make sure Series, and member are not empty.', "error"))
+            setParentAlert(new AlertType('Unable create member Series. Please make sure Series, and member are not empty.', "error"))
             return;
         }
 
@@ -173,15 +173,15 @@ const CreateMemberCollectionDialog = (props) => { // Notice the arrow function..
 
         post("membercollections/", appState.token, postBody, (error, response) => {
             if (error) {
-                setParentAlert(new AlertType('Unable create  member Collection. Please refresh and try again.', "error"));
+                setParentAlert(new AlertType('Unable create  member Series. Please refresh and try again.', "error"));
             }
             else {
                 if (response.status === 201) {
                     getParentData();
-                    setParentAlert(new AlertType('Member Collection created.', "success"));
+                    setParentAlert(new AlertType('Member Series created.', "success"));
                 }
                 else {
-                    setParentAlert(new AlertType('Unable create Member Collection. Please refresh and try again.', "error"));
+                    setParentAlert(new AlertType('Unable create Member Series. Please refresh and try again.', "error"));
                 }
             }
         });

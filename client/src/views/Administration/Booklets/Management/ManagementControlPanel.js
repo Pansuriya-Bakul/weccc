@@ -64,7 +64,7 @@ const selectFilterOptionsSurvey = [{ key: "SurveyName", value: "surveyName", dis
 
 const selectFilterOptionsMemberSurvey = [{ key: "SurveyName", value: "surveyName", display: "Name" }, { key: "MemberSurveyId", value: "memberSurveyId", display: "ID" },
 { key: "Completeness", value: "completeness", display: "Completeness" },
-{ key: "MemberCollectionId", value: "memberCollectionId", display: "Member Collection ID" },
+{ key: "MemberCollectionId", value: "memberCollectionId", display: "Member Series ID" },
 { key: "MemberName", value: "memberName", display: "Member Name" },
 { key: "MemberId", value: "memberId", display: "Member ID" }];
 
