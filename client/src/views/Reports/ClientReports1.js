@@ -103,7 +103,7 @@ const ClientReports = (props) => {
       // );
       return;
     } else {
-      if (appState.patients.length <= 0) { 
+      if (appState.patients.length <= 0) {
         setAlert(
           new AlertType(
             "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
@@ -145,7 +145,7 @@ const ClientReports = (props) => {
     }
   }, [appState]);
 
-  
+
 
   // const getNeighbours = useCallback(
   //   (userId) => {
@@ -282,7 +282,7 @@ const ClientReports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      Your Reports
+                      My Reports
                     </Typography>
                   </Grid>
                 </Grid>
@@ -299,7 +299,7 @@ const ClientReports = (props) => {
             </Grid>
             {/* <Grid item xs={12}>
               <Card raised={true}> */}
-                {/* <Box mx={1} my={1} boxShadow={0}>
+            {/* <Box mx={1} my={1} boxShadow={0}>
                   {/* <Grid
                     container
                     direction="column"
@@ -335,7 +335,7 @@ const ClientReports = (props) => {
                         </Select>
                       </FormControl>
                     </Grid> */}
-                {/* <Grid item xs={12}>
+            {/* <Grid item xs={12}>
                       {reportsData ? (
                         <Pagination
                           count={reportsData.SRVNum_PRF_SD.length}
@@ -352,13 +352,13 @@ const ClientReports = (props) => {
                     </Grid> 
                   </Grid> *
                 </Box> */}
-              {/* </Card>
+            {/* </Card>
             </Grid> */}
             <Grid item xs={12}>
               <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
-                {isLoading ? (<CircularProgress />)
-                  : <Grid
+                  {isLoading ? (<CircularProgress />)
+                    : <Grid
                       container
                       direction="column"
                       justifyContent="flex-start"
@@ -366,8 +366,8 @@ const ClientReports = (props) => {
                       spacing={1}
                     >
                       {reportsData &&
-                      Object.keys(reportsData).length != 0 &&
-                      Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                        Object.keys(reportsData).length != 0 &&
+                        Object.getPrototypeOf(reportsData) === Object.prototype ? (
                         <>
                           <Grid item xs={12}>
                             <Typography variant="h4" color="textPrimary">
@@ -405,7 +405,7 @@ const ClientReports = (props) => {
                               collection={currentReportIndex}
                             />
                           </Grid> */}
-                          
+
                           <Grid item xs={12} id="summary1">
                             <Typography
                               variant="h5"
@@ -449,10 +449,10 @@ const ClientReports = (props) => {
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
-                          </Grid> 
+                          </Grid>
                         </>
                       ) : (
-                        
+
                         <>
                           <Typography
                             variant="subtitle2"
@@ -461,7 +461,7 @@ const ClientReports = (props) => {
                             gutterBottom
                           >
                             No available reports.
-                            
+
                           </Typography>
                         </>
                       )}
@@ -499,8 +499,8 @@ ClientReports.propTypes = {
 
 ClientReports.defaultProps = {
   appState: {},
-  ToggleDrawerClose: () => {},
-  CheckAuthenticationValidity: () => {},
+  ToggleDrawerClose: () => { },
+  CheckAuthenticationValidity: () => { },
 };
 
 export default ClientReports; // You can even shorthand this line by adding this at the function [Component] declaration stage

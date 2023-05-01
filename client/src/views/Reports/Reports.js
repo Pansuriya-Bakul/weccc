@@ -175,7 +175,7 @@ const Reports = (props) => {
           );
         } else {
           if (res.status === 200) {
-            const { memberName, ...otherData} = res.data;
+            const { memberName, ...otherData } = res.data;
 
             if (Object.keys(otherData).length === 0) {
               setReportsData(null);
@@ -256,11 +256,11 @@ const Reports = (props) => {
   }, []);
 
   useEffect(() => {
-      if (currentPatient != "") {
-        getNeighbours(currentPatient);
-        // getScreen(currentPatient);
-      }
-  
+    if (currentPatient != "") {
+      getNeighbours(currentPatient);
+      // getScreen(currentPatient);
+    }
+
   }, [currentPatient]);
 
 
@@ -336,7 +336,7 @@ const Reports = (props) => {
                         size="small"
                         className={classes.formControl}
                       > */}
-                        {/* <InputLabel id="select-label-Member">Member</InputLabel>
+                      {/* <InputLabel id="select-label-Member">Member</InputLabel>
                         <Select
                           className={classes.selectEmpty}
                           labelId="select-label-Member"
@@ -367,14 +367,14 @@ const Reports = (props) => {
                         Member's name:
                       </Typography>
                       {/* <Box mx={1} my={2} boxShadow={1}> */}
-                        <Typography
-                          variant="h5"
-                          color="textPrimary"
-                          align="left"
-                          gutterBottom
-                        >
-                          {memberName}
-                        </Typography>
+                      <Typography
+                        variant="h5"
+                        color="textPrimary"
+                        align="left"
+                        gutterBottom
+                      >
+                        {memberName}
+                      </Typography>
                       {/* </Box> */}
 
                     </Grid>
@@ -401,8 +401,8 @@ const Reports = (props) => {
             <Grid item xs={12}>
               <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
-                {isLoading ? (<CircularProgress />)
-                  : <Grid
+                  {isLoading ? (<CircularProgress />)
+                    : <Grid
                       container
                       direction="column"
                       justifyContent="flex-start"
@@ -427,7 +427,7 @@ const Reports = (props) => {
                               align="left"
                               gutterBottom
                             >
-                              Dashboard
+                              Highlights
                             </Typography>
 
                             <ReportDashboard

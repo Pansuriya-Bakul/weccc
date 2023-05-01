@@ -131,10 +131,9 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
         setAssignMemberDialog(true);
     }, [setAssignMemberDialog]);
 
-    const AssignCoordinatorHandler = useCallback(() =>
-    {
+    const AssignCoordinatorHandler = useCallback(() => {
         setAssignCoordinatorDialog(true);
-    }, [ setAssignCoordinatorDialog ]);
+    }, [setAssignCoordinatorDialog]);
 
     const AssignProjectHandler = useCallback(() => {
         setAssignProjectDialog(true);
@@ -311,45 +310,45 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                         </Tooltip>
                                     </Grid>
 
-                                    {isTemplates? (
-                                    <>
-                                        {appState.role =="Admin"? (
-                                            //Edited by P. Only Admin can create a new survey template
-                                        <Grid item>
-                                            <Tooltip
-                                                placement="bottom"
-                                                title="Create Service Template"
-                                            >
-                                                <Button 
-                                                    size="small" 
-                                                    variant="contained" 
-                                                    color="primary"
-                                                    startIcon={<AddBoxOutlinedIcon />}
-                                                    onClick={() => { createCollectionTemplateHandler(); }}
-                                                >
-                                                    Start a Service Template
-                                                </Button>
-                                            </Tooltip>
-                                        </Grid>): <></>}
-                                        {appState.role=="Admin" ? (
-                                        <Grid item>
-                                            <Tooltip
-                                                placement="bottom"
-                                                title="Assign Coordinators to Service"
-                                            >
-                                                <Button
-                                                    size="small"
-                                                    variant="contained"
-                                                    color="secondary"
-                                                    disabled={!isTemplates}
-                                                    startIcon={<AddBoxOutlinedIcon />}
-                                                    onClick={() => { AssignCoordinatorHandler(); }}
-                                                >
-                                                    Assign Coordinator
-                                                </Button>
-                                            </Tooltip>
-                                        </Grid>):(<></>)}
-                                        <Grid item>
+                                    {isTemplates ? (
+                                        <>
+                                            {appState.role == "Admin" ? (
+                                                //Edited by P. Only Admin can create a new survey template
+                                                <Grid item>
+                                                    <Tooltip
+                                                        placement="bottom"
+                                                        title="Create Service Template"
+                                                    >
+                                                        <Button
+                                                            size="small"
+                                                            variant="contained"
+                                                            color="primary"
+                                                            startIcon={<AddBoxOutlinedIcon />}
+                                                            onClick={() => { createCollectionTemplateHandler(); }}
+                                                        >
+                                                            Start a Service Template
+                                                        </Button>
+                                                    </Tooltip>
+                                                </Grid>) : <></>}
+                                            {appState.role == "Admin" ? (
+                                                <Grid item>
+                                                    <Tooltip
+                                                        placement="bottom"
+                                                        title="Assign Coordinators to Service"
+                                                    >
+                                                        <Button
+                                                            size="small"
+                                                            variant="contained"
+                                                            color="secondary"
+                                                            disabled={!isTemplates}
+                                                            startIcon={<AddBoxOutlinedIcon />}
+                                                            onClick={() => { AssignCoordinatorHandler(); }}
+                                                        >
+                                                            Assign Coordinator
+                                                        </Button>
+                                                    </Tooltip>
+                                                </Grid>) : (<></>)}
+                                            <Grid item>
                                                 <Tooltip
                                                     placement="bottom"
                                                     title="Assign Members to Service"
@@ -367,50 +366,50 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                 </Tooltip>
                                             </Grid>
 
-                                        {appState.role == "Admin" ? ( //Edited by P., appState has been added to show the project assignment only to the Admin
-                                        <Grid item>
-                                            <Tooltip
-                                                placement="bottom"
-                                                title="Assign Projects to Service"
-                                            >
-                                                <Button 
-                                                    size="small" 
-                                                    variant="contained" 
-                                                    color="secondary"
-                                                    disabled={!isTemplates}
-                                                    startIcon={<AddBoxOutlinedIcon />}
-                                                    onClick={() => { AssignProjectHandler(); }}
-                                                >
-                                                    Assign Project
-                                                </Button>
-                                            </Tooltip> 
-                                        </Grid>
-                                        ) : (
-                                            <>
-                                            </>
+                                            {appState.role == "Admin" ? ( //Edited by P., appState has been added to show the project assignment only to the Admin
+                                                <Grid item>
+                                                    <Tooltip
+                                                        placement="bottom"
+                                                        title="Assign Projects to Service"
+                                                    >
+                                                        <Button
+                                                            size="small"
+                                                            variant="contained"
+                                                            color="secondary"
+                                                            disabled={!isTemplates}
+                                                            startIcon={<AddBoxOutlinedIcon />}
+                                                            onClick={() => { AssignProjectHandler(); }}
+                                                        >
+                                                            Assign Project
+                                                        </Button>
+                                                    </Tooltip>
+                                                </Grid>
+                                            ) : (
+                                                <>
+                                                </>
                                             )}
-                                    </>
-                                ) : (
-                                    <>
-                                    {appState.role == "Admin" ? ( //Edited by P., appState has been added to remove create new instance link
-                                            <Grid item>
-                                        <Tooltip
-                                            placement="bottom"
-                                            title="Create a Member Service Instance"
-                                        >
-                                            <Button 
-                                                size="small" 
-                                                variant="contained" 
-                                                color="primary"
-                                                startIcon={<AddBoxOutlinedIcon />}
-                                                onClick={() => { createMemberCollectionHandler(); }}
-                                            >
-                                                Start a Service Instance
-                                            </Button>
-                                        </Tooltip> 
-                                    </Grid>):<></>}
-                                    </>
-                                )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            {appState.role == "Admin" ? ( //Edited by P., appState has been added to remove create new instance link
+                                                <Grid item>
+                                                    <Tooltip
+                                                        placement="bottom"
+                                                        title="Create a Member Service Instance"
+                                                    >
+                                                        <Button
+                                                            size="small"
+                                                            variant="contained"
+                                                            color="primary"
+                                                            startIcon={<AddBoxOutlinedIcon />}
+                                                            onClick={() => { createMemberCollectionHandler(); }}
+                                                        >
+                                                            Start a Service Instance
+                                                        </Button>
+                                                    </Tooltip>
+                                                </Grid>) : <></>}
+                                        </>
+                                    )}
 
 
                                 </Grid>
@@ -432,7 +431,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                             <Card>
                                 <Box mx={1} my={1} boxShadow={0}>
                                     <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={3}>
-                                        <Grid item>
+                                        {/* <Grid item>
                                             <Typography color="textPrimary" variant="subtitle2">
                                                 Table Options
                                             </Typography>
@@ -443,7 +442,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                 label="Compact"
                                                 labelPlacement="end"
                                             />
-                                        </Grid>
+                                        </Grid> */}
                                         <Grid item>
                                             <FormControl id="search-filter-select-label" variant="filled" size="small" style={{ minWidth: 140 }} disabled={dataList ? false : true}>
                                                 <InputLabel>
@@ -557,7 +556,7 @@ CollectionsManagementControlPanel.defaultProps =
     setCreateMemberCollectionDialog: () => { },
     setAssignMemberDialog: () => { },
     setAssignProjectDialog: () => { },
-    setAssignCoordinatorDialog: () => {}    //Edited by P.
+    setAssignCoordinatorDialog: () => { }    //Edited by P.
 }
 
 export default CollectionsManagementControlPanel;  // You can even shorthand this line by adding this at the function [Component] declaration stage

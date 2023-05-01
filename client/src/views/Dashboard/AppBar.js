@@ -46,12 +46,10 @@ const styles = theme => ({
     }
 });
 
-class AppBarContent extends Component 
-{
-    constructor(props)
-    {
+class AppBarContent extends Component {
+    constructor(props) {
         super(props);
-        
+
         this.state = {
             accountMenuAnchor: null,
             accountMenuOpen: false,
@@ -59,33 +57,29 @@ class AppBarContent extends Component
         };
     }
 
-    handleAccountMenuOpen = event =>
-    {
+    handleAccountMenuOpen = event => {
         this.setState({
             accountMenuAnchor: event.currentTarget,
             accountMenuOpen: true
         });
     }
 
-    handleAccountMenuClose = () =>
-    {
+    handleAccountMenuClose = () => {
         this.setState({
             accountMenuAnchor: null,
             accountMenuOpen: false
         });
     }
 
-    handleMenuClose = () =>
-    {
+    handleMenuClose = () => {
         this.setState({
             accountMenuAnchor: null,
             accountMenuOpen: false
         });
     }
-    
-    renderAccountMenu = () =>
-    {
-        return(
+
+    renderAccountMenu = () => {
+        return (
             <Menu
                 anchorEl={this.state.accountMenuAnchor}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -97,7 +91,7 @@ class AppBarContent extends Component
                     <ListItemIcon>
                         <AccountBoxIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText primary="Your Profile" />
+                    <ListItemText primary="My Profile" />
                 </MenuItem>
 
                 <MenuItem onClick={this.props.Logout}>
@@ -120,42 +114,41 @@ class AppBarContent extends Component
         );
     }
 
-    render() 
-    {
+    render() {
         let { classes } = this.props;
-        
+
         return (
             <AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
-                <IconButton
-                    color="inherit"
-                    aria-label="Open drawer"
-                    onClick={this.props.toggleDrawerOpen}
-                    className={classes.menuButton}
-                >
-                    <MenuIcon />
-                </IconButton>
-                <div className={classes.grow}>
-                <Typography variant="h6" color="inherit" noWrap>
-                    <Button color="inherit" component={Link} to="/">
-                        Health and Wellness Friendly Communities Platform (IMS)   
-                    </Button>
-                </Typography>
-                </div>
-                <div className={classes.sectionDesktop}>
-                <IconButton color="inherit">
-                    <NotificationsIcon />
-                </IconButton>
-                <IconButton 
-                    color="inherit" 
-                    aria-owns={this.state.accountMenuOpen ? 'material-appbar' : undefined}
-                    aria-haspopup="true"
-                    onClick={this.handleAccountMenuOpen}
-                >
-                    <AccountCircle />
-                </IconButton>
-                {this.renderAccountMenu()}
-                </div>
+                    <IconButton
+                        color="inherit"
+                        aria-label="Open drawer"
+                        onClick={this.props.toggleDrawerOpen}
+                        className={classes.menuButton}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <div className={classes.grow}>
+                        <Typography variant="h6" color="inherit" noWrap>
+                            <Button color="inherit" component={Link} to="/">
+                                Health and Wellness Friendly Communities Platform (IMS)
+                            </Button>
+                        </Typography>
+                    </div>
+                    <div className={classes.sectionDesktop}>
+                        <IconButton color="inherit">
+                            <NotificationsIcon />
+                        </IconButton>
+                        <IconButton
+                            color="inherit"
+                            aria-owns={this.state.accountMenuOpen ? 'material-appbar' : undefined}
+                            aria-haspopup="true"
+                            onClick={this.handleAccountMenuOpen}
+                        >
+                            <AccountCircle />
+                        </IconButton>
+                        {this.renderAccountMenu()}
+                    </div>
                 </Toolbar>
             </AppBar>
         );
@@ -165,5 +158,5 @@ class AppBarContent extends Component
 AppBarContent.propTypes = {
     classes: PropTypes.object.isRequired
 };
-  
+
 export default withStyles(styles)(AppBarContent);

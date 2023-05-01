@@ -92,9 +92,9 @@ const DialogTitle = withStyles(theme => ({
         <MuiDialogTitle disableTypography className={classes.root}>
             <Typography variant="h6">{children}</Typography>
             {onClose ? (
-            <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
-                <CloseIcon />
-            </IconButton>
+                <IconButton aria-label="Close" className={classes.closeButton} onClick={onClose}>
+                    <CloseIcon />
+                </IconButton>
             ) : null}
         </MuiDialogTitle>
     );
@@ -106,7 +106,7 @@ const DialogContent = withStyles(theme => ({
         padding: theme.spacing(2),
     },
 }))(MuiDialogContent);
-  
+
 const DialogActions = withStyles(theme => ({
     root: {
         borderTop: `1px solid ${theme.palette.divider}`,
@@ -117,7 +117,7 @@ const DialogActions = withStyles(theme => ({
 
 function TabContainer(props) {
     return (
-        <Typography component="div" style={{ padding: 8}}>
+        <Typography component="div" style={{ padding: 8 }}>
             {props.children}
         </Typography>
     );
@@ -127,10 +127,8 @@ TabContainer.propTypes = {
     children: PropTypes.node.isRequired,
 };
 
-class ViewProfile extends Component 
-{	
-    constructor(props)
-    {
+class ViewProfile extends Component {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -148,8 +146,7 @@ class ViewProfile extends Component
         };
     }
 
-    componentDidMount = () =>
-    {
+    componentDidMount = () => {
         let { appState } = this.props;
 
         this.user = {};
@@ -159,58 +156,46 @@ class ViewProfile extends Component
 
         this.setState({ profileID: profileID });
 
-        if(profileID)
-        {
-            if(appState.role !== "Admin")
-            {
-                if(appState.role === "Coordinator")
-                {
-                    if(!appState.patients.includes(profileID) && !appState.workers.includes(profileID))
-                    {
+        if (profileID) {
+            if (appState.role !== "Admin") {
+                if (appState.role === "Coordinator") {
+                    if (!appState.patients.includes(profileID) && !appState.workers.includes(profileID)) {
                         this.setState({
                             loadError: "This user is not a member nor a worker that has been assigned to you.  You do not have permission to view this page.",
                             render: true
                         });
                     }
-                    else
-                    {
+                    else {
                         this.checkAuth();
                     }
                 }
-                else if(appState.role === "Volunteer")
-                {
-                    if(!appState.patients.includes(profileID))
-                    {
+                else if (appState.role === "Volunteer") {
+                    if (!appState.patients.includes(profileID)) {
                         this.setState({
                             loadError: "This user is not a member that has been assigned to you.  You do not have permission to view this page.",
                             render: true
                         });
                     }
-                    else
-                    {
+                    else {
                         this.checkAuth();
                     }
                 }
             }
-            else
-            {
+            else {
                 this.checkAuth();
             }
         }
-        else
-        {
+        else {
             this.checkAuth();
-        }    
+        }
     }
 
-    componentDidUpdate = () =>
-    {
+    componentDidUpdate = () => {
         let { appState } = this.props;
         let { profileID } = this.state;
         const newProfileID = this.props.match.params.profileID;
-        
-        if(newProfileID !== profileID)
-        {
+
+        if (newProfileID !== profileID) {
             this.setState({
                 render: false,
                 profileID: newProfileID,
@@ -219,61 +204,50 @@ class ViewProfile extends Component
             this.loadUserInformation();
         }
 
-        
+
 
     }
 
-    checkAuth = () =>
-    {
+    checkAuth = () => {
         setTimeout(() => {
             this.props.ToggleDrawerClose();
-            this.props.CheckAuthenticationValidity((tokenValid) => 
-            {
-                if(tokenValid)
-                {
+            this.props.CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
                     this.loadUserInformation();
                 }
             });
         }, 200);
     }
 
-    loadUserInformation = () =>
-    {
+    loadUserInformation = () => {
         let { appState } = this.props;
         const profileID = this.props.match.params.profileID;
 
         var _id = "";
 
-        if(profileID == null)
-        {
+        if (profileID == null) {
             _id = this.props.appState._id;
         }
-        else
-        {
+        else {
             _id = profileID;
         }
 
-        get("users/1/" + _id, appState.token, (userError, userResponse) => 
-        {
-            if(userError)
-            {
+        get("users/1/" + _id, appState.token, (userError, userResponse) => {
+            if (userError) {
                 this.setState({
                     loadError: "Unable to load profile.  Please try again later.",
                     render: true
                 });
             }
-            else
-            {
-                if(userResponse.status === 200 || userResponse.status === 304)
-                {
-                    this.user = userResponse.data;   
+            else {
+                if (userResponse.status === 200 || userResponse.status === 304) {
+                    this.user = userResponse.data;
                     this.setState({
                         loadError: "Unable to load profile.  Please try again later.",
                         render: true
                     });
                 }
-                else
-                {
+                else {
                     this.setState({
                         loadError: "Unable to load profile.  Please make sure your User ID is correct and you have proper permissions.",
                         render: true
@@ -283,15 +257,13 @@ class ViewProfile extends Component
         });
     }
 
-    createStickyNote = () =>
-    {
+    createStickyNote = () => {
         let { appState } = this.props;
         let { noteName, noteMessage } = this.state;
 
         const profileID = this.props.match.params.profileID;
 
-        if(noteName === "" || noteMessage === "")
-        {
+        if (noteName === "" || noteMessage === "") {
             this.setState({
                 noteError: "Please make sure a name and message are filled out."
             });
@@ -312,28 +284,23 @@ class ViewProfile extends Component
             noteCreating: true,
         })
 
-        post("stickynotes/", appState.token, newNote, (error, response) => 
-        {
-            if(error)
-            {
-                this.setState({ 
+        post("stickynotes/", appState.token, newNote, (error, response) => {
+            if (error) {
+                this.setState({
                     noteError: "There was an error creating the note, please try again later.",
                     noteCreating: false
                 });
             }
-            else
-            {
-                if(response.status === 201)
-                {
+            else {
+                if (response.status === 201) {
                     this.setState({
                         noteError: "",
                         noteCreating: false,
                         noteCreationDialogOpen: false
-                    }, () => {window.location.reload();})
+                    }, () => { window.location.reload(); })
                 }
-                else
-                {
-                    this.setState({ 
+                else {
+                    this.setState({
                         noteError: "There was an error creating the note, please try again later.",
                         noteCreating: false
                     });
@@ -342,35 +309,29 @@ class ViewProfile extends Component
         });
     }
 
-    createBookletRow = (_id, name, approved, approvedBy, approvedByName, dateCreated, createdBy, createdByName, dateLastModified, lastMofifiedBy, lastMofifiedByName) =>
-    {
-        return {_id, name, approved, approvedBy, approvedByName, dateCreated, createdBy, createdByName, dateLastModified, lastMofifiedBy, lastMofifiedByName}
+    createBookletRow = (_id, name, approved, approvedBy, approvedByName, dateCreated, createdBy, createdByName, dateLastModified, lastMofifiedBy, lastMofifiedByName) => {
+        return { _id, name, approved, approvedBy, approvedByName, dateCreated, createdBy, createdByName, dateLastModified, lastMofifiedBy, lastMofifiedByName }
     }
 
-    createStickyNoteRow = (_id, level, message, open, dateCreated, createdBy, createdByName, dateLastModified, lastMofifiedBy, lastMofifiedByName) =>
-    {
-        return {_id, level, message, open, dateCreated, createdBy, createdByName, dateLastModified, lastMofifiedBy, lastMofifiedByName}
+    createStickyNoteRow = (_id, level, message, open, dateCreated, createdBy, createdByName, dateLastModified, lastMofifiedBy, lastMofifiedByName) => {
+        return { _id, level, message, open, dateCreated, createdBy, createdByName, dateLastModified, lastMofifiedBy, lastMofifiedByName }
     }
 
-    createUserRow = (_id, email, role, name, createdAt) =>
-    {
+    createUserRow = (_id, email, role, name, createdAt) => {
         return { _id, email, role, name, createdAt }
     }
 
-    handleTabChange = (event, tabValue) => 
-    {
+    handleTabChange = (event, tabValue) => {
         this.setState({ tabValue });
     }
 
-    HandleChange = event => 
-    {
-        this.setState({ 
-            [event.target.name]: event.target.value 
+    HandleChange = event => {
+        this.setState({
+            [event.target.name]: event.target.value
         });
     };
 
-    handleBookletDialogOpen = (currentBooklet) =>
-    {
+    handleBookletDialogOpen = (currentBooklet) => {
         this.currentBooklet = currentBooklet;
 
         this.setState({
@@ -378,17 +339,14 @@ class ViewProfile extends Component
         });
     }
 
-    handleBookletDialogClose = () =>
-    {
+    handleBookletDialogClose = () => {
         this.setState({
             bookletDialogOpen: false
-        }); 
+        });
     }
 
-    handlePreviousVersionNumber = (currentBooklet) =>
-    {
-        let getVersions = (survey) =>
-        {
+    handlePreviousVersionNumber = (currentBooklet) => {
+        let getVersions = (survey) => {
             return survey.name === currentBooklet;
         }
 
@@ -397,8 +355,7 @@ class ViewProfile extends Component
         return previousVersions.length
     }
 
-    handlePreviousVersionsOpen = (currentBooklet, memberSurveys) =>
-    {
+    handlePreviousVersionsOpen = (currentBooklet, memberSurveys) => {
         this.currentBooklet = currentBooklet;
         this.memberSurveys = memberSurveys;
 
@@ -408,44 +365,40 @@ class ViewProfile extends Component
 
         let previousVersions = this.user.memberSurveys.filter(getVersions);
 
-        function getVersions(survey){
+        function getVersions(survey) {
             return survey.name === currentBooklet;
         }
-    
+
         this.previousVersions = previousVersions;
     }
 
-    handlePreviousVersionsClose = () =>
-    {
+    handlePreviousVersionsClose = () => {
         this.setState({
             previousVersionDialogOpen: false
-        }); 
+        });
     }
 
-    handleNoteCreationDialogOpen = () =>
-    {
+    handleNoteCreationDialogOpen = () => {
         this.setState({
             noteCreationDialogOpen: true
         });
     }
 
-    handleNoteCreationDialogClose = () =>
-    {
+    handleNoteCreationDialogClose = () => {
         this.setState({
             noteError: "",
             noteCreationDialogOpen: false
         });
     }
 
-    renderBookletTab = () =>
-    {
+    renderBookletTab = () => {
         let { memberSurveys } = this.user;
 
-        memberSurveys.sort(function(a, b) {
+        memberSurveys.sort(function (a, b) {
             let x = a.name.toLowerCase();
             let y = b.name.toLowerCase();
             if (x < y) { return -1; }
-            if (x > y) { return 1;}
+            if (x > y) { return 1; }
             return 0;
 
         })
@@ -463,8 +416,7 @@ class ViewProfile extends Component
         //     }
         // });
 
-        if(length == 1)
-        {
+        if (length == 1) {
             rows.push(this.createBookletRow(memberSurveys[0]._id,
                 memberSurveys[0].name,
                 memberSurveys[0].approved,
@@ -484,15 +436,16 @@ class ViewProfile extends Component
         //way to find most recent version of each unique booklet
         let index = 1;
         let recent = 0;
-        while(index < length){     
-            if(memberSurveys[index].name === memberSurveys[recent].name){
-                if(memberSurveys[index].createdAt > memberSurveys[recent].createdAt){
+        while (index < length) {
+            if (memberSurveys[index].name === memberSurveys[recent].name) {
+                if (memberSurveys[index].createdAt > memberSurveys[recent].createdAt) {
                     recent = index++;
                 }
-                else{ 
-                    ++index; }
+                else {
+                    ++index;
+                }
             }
-            else{
+            else {
                 rows.push(this.createBookletRow(memberSurveys[recent]._id,
                     memberSurveys[recent].name,
                     memberSurveys[recent].approved,
@@ -506,7 +459,7 @@ class ViewProfile extends Component
                     memberSurveys[recent].modifiedByName));
                 recent = index++;
             }
-        } 
+        }
         // rows.push(this.createBookletRow(memberSurveys[recent]._id,
         //     memberSurveys[recent].name,
         //     memberSurveys[recent].approved,
@@ -520,13 +473,11 @@ class ViewProfile extends Component
         //     memberSurveys[recent].modifiedByName));
 
 
-        if(length === 0)
-        {
-            return(<Typography>There are no chapters for this user yet.</Typography>);
+        if (length === 0) {
+            return (<Typography>There are no chapters for this user yet.</Typography>);
         }
-        else
-        {
-            return(
+        else {
+            return (
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -538,50 +489,48 @@ class ViewProfile extends Component
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row, index) => 
-                        {
+                        {rows.map((row, index) => {
                             var bookletURL = "/booklet/" + row._id;
                             var createdAt = new Date(row.dateCreated);
                             var approved = "Pending Approval";
 
-                            if(row.approved)
-                            {
+                            if (row.approved) {
                                 approved = "Approved"
                             }
 
-                            return(
-                            <TableRow key={index}>
-                                <TableCell>
-                                    <Typography component={Link} to={bookletURL}>
-                                        {row.name}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell align="right">
-                                    {createdAt.getMonth() + 1} / {createdAt.getDate() } / {createdAt.getFullYear()}
-                                </TableCell>
-                                <TableCell align="right">
-                                    {approved === "Approved"? (
-                                        <Typography style={{color: "green"}}>Approved</Typography>
-                                    ) : (
-                                        <Typography style={{color: "blue"}}>Pending</Typography>
-                                    )}
-                                </TableCell>
-                                <TableCell align="right">
-                                <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    onClick={() => this.handlePreviousVersionsOpen(row.name, memberSurveys)}
-                                    endIcon={<OpenInBrowser fontSize="small" />}
-                                >
-                                    {this.handlePreviousVersionNumber(row.name)}
-                                </Button>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <IconButton aria-label="View" onClick={() => this.handleBookletDialogOpen(row)}>
-                                        <InfoIcon fontSize="small" />
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
+                            return (
+                                <TableRow key={index}>
+                                    <TableCell>
+                                        <Typography component={Link} to={bookletURL}>
+                                            {row.name}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        {createdAt.getMonth() + 1} / {createdAt.getDate()} / {createdAt.getFullYear()}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        {approved === "Approved" ? (
+                                            <Typography style={{ color: "green" }}>Approved</Typography>
+                                        ) : (
+                                            <Typography style={{ color: "blue" }}>Pending</Typography>
+                                        )}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={() => this.handlePreviousVersionsOpen(row.name, memberSurveys)}
+                                            endIcon={<OpenInBrowser fontSize="small" />}
+                                        >
+                                            {this.handlePreviousVersionNumber(row.name)}
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <IconButton aria-label="View" onClick={() => this.handleBookletDialogOpen(row)}>
+                                            <InfoIcon fontSize="small" />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
                             );
                         })}
                     </TableBody>
@@ -590,83 +539,79 @@ class ViewProfile extends Component
         }
     }
 
-    renderPreviousVersions = () =>
-    {
+    renderPreviousVersions = () => {
         let { previousVersionDialogOpen } = this.state;
 
-        if(this.previousVersions){
-            return(
+        if (this.previousVersions) {
+            return (
                 <div>
-                   <Dialog
+                    <Dialog
                         onClose={this.handlePreviousVersionsClose}
                         aria-labelledby="Link-Dialog"
                         open={previousVersionDialogOpen}
                     >
-                            
-                            <DialogContent>
-                              <List>
 
-                              {this.previousVersions.map(previousVersion => {
-                                var bookletURL = "/booklet/" + previousVersion._id;
-                                return (
-                                    <ListItem key={previousVersion._id}> 
-                                        <Link to={bookletURL}>
-                                            {previousVersion.name} created on {previousVersion.createdAt}
-                                        </Link> 
-                                    </ListItem>
-                                )
-                              })}
+                        <DialogContent>
+                            <List>
 
-                              </List>
-                            </DialogContent>
+                                {this.previousVersions.map(previousVersion => {
+                                    var bookletURL = "/booklet/" + previousVersion._id;
+                                    return (
+                                        <ListItem key={previousVersion._id}>
+                                            <Link to={bookletURL}>
+                                                {previousVersion.name} created on {previousVersion.createdAt}
+                                            </Link>
+                                        </ListItem>
+                                    )
+                                })}
+
+                            </List>
+                        </DialogContent>
                     </Dialog>
                 </div>
             );
         }
-        else return(<div>
+        else return (<div>
             <Dialog
-                 onClose={this.handlePreviousVersionsClose}
-                 aria-labelledby="Delete-Dialog"
-                 open={previousVersionDialogOpen}
-             >
-                 <DialogTitle id="Delete-Dialog" onClose={this.handlePreviousVersionsClose}>
-                     {this.currentBooklet.name}
-                 </DialogTitle>                
-                     <DialogContent>
-                       <List>
-                       </List>
-                     </DialogContent>
-             </Dialog>
-         </div>);
-        
+                onClose={this.handlePreviousVersionsClose}
+                aria-labelledby="Delete-Dialog"
+                open={previousVersionDialogOpen}
+            >
+                <DialogTitle id="Delete-Dialog" onClose={this.handlePreviousVersionsClose}>
+                    {this.currentBooklet.name}
+                </DialogTitle>
+                <DialogContent>
+                    <List>
+                    </List>
+                </DialogContent>
+            </Dialog>
+        </div>);
+
 
     }
 
-    renderStickyNotesTab = () =>
-    {        
+    renderStickyNotesTab = () => {
         let { classes } = this.props;
         let { stickyNotes } = this.user;
 
         var rows = [];
         const length = stickyNotes.length;
 
-        for (let index = 0; index < length; index++) 
-        {
+        for (let index = 0; index < length; index++) {
             rows.push(this.createStickyNoteRow(stickyNotes[index]._id,
-                                               stickyNotes[index].level,
-                                               stickyNotes[index].message,
-                                               stickyNotes[index].open,
-                                               stickyNotes[index].createdAt,
-                                               stickyNotes[index].createdBy._id,
-                                               stickyNotes[index].createdBy.info.name,
-                                               stickyNotes[index].updatedAt,
-                                               stickyNotes[index].modifiedBy._id,
-                                               stickyNotes[index].modifiedBy.info.name));
+                stickyNotes[index].level,
+                stickyNotes[index].message,
+                stickyNotes[index].open,
+                stickyNotes[index].createdAt,
+                stickyNotes[index].createdBy._id,
+                stickyNotes[index].createdBy.info.name,
+                stickyNotes[index].updatedAt,
+                stickyNotes[index].modifiedBy._id,
+                stickyNotes[index].modifiedBy.info.name));
         }
 
-        if(length === 0)
-        {
-            return(
+        if (length === 0) {
+            return (
                 <div className={classes.root}>
                     <Typography>
                         There are no sticky notes attatched to this user yet.
@@ -681,61 +626,59 @@ class ViewProfile extends Component
                 </div>
             );
         }
-        else
-        {
-            return(
+        else {
+            return (
                 <div>
                     <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Type</TableCell>
-                            <TableCell align="right">Message</TableCell>
-                            <TableCell align="right">Date Created</TableCell>
-                            <TableCell align="right">Created By</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.map((row, index) => 
-                        {                            
-                            var createdAt = new Date(row.dateCreated);
-                            var url = "/profile/" + row.createdBy;
-                            return(
-                            <TableRow key={index}>
-                                <TableCell>
-                                        {row.level === "Info"? (
-                                            <Alert severity="info">Info Status</Alert>
-                                        ) : (
-                                            null
-                                        )}
-                                        {row.level === "Warning"? (
-                                            <Alert severity="warning">Warning Status</Alert>
-                                        ) : (
-                                            null
-                                        )}
-                                        {row.level === "Danger"? (
-                                            <Alert severity="error">Danger Status</Alert>
-                                        ) : (
-                                            null
-                                        )}
-                                </TableCell>
-                                <TableCell align="right">
-                                    <Typography>
-                                        {row.message}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell align="right">
-                                    {createdAt.getMonth() + 1} / {createdAt.getDate() } / {createdAt.getFullYear()}
-                                </TableCell>
-                                <TableCell align="right">
-                                    <Typography>
-                                        <em>{row.createdByName}</em>
-                                        {/* <a href={url}>{row.createdByName}</a> */}
-                                    </Typography>
-                                </TableCell>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Type</TableCell>
+                                <TableCell align="right">Message</TableCell>
+                                <TableCell align="right">Date Created</TableCell>
+                                <TableCell align="right">Created By</TableCell>
                             </TableRow>
-                            );
-                        })}
-                    </TableBody>
+                        </TableHead>
+                        <TableBody>
+                            {rows.map((row, index) => {
+                                var createdAt = new Date(row.dateCreated);
+                                var url = "/profile/" + row.createdBy;
+                                return (
+                                    <TableRow key={index}>
+                                        <TableCell>
+                                            {row.level === "Info" ? (
+                                                <Alert severity="info">Info Status</Alert>
+                                            ) : (
+                                                null
+                                            )}
+                                            {row.level === "Warning" ? (
+                                                <Alert severity="warning">Warning Status</Alert>
+                                            ) : (
+                                                null
+                                            )}
+                                            {row.level === "Danger" ? (
+                                                <Alert severity="error">Danger Status</Alert>
+                                            ) : (
+                                                null
+                                            )}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <Typography>
+                                                {row.message}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {createdAt.getMonth() + 1} / {createdAt.getDate()} / {createdAt.getFullYear()}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <Typography>
+                                                <em>{row.createdByName}</em>
+                                                {/* <a href={url}>{row.createdByName}</a> */}
+                                            </Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
                     </Table>
                     <br />
                     <div className={classes.root}>
@@ -752,28 +695,25 @@ class ViewProfile extends Component
         }
     }
 
-    renderUserTab = (data) =>
-    {
+    renderUserTab = (data) => {
         let { classes } = this.props;
-        
+
         var rows = [];
         const length = data.length;
-        
 
-        for (let index = 0; index < length; index++) 
-        {
-            
+
+        for (let index = 0; index < length; index++) {
+
 
             rows.push(this.createUserRow(data[index]._id,
-                                         data[index].email,
-                                         data[index].role,
-                                         data[index].info.name,
-                                         data[index].createdAt));
+                data[index].email,
+                data[index].role,
+                data[index].info.name,
+                data[index].createdAt));
         }
 
-        if(length === 0)
-        {
-            return(
+        if (length === 0) {
+            return (
                 <div className={classes.root}>
                     <Typography>
                         There are no patients assigned to this user.
@@ -781,9 +721,8 @@ class ViewProfile extends Component
                 </div>
             );
         }
-        else
-        {
-            return(
+        else {
+            return (
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -793,26 +732,25 @@ class ViewProfile extends Component
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row, index) => 
-                        {                            
+                        {rows.map((row, index) => {
                             var createdAt = new Date(row.createdAt);
                             var url = "/profile/" + row._id;
-                            return(
-                            <TableRow key={index}>
-                                <TableCell>
-                                    <Typography>
-                                        <a href={url}>{row.name}</a>
-                                    </Typography>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <Typography>
-                                        {row.email}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell align="right">
-                                    {createdAt.getMonth() + 1} / {createdAt.getDate() } / {createdAt.getFullYear()}
-                                </TableCell>
-                            </TableRow>
+                            return (
+                                <TableRow key={index}>
+                                    <TableCell>
+                                        <Typography>
+                                            <a href={url}>{row.name}</a>
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <Typography>
+                                            {row.email}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        {createdAt.getMonth() + 1} / {createdAt.getDate()} / {createdAt.getFullYear()}
+                                    </TableCell>
+                                </TableRow>
                             );
                         })}
                     </TableBody>
@@ -821,11 +759,10 @@ class ViewProfile extends Component
         }
     }
 
-    renderInfoTab = () =>
-    {
+    renderInfoTab = () => {
         let user = this.user;
 
-        return(
+        return (
             <Box my={3}>
                 <Grid spacing={3} container>
                     <Grid item xs={6}>
@@ -854,16 +791,15 @@ class ViewProfile extends Component
                     </Grid>
                 </Grid>
             </Box>
-            
+
         );
     }
 
-    renderBookletDialog = () =>
-    {
+    renderBookletDialog = () => {
         let { bookletDialogOpen } = this.state;
         let { name } = this.user.user;
 
-        return(
+        return (
             <div>
                 <Dialog
                     onClose={this.handleBookletDialogClose}
@@ -872,35 +808,35 @@ class ViewProfile extends Component
                 >
                     <DialogTitle id="Delete-Dialog" onClose={this.handleBookletDialogClose}>
                         {this.currentBooklet.name}
-                    </DialogTitle>                
-                        <DialogContent>
+                    </DialogTitle>
+                    <DialogContent>
+                        <Typography gutterBottom>
+                            Here is all the important information for the {this.currentBooklet.name} for {name}:
+                        </Typography>
+                        <br />
+                        <Typography gutterBottom>
+                            Chapter Started: {this.currentBooklet.dateCreated}
+                        </Typography>
+                        <Typography gutterBottom>
+                            Started By: {this.currentBooklet.createdByName}
+                        </Typography>
+                        <Typography gutterBottom>
+                            Chapter Last Modified: {this.currentBooklet.dateLastModified}
+                        </Typography>
+                        <Typography gutterBottom>
+                            Last Modified By: {this.currentBooklet.lastMofifiedByName}
+                        </Typography>
+                        <br />
+                        {this.currentBooklet.approved ?
                             <Typography gutterBottom>
-                                Here is all the important information for the {this.currentBooklet.name} for {name}:
+                                This Chapter has been approved by {this.currentBooklet.approvedByName}.
                             </Typography>
-                            <br />
-                            <Typography gutterBottom>
-                                Chapter Started: {this.currentBooklet.dateCreated}
-                            </Typography>
-                            <Typography gutterBottom>
-                                Started By: {this.currentBooklet.createdByName}
-                            </Typography>
-                            <Typography gutterBottom>
-                                Chapter Last Modified: {this.currentBooklet.dateLastModified}
-                            </Typography>
-                            <Typography gutterBottom>
-                                Last Modified By: {this.currentBooklet.lastMofifiedByName}
-                            </Typography>
-                            <br />
-                            {this.currentBooklet.approved ? 
-                                <Typography gutterBottom>
-                                    This Chapter has been approved by {this.currentBooklet.approvedByName}.        
-                                </Typography>
                             :
-                                <Typography gutterBottom>
-                                    This Chapter has not been approved yet.
-                                </Typography>
-                            }
-                        </DialogContent>
+                            <Typography gutterBottom>
+                                This Chapter has not been approved yet.
+                            </Typography>
+                        }
+                    </DialogContent>
                     <DialogActions>
                         <Button color="primary" onClick={this.handleBookletDialogClose}>
                             Close
@@ -911,12 +847,11 @@ class ViewProfile extends Component
         );
     }
 
-    renderNoteCreationDialog = () =>
-    {
+    renderNoteCreationDialog = () => {
         let { classes } = this.props;
         let { noteCreationDialogOpen, noteName, noteMessage, noteError, noteCreating } = this.state;
 
-        return(
+        return (
             <div>
                 <Dialog
                     onClose={this.handleNoteCreationDialogClose}
@@ -925,41 +860,41 @@ class ViewProfile extends Component
                 >
                     <DialogTitle id="Creation-Dialog" onClose={this.handleNoteCreationDialogClose}>
                         Create a new Sticky Note
-                    </DialogTitle>                
+                    </DialogTitle>
                     <DialogContent>
                         <Typography gutterBottom>
                             Please provide a name for this sticky note as well as a message.  This note will be visible to all users who have access to this member.
                         </Typography>
                         <form className={classes.root}>
-                        <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="noteName">Priority</InputLabel>
-                            <Select
-                                value={noteName}
-                                onChange={this.HandleChange}
-                                inputProps={{
-                                    name: 'noteName',
-                                    id: 'noteName',
-                                }}
-                            >
-                                <MenuItem value="">
-                                    <em>Select Message Importance</em>
-                                </MenuItem>
-                                <MenuItem value={"Info"}>Info</MenuItem>
-                                <MenuItem value={"Warning"}>Warning</MenuItem>
-                                <MenuItem value={"Danger"}>Danger</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="noteMessage">Message</InputLabel>
-                            <Input 
-                                id="noteMessage" 
-                                name="noteMessage"
-                                value={noteMessage} 
-                                onChange={this.HandleChange}
-                            />
-                        </FormControl>
+                            <FormControl margin="normal" required fullWidth>
+                                <InputLabel htmlFor="noteName">Priority</InputLabel>
+                                <Select
+                                    value={noteName}
+                                    onChange={this.HandleChange}
+                                    inputProps={{
+                                        name: 'noteName',
+                                        id: 'noteName',
+                                    }}
+                                >
+                                    <MenuItem value="">
+                                        <em>Select Message Importance</em>
+                                    </MenuItem>
+                                    <MenuItem value={"Info"}>Info</MenuItem>
+                                    <MenuItem value={"Warning"}>Warning</MenuItem>
+                                    <MenuItem value={"Danger"}>Danger</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <FormControl margin="normal" required fullWidth>
+                                <InputLabel htmlFor="noteMessage">Message</InputLabel>
+                                <Input
+                                    id="noteMessage"
+                                    name="noteMessage"
+                                    value={noteMessage}
+                                    onChange={this.HandleChange}
+                                />
+                            </FormControl>
                         </form>
-                        { noteError !== "" &&
+                        {noteError !== "" &&
                             <Typography gutterBottom className={classes.error}>
                                 {noteError}
                             </Typography>
@@ -978,19 +913,17 @@ class ViewProfile extends Component
         );
     }
 
-	render()
-	{
+    render() {
         let { profileID } = this.state
 
         let { classes } = this.props;
         let { render, tabValue } = this.state;
 
-        if(render)
-        {
+        if (render) {
             let { createdAt, info, patients, role, workers } = this.user.user;
 
             var dateCreated = new Date(createdAt);
-            
+
             return (
                 <Grid container key={dateCreated}
                     className={classes.rootGrid}
@@ -1003,19 +936,19 @@ class ViewProfile extends Component
                         <Box mx={1} my={1}>
                             <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
                                 <Grid item>
-                                    <AccountBoxIcon color="primary"/>
+                                    <AccountBoxIcon color="primary" />
                                 </Grid>
                                 <Grid item xs>
                                     <Typography variant="h5" color="secondary" align="left" gutterBottom={false}>
-                                        {profileID == null? (
-                                            `Your Profile`
+                                        {profileID == null ? (
+                                            `My Profile`
                                         ) : (
                                             `Viewing Profile`
                                         )}
-                                        
+
                                     </Typography>
                                 </Grid>
-                                {profileID == null? (
+                                {profileID == null ? (
                                     null
                                 ) : (
                                     <Grid item xs={12}>
@@ -1025,12 +958,12 @@ class ViewProfile extends Component
                                             component={Link}
                                             to="/your/"
                                         >
-                                            Your Members
+                                            My Members
                                         </Button>
                                     </Grid>
                                 )}
-                            </Grid>                
-                        </Box> 
+                            </Grid>
+                        </Box>
                     </Grid>
                     <Grid item xs={9}>
                         <Box mx={1} my={1}>
@@ -1039,7 +972,7 @@ class ViewProfile extends Component
                     </Grid>
                     <Grid item xs={12}>
                         <Card raised={true}>
-                            <CardHeader title={info.name} style={{backgroundColor: "aliceblue"}}
+                            <CardHeader title={info.name} style={{ backgroundColor: "aliceblue" }}
                                 avatar={
                                     <Avatar aria-label="profile">
                                         P
@@ -1066,7 +999,7 @@ class ViewProfile extends Component
                                                 Joined:
                                             </Typography>
                                             <Typography variant="body2" component="h2" gutterBottom>
-                                                <em>{dateCreated.getMonth() + 1} / {dateCreated.getDate() } / {dateCreated.getFullYear()}</em>
+                                                <em>{dateCreated.getMonth() + 1} / {dateCreated.getDate()} / {dateCreated.getFullYear()}</em>
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12}>
@@ -1129,18 +1062,17 @@ class ViewProfile extends Component
                                             {this.renderNoteCreationDialog()}
                                         </Grid>
                                     </Grid>
-                                </Box> 
+                                </Box>
                             </CardContent>
                         </Card>
                     </Grid>
                 </Grid>
             );
         }
-        else
-        {
-            return(<CircularProgress />);
+        else {
+            return (<CircularProgress />);
         }
-	}
+    }
 }
 
 ViewProfile.propTypes = {

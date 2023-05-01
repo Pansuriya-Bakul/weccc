@@ -21,7 +21,7 @@ import Divider from '@material-ui/core/Divider';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from  '@material-ui/core/ButtonGroup';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 
@@ -46,20 +46,20 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            flexGrow: 1,     // CSS determined this way, flexbox properties
-            height: '100%'
-        },
-        rootGrid: {
-            height: '100%'
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        flexGrow: 1,     // CSS determined this way, flexbox properties
+        height: '100%'
+    },
+    rootGrid: {
+        height: '100%'
+    }
+}));
 
 
 // ================= Static Variables ================
-const selectFilterOptions = [ { key: "Name", value: "name", display: "Name"}, { key: "SequenceId", value: "sequenceId", display: "Sequence ID"}, { key: "Email", value: "email", display: "Email"}, { key: "Role", value: "role", display: "Role"},  { key: "Enabled", value: "enabled", display: "Enabled"}]
+const selectFilterOptions = [{ key: "Name", value: "name", display: "Name" }, { key: "SequenceId", value: "sequenceId", display: "Sequence ID" }, { key: "Email", value: "email", display: "Email" }, { key: "Role", value: "role", display: "Role" }, { key: "Enabled", value: "enabled", display: "Status" }]
 
 // ================= Static Functions ================
 
@@ -70,238 +70,221 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const {  appState, mode, setParentAlert,
-            isDense, setIsDense,
-            dataList, getParentData,
-            setSearchFilteredDataList,
-            setCreateUserDialog, setAssignUserDialog } = props;
+    // Declaration of Stateful Variables ===
+    const { appState, mode, setParentAlert,
+        isDense, setIsDense,
+        dataList, getParentData,
+        setSearchFilteredDataList,
+        setCreateUserDialog, setAssignUserDialog } = props;
 
-        const [selectSearchFilterOption, setSelectSearchFilterOption ] = useState(selectFilterOptions[0].value);
-        const [searchFilter, setSearchFilter] = useState("");
-        
+    const [selectSearchFilterOption, setSelectSearchFilterOption] = useState(selectFilterOptions[0].value);
+    const [searchFilter, setSearchFilter] = useState("");
+
     // Functions ===
 
-        const pullHandler = useCallback(() =>
+    const pullHandler = useCallback(() => {
+        try {
+            getParentData();
+            setParentAlert(new AlertType('Refreshed initiated...', "info"));
+        }
+        catch
         {
-            try
-            {
-                getParentData();
-                setParentAlert(new AlertType('Refreshed initiated...', "info"));
+
+        }
+
+    }, [getParentData, setParentAlert]);
+
+    const createUserHandler = useCallback(() => {
+        setCreateUserDialog(true);
+    }, [setCreateUserDialog]);
+
+    const assignUserHandler = useCallback(() => {
+        setAssignUserDialog(true);
+    }, [setAssignUserDialog]);
+
+    const compactHandler = useCallback((event) => {
+        setIsDense(event.target.checked);
+    }, [setIsDense]);
+
+    const selectSearchHandler = useCallback((event) => {
+        setSearchFilter("");
+        setSelectSearchFilterOption(event.target.value);
+
+    }, [setSelectSearchFilterOption]);
+
+    const searchHandler = useCallback((event) => {
+        let tempFilter = event.target.value.toUpperCase();
+        let tempArray = [];
+        dataList.forEach(item => {
+            switch (selectSearchFilterOption) {
+                case "name":
+
+                    if (item.info.name.toUpperCase().indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
+
+                    break;
+
+                case "sequenceId":
+
+                    if (String(item.sequenceId).indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
+
+                    break;
+
+                case "email":
+
+                    if (item.email.toUpperCase().indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
+
+                    break;
+
+                case "role":
+
+                    if (item.role.toUpperCase().indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
+
+                    break;
+                case "enabled":
+                    let status = item.enabled ? "true" : "false";
+                    if (status.toUpperCase().indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
+
+                    break;
+
+                default:
             }
-            catch
-            {
 
-            }
-            
-        }, [ getParentData, setParentAlert ]);
+        });
 
-        const createUserHandler = useCallback(() =>
-        {
-            setCreateUserDialog(true);
-        }, [ setCreateUserDialog ]);
-
-        const assignUserHandler = useCallback(() =>
-        {
-            setAssignUserDialog(true);
-        }, [ setAssignUserDialog ]);
-
-        const compactHandler = useCallback((event) =>
-        {
-            setIsDense(event.target.checked);
-        }, [ setIsDense ]);
-
-        const selectSearchHandler = useCallback((event) =>
-        {
-            setSearchFilter("");
-            setSelectSearchFilterOption(event.target.value);
-
-        }, [ setSelectSearchFilterOption ]);
-
-        const searchHandler = useCallback((event) =>
-        {
-            let tempFilter = event.target.value.toUpperCase();
-            let tempArray = [];
-            dataList.forEach( item => 
-            {
-                switch(selectSearchFilterOption)
-                {
-                    case "name":
-
-                            if(item.info.name.toUpperCase().indexOf(tempFilter) > -1)
-                            {
-                                tempArray.push(item);
-                            }
-    
-                            break;
-
-                    case "sequenceId":
-
-                        if(String(item.sequenceId).indexOf(tempFilter) > -1)
-                        {
-                            tempArray.push(item);
-                        }
-
-                        break;
-
-                    case "email":
-
-                        if(item.email.toUpperCase().indexOf(tempFilter) > -1)
-                        {
-                            tempArray.push(item);
-                        }
-
-                        break;
-
-                    case "role":
-
-                        if(item.role.toUpperCase().indexOf(tempFilter) > -1)
-                        {
-                            tempArray.push(item);
-                        }
-
-                        break;
-                    case "enabled":
-                        let status = item.enabled ? "true" : "false";
-                        if(status.toUpperCase().indexOf(tempFilter) > -1)
-                        {
-                            tempArray.push(item);
-                        }
-
-                        break;
-
-                    default:
-                }
-                
-            });
-
-            setSearchFilter(event.target.value);
-            setSearchFilteredDataList(tempArray);
-        }, [ dataList, setSearchFilteredDataList, selectSearchFilterOption ]);
+        setSearchFilter(event.target.value);
+        setSearchFilteredDataList(tempArray);
+    }, [dataList, setSearchFilteredDataList, selectSearchFilterOption]);
 
     // Hooks ===
 
-        // First Render only because of the [ ] empty array tracking with the useEffect
-        useEffect( () =>
-        {
-            setSearchFilter("");
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ dataList ]);
+    // First Render only because of the [ ] empty array tracking with the useEffect
+    useEffect(() => {
+        setSearchFilter("");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dataList]);
 
-        useEffect( () =>
-        {
-            if(searchFilter === "")
-            {
-                setSearchFilteredDataList(dataList);
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ setSelectSearchFilterOption, searchFilter ]);
+    useEffect(() => {
+        if (searchFilter === "") {
+            setSearchFilteredDataList(dataList);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [setSelectSearchFilterOption, searchFilter]);
 
     // Render Section ===
 
-        return (
-            <>
-                <Box mx={2} my={1} boxShadow={0}>
-                    <Grid
-                        container
-                        direction="column"
-                        justifyContent="flex-start"
-                        alignItems="stretch"
-                        spacing={1}
-                        appState={appState}
-                    >
-                        <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
-                            <Grid item>
-                                <Typography variant="h6" component="h6">
-                                    Manage
-                                </Typography>
-                                <Divider />
-                            </Grid>
-                            <Grid item xs>
-                                <Box mx={3} my={1} boxShadow={0}>
-                                    <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                                        <Grid item>
+    return (
+        <>
+            <Box mx={2} my={1} boxShadow={0}>
+                <Grid
+                    container
+                    direction="column"
+                    justifyContent="flex-start"
+                    alignItems="stretch"
+                    spacing={1}
+                    appState={appState}
+                >
+                    <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
+                        <Grid item>
+                            <Typography variant="h6" component="h6">
+                                Manage
+                            </Typography>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs>
+                            <Box mx={3} my={1} boxShadow={0}>
+                                <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                                    <Grid item>
+                                        <Tooltip
+                                            placement="bottom"
+                                            title="Refresh Online Users"
+                                        >
+                                            <Button
+                                                size="small"
+                                                variant="contained"
+                                                color="primary"
+                                                startIcon={<RefreshIcon />}
+                                                onClick={() => { pullHandler(); }}
+                                            >
+                                                Refresh
+                                            </Button>
+                                        </Tooltip>
+                                    </Grid>
+                                    <Grid item>
+                                        {mode === "Other" ? (
+                                            <>
+                                            </>
+                                        ) : (
                                             <Tooltip
                                                 placement="bottom"
-                                                title="Refresh Online Users"
+                                                title="Create User"
                                             >
-                                                <Button 
-                                                    size="small" 
-                                                    variant="contained" 
+                                                <Button
+                                                    size="small"
+                                                    variant="contained"
                                                     color="primary"
-                                                    startIcon={<RefreshIcon />}
-                                                    onClick={() => { pullHandler(); }}
+                                                    startIcon={<AddBoxOutlinedIcon />}
+                                                    onClick={() => { createUserHandler(); }}
                                                 >
-                                                    Refresh
+                                                    Create a User
                                                 </Button>
-                                            </Tooltip> 
-                                        </Grid>
-                                        <Grid item>
-                                            {mode === "Other"? (
-                                                <>
-                                                </>
-                                            ) : (
-                                                <Tooltip
-                                                    placement="bottom"
-                                                    title="Create User"
-                                                >
-                                                    <Button 
-                                                        size="small" 
-                                                        variant="contained" 
-                                                        color="primary"
-                                                        startIcon={<AddBoxOutlinedIcon />}
-                                                        onClick={() => { createUserHandler(); }}
-                                                    >
-                                                        Create a User
-                                                    </Button>
-                                                </Tooltip> 
-                                            )}
-                                        </Grid>
-                                       
-                                        {appState.role != "Volunteer"? (
+                                            </Tooltip>
+                                        )}
+                                    </Grid>
+
+                                    {appState.role != "Volunteer" ? (
                                         <Grid item>
                                             <Tooltip
                                                 placement="bottom"
                                                 title="Assign User"
                                             >
-                                                <Button 
-                                                    size="small" 
-                                                    variant="contained" 
+                                                <Button
+                                                    size="small"
+                                                    variant="contained"
                                                     color="secondary"
                                                     startIcon={<SupervisorAccountIcon />}
                                                     onClick={() => { assignUserHandler(); }}
                                                 >
-                                                    Assign User 
+                                                    Assign User
                                                 </Button>
-                                            </Tooltip> 
+                                            </Tooltip>
                                         </Grid>
-                                        ) : (
-                                            <>
-                                            </>
-                                        )} 
-                                    </Grid>
-                                </Box>
-                            </Grid>
-                            <Grid item>
-                                <Tooltip
-                                    placement="left"
-                                    title="Use this page to manage users in the system."
-                                >
-                                    <IconButton>
-                                        <HelpOutlineIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </Grid>
+                                    ) : (
+                                        <>
+                                        </>
+                                    )}
+                                </Grid>
+                            </Box>
                         </Grid>
-                        <Grid item xs={12} container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
-                            <Box mx={1} my={1} boxShadow={0}>
-                                <Card>
-                                    <Box mx={1} my={1} boxShadow={0}>
-                                        <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={3}>
-                                            <Grid item>
+                        <Grid item>
+                            <Tooltip
+                                placement="left"
+                                title="Use this page to manage users in the system."
+                            >
+                                <IconButton>
+                                    <HelpOutlineIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
+                        <Box mx={1} my={1} boxShadow={0}>
+                            <Card>
+                                <Box mx={1} my={1} boxShadow={0}>
+                                    <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={3}>
+                                        {/* <Grid item>
                                                 <Typography color="textPrimary" variant="subtitle2">
                                                     Table Options
                                                 </Typography>
@@ -314,61 +297,60 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
                                                         labelPlacement="end"
                                                     />
                                                 </Grid>
-                                            ) :(<></>)}
-                                            <Grid item>
-                                                <FormControl id="search-filter-select-label" variant="filled" size="small" style={{minWidth: 140}} disabled={dataList? false : true}>
-                                                    <InputLabel>
-                                                        Search Filter
-                                                    </InputLabel>
-                                                    <Select
-                                                        autoWidth={true}
-                                                        labelId="search-filter-select-label"
-                                                        value={selectSearchFilterOption}
-                                                        onChange={(event) => { selectSearchHandler(event); } }
-                                                    >
-                                                        {selectFilterOptions.map( item => 
-                                                        {
-                                                            return(
-                                                                <MenuItem key={item.key} value={item.value}>
-                                                                    <em>{item.display}</em>
-                                                                </MenuItem>  
-                                                            )
-                                                        })}
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs>
-                                                <TextField label="Search"
-                                                    type="search"
-                                                    size="small"
-                                                    variant="filled"
-                                                    fullWidth
-                                                    value={searchFilter}
-                                                    onChange={ (event) => { searchHandler(event); }}
-                                                    disabled={dataList? false : true}
-                                                />
-                                            </Grid>
+                                            ) :(<></>)} */}
+                                        <Grid item>
+                                            <FormControl id="search-filter-select-label" variant="filled" size="small" style={{ minWidth: 140 }} disabled={dataList ? false : true}>
+                                                <InputLabel>
+                                                    Search Filter
+                                                </InputLabel>
+                                                <Select
+                                                    autoWidth={true}
+                                                    labelId="search-filter-select-label"
+                                                    value={selectSearchFilterOption}
+                                                    onChange={(event) => { selectSearchHandler(event); }}
+                                                >
+                                                    {selectFilterOptions.map(item => {
+                                                        return (
+                                                            <MenuItem key={item.key} value={item.value}>
+                                                                <em>{item.display}</em>
+                                                            </MenuItem>
+                                                        )
+                                                    })}
+                                                </Select>
+                                            </FormControl>
                                         </Grid>
-                                    </Box>
-                                </Card>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12} container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
-                            <Grid item>
-                                <Typography variant="h6" component="h6">
-                                    Table
-                                </Typography>
-                                <Divider />
-                            </Grid>
+                                        <Grid item xs>
+                                            <TextField label="Search"
+                                                type="search"
+                                                size="small"
+                                                variant="filled"
+                                                fullWidth
+                                                value={searchFilter}
+                                                onChange={(event) => { searchHandler(event); }}
+                                                disabled={dataList ? false : true}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                            </Card>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
+                        <Grid item>
+                            <Typography variant="h6" component="h6">
+                                Table
+                            </Typography>
+                            <Divider />
                         </Grid>
                     </Grid>
-                </Box>
-            </>
-        );
+                </Grid>
+            </Box>
+        </>
+    );
 }
 
 // ======================== Component PropType Check ========================
-UsersManagementControlPanel.propTypes = 
+UsersManagementControlPanel.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -381,20 +363,20 @@ UsersManagementControlPanel.propTypes =
     setSearchFilteredDataList: PropTypes.func.isRequired,
     setCreateUserDialog: PropTypes.func.isRequired,
     setAssignUserDialog: PropTypes.func.isRequired,
-                        
+
 }
 
-UsersManagementControlPanel.defaultProps = 
+UsersManagementControlPanel.defaultProps =
 {
     appState: {},
     mode: null,
-    setParentAlert: () => {},
-    setIsDense: () => {},
+    setParentAlert: () => { },
+    setIsDense: () => { },
     dataList: {},
-    getParentData: () => {},
-    setSearchFilteredDataList: () => {},
-    setCreateUserDialog: () => {},
-    setAssignUserDialog: () => {}
+    getParentData: () => { },
+    setSearchFilteredDataList: () => { },
+    setCreateUserDialog: () => { },
+    setAssignUserDialog: () => { }
 }
 
 export default UsersManagementControlPanel;  // You can even shorthand this line by adding this at the function [Component] declaration stage

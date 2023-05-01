@@ -32,7 +32,7 @@ class Main extends Component {
 
 		this.state = {
 			render: false,
-			isLoading: [true,true],
+			isLoading: true,
 			clientData: [],
 			clientSurvey: '',
 			quote: '',
@@ -158,43 +158,36 @@ class Main extends Component {
 	getPatients = async () => {
 		let { appState } = this.props;
 
-		if (appState.role == "Patient") {
+		if (appState.patients.length <= 0) {
 			// setAlert(
-			//   new AlertType("You do not have Permission to recieve Patients", "error")
+			//   new AlertType(
+			//     "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
+			//     "error"
+			//   )
 			// );
 			return;
-		} else {
-			if (appState.patients.length <= 0) {
-				// setAlert(
-				//   new AlertType(
-				//     "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
-				//     "error"
-				//   )
-				// );
-				return;
-			}
-
-			return new Promise((resolve, reject) => {
-				get("users/" + appState._id, appState.token, (err, res) => {
-					if (err) {
-						//Bad callback call
-						//setAlert(new AlertType(err.message, "error"));
-						// setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
-						reject(err);
-					} else {
-						if (res.status === 200) {
-							// this.setState({patientsList: res.data.user.patients});
-							//   console.log(res.data.user.patients);
-							resolve(res.data.user.patients);
-						} else {
-							//Bad HTTP Response
-							// setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
-							reject(new Error('Unable to retrieve Users. Please refresh and try again.'));
-						}
-					}
-				});
-			});
 		}
+
+		return new Promise((resolve, reject) => {
+			get("users/" + appState._id, appState.token, (err, res) => {
+				if (err) {
+					//Bad callback call
+					//setAlert(new AlertType(err.message, "error"));
+					// setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
+					reject(err);
+				} else {
+					if (res.status === 200) {
+						// this.setState({patientsList: res.data.user.patients});
+						//   console.log(res.data.user.patients);
+						resolve(res.data.user.patients);
+					} else {
+						//Bad HTTP Response
+						// setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
+						reject(new Error('Unable to retrieve Users. Please refresh and try again.'));
+					}
+				}
+			});
+		});
 	}
 
 	checkClientSurveys = (callback) => {
@@ -219,9 +212,7 @@ class Main extends Component {
 					})
 					this.setState({ toggle: toggle });
 				}
-				const temploading = this.state.isLoading;
-				temploading[0] = false;
-				this.setState({ isLoading: temploading });
+				this.setState({ isLoading: false });
 				callback();
 			}
 		}); // call the get request.
@@ -279,7 +270,7 @@ class Main extends Component {
 			// handle the response here
 			await new Promise(resolve => this.setState({ patientCollectionNames: response.data.collectionNames }, resolve));
 			await new Promise(resolve => this.setState({ patientCollections: response.data.collections }, resolve));
-			// ...
+
 		} catch (error) {
 			console.log(error);
 		}
@@ -342,22 +333,23 @@ class Main extends Component {
 	}
 
 	createMapping = async () => {
+		let { appState } = this.props;
+		if (appState.role == "Patient") {
+			return;
+		}
 		const templist = await this.getPatients()
 		this.setState({ patientsList: templist });
 		const temp = this.state.pMapping;
-		
+
 		for (let user of this.state.patientsList) {
 			await this.getPatientSurveys(user._id);
 			await this.patientCheckComplete();
 			temp[user._id] = [this.state.patientCollectionNames, this.state.patientCollections, this.state.patientCollectionCompleteness];
-			this.setState({ patientCheckComplete: [] });
+			this.setState({ patientCollectionCompleteness: [] });
 
 		}
 
 		this.setState({ pMapping: temp });
-		const temploading = this.state.isLoading;
-		temploading[1] = false;
-		this.setState({ isLoading: temploading });
 	}
 
 	componentDidMount = () => {
@@ -476,11 +468,14 @@ class Main extends Component {
 									<Box mx={1} my={1} boxShadow={0}>
 										<Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
 											<Grid item xs={12}>
-												<Typography variant="subtitle2" component="h2">
-													Current Services: Requested Information
-												</Typography>
+												{(appState.role === 'Patient') && <Typography variant="subtitle2" component="h2">
+													What would you like to do today?
+												</Typography>}
+												{(appState.role === 'Volunteer') && <Typography variant="subtitle2" component="h2">
+													Current Assigned Tasks
+												</Typography>}
 											</Grid>
-											{(this.state.isLoading[0] && this.state.isLoading[1])
+											{(this.state.isLoading)
 												? (<CircularProgress />)
 												: <Grid item xs={12}>
 													<Grid item xs={12}>
