@@ -141,7 +141,7 @@ const UserCollectionsTab = (props) => { // Notice the arrow function... regular 
                 {
                     if(error)
                     {
-                        setParentAlert(new AlertType('Unable to retrieve user Collections. Please refresh and try again.', "error"));
+                        setParentAlert(new AlertType('Unable to retrieve user Series. Please refresh and try again.', "error"));
                     }
                     else
                     {
@@ -151,14 +151,14 @@ const UserCollectionsTab = (props) => { // Notice the arrow function... regular 
                         }
                         else
                         {
-                            setParentAlert(new AlertType('Unable to retrieve user Collections. Please refresh and try again.', "error"));
+                            setParentAlert(new AlertType('Unable to retrieve user Series. Please refresh and try again.', "error"));
                         }
                     }
                 });
             }
             else
             {
-                setParentAlert(new AlertType('Unable to retrieve user Collections. Please refresh and try again.', "error"));
+                setParentAlert(new AlertType('Unable to retrieve user Series. Please refresh and try again.', "error"));
             }
         }, [ userID, appState, populateList ]);
 
@@ -208,7 +208,7 @@ const UserCollectionsTab = (props) => { // Notice the arrow function... regular 
                                 <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
                                     <Grid item>
                                         <Typography variant="h6" component="h6">
-                                            My Collections
+                                            My Series
                                         </Typography>
                                         <Divider />
                                     </Grid>

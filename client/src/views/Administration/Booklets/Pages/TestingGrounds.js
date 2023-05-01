@@ -91,7 +91,7 @@ const TestingGrounds = (props) => { // Notice the arrow function... regular func
         {
             if(appState.patients.length <= 0)
             {
-                setAlert(new AlertType('You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.', "error"));
+                setAlert(new AlertType('You do not have any patients assigned. In order to start a series, you must first be assigned a member by an Administrator.', "error"));
                 return;
             }
 

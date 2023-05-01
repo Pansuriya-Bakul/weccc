@@ -206,7 +206,7 @@ const CreateProjectDialog = (props) => { // Notice the arrow function... regular
                     if(response.status === 201)
                     {
                         getParentData();
-                        setParentAlert(new AlertType('Collection created.', "success"));
+                        setParentAlert(new AlertType('Series created.', "success"));
                     }
                     else
                     {

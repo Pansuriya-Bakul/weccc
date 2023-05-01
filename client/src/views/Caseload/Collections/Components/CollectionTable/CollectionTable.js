@@ -335,7 +335,7 @@ export default function CollectionTable(props) {
                                                                         );
                                                                     })}
                                                                 </ol> */}
-                                                                <em>{"Member Collections apart of this"}</em> <b>{'Service Template'}</b>.{' '}
+                                                                <em>{"Member Series apart of this"}</em> <b>{'Service Template'}</b>.{' '}
                                                             </>
                                                         } placement="top">
                                                             <Button>
@@ -386,7 +386,7 @@ export default function CollectionTable(props) {
                                                                                     );
                                                                                 })}
                                                                             </ol>
-                                                                            <em>{"Member Chapters instantiated in this"}</em> <b>{'Member Collection'}</b>.{' '}
+                                                                            <em>{"Member Chapters instantiated in this"}</em> <b>{'Member Series'}</b>.{' '}
                                                                         </>
                                                                     } placement="top">
                                                                         <Button>

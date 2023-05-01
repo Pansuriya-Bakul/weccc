@@ -223,7 +223,7 @@ const AssignCoordinatorDialog = (props) => { // Notice the arrow function... reg
                         {
                             if(error)
                             {
-                                setParentAlert(new AlertType('Unable to update collections. Please refresh and try again.', "error"));
+                                setParentAlert(new AlertType('Unable to update series. Please refresh and try again.', "error"));
                             }
                             else
                             {
@@ -233,11 +233,11 @@ const AssignCoordinatorDialog = (props) => { // Notice the arrow function... reg
                                     // getParentData();
                                     //  const _id = response.data.survey._id; The id to redirect to if you wish
                                     getParentData();
-                                    setParentAlert(new AlertType('Successfully updated collections.', "success"));
+                                    setParentAlert(new AlertType('Successfully updated series.', "success"));
                                 }
                                 else
                                 {
-                                    setParentAlert(new AlertType('Unable to update collections. Please refresh and try again.', "error"));
+                                    setParentAlert(new AlertType('Unable to update series. Please refresh and try again.', "error"));
                                 }
                             }
                         });
@@ -245,7 +245,7 @@ const AssignCoordinatorDialog = (props) => { // Notice the arrow function... reg
             }
             else
             {
-                setParentAlert(new AlertType('Unable to assign Coordinator to collection. Please refresh and try again.', "error"));
+                setParentAlert(new AlertType('Unable to assign Coordinator to series. Please refresh and try again.', "error"));
             }
 
         }, [ appState, getParentData, setParentAlert, selectedCollectionList, selectedMemberList]);
@@ -358,7 +358,7 @@ const AssignCoordinatorDialog = (props) => { // Notice the arrow function... reg
                         onClose={() => { closeHandler(); }}
                     >
                         <DialogTitle>
-                            Assign Coordinator(s) to Collection(s)
+                            Assign Coordinator(s) to Series
                         </DialogTitle>
                         <DialogContent>
                             {assignCoordinatorDialogExecuting? (
@@ -366,7 +366,7 @@ const AssignCoordinatorDialog = (props) => { // Notice the arrow function... reg
                             ) : (
                                 <>
                                     <DialogContentText>
-                                        Please select <em><u>Coordinators</u></em> to be assigned to each the following <em><u>Collections</u></em>.
+                                        Please select <em><u>Coordinators</u></em> to be assigned to each the following <em><u>Series</u></em>.
                                     </DialogContentText>
                                     <Box mx={1} my={1} boxShadow={0}>
                                         <Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
@@ -376,7 +376,7 @@ const AssignCoordinatorDialog = (props) => { // Notice the arrow function... reg
                                                         <Grid item xs={11}>
                                                             <FormControl id="Collection-options-label" variant="filled" size="small" fullWidth disabled={!collectionList}>
                                                                 <InputLabel>
-                                                                    Collection
+                                                                    Series
                                                                 </InputLabel>
                                                                 <Select
                                                                     fullWidth
@@ -416,7 +416,7 @@ const AssignCoordinatorDialog = (props) => { // Notice the arrow function... reg
                                                 {(selectedCollectionList)? (
                                                      <Collapse in={(selectedCollectionList.length > 0)? true : false}>
                                                         <Typography component="div" variant="body2" color="textSecondary" gutterBottom={true}>
-                                                            <em>{"The following selected collections"}</em> <u>{'to be assigned:'}</u>
+                                                            <em>{"The following selected series"}</em> <u>{'to be assigned:'}</u>
                                                         </Typography>
                                                         <Typography component="div" variant="body2" color="primary" gutterBottom={true}>
                                                             <ol>

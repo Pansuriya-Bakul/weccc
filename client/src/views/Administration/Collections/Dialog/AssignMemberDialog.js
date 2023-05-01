@@ -233,7 +233,7 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                         {
                             if(error)
                             {
-                                setParentAlert(new AlertType('Unable to update collections. Please refresh and try again.', "error"));
+                                setParentAlert(new AlertType('Unable to update series. Please refresh and try again.', "error"));
                             }
                             else
                             {
@@ -242,11 +242,11 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                                     // getParentData();
                                     //  const _id = response.data.survey._id; The id to redirect to if you wish
                                     getParentData();
-                                    setParentAlert(new AlertType('Successfully updated collections.', "success")); 
+                                    setParentAlert(new AlertType('Successfully updated series.', "success")); 
                                 }
                                 else
                                 {
-                                    setParentAlert(new AlertType('Unable to update collections. Please refresh and try again.', "error"));
+                                    setParentAlert(new AlertType('Unable to update series. Please refresh and try again.', "error"));
                                 }
                             }
                         });
@@ -254,7 +254,7 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
             }
             else
             {
-                setParentAlert(new AlertType('Unable to assign members to collection. Please refresh and try again.', "error"));
+                setParentAlert(new AlertType('Unable to assign members to series. Please refresh and try again.', "error"));
             }
 
         }, [ appState, getParentData, setParentAlert, selectedCollectionList, selectedMemberList]);
@@ -297,18 +297,18 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                         {
                             if(error)
                             {
-                                setParentAlert(new AlertType('Unable create  member Collection. Please refresh and try again.', "error"));
+                                setParentAlert(new AlertType('Unable create  member series. Please refresh and try again.', "error"));
                             }
                             else
                             {
                                 if(response.status === 201)
                                 {
                                     getParentData();
-                                    setParentAlert(new AlertType('Member Collection created.', "success"));
+                                    setParentAlert(new AlertType('Member series created.', "success"));
                                 }
                                 else
                                 {
-                                    setParentAlert(new AlertType('Unable create Member Collection. Please refresh and try again.', "error"));
+                                    setParentAlert(new AlertType('Unable create Member Series. Please refresh and try again.', "error"));
                                 }
                             }
                         });

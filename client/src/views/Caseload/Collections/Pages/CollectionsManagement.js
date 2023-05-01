@@ -164,7 +164,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                 {   
                     //Bad callback call
                     //setAlert(new AlertType(err.message, "error"));
-                    setAlert(new AlertType('Unable to retrieve Collections Templates. Please refresh and try again.', "error"));
+                    setAlert(new AlertType('Unable to retrieve Series Templates. Please refresh and try again.', "error"));
                 }
                 else
                 {
@@ -175,7 +175,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                     else
                     {
                         //Bad HTTP Response
-                        setAlert(new AlertType('Unable to retrieve Collections Templates. Please refresh and try again.', "error"));
+                        setAlert(new AlertType('Unable to retrieve Series Templates. Please refresh and try again.', "error"));
                     }
                 }
 
@@ -193,7 +193,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                 {   
                     //Bad callback call
                     //setAlert(new AlertType(err.message, "error"));
-                    setAlert(new AlertType('Unable to retrieve Member Collections. Please refresh and try again.', "error"));
+                    setAlert(new AlertType('Unable to retrieve Member Series. Please refresh and try again.', "error"));
                 }
                 else
                 {
@@ -204,7 +204,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
                     else
                     {
                         //Bad HTTP Response
-                        setAlert(new AlertType('Unable to retrieve Member Collections. Please refresh and try again.', "error"));
+                        setAlert(new AlertType('Unable to retrieve Member Series. Please refresh and try again.', "error"));
                     }
                 }
 

@@ -54,7 +54,7 @@ import { Checkbox } from '@material-ui/core';
         { id: 'completeness', numeric: false, disablePadding: true, label: 'Completeness' },
         { id: 'memberName', numeric: false, disablePadding: true, label: 'Client Name' },
         { id: 'memberId', numeric: false, disablePadding: true, label: 'Client ID' },
-        { id: 'memberCollectionId', numeric: false, disablePadding: true, label: 'Member Collection ID' },
+        { id: 'memberCollectionId', numeric: false, disablePadding: true, label: 'Member Series ID' },
         { id: 'surveyTemplateId', numeric: false, disablePadding: true, label: 'Survey Template ID' },
         { id: 'createdAt', numeric: true, disablePadding: false, label: 'Date Created' },
         { id: 'updatedAt', numeric: true, disablePadding: false, label: 'Date Last Modified' },

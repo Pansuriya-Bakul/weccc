@@ -251,30 +251,71 @@ class Main extends Component {
 	// 	}); // call the get request.
 	// };
 
+	// getPatientSurveys = async (patientId) => {
+	// 	let { appState } = this.props;
+	// 	let url = 'users/client/' + patientId;
+	// 	const token = appState.token;
+
+	// 	try {
+	// 		const response = await new Promise((resolve, reject) => {
+	// 			get(url, token, (error, response) => {
+	// 				if (error) {
+	// 					reject(error);
+	// 				} else {
+	// 					resolve(response);
+	// 				}
+	// 			});
+	// 		});
+
+	// 		this.setState({
+	// 			patientCollectionNames: response.data.collectionNames,
+	// 			patientCollections: response.data.collections
+	// 		  }, () => {
+	// 			// the state has been updated, now resolve the Promise with the response
+	// 			resolve(response);
+	// 		  });
+
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
+
 	getPatientSurveys = async (patientId) => {
 		let { appState } = this.props;
 		let url = 'users/client/' + patientId;
 		const token = appState.token;
-
+	  
 		try {
-			const response = await new Promise((resolve, reject) => {
-				get(url, token, (error, response) => {
-					if (error) {
-						reject(error);
-					} else {
-						resolve(response);
-					}
+		  // define the Promise outside of the get callback function
+		  const promise = new Promise((resolve, reject) => {
+			// define the resolve and reject functions here
+			const handleResponse = (error, response) => {
+			  if (error) {
+				reject(error);
+			  } else {
+				// update the state with the survey data
+				this.setState({
+				  patientCollectionNames: response.data.collectionNames,
+				  patientCollections: response.data.collections
+				}, () => {
+				  // the state has been updated, now resolve the Promise with the response
+				  resolve(response);
 				});
-			});
-
-			// handle the response here
-			await new Promise(resolve => this.setState({ patientCollectionNames: response.data.collectionNames }, resolve));
-			await new Promise(resolve => this.setState({ patientCollections: response.data.collections }, resolve));
-
+			  }
+			};
+	  
+			// make the get request with the callback function
+			get(url, token, handleResponse);
+		  });
+	  
+		  // return the Promise
+		  return promise;
+	  
 		} catch (error) {
-			console.log(error);
+		  console.log(error);
 		}
-	};
+	  };
+	  
 
 	getQuote = () => {
 		return fetch("https://type.fit/api/quotes")
@@ -323,7 +364,7 @@ class Main extends Component {
 							}
 						})
 						let tempArr = this.state.patientCollectionCompleteness
-						console.log(tempArr);
+						// console.log(tempArr);
 						this.setState({ patientCollectionCompleteness: [...tempArr, temp] })
 					}
 				})
@@ -344,6 +385,8 @@ class Main extends Component {
 		for (let user of this.state.patientsList) {
 			await this.getPatientSurveys(user._id);
 			await this.patientCheckComplete();
+			console.log(user);
+			console.log(this.state.collectionNames);
 			temp[user._id] = [this.state.patientCollectionNames, this.state.patientCollections, this.state.patientCollectionCompleteness];
 			this.setState({ patientCollectionCompleteness: [] });
 
@@ -655,7 +698,7 @@ class Main extends Component {
 																	);
 																})
 															) : (
-																'No services assigned'
+																'No series assigned'
 															)}
 														</Typography>
 													</Grid>
