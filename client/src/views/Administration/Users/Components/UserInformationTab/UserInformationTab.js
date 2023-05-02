@@ -1175,10 +1175,10 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                             </Typography>
                                             <Divider light />
                                         </Grid>
-                                        <Grid item xs={1}>
+                                        {/* <Grid item xs={2}>
                                             <TextField id="Sequence-id" size="small" variant="outlined" fullWidth label="Sequence ID" readOnly disabled value={userEdit.sequence_id} />
-                                        </Grid>
-                                        <Grid item xs={1}>
+                                        </Grid> */}
+                                        <Grid item xs={3}>
                                             <TextField id="Sequence-prefix" size="small" variant="outlined" fullWidth label="Facility Prefix" readOnly disabled value={(userEdit.facilityId) ? userEdit.facilityId.prefix : ""} />
                                         </Grid>
                                         {appState.role !== "Admin" ? (
@@ -1226,7 +1226,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                             />
                                         </Grid>
                                         <Grid item xs={7}></Grid>
-                                        <Grid item xs={1}>
+                                        <Grid item xs={2}>
                                             <TextField
                                                 id="Gender"
                                                 select
@@ -1245,7 +1245,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 <MenuItem key={'NonBinary'} value={'NonBinary'}>Non-Binary</MenuItem>
                                             </TextField>
                                         </Grid>
-                                        <Grid item xs={1}>
+                                        <Grid item xs={2}>
                                             <TextField id="Gender2" fullWidth label="Specify Gender" onChange={(event) => { gender2Handler(event); }} value={gender2} error={gender2Error}
                                                 size="small"
                                                 variant="outlined"
@@ -1254,7 +1254,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 disabled={!editable || !isGender2}
                                             />
                                         </Grid>
-                                        <Grid item xs={10}></Grid>
+                                        <Grid item xs={7}></Grid>
                                         <Grid item xs={2}>
                                             <TextField
                                                 id="Date-Of-Birth"
@@ -1286,7 +1286,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 </IconButton>
                                             </Grid> */}
                                         <Grid item xs={10}></Grid>
-                                        <Grid item xs={1}>
+                                        <Grid item xs={2}>
                                             <TextField
                                                 id="Language"
                                                 select
@@ -1304,7 +1304,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 <MenuItem key={'Other'} value={'Other'}>Other</MenuItem>
                                             </TextField>
                                         </Grid>
-                                        <Grid item xs={1}>
+                                        <Grid item xs={2}>
                                             <TextField id="Language2" fullWidth label="Specify Language" onChange={(event) => { language2Handler(event); }} value={language2} error={language2Error}
                                                 size="small"
                                                 variant="outlined"
@@ -1345,7 +1345,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 </IconButton>
                                             </Grid> */}
                                         <Grid item xs={10}></Grid>
-                                        <Grid item xs={2}>
+                                        <Grid item xs={3}>
                                             <TextField id="Street" size="small" variant="outlined" fullWidth label="Street" onChange={(event) => { streetHandler(event); }}
                                                 value={street} error={streetError}
                                                 readOnly={editable ? false : true}
@@ -1357,8 +1357,8 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                     <EditIcon />
                                                 </IconButton>
                                             </Grid> */}
-                                        <Grid item xs={10}></Grid>
-                                        <Grid item xs={2}>
+                                        <Grid item xs={7}></Grid>
+                                        <Grid item xs={3}>
                                             <TextField id="City" size="small" variant="outlined" fullWidth label="City" onChange={(event) => { cityHandler(event); }}
                                                 value={city} error={cityError}
                                                 readOnly={editable ? false : true}
@@ -1370,7 +1370,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                     <EditIcon />
                                                 </IconButton>
                                             </Grid> */}
-                                        <Grid item xs={10}></Grid>
+                                        <Grid item xs={8}></Grid>
                                         <Grid item xs={2}>
                                             <TextField id="PostalCode" size="small" variant="outlined" fullWidth label="Postal Code" onChange={(event) => { postalCodeHandler(event); }}
                                                 value={postalCode} error={postalCodeError}
@@ -1384,7 +1384,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 </IconButton>
                                             </Grid> */}
                                         <Grid item xs={10}></Grid>
-                                        <Grid item xs={2}>
+                                        <Grid item xs={3}>
                                             <TextField
                                                 id="Province"
                                                 select
@@ -1418,8 +1418,8 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                     <EditIcon />
                                                 </IconButton>
                                             </Grid> */}
-                                        <Grid item xs={10}></Grid>
-                                        <Grid item xs={2}>
+                                        <Grid item xs={7}></Grid>
+                                        <Grid item xs={3}>
                                             <TextField id="Country" size="small" variant="outlined" fullWidth label="Country"
                                                 value={country} error={countryError}
                                                 required

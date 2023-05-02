@@ -136,9 +136,9 @@ class AppBarContent extends Component {
                         </Typography>
                     </div>
                     <div className={classes.sectionDesktop}>
-                        <IconButton color="inherit">
+                        {/* <IconButton color="inherit">
                             <NotificationsIcon />
-                        </IconButton>
+                        </IconButton> */}
                         <IconButton
                             color="inherit"
                             aria-owns={this.state.accountMenuOpen ? 'material-appbar' : undefined}

@@ -275,7 +275,7 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
 
                                         <Tab label="Intake" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
                                         <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
-                                        <Tab label="Assigned Members" id={`Tab-${2}`} aria-controls={`Tab-${0}`} />
+                                        <Tab label="Assigned Volunteers" id={`Tab-${2}`} aria-controls={`Tab-${0}`} />
                                         <Tab label="Change password" id={`Tab-${3}`} aria-controls={`Tab-${2}`} />
                                     </Tabs>
                                 )}

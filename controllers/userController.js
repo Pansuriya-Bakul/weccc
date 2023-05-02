@@ -345,7 +345,7 @@ exports.signup = (req, res, next) => {
 // The main authorization is handled by Passport, so
 // just generate a JWT!
 // ====================================================
-exports.login = (req, res, next) => {
+exports.login = async (req, res, next) => {
 	// log.warn(req);
 
 	if (req.user == null) {
@@ -359,6 +359,17 @@ exports.login = (req, res, next) => {
 	try {
 		if (req.user.enabled) {
 			if (req.user.info.name.length > 50) {
+
+				let facilityName = '';
+				let fPrefix = '';
+				await Facility.findById(req.user.facilityId)
+					.select('name prefix')
+					.exec()
+					.then(facility => {
+						facilityName = facility.name;
+						fPrefix = facility.prefix;
+					})
+
 				const token = signToken(req.user);
 
 				log.info('User ' + req.user.email + ' succesful authenticated.');
@@ -392,9 +403,9 @@ exports.login = (req, res, next) => {
 						enabled: req.user.enabled,
 						role: req.user.role,
 						facilityId: {
-							_id: '60e1f2bd08fa9904cc62cdf5',
-							name: 'Palliative IMS Facility',
-							prefix: 'YQG'
+							_id: req.user.facilityId,
+							name: facilityName,
+							prefix: fPrefix
 						},
 						createdAt: req.user.createdAt,
 						updatedAt: req.user.updatedAt,

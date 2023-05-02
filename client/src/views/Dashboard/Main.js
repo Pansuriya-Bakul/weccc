@@ -42,7 +42,8 @@ class Main extends Component {
 			collectionCompleteness: [],
 			patientCollectionCompleteness: [],
 			patientsList: [],
-			pMapping: {}
+			pMapping: {},
+			facilityName: ''
 		};
 	}
 
@@ -203,6 +204,7 @@ class Main extends Component {
 				// this.setState({ clientSurvey: response.data.surveys });
 				// this.setState({ clientCompletedSurvey: response.data.completedSurveys });
 				// this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
+				this.setState({ facilityName: response.data.facilityName })
 				this.setState({ collectionNames: response.data.collectionNames });
 				this.setState({ collections: response.data.collections });
 				if (this.state.collectionNames != undefined && this.state.collections != undefined) {
@@ -379,6 +381,9 @@ class Main extends Component {
 			return;
 		}
 		const templist = await this.getPatients()
+		if (templist == undefined) {
+			return;
+		}
 		this.setState({ patientsList: templist });
 		const temp = this.state.pMapping;
 

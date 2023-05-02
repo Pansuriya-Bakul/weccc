@@ -203,12 +203,12 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
                     appState={appState}
                 >
                     <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
-                        <Grid item>
+                        {/* <Grid item>
                             <Typography variant="h6" component="h6">
                                 Manage
                             </Typography>
                             <Divider />
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs>
                             <Box mx={3} my={1} boxShadow={0}>
                                 <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
@@ -341,14 +341,14 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
                             </Card>
                         </Box>
                     </Grid>
-                    <Grid item xs={12} container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
+                    {/* <Grid item xs={12} container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
                         <Grid item>
                             <Typography variant="h6" component="h6">
                                 Table
                             </Typography>
                             <Divider />
                         </Grid>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Box>
         </>
