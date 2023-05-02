@@ -32,7 +32,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';  //h1, p replacement Tag
 
 // ==================== Styles ====================
-const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
 ({
     root: {
         flexGrow: 1     // CSS determined this way, flexbox properties
@@ -45,212 +45,194 @@ const Management = (props) => { // Notice the arrow function... regular function
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+    // Declaration of Stateful Variables ===
+    const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
-        // Template or User Chapters boolean
-        const [isTemplates, setIsTemplates] = useState(true);
-        
-        // IsDense ; is the template table in compact form
-        const [isDense, setIsDense] = useState(true);
+    // Template or User Chapters boolean
+    const [isTemplates, setIsTemplates] = useState(true);
 
-        // Current dataList variable
-        const [dataList, setDataList] = useState(null);
+    // IsDense ; is the template table in compact form
+    const [isDense, setIsDense] = useState(true);
 
-        // Current dataList variable
-        const [searchFilteredDataList, setSearchFilteredDataList] = useState(null);
+    // Current dataList variable
+    const [dataList, setDataList] = useState(null);
 
-        // Current selected items dataList variable
-        const [selectedDataItemsList, setSelectedDataItemsList] = useState(null);
+    // Current dataList variable
+    const [searchFilteredDataList, setSearchFilteredDataList] = useState(null);
 
-        // Create Chapter Template Dialog Logic variables
-        const [createChapterTemplateDialog, setCreateChapterTemplateDialog] = useState(false);
-        const [createChapterTemplateDialogExecuting, setCreateChapterTemplateDialogExecuting] = useState(false);
+    // Current selected items dataList variable
+    const [selectedDataItemsList, setSelectedDataItemsList] = useState(null);
 
-        // Export Chapter / Template Dialog Logic variables
-        const [exportChapterDialog, setExportChapterDialog] = useState(false);
-        const [exportChapterDialogExecuting, setExportChapterDialogExecuting] = useState(false);
+    // Create Chapter Template Dialog Logic variables
+    const [createChapterTemplateDialog, setCreateChapterTemplateDialog] = useState(false);
+    const [createChapterTemplateDialogExecuting, setCreateChapterTemplateDialogExecuting] = useState(false);
 
-        // Create Chapter Template Dialog Logic variables
-        const [deleteChapterDialog, setDeleteChapterDialog] = useState(false);
-        const [deleteChapterDialogExecuting, setDeleteChapterDialogExecuting] = useState(false);
+    // Export Chapter / Template Dialog Logic variables
+    const [exportChapterDialog, setExportChapterDialog] = useState(false);
+    const [exportChapterDialogExecuting, setExportChapterDialogExecuting] = useState(false);
 
-        // Create User Chapter Dialog Logic variables
-        const [createChapterUserDialog, setCreateChapterUserDialog] = useState(false);
-        const [createChapterUserDialogExecuting, setCreateChapterUserDialogExecuting] = useState(false);
+    // Create Chapter Template Dialog Logic variables
+    const [deleteChapterDialog, setDeleteChapterDialog] = useState(false);
+    const [deleteChapterDialogExecuting, setDeleteChapterDialogExecuting] = useState(false);
+
+    // Create User Chapter Dialog Logic variables
+    const [createChapterUserDialog, setCreateChapterUserDialog] = useState(false);
+    const [createChapterUserDialogExecuting, setCreateChapterUserDialogExecuting] = useState(false);
 
 
-        // Alert variable
-        const [alert, setAlert] = useState(new AlertType());
+    // Alert variable
+    const [alert, setAlert] = useState(new AlertType());
 
     // Functions ===
 
-        const populateList = useCallback((data) => 
-        {
-            let tempArray = [];
+    const populateList = useCallback((data) => {
+        let tempArray = [];
 
-            if(isTemplates) {
-                for (let index = 0; index < data.length; ++index) 
-                {
-                    tempArray.push(
-                        {
-                            _id: data[index]._id,
-                            name: data[index].name,
-                            surveyJSON: data[index].surveyJSON,
-                            createdAt: data[index].createdAt,
-                            createdBy: data[index].createdBy,
-                            updatedAt: data[index].updatedAt,
-                            modifiedBy: data[index].modifiedBy
-                        }
-                    );
-                }
+        if (isTemplates) {
+            for (let index = 0; index < data.length; ++index) {
+                tempArray.push(
+                    {
+                        _id: data[index]._id,
+                        name: data[index].name,
+                        surveyJSON: data[index].surveyJSON,
+                        createdAt: data[index].createdAt,
+                        createdBy: data[index].createdBy,
+                        updatedAt: data[index].updatedAt,
+                        modifiedBy: data[index].modifiedBy
+                    }
+                );
+            }
+        }
+        else {
+            for (let index = 0; index < data.length; ++index) {
+                tempArray.push(
+                    {
+                        _id: data[index]._id,
+                        surveyTemplate: data[index].surveyTemplate,
+                        memberCollection: data[index].memberCollection || "",
+                        member: data[index].member,
+                        responseJSON: data[index].responseJSON,
+                        completeness: data[index].completeness,
+                        createdAt: data[index].createdAt,
+                        createdBy: data[index].createdBy,
+                        updatedAt: data[index].updatedAt,
+                        modifiedBy: data[index].modifiedBy
+                    }
+                );
+            }
+        }
+
+        setDataList([...tempArray]);
+        setSearchFilteredDataList([...tempArray]);
+        setSelectedDataItemsList([]);
+
+    }, [isTemplates]);
+
+    // Retrieve the list of Current user Chapters
+    const getUserChapters = useCallback(() => {
+
+        setDataList(null);
+
+        get("membersurveys/", appState.token, (err, res) => {
+            if (err) {
+                //Bad callback call
+                //setAlert(new AlertType(err.message, "error"));
+                setAlert(new AlertType('Unable to retrieve User Chapters. Please refresh and try again.', "error"));
             }
             else {
-                for (let index = 0; index < data.length; ++index) 
-                {
-                    tempArray.push(
-                        {
-                            _id: data[index]._id,
-                            surveyTemplate: data[index].surveyTemplate,
-                            memberCollection: data[index].memberCollection || "",
-                            member: data[index].member,
-                            responseJSON: data[index].responseJSON,
-                            completeness: data[index].completeness,
-                            createdAt: data[index].createdAt,
-                            createdBy: data[index].createdBy,
-                            updatedAt: data[index].updatedAt,
-                            modifiedBy: data[index].modifiedBy
-                        }
-                    );
+                if (res.status === 200) {
+                    populateList(res.data.memberSurveyList);
+                }
+                else {
+                    //Bad HTTP Response
+                    setAlert(new AlertType('Unable to retrieve User Chapters. Please refresh and try again.', "error"));
                 }
             }
 
-            setDataList([...tempArray]);
-            setSearchFilteredDataList([...tempArray]);
-            setSelectedDataItemsList([]);
+        });
+    }, [populateList, appState.token]);
 
-        }, [ isTemplates ] );
+    // Retrieve the list of Current Templates
+    const getTemplates = useCallback(() => {
+        setDataList(null);
 
-        // Retrieve the list of Current user Chapters
-        const getUserChapters = useCallback(() => 
-        {
-
-            setDataList(null);
-
-            get("membersurveys/", appState.token, (err, res) => 
-            {
-                if(err)
-                {   
-                    //Bad callback call
-                    //setAlert(new AlertType(err.message, "error"));
-                    setAlert(new AlertType('Unable to retrieve User Chapters. Please refresh and try again.', "error"));
+        get("surveys/", appState.token, (err, res) => {
+            if (err) {
+                //Bad callback call
+                //setAlert(new AlertType(err.message, "error"));
+                setAlert(new AlertType('Unable to retrieve templates. Please refresh and try again.', "error"));
+            }
+            else {
+                if (res.status === 200) {
+                    populateList(res.data.surveyList);
                 }
-                else
-                {
-                    if(res.status === 200)
-                    {
-                        populateList(res.data.memberSurveyList);
-                    }
-                    else
-                    {
-                        //Bad HTTP Response
-                        setAlert(new AlertType('Unable to retrieve User Chapters. Please refresh and try again.', "error"));
-                    }
-                }
-
-            });
-        }, [ populateList, appState.token ] );
-        
-        // Retrieve the list of Current Templates
-        const getTemplates = useCallback(() => 
-        {
-            setDataList(null);
-
-            get("surveys/", appState.token, (err, res) => 
-            {
-                if(err)
-                {
-                    //Bad callback call
-                    //setAlert(new AlertType(err.message, "error"));
+                else {
+                    //Bad HTTP Response
                     setAlert(new AlertType('Unable to retrieve templates. Please refresh and try again.', "error"));
                 }
-                else
-                {
-                    if(res.status === 200)
-                    {
-                        populateList(res.data.surveyList);
-                    }
-                    else
-                    {
-                        //Bad HTTP Response
-                        setAlert(new AlertType('Unable to retrieve templates. Please refresh and try again.', "error"));
-                    }
-                }
+            }
 
-            });
-        }, [ populateList, appState.token ] );
+        });
+    }, [populateList, appState.token]);
 
 
-        const getData = useCallback(() => {
-            isTemplates? getTemplates() : getUserChapters();
-        }, [ isTemplates, getTemplates, getUserChapters ] );
+    const getData = useCallback(() => {
+        isTemplates ? getTemplates() : getUserChapters();
+    }, [isTemplates, getTemplates, getUserChapters]);
 
     // Hooks ===
 
-        // Fetch DataList | First Render Only
-        useEffect( () =>
-        {
-            ToggleDrawerClose();
-            setTimeout(() => {
-                CheckAuthenticationValidity( (tokenValid) => 
-                {
-                    if(tokenValid)
-                    {
-                        getData();
-                    }
-                    else {
-                        //Bad HTTP Response
-                        setAlert(null);
-                    }
-                });
-            }, 200);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ ]);
+    // Fetch DataList | First Render Only
+    useEffect(() => {
+        ToggleDrawerClose();
+        setTimeout(() => {
+            CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
+                    getData();
+                }
+                else {
+                    //Bad HTTP Response
+                    setAlert(null);
+                }
+            });
+        }, 200);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-        // Fetch DataList version | Based on isTemplate or not
-        useEffect( () => {
-            getData();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ isTemplates ] );
+    // Fetch DataList version | Based on isTemplate or not
+    useEffect(() => {
+        getData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isTemplates]);
 
-        useEffect( () => {
-            
-            setSearchFilteredDataList(dataList);
-            setSelectedDataItemsList([]);
+    useEffect(() => {
 
-        }, [ dataList ] );
+        setSearchFilteredDataList(dataList);
+        setSelectedDataItemsList([]);
+
+    }, [dataList]);
 
     // Component Render Section ===
     return (
-        alert != null? (
+        alert != null ? (
             // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
             <div className={classes.root}>
                 <Grid container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="stretch"
-                style={ {"height": "100%"} }
-                spacing={1}
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="stretch"
+                    style={{ "height": "100%" }}
+                    spacing={1}
                 >
                     <Grid item xs={5}>
                         <Box mx={1} my={1}>
                             <Typography variant="h5" color="inherit" align="left" gutterBottom>
-                                Manage Chapters
+                                Manage Modules
                             </Typography>
-                        </Box> 
+                        </Box>
                     </Grid>
                     <Grid item xs={6}>
                         <Box mx={1} my={1}>
@@ -267,7 +249,7 @@ const Management = (props) => { // Notice the arrow function... regular function
                                     alignItems="stretch"
                                     spacing={0}
                                 >
-                                    {dataList && searchFilteredDataList && selectedDataItemsList? (
+                                    {dataList && searchFilteredDataList && selectedDataItemsList ? (
                                         <Grid item xs={12}>
                                             <ManagementControlPanel
                                                 isDense={isDense}
@@ -302,7 +284,7 @@ const Management = (props) => { // Notice the arrow function... regular function
                                     )}
                                 </Grid>
                             </Card>
-                        </Box>    
+                        </Box>
                     </Grid>
                 </Grid>
                 <CreateChapterTemplateDialog
@@ -351,12 +333,12 @@ const Management = (props) => { // Notice the arrow function... regular function
                 Not Authorized. Please refresh and try again.
             </Typography>
         )
-        
+
     );
 }
 
 // ======================== Component PropType Check ========================
-Management.propTypes = 
+Management.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -366,8 +348,8 @@ Management.propTypes =
 
 Management.defaultProps = {
     appState: {},
-    ToggleDrawerClose: () => {},
-    CheckAuthenticationValidity: () => {}
+    ToggleDrawerClose: () => { },
+    CheckAuthenticationValidity: () => { }
 }
 
 export default Management;  // You can even shorthand this line by adding this at the function [Component] declaration stage

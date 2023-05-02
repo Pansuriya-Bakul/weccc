@@ -21,7 +21,7 @@ import Divider from '@material-ui/core/Divider';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
-import ButtonGroup from  '@material-ui/core/ButtonGroup';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 
@@ -45,32 +45,32 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            flexGrow: 1,     // CSS determined this way, flexbox properties
-            height: '100%'
-        },
-        rootGrid: {
-            height: '100%'
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        flexGrow: 1,     // CSS determined this way, flexbox properties
+        height: '100%'
+    },
+    rootGrid: {
+        height: '100%'
+    }
+}));
 
 // ================= Static Variables ================
-const selectFilterOptionsTemplate = [ { key: "CollectionId", value: "collectionId", display: "Service ID"}, 
-    { key: "CollectionName", value: "collectionName", display: "Service Name"}, 
-    { key: "NumSurveyTemplates", value: "numSurveyTemplates", display: "# Chapter Templates"} ];
+const selectFilterOptionsTemplate = [{ key: "CollectionId", value: "collectionId", display: "Series ID" },
+{ key: "CollectionName", value: "collectionName", display: "Series Name" },
+{ key: "NumSurveyTemplates", value: "numSurveyTemplates", display: "# Chapter Templates" }];
 
-const selectFilterOptionsMember = [ { key: "CollectionId", value: "collectionId", display: "Service ID"}, 
-    { key: "CollectionName", value: "collectionName", display: "Service Name"}, 
-    { key: "NumMemberSurveys", value: "numMemberSurveys", display: "# Member Chapters"}, 
-    { key: "ClientId", value: "clientId", display: "Client ID"}, 
-    { key: "ClientName", value: "clientName", display: "Client Name"}, 
-    { key: "Completeness", value: "completeness", display: "Completeness"} ];
+const selectFilterOptionsMember = [{ key: "CollectionId", value: "collectionId", display: "Series ID" },
+{ key: "CollectionName", value: "collectionName", display: "Series Name" },
+{ key: "NumMemberSurveys", value: "numMemberSurveys", display: "# Member Chapters" },
+{ key: "ClientId", value: "clientId", display: "Client ID" },
+{ key: "ClientName", value: "clientName", display: "Client Name" },
+{ key: "Completeness", value: "completeness", display: "Completeness" }];
 
-const selectFilterOptionsMemberClient = [ { key: "CollectionId", value: "collectionId", display: "Service ID"}, 
-{ key: "CollectionName", value: "collectionName", display: "Service Name"}, 
-{ key: "Completeness", value: "completeness", display: "Completeness"} ]
+const selectFilterOptionsMemberClient = [{ key: "CollectionId", value: "collectionId", display: "Series ID" },
+{ key: "CollectionName", value: "collectionName", display: "Series Name" },
+{ key: "Completeness", value: "completeness", display: "Completeness" }]
 
 // ================= Static Functions ================
 
@@ -81,288 +81,259 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const {  setParentAlert,
-            isDense, setIsDense,
-            isTemplates, setIsTemplates,
-            dataList, getParentData,
-            userID,
-            setSearchFilteredDataList,
-            setCreateCollectionTemplateDialog, setCreateMemberCollectionDialog, setAssignMemberDialog, setAssignProjectDialog, setAssignCoordinatorDialog } = props;
+    // Declaration of Stateful Variables ===
+    const { setParentAlert,
+        isDense, setIsDense,
+        isTemplates, setIsTemplates,
+        dataList, getParentData,
+        userID,
+        setSearchFilteredDataList,
+        setCreateCollectionTemplateDialog, setCreateMemberCollectionDialog, setAssignMemberDialog, setAssignProjectDialog, setAssignCoordinatorDialog } = props;
 
-        const [selectSearchFilterOption, setSelectSearchFilterOption ] = useState(selectFilterOptionsTemplate[0].value);
-        const [searchFilter, setSearchFilter] = useState("");
+    const [selectSearchFilterOption, setSelectSearchFilterOption] = useState(selectFilterOptionsTemplate[0].value);
+    const [searchFilter, setSearchFilter] = useState("");
 
     // Functions ===
 
-        const pullHandler = useCallback(() =>
+    const pullHandler = useCallback(() => {
+        try {
+            getParentData();
+            setParentAlert(new AlertType('Refreshed initiated...', "info"));
+        }
+        catch
         {
-            try
-            {
-                getParentData();
-                setParentAlert(new AlertType('Refreshed initiated...', "info"));
-            }
-            catch
-            {
 
-            }
-            
-        }, [ getParentData, setParentAlert ]);
+        }
 
-        const createCollectionTemplateHandler = useCallback(() =>
-        {
-            setCreateCollectionTemplateDialog(true);
-        }, [ setCreateCollectionTemplateDialog ]);
+    }, [getParentData, setParentAlert]);
 
-        const createMemberCollectionHandler = useCallback(() =>
-        {
-            setCreateMemberCollectionDialog(true);
-        }, [ setCreateMemberCollectionDialog ]);
+    const createCollectionTemplateHandler = useCallback(() => {
+        setCreateCollectionTemplateDialog(true);
+    }, [setCreateCollectionTemplateDialog]);
 
-        const compactHandler = useCallback((event) =>
-        {
-            setIsDense(event.target.checked);
-        }, [ setIsDense ]);
+    const createMemberCollectionHandler = useCallback(() => {
+        setCreateMemberCollectionDialog(true);
+    }, [setCreateMemberCollectionDialog]);
 
-        const collectionTemplateButtonHandler = useCallback(() =>
-        {
-            setIsTemplates(true);
-            setSelectSearchFilterOption(selectFilterOptionsTemplate[0].value);
-        }, [ setIsTemplates ]);
+    const compactHandler = useCallback((event) => {
+        setIsDense(event.target.checked);
+    }, [setIsDense]);
 
-        const AssignMemberHandler = useCallback(() =>
-        {
-            setAssignMemberDialog(true);
-        }, [ setAssignMemberDialog ]);
+    const collectionTemplateButtonHandler = useCallback(() => {
+        setIsTemplates(true);
+        setSelectSearchFilterOption(selectFilterOptionsTemplate[0].value);
+    }, [setIsTemplates]);
 
-        const AssignCoordinatorHandler = useCallback(() =>
-        {
-            setAssignCoordinatorDialog(true);
-        }, [ setAssignCoordinatorDialog ]);
+    const AssignMemberHandler = useCallback(() => {
+        setAssignMemberDialog(true);
+    }, [setAssignMemberDialog]);
 
-        const AssignProjectHandler = useCallback(() =>
-        {
-            setAssignProjectDialog(true);
-        }, [ setAssignProjectDialog ]);
+    const AssignCoordinatorHandler = useCallback(() => {
+        setAssignCoordinatorDialog(true);
+    }, [setAssignCoordinatorDialog]);
 
-        const memberCollectionButtonHandler = useCallback(() =>
-        {
-            setIsTemplates(false);
+    const AssignProjectHandler = useCallback(() => {
+        setAssignProjectDialog(true);
+    }, [setAssignProjectDialog]);
 
-            if(userID)
-            {
-                setSelectSearchFilterOption(selectFilterOptionsMemberClient[0].value);
-            }
-            else
-            {
-                setSelectSearchFilterOption(selectFilterOptionsMember[0].value);
-            }
-            
-        }, [ setIsTemplates, userID ]);
+    const memberCollectionButtonHandler = useCallback(() => {
+        setIsTemplates(false);
 
-        const selectSearchHandler = useCallback((event) =>
-        {
-            setSearchFilter("");
-            setSelectSearchFilterOption(event.target.value);
+        if (userID) {
+            setSelectSearchFilterOption(selectFilterOptionsMemberClient[0].value);
+        }
+        else {
+            setSelectSearchFilterOption(selectFilterOptionsMember[0].value);
+        }
 
-        }, [ setSelectSearchFilterOption ]);
+    }, [setIsTemplates, userID]);
 
-        const searchHandler = useCallback((event) =>
-        {
-            let tempFilter = event.target.value.toUpperCase();
-            let tempArray = [];
-            dataList.forEach( item => 
-            {
-                switch(selectSearchFilterOption)
-                {
-                    case "collectionId":
+    const selectSearchHandler = useCallback((event) => {
+        setSearchFilter("");
+        setSelectSearchFilterOption(event.target.value);
 
-                            if(item._id.toUpperCase().indexOf(tempFilter) > -1)
-                            {
-                                tempArray.push(item);
-                            }
-    
-                            break;
+    }, [setSelectSearchFilterOption]);
 
-                    case "collectionName":
-                        
-                        if(isTemplates)
-                        {
-                            if(item.name.toUpperCase().indexOf(tempFilter) > -1)
-                            {
-                                tempArray.push(item);
-                            }
+    const searchHandler = useCallback((event) => {
+        let tempFilter = event.target.value.toUpperCase();
+        let tempArray = [];
+        dataList.forEach(item => {
+            switch (selectSearchFilterOption) {
+                case "collectionId":
 
-                        }
-                        else
-                        {
-                            if(item.collectionTemplate.name.toUpperCase().indexOf(tempFilter) > -1)
-                            {
-                                tempArray.push(item);
-                            }
-                        }
+                    if (item._id.toUpperCase().indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
 
-                        
-                        break;
+                    break;
 
-                    case "clientId":
+                case "collectionName":
 
-                        if(item.member._id.toUpperCase().indexOf(tempFilter) > -1)
-                        {
+                    if (isTemplates) {
+                        if (item.name.toUpperCase().indexOf(tempFilter) > -1) {
                             tempArray.push(item);
                         }
 
-                        break;
-                    
-                    case "clientName":
-
-                            if(item.member.info.name.toUpperCase().indexOf(tempFilter) > -1)
-                            {
-                                tempArray.push(item);
-                            }
-    
-                            break;
-
-                    case "completeness":
-
-                        if(item.completeness.toUpperCase().indexOf(tempFilter) > -1)
-                        {
+                    }
+                    else {
+                        if (item.collectionTemplate.name.toUpperCase().indexOf(tempFilter) > -1) {
                             tempArray.push(item);
                         }
+                    }
 
-                        break;
 
-                    case "numSurveyTemplates":
+                    break;
 
-                        if(item.surveyTemplates.length.toUpperCase().indexOf(tempFilter) > -1)
-                        {
-                            tempArray.push(item);
-                        }
+                case "clientId":
 
-                        break;
-                    
-                    case "numMemberSurveys":
+                    if (item.member._id.toUpperCase().indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
 
-                        if(item.memberSurveys.length.toUpperCase().indexOf(tempFilter) > -1)
-                        {
-                            tempArray.push(item);
-                        }
+                    break;
 
-                        break;
+                case "clientName":
 
-                    default:
-                }
-                
-            });
+                    if (item.member.info.name.toUpperCase().indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
 
-            setSearchFilter(event.target.value);
-            setSearchFilteredDataList(tempArray);
+                    break;
 
-        }, [ dataList, setSearchFilteredDataList, selectSearchFilterOption, isTemplates ]);
+                case "completeness":
+
+                    if (item.completeness.toUpperCase().indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
+
+                    break;
+
+                case "numSurveyTemplates":
+
+                    if (item.surveyTemplates.length.toUpperCase().indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
+
+                    break;
+
+                case "numMemberSurveys":
+
+                    if (item.memberSurveys.length.toUpperCase().indexOf(tempFilter) > -1) {
+                        tempArray.push(item);
+                    }
+
+                    break;
+
+                default:
+            }
+
+        });
+
+        setSearchFilter(event.target.value);
+        setSearchFilteredDataList(tempArray);
+
+    }, [dataList, setSearchFilteredDataList, selectSearchFilterOption, isTemplates]);
 
 
     // Hooks ===
 
-        // First Render only because of the [ ] empty array tracking with the useEffect
-        useEffect( () =>
-        {
-            setSearchFilter("");
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ dataList ]);
+    // First Render only because of the [ ] empty array tracking with the useEffect
+    useEffect(() => {
+        setSearchFilter("");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dataList]);
 
-        useEffect( () =>
-        {
-            if(searchFilter === "")
-            {
-                setSearchFilteredDataList(dataList);
-            }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ setSelectSearchFilterOption, searchFilter ]);
+    useEffect(() => {
+        if (searchFilter === "") {
+            setSearchFilteredDataList(dataList);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [setSelectSearchFilterOption, searchFilter]);
 
     // Render Section ===
 
-        return (
-            <>
-                <Box mx={2} my={1} boxShadow={0}>
-                    <Grid
-                        container
-                        direction="column"
-                        justifyContent="flex-start"
-                        alignItems="stretch"
-                        spacing={1}
-                    >
-                        <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
-                            <Grid item>
-                                <Typography variant="h6" component="h6">
-                                    Manage
-                                </Typography>
-                                <Divider />
-                            </Grid>
-                            <Grid item xs>
-                                <Box mx={3} my={1} boxShadow={0}>
-                                    <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                                        <Grid item>
-                                                <ButtonGroup size="small" variant="contained" color="secondary">
-                                                        <Button 
-                                                            startIcon={<CheckBoxOutlineBlankOutlinedIcon />}
-                                                            disabled={isTemplates}
-                                                            onClick={ () => { collectionTemplateButtonHandler(); }}
-                                                        >
-                                                            Service Templates
-                                                        </Button>
-                                                        <Button
-                                                            startIcon={<ListAltOutlinedIcon />}
-                                                            disabled={!isTemplates}
-                                                            onClick={ () => { memberCollectionButtonHandler(); }}
-                                                        >
-                                                            Service Instances
-                                                        </Button>
-                                                </ButtonGroup>
-                                            </Grid>
-                                        <Grid item>
-                                            <Tooltip
-                                                placement="bottom"
-                                                title="Refresh Online Collections"
+    return (
+        <>
+            <Box mx={2} my={1} boxShadow={0}>
+                <Grid
+                    container
+                    direction="column"
+                    justifyContent="flex-start"
+                    alignItems="stretch"
+                    spacing={1}
+                >
+                    <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
+                        <Grid item>
+                            <Typography variant="h6" component="h6">
+                                Manage
+                            </Typography>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs>
+                            <Box mx={3} my={1} boxShadow={0}>
+                                <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                                    <Grid item>
+                                        <ButtonGroup size="small" variant="contained" color="secondary">
+                                            <Button
+                                                startIcon={<CheckBoxOutlineBlankOutlinedIcon />}
+                                                disabled={isTemplates}
+                                                onClick={() => { collectionTemplateButtonHandler(); }}
                                             >
-                                                <Button 
-                                                    size="small" 
-                                                    variant="contained" 
-                                                    color="primary"
-                                                    startIcon={<RefreshIcon />}
-                                                    onClick={() => { pullHandler(); }}
-                                                >
-                                                    Refresh
-                                                </Button>
-                                            </Tooltip> 
-                                        </Grid>
-                                        {isTemplates? (
-                                            <>
-                                                {appState.role =="Admin"? (
-    //Edited by P. Only Admin can create a new survey template
+                                                Series Templates
+                                            </Button>
+                                            <Button
+                                                startIcon={<ListAltOutlinedIcon />}
+                                                disabled={!isTemplates}
+                                                onClick={() => { memberCollectionButtonHandler(); }}
+                                            >
+                                                Series Instances
+                                            </Button>
+                                        </ButtonGroup>
+                                    </Grid>
+                                    <Grid item>
+                                        <Tooltip
+                                            placement="bottom"
+                                            title="Refresh Online Collections"
+                                        >
+                                            <Button
+                                                size="small"
+                                                variant="contained"
+                                                color="primary"
+                                                startIcon={<RefreshIcon />}
+                                                onClick={() => { pullHandler(); }}
+                                            >
+                                                Refresh
+                                            </Button>
+                                        </Tooltip>
+                                    </Grid>
+                                    {isTemplates ? (
+                                        <>
+                                            {appState.role == "Admin" ? (
+                                                //Edited by P. Only Admin can create a new survey template
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
-                                                        title="Create Service Template"
+                                                        title="Create Series Template"
                                                     >
-                                                        <Button 
-                                                            size="small" 
-                                                            variant="contained" 
+                                                        <Button
+                                                            size="small"
+                                                            variant="contained"
                                                             color="primary"
                                                             startIcon={<AddBoxOutlinedIcon />}
                                                             onClick={() => { createCollectionTemplateHandler(); }}
                                                         >
-                                                            Start a Service Template
+                                                            Start a Series Template
                                                         </Button>
                                                     </Tooltip>
-                                                </Grid>): <></>}
-                                                {appState.role=="Admin" ? (
+                                                </Grid>) : <></>}
+                                            {appState.role == "Admin" ? (
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
-                                                        title="Assign Coordinators to Service"
+                                                        title="Assign Coordinators to Series"
                                                     >
                                                         <Button
                                                             size="small"
@@ -375,35 +346,35 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                             Assign Coordinator
                                                         </Button>
                                                     </Tooltip>
-                                                </Grid>):(<></>)}
-                                                
-                                                <Grid item>
-                                                    <Tooltip
-                                                        placement="bottom"
-                                                        title="Assign Members to Service"
-                                                    >
-                                                        <Button 
-                                                            size="small" 
-                                                            variant="contained" 
-                                                            color="secondary"
-                                                            disabled={!isTemplates}
-                                                            startIcon={<AddBoxOutlinedIcon />}
-                                                            onClick={() => { AssignMemberHandler(); }}
-                                                        >
-                                                            Assign Member
-                                                        </Button>
-                                                    </Tooltip> 
-                                                </Grid>
+                                                </Grid>) : (<></>)}
 
-                                                {appState.role == "Admin" ? ( //Edited by P., appState has been added to show the project assignment only to the Admin
+                                            <Grid item>
+                                                <Tooltip
+                                                    placement="bottom"
+                                                    title="Assign Members to Series"
+                                                >
+                                                    <Button
+                                                        size="small"
+                                                        variant="contained"
+                                                        color="secondary"
+                                                        disabled={!isTemplates}
+                                                        startIcon={<AddBoxOutlinedIcon />}
+                                                        onClick={() => { AssignMemberHandler(); }}
+                                                    >
+                                                        Assign Member
+                                                    </Button>
+                                                </Tooltip>
+                                            </Grid>
+
+                                            {appState.role == "Admin" ? ( //Edited by P., appState has been added to show the project assignment only to the Admin
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
-                                                        title="Assign Projects to Service"
+                                                        title="Assign Projects to Series"
                                                     >
-                                                        <Button 
-                                                            size="small" 
-                                                            variant="contained" 
+                                                        <Button
+                                                            size="small"
+                                                            variant="contained"
                                                             color="secondary"
                                                             disabled={!isTemplates}
                                                             startIcon={<AddBoxOutlinedIcon />}
@@ -411,55 +382,55 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                         >
                                                             Assign Project
                                                         </Button>
-                                                    </Tooltip> 
+                                                    </Tooltip>
                                                 </Grid>
-                                                ) : (
-                                                    <>
-                                                    </>
-                                                    )}
-                                            </>
-                                        ) : (
-                                            <>
-                                        {appState.role == "Admin" ? ( //Edited by P., appState has been added to remove create new instance link
-                                        <Grid item>
-                                        <Tooltip
-                                            placement="bottom"
-                                            title="Create a Member Service Instance"
-                                        >
-                                            <Button 
-                                                size="small" 
-                                                variant="contained" 
-                                                color="primary"
-                                                startIcon={<AddBoxOutlinedIcon />}
-                                                onClick={() => { createMemberCollectionHandler(); }}
-                                            >
-                                                Start a Service Instance
-                                            </Button>
-                                        </Tooltip> 
-                                    </Grid>):<></>}
-                                    </>   
-                                        )}
-                                        
-                                    </Grid>
-                                </Box>
-                            </Grid>
-                            <Grid item>
-                                <Tooltip
-                                    placement="left"
-                                    title="Use this page to manage your services."
-                                >
-                                    <IconButton>
-                                        <HelpOutlineIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </Grid>
+                                            ) : (
+                                                <>
+                                                </>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            {appState.role == "Admin" ? ( //Edited by P., appState has been added to remove create new instance link
+                                                <Grid item>
+                                                    <Tooltip
+                                                        placement="bottom"
+                                                        title="Create a Member Series Instance"
+                                                    >
+                                                        <Button
+                                                            size="small"
+                                                            variant="contained"
+                                                            color="primary"
+                                                            startIcon={<AddBoxOutlinedIcon />}
+                                                            onClick={() => { createMemberCollectionHandler(); }}
+                                                        >
+                                                            Start a Series Instance
+                                                        </Button>
+                                                    </Tooltip>
+                                                </Grid>) : <></>}
+                                        </>
+                                    )}
+
+                                </Grid>
+                            </Box>
                         </Grid>
-                        <Grid item xs={12} container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
-                            <Box mx={1} my={1} boxShadow={0}>
-                                <Card>
-                                    <Box mx={1} my={1} boxShadow={0}>
-                                        <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={3}>
-                                            <Grid item>
+                        <Grid item>
+                            <Tooltip
+                                placement="left"
+                                title="Use this page to manage your series."
+                            >
+                                <IconButton>
+                                    <HelpOutlineIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
+                        <Box mx={1} my={1} boxShadow={0}>
+                            <Card>
+                                <Box mx={1} my={1} boxShadow={0}>
+                                    <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={3}>
+                                        {/* <Grid item>
                                                 <Typography color="textPrimary" variant="subtitle2">
                                                     Table Options
                                                 </Typography>
@@ -470,95 +441,92 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                     label="Compact"
                                                     labelPlacement="end"
                                                 />
-                                            </Grid>
-                                            <Grid item>
-                                                <FormControl id="search-filter-select-label" variant="filled" size="small" style={{minWidth: 140}} disabled={dataList? false : true}>
-                                                    <InputLabel>
-                                                        Search Filter
-                                                    </InputLabel>
-                                                    <Select
-                                                        autoWidth={true}
-                                                        labelId="search-filter-select-label"
-                                                        value={selectSearchFilterOption}
-                                                        onChange={(event) => { selectSearchHandler(event); } }
-                                                    >
-                                                        {userID?
-                                                                isTemplates? (
-                                                                    <MenuItem value="">
-                                                                        <em>None</em>
+                                            </Grid> */}
+                                        <Grid item>
+                                            <FormControl id="search-filter-select-label" variant="filled" size="small" style={{ minWidth: 140 }} disabled={dataList ? false : true}>
+                                                <InputLabel>
+                                                    Search Filter
+                                                </InputLabel>
+                                                <Select
+                                                    autoWidth={true}
+                                                    labelId="search-filter-select-label"
+                                                    value={selectSearchFilterOption}
+                                                    onChange={(event) => { selectSearchHandler(event); }}
+                                                >
+                                                    {userID ?
+                                                        isTemplates ? (
+                                                            <MenuItem value="">
+                                                                <em>None</em>
+                                                            </MenuItem>
+                                                        ) : (
+                                                            selectFilterOptionsMemberClient.map(item => {
+                                                                return (
+                                                                    <MenuItem key={item.key} value={item.value}>
+                                                                        <em>{item.display}</em>
                                                                     </MenuItem>
-                                                                ) : (
-                                                                    selectFilterOptionsMemberClient.map( item => 
-                                                                    {
-                                                                        return(
-                                                                            <MenuItem key={item.key} value={item.value}>
-                                                                                <em>{item.display}</em>
-                                                                            </MenuItem>  
-                                                                        )
-                                                                    })
-                                                                )      
-                                                            : 
-                                                                isTemplates? (
-                                                                    selectFilterOptionsTemplate.map( item => 
-                                                                    {
-                                                                        return(
-                                                                            <MenuItem key={item.key} value={item.value}>
-                                                                                <em>{item.display}</em>
-                                                                            </MenuItem>  
-                                                                        )
-                                                                    })
-                                                                ) : (
-                                                                    selectFilterOptionsMember.map( item => 
-                                                                    {
-                                                                        return(
-                                                                            <MenuItem key={item.key} value={item.value}>
-                                                                                <em>{item.display}</em>
-                                                                            </MenuItem>  
-                                                                        )
-                                                                    })
-                                                                )       
-                                                        }
-                                                    </Select>
-                                                </FormControl>
-                                            </Grid>
-                                            <Grid item xs>
-                                                <TextField label="Search"
-                                                    type="search"
-                                                    size="small"
-                                                    variant="filled"
-                                                    fullWidth
-                                                    value={searchFilter}
-                                                    onChange={ (event) => { searchHandler(event); }}
-                                                    disabled={dataList? false : true}
-                                                />
-                                            </Grid>
+                                                                )
+                                                            })
+                                                        )
+                                                        :
+                                                        isTemplates ? (
+                                                            selectFilterOptionsTemplate.map(item => {
+                                                                return (
+                                                                    <MenuItem key={item.key} value={item.value}>
+                                                                        <em>{item.display}</em>
+                                                                    </MenuItem>
+                                                                )
+                                                            })
+                                                        ) : (
+                                                            selectFilterOptionsMember.map(item => {
+                                                                return (
+                                                                    <MenuItem key={item.key} value={item.value}>
+                                                                        <em>{item.display}</em>
+                                                                    </MenuItem>
+                                                                )
+                                                            })
+                                                        )
+                                                    }
+                                                </Select>
+                                            </FormControl>
                                         </Grid>
-                                    </Box>
-                                </Card>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12} container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
-                            <Grid item>
-                                <Typography variant="h6" component="h6">
-                                    Table
-                                </Typography>
-                                <Divider />
-                            </Grid>
+                                        <Grid item xs>
+                                            <TextField label="Search"
+                                                type="search"
+                                                size="small"
+                                                variant="filled"
+                                                fullWidth
+                                                value={searchFilter}
+                                                onChange={(event) => { searchHandler(event); }}
+                                                disabled={dataList ? false : true}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                            </Card>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} container direction="row" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
+                        <Grid item>
+                            <Typography variant="h6" component="h6">
+                                Table
+                            </Typography>
+                            <Divider />
                         </Grid>
                     </Grid>
-                </Box>
-            </>
-        );
+                </Grid>
+            </Box>
+        </>
+    );
 }
 
 // ======================== Component PropType Check ========================
-CollectionsManagementControlPanel.propTypes = 
+CollectionsManagementControlPanel.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     setParentAlert: PropTypes.func.isRequired,
     isDense: PropTypes.bool.isRequired,
     setIsDense: PropTypes.func.isRequired,
-    isTemplates:PropTypes.bool.isRequired,
+    isTemplates: PropTypes.bool.isRequired,
     setIsTemplates: PropTypes.func.isRequired,
     dataList: PropTypes.arrayOf(PropTypes.object).isRequired,
     getParentData: PropTypes.func.isRequired,
@@ -568,24 +536,24 @@ CollectionsManagementControlPanel.propTypes =
     setCreateMemberCollectionDialog: PropTypes.func.isRequired,
     setAssignMemberDialog: PropTypes.func.isRequired,
     setAssignProjectDialog: PropTypes.func.isRequired,
-    setAssignCoordinatorDialog:PropTypes.func.isRequired //Edited by P.
-                        
+    setAssignCoordinatorDialog: PropTypes.func.isRequired //Edited by P.
+
 }
 
-CollectionsManagementControlPanel.defaultProps = 
+CollectionsManagementControlPanel.defaultProps =
 {
-    setParentAlert: () => {},
-    setIsDense: () => {},
-    setIsTemplates: () => {},
+    setParentAlert: () => { },
+    setIsDense: () => { },
+    setIsTemplates: () => { },
     dataList: {},
-    getParentData: () => {},
+    getParentData: () => { },
     userID: null,
-    setSearchFilteredDataList: () => {},
-    setCreateCollectionTemplateDialog: () => {},
-    setCreateMemberCollectionDialog: () => {},
-    setAssignMemberDialog: () => {},
-    setAssignProjectDialog: () => {},
-    setAssignCoordinatorDialog: () => {}    //Edited by P.
+    setSearchFilteredDataList: () => { },
+    setCreateCollectionTemplateDialog: () => { },
+    setCreateMemberCollectionDialog: () => { },
+    setAssignMemberDialog: () => { },
+    setAssignProjectDialog: () => { },
+    setAssignCoordinatorDialog: () => { }    //Edited by P.
 }
 
 export default CollectionsManagementControlPanel;  // You can even shorthand this line by adding this at the function [Component] declaration stage

@@ -24,7 +24,7 @@ import * as Survey from "survey-react";
 import "survey-react/survey.css";
 
 // ==================== Helpers =====================
-import get from  '../../../../helpers/common/get';
+import get from '../../../../helpers/common/get';
 import AlertType from '../../../../helpers/models/AlertType';
 
 // ==================== MUI =========================
@@ -52,7 +52,7 @@ import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 const backLink = "/administration/booklets/management";
 
 const surveyStyle = "default";
- 
+
 // const surveyOptions = {
 
 // };
@@ -71,16 +71,16 @@ widgets.bootstrapslider(Survey);
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            flexGrow: 1,     // CSS determined this way, flexbox properties
-            height: '100%'
-        },
-        rootGrid: {
-            height: '100%'
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        flexGrow: 1,     // CSS determined this way, flexbox properties
+        height: '100%'
+    },
+    rootGrid: {
+        height: '100%'
+    }
+}));
 
 // ======================== React Modern | Functional Component ========================
 
@@ -88,151 +88,137 @@ const ViewChapterTemplate = (props) => { // Notice the arrow function... regular
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, ChapterID, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+    // Declaration of Stateful Variables ===
+    const { appState, ChapterID, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
-        const [chapterOriginal, setChapterOriginal] = useState(null);
+    const [chapterOriginal, setChapterOriginal] = useState(null);
 
-        const [survey, setSurvey] = useState(null);
+    const [survey, setSurvey] = useState(null);
 
-        const [surveyJSloading, setSurveyJSLoading] = useState(true);
+    const [surveyJSloading, setSurveyJSLoading] = useState(true);
 
-        // Alert variable
-        const [alert, setAlert] = useState(new AlertType());
+    // Alert variable
+    const [alert, setAlert] = useState(new AlertType());
 
     // Functions ===
 
-        // Loads existing booklet chosen by user from the database
-        const loadChapter = useCallback(() =>
-        {
+    // Loads existing booklet chosen by user from the database
+    const loadChapter = useCallback(() => {
 
-            if(ChapterID != null)
-            {
-                get("surveys/" + ChapterID, appState.token, (error, response) => 
-                {
-                    if(error)
-                    {
+        if (ChapterID != null) {
+            get("surveys/" + ChapterID, appState.token, (error, response) => {
+                if (error) {
+                    setAlert(new AlertType('Unable to retrieve User Modules. Please refresh and try again.', "error"));
+                }
+                else {
+                    if (response.status === 200 || response.status === 304) {
+                        setSurveyJSLoading(true);
+                        setChapterOriginal(response.data.survey);
+                    }
+                    else {
                         setAlert(new AlertType('Unable to retrieve User Chapters. Please refresh and try again.', "error"));
                     }
-                    else
-                    {
-                        if(response.status === 200 || response.status === 304)
-                        {
-                            setSurveyJSLoading(true);
-                            setChapterOriginal(response.data.survey);
-                        }
-                        else
-                        {
-                            setAlert(new AlertType('Unable to retrieve User Chapters. Please refresh and try again.', "error"));
-                        }
-                    }
-                });
-            }
-            else
-            {
-                setAlert(new AlertType('Unable to retrieve User Chapters. Please refresh and try again.', "error")); 
-            }
-        }, [ ChapterID, appState ]);
+                }
+            });
+        }
+        else {
+            setAlert(new AlertType('Unable to retrieve User Chapters. Please refresh and try again.', "error"));
+        }
+    }, [ChapterID, appState]);
 
     // Hooks ===
 
-        // First Render only because of the [ ] empty array tracking with the useEffect
-        useEffect( () =>
-        {
-            ToggleDrawerClose();
-            setTimeout(() => {
-                CheckAuthenticationValidity( (tokenValid) => 
-                {
-                    if(tokenValid)
-                    {
-                        // Load or Do Something
-                        loadChapter();
-                    }
-                    else {
-
-                        // Bad Response
-                        setAlert(null);
-                    }
-                });
-            }, 200);    //
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ ]);
-
-        useEffect( () => 
-        {
-            
-            if(chapterOriginal) {
-                
-                if(chapterOriginal.surveyJSON !== "")
-                {
-                    setSurvey(JSON.parse(chapterOriginal.surveyJSON));
+    // First Render only because of the [ ] empty array tracking with the useEffect
+    useEffect(() => {
+        ToggleDrawerClose();
+        setTimeout(() => {
+            CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
+                    // Load or Do Something
+                    loadChapter();
                 }
-                else
-                {
-                    setSurvey(null);
-                    setAlert(new AlertType('Chapter survey is empty. Please go to the Edit page to add content to it.', "info"));
-                }
+                else {
 
-                setSurveyJSLoading(false);
+                    // Bad Response
+                    setAlert(null);
+                }
+            });
+        }, 200);    //
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+
+        if (chapterOriginal) {
+
+            if (chapterOriginal.surveyJSON !== "") {
+                setSurvey(JSON.parse(chapterOriginal.surveyJSON));
+            }
+            else {
+                setSurvey(null);
+                setAlert(new AlertType('Chapter survey is empty. Please go to the Edit page to add content to it.', "info"));
             }
 
-        }, [ chapterOriginal ]);
+            setSurveyJSLoading(false);
+        }
+
+    }, [chapterOriginal]);
 
     // Render Section ===
 
-        return (
-            alert != null? (
+    return (
+        alert != null ? (
 
-                // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
-                <div className={classes.root}>
-                    <Grid container
+            // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
+            <div className={classes.root}>
+                <Grid container
                     className={classes.rootGrid}
                     direction="row"
                     justifyContent="flex-start"
                     alignItems="stretch"
                     spacing={1}
-                    >
-                        <Grid item xs={5}>
-                            <Box mx={1} my={1}>
-                                <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>
-                                    <Grid item>
-                                        <IconButton component={Link} to={backLink}>
-                                            <ArrowBackIosIcon />
-                                        </IconButton>
-                                    </Grid>
-                                    <Grid item xs>
-                                        <Typography variant="h4" color="inherit" align="left" gutterBottom>
-                                            Viewing {chapterOriginal? `"${chapterOriginal.name}"` : null}
-                                        </Typography>
-                                    </Grid>
+                >
+                    <Grid item xs={5}>
+                        <Box mx={1} my={1}>
+                            <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>
+                                <Grid item>
+                                    <IconButton component={Link} to={backLink}>
+                                        <ArrowBackIosIcon />
+                                    </IconButton>
                                 </Grid>
-                            </Box> 
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box mx={1} my={1}>
-                                <AlertMessage alert={alert} setParentAlert={setAlert} />
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Card raised={true}>
-                                <Box mx={2} my={1} boxShadow={0}>
-                                    <Grid
-                                        container
-                                        direction="column"
-                                        justifyContent="flex-start"
-                                        alignItems="stretch"
-                                        spacing={1}
-                                    >
-                                        {chapterOriginal?
+                                <Grid item xs>
+                                    <Typography variant="h4" color="inherit" align="left" gutterBottom>
+                                        Viewing {chapterOriginal ? `"${chapterOriginal.name}"` : null}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Box mx={1} my={1}>
+                            <AlertMessage alert={alert} setParentAlert={setAlert} />
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Card raised={true}>
+                            <Box mx={2} my={1} boxShadow={0}>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justifyContent="flex-start"
+                                    alignItems="stretch"
+                                    spacing={1}
+                                >
+                                    {chapterOriginal ?
                                         (
                                             <>
                                                 <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
                                                     <Grid item>
                                                         <Typography variant="h6" component="h6">
-                                                            View Chapter Template
+                                                            View Module Template
                                                         </Typography>
                                                         <Divider />
                                                     </Grid>
@@ -242,11 +228,11 @@ const ViewChapterTemplate = (props) => { // Notice the arrow function... regular
                                                                 <Grid item>
                                                                     <Tooltip
                                                                         placement="bottom"
-                                                                        title="Edit Chapter"
+                                                                        title="Edit Module"
                                                                     >
-                                                                        <Button 
-                                                                            size="small" 
-                                                                            variant="contained" 
+                                                                        <Button
+                                                                            size="small"
+                                                                            variant="contained"
                                                                             color="secondary"
                                                                             startIcon={<EditIcon />}
                                                                             component={Link}
@@ -262,7 +248,7 @@ const ViewChapterTemplate = (props) => { // Notice the arrow function... regular
                                                     <Grid item>
                                                         <Tooltip
                                                             placement="left"
-                                                            title="This page is to view the selected chapter. The chapter here will be in READ-ONLY mode. If you need to test your chapter, please navigate to the 'Edit' page from the management page."
+                                                            title="This page is to view the selected Module. The Module here will be in READ-ONLY mode. If you need to test your Module, please navigate to the 'Edit' page from the management page."
                                                         >
                                                             <IconButton>
                                                                 <HelpOutlineIcon />
@@ -279,36 +265,36 @@ const ViewChapterTemplate = (props) => { // Notice the arrow function... regular
                                                     </Box>
                                                 </Grid>
                                             </Grid>
-                                        )}   
-                                        <Grid item xs={12}>
-                                            <Box mx={1} my={1} boxShadow={0}>
-                                                <Collapse in={!surveyJSloading}>
-                                                    {survey != null?
+                                        )}
+                                    <Grid item xs={12}>
+                                        <Box mx={1} my={1} boxShadow={0}>
+                                            <Collapse in={!surveyJSloading}>
+                                                {survey != null ?
                                                     (
                                                         <Survey.Survey id={surveyContainerID} json={survey} mode="display" />
                                                     ) : (
                                                         null
                                                     )}
-                                                </Collapse>
-                                            </Box>
-                                        </Grid>
+                                            </Collapse>
+                                        </Box>
                                     </Grid>
-                                </Box>
-                            </Card>
-                        </Grid>
+                                </Grid>
+                            </Box>
+                        </Card>
                     </Grid>
-                </div>
-            ) : (
-                <Typography variant="h6" color="inherit" align="center" gutterBottom>
-                    Not Authorized. Please refresh and try again.
-                </Typography>
-            )
-            
-        );
+                </Grid>
+            </div>
+        ) : (
+            <Typography variant="h6" color="inherit" align="center" gutterBottom>
+                Not Authorized. Please refresh and try again.
+            </Typography>
+        )
+
+    );
 }
 
 // ======================== Component PropType Check ========================
-ViewChapterTemplate.propTypes = 
+ViewChapterTemplate.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -317,12 +303,12 @@ ViewChapterTemplate.propTypes =
     CheckAuthenticationValidity: PropTypes.func.isRequired
 }
 
-ViewChapterTemplate.defaultProps = 
+ViewChapterTemplate.defaultProps =
 {
     appState: {},
     ChapterID: {},
-    ToggleDrawerClose: () => {},
-    CheckAuthenticationValidity: () => {}
+    ToggleDrawerClose: () => { },
+    CheckAuthenticationValidity: () => { }
 }
 
 export default ViewChapterTemplate;  // You can even shorthand this line by adding this at the function [Component] declaration stage

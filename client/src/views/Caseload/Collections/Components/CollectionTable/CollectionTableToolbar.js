@@ -32,26 +32,26 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            paddingLeft: theme.spacing(2),
-            paddingRight: theme.spacing(1),
-          },
-          highlight:
-            theme.palette.type === 'light'
-              ? {
-                  color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-                }
-              : {
-                  color: theme.palette.text.primary,
-                  backgroundColor: theme.palette.secondary.dark,
-                },
-          title: {
-            flex: '1 1 100%',
-          }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(1),
+    },
+    highlight:
+        theme.palette.type === 'light'
+            ? {
+                color: theme.palette.secondary.main,
+                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+            }
+            : {
+                color: theme.palette.text.primary,
+                backgroundColor: theme.palette.secondary.dark,
+            },
+    title: {
+        flex: '1 1 100%',
+    }
+}));
 
 
 // ================= Static Variables ================
@@ -68,157 +68,151 @@ const CollectionTableToolbar = (props) => { // Notice the arrow function... regu
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, isTemplates, selectedDataItemsList, setParentDeleteCollectionDialog, setParentExportCollectionDialog} = props;
+    // Declaration of Stateful Variables ===
+    const { appState, isTemplates, selectedDataItemsList, setParentDeleteCollectionDialog, setParentExportCollectionDialog } = props;
 
-        const [viewUrl, setViewUrl] = useState("");
-        const [editUrl, setEditUrl] = useState("");
+    const [viewUrl, setViewUrl] = useState("");
+    const [editUrl, setEditUrl] = useState("");
 
-        const [toolNone, setToolNone] = useState(false);
-        const [toolOne, setToolOne] = useState(false);
-        const [toolMultiple, setToolMultiple] = useState(false);
+    const [toolNone, setToolNone] = useState(false);
+    const [toolOne, setToolOne] = useState(false);
+    const [toolMultiple, setToolMultiple] = useState(false);
 
     // Functions ===
-    
-        const toolHandler = useCallback(() => {
-            if(selectedDataItemsList.length === 0) {
-                setToolNone(true);
-                setToolOne(false);
-                setToolMultiple(false);
-            }
-            else if(selectedDataItemsList.length === 1) {
-                setToolNone(false);
-                setToolOne(true);
-                setToolMultiple(false);
-            }
-            else if(selectedDataItemsList.length > 1) {
-                setToolNone(false);
-                setToolOne(false);
-                setToolMultiple(true);
-            }
-        }, [ selectedDataItemsList, setToolNone, setToolOne, setToolMultiple]);
-    
 
-        const deleteHandler = useCallback(() => {
-            setParentDeleteCollectionDialog(true);
-        }, [ setParentDeleteCollectionDialog ]);
+    const toolHandler = useCallback(() => {
+        if (selectedDataItemsList.length === 0) {
+            setToolNone(true);
+            setToolOne(false);
+            setToolMultiple(false);
+        }
+        else if (selectedDataItemsList.length === 1) {
+            setToolNone(false);
+            setToolOne(true);
+            setToolMultiple(false);
+        }
+        else if (selectedDataItemsList.length > 1) {
+            setToolNone(false);
+            setToolOne(false);
+            setToolMultiple(true);
+        }
+    }, [selectedDataItemsList, setToolNone, setToolOne, setToolMultiple]);
 
-        const exportHandler = useCallback(() => {
-            setParentExportCollectionDialog(true);
-        }, [ setParentExportCollectionDialog ]);
-        
+
+    const deleteHandler = useCallback(() => {
+        setParentDeleteCollectionDialog(true);
+    }, [setParentDeleteCollectionDialog]);
+
+    const exportHandler = useCallback(() => {
+        setParentExportCollectionDialog(true);
+    }, [setParentExportCollectionDialog]);
+
 
     // Hooks ===
 
-        useEffect( () =>
-        {
-            toolHandler();  
-        }, [ selectedDataItemsList, toolHandler ]);
+    useEffect(() => {
+        toolHandler();
+    }, [selectedDataItemsList, toolHandler]);
 
-        useEffect( () => {
-            
-            if(toolNone || toolMultiple)
-            {
-                setViewUrl("");
+    useEffect(() => {
+
+        if (toolNone || toolMultiple) {
+            setViewUrl("");
+        }
+        else if (toolOne) {
+            if (appState.role === "Admin") {
+                setViewUrl(viewCollectionBaseLinkAdministration + "view/" + selectedDataItemsList[0]._id);
             }
-            else if(toolOne)
-            {
-                if(appState.role === "Admin")
-                {
-                    setViewUrl(viewCollectionBaseLinkAdministration + "view/" + selectedDataItemsList[0]._id);
-                }
-                else if(appState.role === "Coordinator" || appState.role === "Volunteer")
-                {
-                    setViewUrl(viewCollectionBaseLinkStaff + "view/" + selectedDataItemsList[0]._id);
-                }
-                else
-                {
-                    setViewUrl(viewCollectionBaseLinkClient + "view/" + selectedDataItemsList[0]._id);
-                }
-
-                
+            else if (appState.role === "Coordinator" || appState.role === "Volunteer") {
+                setViewUrl(viewCollectionBaseLinkStaff + "view/" + selectedDataItemsList[0]._id);
+            }
+            else {
+                setViewUrl(viewCollectionBaseLinkClient + "view/" + selectedDataItemsList[0]._id);
             }
 
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [toolNone, toolOne, toolMultiple, isTemplates ]);
+
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [toolNone, toolOne, toolMultiple, isTemplates]);
 
     // Render Section ===
 
-        return (
-            <Toolbar
-                className={clsx(classes.root, { [classes.highlight]: selectedDataItemsList.length > 0 } )}
-            >
-                {selectedDataItemsList.length > 0 ? (
-                    <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-                        {selectedDataItemsList.length} Selected Item{selectedDataItemsList.length > 1 ? "s" : null}
-                    </Typography>
-                ) : (
-                    <Typography className={classes.title} variant="h6" component="div">
-                         {isTemplates? "Service Template Results" : "Member Service Instance Results"}
-                    </Typography>
-                )}
+    return (
+        <Toolbar
+            className={clsx(classes.root, { [classes.highlight]: selectedDataItemsList.length > 0 })}
+        >
+            {selectedDataItemsList.length > 0 ? (
+                <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
+                    {selectedDataItemsList.length} Selected Item{selectedDataItemsList.length > 1 ? "s" : null}
+                </Typography>
+            ) : (
+                <Typography className={classes.title} variant="h6" component="div">
+                    {isTemplates ? "Series Template Results" : "Member Series Instance Results"}
+                </Typography>
+            )}
 
-                {toolNone ? (
-                    <>
-                        <Tooltip title="Filter list">
-                            <IconButton aria-label="filter list">
-                                <FilterListIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </>
-                ) : (null)}
-                
-                {toolOne? (
-                    <>
-                        <Tooltip title="View">
-                            <IconButton aria-label="view" component={Link} to={viewUrl} disabled>
-                                <VisibilityIcon/>
-                            </IconButton>
-                        </Tooltip>
-                            
-                        {/* <Tooltip title="Edit">
+            {toolNone ? (
+                <>
+                    <Tooltip title="Filter list">
+                        <IconButton aria-label="filter list">
+                            <FilterListIcon />
+                        </IconButton>
+                    </Tooltip>
+                </>
+            ) : (null)}
+
+            {toolOne ? (
+                <>
+                    <Tooltip title="View">
+                        <IconButton aria-label="view" component={Link} to={viewUrl} disabled>
+                            <VisibilityIcon />
+                        </IconButton>
+                    </Tooltip>
+
+                    {/* <Tooltip title="Edit">
                             <IconButton aria-label="edit" component={Link} to={editUrl} >
                                 <EditIcon/>
                             </IconButton>
                         </Tooltip> */}
-                            
-                        <Tooltip title="Export" onClick={() => exportHandler()}>
-                            <IconButton aria-label="export">
-                                <SystemUpdateAltIcon/>
-                            </IconButton>
-                        </Tooltip>
-                            
-                        <Tooltip title="Delete">
-                            <IconButton aria-label="delete" onClick={() => deleteHandler()}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </>
-                ) : (null)}
-                {toolMultiple ? (
-                    <>
-                        {/* <Tooltip title="Export">
+
+                    <Tooltip title="Export" onClick={() => exportHandler()}>
+                        <IconButton aria-label="export">
+                            <SystemUpdateAltIcon />
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Delete">
+                        <IconButton aria-label="delete" onClick={() => deleteHandler()}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                </>
+            ) : (null)}
+            {toolMultiple ? (
+                <>
+                    {/* <Tooltip title="Export">
                             <IconButton aria-label="export" onClick={() => exportHandler()}>
                                 <SystemUpdateAltIcon/>
                             </IconButton>
                         </Tooltip> */}
 
-                        <Tooltip title="Delete">
-                            <IconButton aria-label="delete" onClick={() => deleteHandler()}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </>
-                ) : (null)}
-            </Toolbar>
-        );
+                    <Tooltip title="Delete">
+                        <IconButton aria-label="delete" onClick={() => deleteHandler()}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                </>
+            ) : (null)}
+        </Toolbar>
+    );
 }
 
 // ======================== Component PropType Check ========================
-CollectionTableToolbar.propTypes = 
+CollectionTableToolbar.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -228,12 +222,12 @@ CollectionTableToolbar.propTypes =
     isTemplates: PropTypes.bool.isRequired
 }
 
-CollectionTableToolbar.defaultProps = 
+CollectionTableToolbar.defaultProps =
 {
     appState: {},
     selectedDataItemsList: {},
-    setParentDeleteCollectionDialog: () => {},
-    setParentExportCollectionDialog: () => {},
+    setParentDeleteCollectionDialog: () => { },
+    setParentExportCollectionDialog: () => { },
     isTemplates: true
 }
 

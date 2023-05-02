@@ -116,17 +116,17 @@ class DrawerContents extends Component {
 					{(appState.role == "Patient" || appState.role == "Volunteer") &&
 						<ListItem button component={Link} to="/MainReports">
 							<ListItemIcon><AssessmentIcon color="primary" /></ListItemIcon>
-							<ListItemText primary="Your Reports" />
+							<ListItemText primary="My Reports" />
 						</ListItem>
 					}
 					<ListItem button component={Link} to="/profile">
 						<ListItemIcon><AccountBoxIcon color="primary" /></ListItemIcon>
-						<ListItemText>Your Profile</ListItemText>
+						<ListItemText>My Profile</ListItemText>
 					</ListItem>
 					{appState.role !== "Patient" &&
 						<ListItem button component={Link} to="/members">
 							<ListItemIcon><PeopleIcon color="primary" /></ListItemIcon>
-							<ListItemText primary="Your Members" />
+							<ListItemText primary="My Members" />
 						</ListItem>
 					}
 					{/* <ListItem button component={Link} to="/search" divider>
@@ -150,12 +150,12 @@ class DrawerContents extends Component {
 								{appState.role === "Admin" &&
 									<ListItem button component={Link} to="/administration/booklets/management" className={classes.nested}>
 										<ListItemIcon><Ballot /></ListItemIcon>
-										<ListItemText secondary="Chapters" />
+										<ListItemText secondary="Modules" />
 									</ListItem>
 								}
 								<ListItem button component={Link} to="/administration/services/management" className={classes.nested}>
 									<ListItemIcon><LibraryBooksIcon /></ListItemIcon>
-									<ListItemText secondary="Services" />
+									<ListItemText secondary="Series" />
 								</ListItem>
 								{appState.role === "Admin" &&
 									<ListItem button component={Link} to="/administration/projects/management" className={classes.nested}>

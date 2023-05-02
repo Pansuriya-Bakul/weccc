@@ -257,7 +257,7 @@ export default function CollectionTable(props) {
                                                                             );
                                                                         })}
                                                                     </ol>
-                                                                    <em>{"Projects apart of this"}</em> <b>{'Service Template'}</b>.{' '}
+                                                                    <em>{"Projects apart of this"}</em> <b>{'Series Template'}</b>.{' '}
                                                                 </>
                                                             } placement="top">
                                                                 <Button>
@@ -281,7 +281,7 @@ export default function CollectionTable(props) {
                                                                         );
                                                                     })}
                                                                 </ol> */}
-                                                                    <em>{"Members apart of this"}</em> <b>{'Service Template'}</b>.{' '}
+                                                                    <em>{"Members apart of this"}</em> <b>{'Series Template'}</b>.{' '}
                                                                 </>
                                                             } placement="top">
                                                                 <Button>
@@ -305,7 +305,7 @@ export default function CollectionTable(props) {
                                                                             );
                                                                         })}
                                                                     </ol>
-                                                                    <em>{"Survey Templates apart of this"}</em> <b>{'Service Template'}</b>.{' '}
+                                                                    <em>{"Survey Templates apart of this"}</em> <b>{'Series Template'}</b>.{' '}
                                                                 </>
                                                             } placement="top">
                                                                 <Button>
@@ -319,7 +319,7 @@ export default function CollectionTable(props) {
                                                         <TableCell align="right" padding="normal">
                                                             <Tooltip title={
                                                                 <>
-                                                                    <Typography color="inherit">Member Service Instances</Typography>
+                                                                    <Typography color="inherit">Member Series Instances</Typography>
                                                                     {/* <ol>
                                                                     {item.projectList.map((subItem, index) => {
                                                                         return (
@@ -329,7 +329,7 @@ export default function CollectionTable(props) {
                                                                         );
                                                                     })}
                                                                 </ol> */}
-                                                                    <em>{"Member Collections apart of this"}</em> <b>{'Service Template'}</b>.{' '}
+                                                                    <em>{"Member Series apart of this"}</em> <b>{'Series Template'}</b>.{' '}
                                                                 </>
                                                             } placement="top">
                                                                 <Button>
@@ -380,7 +380,7 @@ export default function CollectionTable(props) {
                                                                                         );
                                                                                     })}
                                                                                 </ol>
-                                                                                <em>{"Member Chapters instantiated in this"}</em> <b>{'Member Collection'}</b>.{' '}
+                                                                                <em>{"Member Chapters instantiated in this"}</em> <b>{'Member Series'}</b>.{' '}
                                                                             </>
                                                                         } placement="top">
                                                                             <Button>

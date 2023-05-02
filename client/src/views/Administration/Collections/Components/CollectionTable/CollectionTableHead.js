@@ -23,53 +23,53 @@ import { Checkbox } from '@material-ui/core';
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        visuallyHidden: {
-            border: 0,
-            clip: 'rect(0 0 0 0)',
-            height: 1,
-            margin: -1,
-            overflow: 'hidden',
-            padding: 0,
-            position: 'absolute',
-            top: 20,
-            width: 1,
-          }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    visuallyHidden: {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
+    }
+}));
 
 
 // ================= Static Variables ================
 
-    const headCellTitlesCollectionTemplate = [ //This is a user specified array is used to populate the table header cells. Notice the Template Specifications
-        { id: 'collectionName', numeric: false, disablePadding: true, label: 'Service Name' },
-        { id: 'collectionId', numeric: false, disablePadding: true, label: 'Service ID' },
-        { id: 'numProjects', numeric: true, disablePadding: false, label: '# of Associated Projects' },
-        { id: 'numMembers', numeric: true, disablePadding: false, label: '# of Associated Members' },
-        { id: 'numSurveyTemplates', numeric: true, disablePadding: false, label: '# of Chapter Templates' },
-        { id: 'numMemberSurveys', numeric: true, disablePadding: false, label: '# of Instances' },
-        { id: 'createdAt', numeric: true, disablePadding: false, label: 'Date Created' },
-        { id: 'updatedAt', numeric: true, disablePadding: false, label: 'Date Last Modified' },
-    ];
+const headCellTitlesCollectionTemplate = [ //This is a user specified array is used to populate the table header cells. Notice the Template Specifications
+    { id: 'collectionName', numeric: false, disablePadding: true, label: 'Series Name' },
+    { id: 'collectionId', numeric: false, disablePadding: true, label: 'Series ID' },
+    { id: 'numProjects', numeric: true, disablePadding: false, label: '# of Associated Projects' },
+    { id: 'numMembers', numeric: true, disablePadding: false, label: '# of Associated Members' },
+    { id: 'numSurveyTemplates', numeric: true, disablePadding: false, label: '# of Module Templates' },
+    { id: 'numMemberSurveys', numeric: true, disablePadding: false, label: '# of Instances' },
+    { id: 'createdAt', numeric: true, disablePadding: false, label: 'Date Created' },
+    { id: 'updatedAt', numeric: true, disablePadding: false, label: 'Date Last Modified' },
+];
 
-    const headCellTitlesMemberCollection = [
-        { id: 'collectionName', numeric: false, disablePadding: true, label: 'Service Name' },
-        { id: 'collectionId', numeric: false, disablePadding: true, label: 'Service ID' },
-        { id: 'completeness', numeric: false, disablePadding: true, label: 'Completeness' },
-        { id: 'clientName', numeric: false, disablePadding: true, label: 'Client Name' },
-        { id: 'clientId', numeric: false, disablePadding: true, label: 'Client ID' },
-        { id: 'numMemberSurveys', numeric: true, disablePadding: false, label: '# of Member Chapters' },
-        { id: 'createdAt', numeric: true, disablePadding: false, label: 'Date Created' },
-        { id: 'updatedAt', numeric: true, disablePadding: false, label: 'Date Last Modified' },
-    ];
+const headCellTitlesMemberCollection = [
+    { id: 'collectionName', numeric: false, disablePadding: true, label: 'Series Name' },
+    { id: 'collectionId', numeric: false, disablePadding: true, label: 'Series ID' },
+    { id: 'completeness', numeric: false, disablePadding: true, label: 'Completeness' },
+    { id: 'clientName', numeric: false, disablePadding: true, label: 'Client Name' },
+    { id: 'clientId', numeric: false, disablePadding: true, label: 'Client ID' },
+    { id: 'numMemberSurveys', numeric: true, disablePadding: false, label: '# of Member Modules' },
+    { id: 'createdAt', numeric: true, disablePadding: false, label: 'Date Created' },
+    { id: 'updatedAt', numeric: true, disablePadding: false, label: 'Date Last Modified' },
+];
 
-    const headCellTitlesMemberCollectionClient = [
-        { id: 'collectionName', numeric: false, disablePadding: true, label: 'Service Name' },
-        { id: 'collectionId', numeric: false, disablePadding: true, label: 'Service ID' },
-        { id: 'completeness', numeric: false, disablePadding: true, label: 'Completeness' },
-        { id: 'createdAt', numeric: true, disablePadding: false, label: 'Date Created' },
-        { id: 'updatedAt', numeric: true, disablePadding: false, label: 'Date Last Modified' },
-    ];
+const headCellTitlesMemberCollectionClient = [
+    { id: 'collectionName', numeric: false, disablePadding: true, label: 'Series Name' },
+    { id: 'collectionId', numeric: false, disablePadding: true, label: 'Series ID' },
+    { id: 'completeness', numeric: false, disablePadding: true, label: 'Completeness' },
+    { id: 'createdAt', numeric: true, disablePadding: false, label: 'Date Created' },
+    { id: 'updatedAt', numeric: true, disablePadding: false, label: 'Date Last Modified' },
+];
 
 // ================= Static Functions ================
 
@@ -80,88 +80,83 @@ const CollectionTableHead = (props) => { // Notice the arrow function... regular
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { userID, isTemplates, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+    // Declaration of Stateful Variables ===
+    const { userID, isTemplates, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
 
-        const [headCells, setHeadCells] = useState(null);
+    const [headCells, setHeadCells] = useState(null);
 
-        
+
     // Functions ===
 
-        const createSortHandler = useCallback((property) => (event) => {
-            onRequestSort(event, property);
-        }, [ onRequestSort ]);
+    const createSortHandler = useCallback((property) => (event) => {
+        onRequestSort(event, property);
+    }, [onRequestSort]);
 
     // Hooks ===
 
-    useEffect( () =>
-        {
-            if(userID)
-            {
-                setHeadCells(headCellTitlesMemberCollectionClient);
+    useEffect(() => {
+        if (userID) {
+            setHeadCells(headCellTitlesMemberCollectionClient);
+        }
+        else {
+            if (isTemplates) {
+                setHeadCells(headCellTitlesCollectionTemplate);
             }
-            else
-            {
-                if(isTemplates)
-                {
-                    setHeadCells(headCellTitlesCollectionTemplate);
-                }
-                else 
-                {
-                    setHeadCells(headCellTitlesMemberCollection);
-                }
+            else {
+                setHeadCells(headCellTitlesMemberCollection);
             }
-            
-        }, [ userID, isTemplates ]);
+        }
+
+    }, [userID, isTemplates]);
 
     // Render Section ===
 
-        return (
-            <TableHead>
-                <TableRow>
-                    <TableCell padding="checkbox">
-                        <Checkbox
-                            indeterminate={numSelected > 0 && numSelected < rowCount}
-                            checked={rowCount > 0 && numSelected === rowCount}
-                            onChange={onSelectAllClick}
-                            inputProps={{ 'aria-label': 'select all' }}
-                        />
-                    </TableCell>
-                    {headCells? ( 
-                        headCells.map((headCell) => (
-                            <TableCell
-                                key={headCell.id}
-                                align={headCell.numeric ? 'right' : 'left'}
-                                padding={headCell.disablePadding ? 'none' : 'normal'}
-                                sortDirection={orderBy === headCell.id ? order : false}
+    return (
+        <TableHead>
+            <TableRow>
+                <TableCell padding="checkbox">
+                    <Checkbox
+                        indeterminate={numSelected > 0 && numSelected < rowCount}
+                        checked={rowCount > 0 && numSelected === rowCount}
+                        onChange={onSelectAllClick}
+                        inputProps={{ 'aria-label': 'select all' }}
+                    />
+                </TableCell>
+                {headCells ? (
+                    headCells.map((headCell) => (
+                        <TableCell
+                            key={headCell.id}
+                            align={headCell.numeric ? 'right' : 'left'}
+                            padding={headCell.disablePadding ? 'none' : 'normal'}
+                            sortDirection={orderBy === headCell.id ? order : false}
+                        >
+                            <TableSortLabel
+                                active={orderBy === headCell.id}
+                                direction={orderBy === headCell.id ? order : 'asc'}
+                                onClick={createSortHandler(headCell.id)}
                             >
-                                <TableSortLabel
-                                    active={orderBy === headCell.id}
-                                    direction={orderBy === headCell.id ? order : 'asc'}
-                                    onClick={createSortHandler(headCell.id)}
-                                >
                                 {headCell.label}
                                 {orderBy === headCell.id ? (
                                     <span className={classes.visuallyHidden}>
-                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                     </span>
                                 ) : null}
-                                </TableSortLabel>
-                            </TableCell>
-                        ))
-                    ) : ( 
-                        null
-                    )}
-                </TableRow>
-            </TableHead>
-        );
+                            </TableSortLabel>
+                        </TableCell>
+                    ))
+                ) : (
+                    null
+                )}
+            </TableRow>
+        </TableHead>
+    );
 }
 
 // ======================== Component PropType Check ========================
-CollectionTableHead.propTypes = 
+CollectionTableHead.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     userID: PropTypes.string,
@@ -174,13 +169,13 @@ CollectionTableHead.propTypes =
     rowCount: PropTypes.number.isRequired,
 }
 
-CollectionTableHead.defaultProps = 
+CollectionTableHead.defaultProps =
 {
     userID: null,
     isTemplates: true,
     numSelected: {},
-    onRequestSort: () => {},
-    onSelectAllClick: () => {},
+    onRequestSort: () => { },
+    onSelectAllClick: () => { },
     order: {},
     orderBy: {},
     rowCount: {},

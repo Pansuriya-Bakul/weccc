@@ -73,19 +73,19 @@ const DeleteCollectionDialog = (props) => { // Notice the arrow function... regu
                         if(error)
                         {
                             setDeleteCollectionDialog(false);
-                            setParentAlert(new AlertType('Unable to delete collection(s). Please try again.', "error"));
+                            setParentAlert(new AlertType('Unable to delete series. Please try again.', "error"));
                         }
                         else
                         {
                             if(response.status === 200)
                             {
                                 getParentData();
-                                setParentAlert(new AlertType('Successfully deleted collection(s). You can continue working.', "success")); 
+                                setParentAlert(new AlertType('Successfully deleted series. You can continue working.', "success")); 
                             }   
                             else
                             {
                                 setDeleteCollectionDialog(false);
-                                setParentAlert(new AlertType('Unable to delete collection(s). Please try again.', "error"));
+                                setParentAlert(new AlertType('Unable to delete series. Please try again.', "error"));
                             }
                         }
                     });
@@ -94,7 +94,7 @@ const DeleteCollectionDialog = (props) => { // Notice the arrow function... regu
             else
             {
                 setDeleteCollectionDialog(false);
-                setParentAlert(new AlertType('Unable to delete collection(s). Please try again.', "error"));
+                setParentAlert(new AlertType('Unable to delete series. Please try again.', "error"));
             }
 
             // window.location.reload(); Last resort, refresh the entire page
@@ -110,19 +110,19 @@ const DeleteCollectionDialog = (props) => { // Notice the arrow function... regu
                         if(error)
                         {
                             setDeleteCollectionDialog(false);
-                            setParentAlert(new AlertType('Unable to delete Member collection(s). Please try again.', "error"));
+                            setParentAlert(new AlertType('Unable to delete Member series. Please try again.', "error"));
                         }
                         else
                         {
                             if(response.status === 200)
                             {
                                 getParentData();
-                                setParentAlert(new AlertType('Successfully deleted Member collection(s). You can continue working.', "success")); 
+                                setParentAlert(new AlertType('Successfully deleted Member series. You can continue working.', "success")); 
                             }   
                             else
                             {
                                 setDeleteCollectionDialog(false);
-                                setParentAlert(new AlertType('Unable to delete Member collection(s). Please try again.', "error"));
+                                setParentAlert(new AlertType('Unable to delete Member series. Please try again.', "error"));
                             }
                         }
                     });
@@ -131,7 +131,7 @@ const DeleteCollectionDialog = (props) => { // Notice the arrow function... regu
             else
             {
                 setDeleteCollectionDialog(false);
-                setParentAlert(new AlertType('Unable to delete Member collection(s). Please try again.', "error"));
+                setParentAlert(new AlertType('Unable to delete Member series. Please try again.', "error"));
             }
 
             // window.location.reload(); Last resort, refresh the entire page
@@ -188,12 +188,12 @@ const DeleteCollectionDialog = (props) => { // Notice the arrow function... regu
                                 <DialogContentText>
                                     {selectedDataItemsList.length === 1? (
                                         <>
-                                            Are you sure you would like to delete the collection?
+                                            Are you sure you would like to delete the series?
                                         </>
                                         
                                     ) : (
                                         <>
-                                            {`Are you sure you would like to delete ${selectedDataItemsList.length} collections?`}
+                                            {`Are you sure you would like to delete ${selectedDataItemsList.length} series?`}
                                         </>
                                     )}
                                 </DialogContentText>

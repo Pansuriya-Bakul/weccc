@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';                     //Development Package to
 // ==================== Helpers =====================
 import AlertType from '../../../../helpers/models/AlertType';
 
-import get from  '../../../../helpers/common/get';
+import get from '../../../../helpers/common/get';
 import post from '../../../../helpers/common/post'
 
 // ==================== MUI =========================
@@ -40,16 +40,16 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            flexGrow: 1,     // CSS determined this way, flexbox properties
-            height: '100%'
-        },
-        rootGrid: {
-            height: '100%'
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        flexGrow: 1,     // CSS determined this way, flexbox properties
+        height: '100%'
+    },
+    rootGrid: {
+        height: '100%'
+    }
+}));
 
 
 // ================= Static Variables ================
@@ -63,266 +63,251 @@ const CreateProjectDialog = (props) => { // Notice the arrow function... regular
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, setParentAlert, getParentData, userID,
-            createProjectDialog, setCreateProjectDialog,
-            createProjectDialogExecuting, setCreateProjectDialogExecuting } = props;
-    
-        // const [userList, setUserList] = useState(null);
+    // Declaration of Stateful Variables ===
+    const { appState, setParentAlert, getParentData, userID,
+        createProjectDialog, setCreateProjectDialog,
+        createProjectDialogExecuting, setCreateProjectDialogExecuting } = props;
 
-        const [collectionTemplateList, setCollectionTemplateList] = useState(null);
+    // const [userList, setUserList] = useState(null);
 
-        const [selectedCollectionTemplate, setSelectedCollectionTemplate] = useState("");
+    const [collectionTemplateList, setCollectionTemplateList] = useState(null);
 
-        const [selectedCollectionTemplatesList, setSelectedCollectionTemplatesList] = useState([]);
+    const [selectedCollectionTemplate, setSelectedCollectionTemplate] = useState("");
 
-        const [projectName, setProjectName] = useState("");
+    const [selectedCollectionTemplatesList, setSelectedCollectionTemplatesList] = useState([]);
 
-        // const [user, setUser] = useState("");
+    const [projectName, setProjectName] = useState("");
+
+    // const [user, setUser] = useState("");
 
     // Functions ===
 
-        const getCollectionTemplates = useCallback(() =>
-        {
+    const getCollectionTemplates = useCallback(() => {
 
-            get('collections/', appState.token, (error, response) => 
-            {
-                if(error)
-                {
+        get('collections/', appState.token, (error, response) => {
+            if (error) {
+                setParentAlert(new AlertType('Unable to get public templates. Please refresh and try again.', "error"));
+            }
+            else {
+                if (response.status === 200) {
+                    // console.log("Patient Query", response.data.response);
+                    setCollectionTemplateList(response.data.collectionList);
+                }
+                else {
                     setParentAlert(new AlertType('Unable to get public templates. Please refresh and try again.', "error"));
+
                 }
-                else
-                {
-                    if(response.status === 200)
-                    {
-                        // console.log("Patient Query", response.data.response);
-                        setCollectionTemplateList(response.data.collectionList);
-                    }
-                    else
-                    {
-                        setParentAlert(new AlertType('Unable to get public templates. Please refresh and try again.', "error"));
+            }
+        });
+    }, [appState]);
 
-                    }
+    // const getPatients = useCallback(() =>
+    // {
+    //     let query;
+
+    //     if(userID)
+    //     {
+    //         query = {
+    //             _id: userID
+    //         }; 
+    //     }
+    //     else
+    //     {
+    //        query = {
+    //             role: {
+    //                 $in: 'Patient'
+    //             }
+    //         }; 
+    //     }
+
+    //     post('users/query', appState.token, query, (error, response) => 
+    //     {
+    //         if(error)
+    //         {
+    //             setParentAlert(new AlertType('Unable to get patients. Please refresh and try again.', "error"));
+    //         }
+    //         else
+    //         {
+    //             if(response.status === 200)
+    //             {
+    //                 // console.log("Patient Query", response.data.response);
+    //                 populateUserData(response.data.response.users); 
+    //             }
+    //             else
+    //             {
+    //                 setParentAlert(new AlertType('Unable to get patients. Please refresh and try again.', "error"));
+    //             }
+    //         }
+    //     });
+    // }, [ appState, populateUserData ]);
+
+    // const populateUserData = useCallback((data) => 
+    // {
+    //     let tempArray = new Array();
+
+    //     if(data && Array.isArray(data))
+    //     {
+    //         data.forEach(item => {
+
+    //             tempArray.push(
+    //                 {
+    //                     _id: item._id,
+    //                     name: item.info.name,
+    //                     role: item.role,
+    //                     email: item.email,
+    //                     createdAt: item.createdAt
+    //                 });
+    //         });
+    //     }
+
+    //     setUserList([...tempArray]);
+
+    // }, [ ] );
+
+    const createProject = useCallback(() => {
+        if (!projectName || projectName == "") {
+            // selectedCollectionTemplatesList.length == 0
+            setParentAlert(new AlertType('Unable create project. Please make sure Template Name is and selected Module Templates are not empty.', "error"))
+            return;
+        }
+
+        // let tempSelectedCollectionTemplatesList = new Array();
+
+        // selectedCollectionTemplatesList.forEach(item => {
+        //     tempSelectedCollectionTemplatesList.push(item._id);
+        // });
+
+        let data = {
+            name: projectName,
+            collectionList: [],
+            createdBy: appState._id,
+            modifiedBy: appState._id,
+        }
+
+        post("projects/", appState.token, data, (error, response) => {
+            if (error) {
+                setParentAlert(new AlertType('Unable create project. Please refresh and try again.', "error"));
+            }
+            else {
+                if (response.status === 201) {
+                    getParentData();
+                    setParentAlert(new AlertType('Series created.', "success"));
                 }
-            });
-        }, [ appState ]);
-
-        // const getPatients = useCallback(() =>
-        // {
-        //     let query;
-
-        //     if(userID)
-        //     {
-        //         query = {
-        //             _id: userID
-        //         }; 
-        //     }
-        //     else
-        //     {
-        //        query = {
-        //             role: {
-        //                 $in: 'Patient'
-        //             }
-        //         }; 
-        //     }
-            
-        //     post('users/query', appState.token, query, (error, response) => 
-        //     {
-        //         if(error)
-        //         {
-        //             setParentAlert(new AlertType('Unable to get patients. Please refresh and try again.', "error"));
-        //         }
-        //         else
-        //         {
-        //             if(response.status === 200)
-        //             {
-        //                 // console.log("Patient Query", response.data.response);
-        //                 populateUserData(response.data.response.users); 
-        //             }
-        //             else
-        //             {
-        //                 setParentAlert(new AlertType('Unable to get patients. Please refresh and try again.', "error"));
-        //             }
-        //         }
-        //     });
-        // }, [ appState, populateUserData ]);
-
-        // const populateUserData = useCallback((data) => 
-        // {
-        //     let tempArray = new Array();
-
-        //     if(data && Array.isArray(data))
-        //     {
-        //         data.forEach(item => {
-
-        //             tempArray.push(
-        //                 {
-        //                     _id: item._id,
-        //                     name: item.info.name,
-        //                     role: item.role,
-        //                     email: item.email,
-        //                     createdAt: item.createdAt
-        //                 });
-        //         });
-        //     }
-
-        //     setUserList([...tempArray]);
-
-        // }, [ ] );
-
-        const createProject = useCallback(() =>
-        {
-            if(!projectName || projectName == "")
-            {
-                // selectedCollectionTemplatesList.length == 0
-                setParentAlert(new AlertType('Unable create project. Please make sure Template Name is and selected Chapter Templates are not empty.', "error"))
-                return;
-            }
-
-            // let tempSelectedCollectionTemplatesList = new Array();
-
-            // selectedCollectionTemplatesList.forEach(item => {
-            //     tempSelectedCollectionTemplatesList.push(item._id);
-            // });
-
-            let data = {
-                name: projectName,
-                collectionList: [],
-                createdBy: appState._id,
-                modifiedBy: appState._id,
-            }
-            
-            post("projects/",  appState.token, data, (error, response) => 
-            {
-                if(error)
-                {
+                else {
                     setParentAlert(new AlertType('Unable create project. Please refresh and try again.', "error"));
                 }
-                else
-                {
-                    if(response.status === 201)
-                    {
-                        getParentData();
-                        setParentAlert(new AlertType('Collection created.', "success"));
-                    }
-                    else
-                    {
-                        setParentAlert(new AlertType('Unable create project. Please refresh and try again.', "error"));
-                    }
-                }
-            });
+            }
+        });
 
-        }, [ appState, projectName, selectedCollectionTemplatesList ] );
+    }, [appState, projectName, selectedCollectionTemplatesList]);
 
-        
-        const projectNameHandler = useCallback((event) =>
-        {
-            setProjectName(event.target.value);
-        }, [ ]);
 
-        // const selectCollectionTemplateHandler = useCallback((event) =>
-        // {
-        //     setSelectedCollectionTemplate(event.target.value);
-        // }, [ ]);
+    const projectNameHandler = useCallback((event) => {
+        setProjectName(event.target.value);
+    }, []);
 
-        // const addCollectionTemplateHandler = useCallback((item) =>
-        // {
-        //     if(selectedCollectionTemplate && selectedCollectionTemplate != "")
-        //     {
-        //         let tempSurveyObject = collectionTemplateList.find(item => item._id == selectedCollectionTemplate);
+    // const selectCollectionTemplateHandler = useCallback((event) =>
+    // {
+    //     setSelectedCollectionTemplate(event.target.value);
+    // }, [ ]);
 
-        //         if(tempSurveyObject != undefined)
-        //         {
-        //             setSelectedCollectionTemplatesList([...selectedCollectionTemplatesList, tempSurveyObject]);
-        //             setSelectedCollectionTemplate("");
-        //         }
-        //     }
+    // const addCollectionTemplateHandler = useCallback((item) =>
+    // {
+    //     if(selectedCollectionTemplate && selectedCollectionTemplate != "")
+    //     {
+    //         let tempSurveyObject = collectionTemplateList.find(item => item._id == selectedCollectionTemplate);
 
-        // }, [ selectedCollectionTemplate, selectedCollectionTemplatesList]);
+    //         if(tempSurveyObject != undefined)
+    //         {
+    //             setSelectedCollectionTemplatesList([...selectedCollectionTemplatesList, tempSurveyObject]);
+    //             setSelectedCollectionTemplate("");
+    //         }
+    //     }
 
-        // const removeCollectionTemplateHandler = useCallback((item) =>
-        // {
-        //     let tempList = selectedCollectionTemplatesList;
+    // }, [ selectedCollectionTemplate, selectedCollectionTemplatesList]);
 
-        //     tempList.splice(selectedCollectionTemplatesList.findIndex(oldItem => oldItem._id == item._id), 1);
+    // const removeCollectionTemplateHandler = useCallback((item) =>
+    // {
+    //     let tempList = selectedCollectionTemplatesList;
 
-        //     setSelectedCollectionTemplatesList([...tempList]);
+    //     tempList.splice(selectedCollectionTemplatesList.findIndex(oldItem => oldItem._id == item._id), 1);
 
-        // }, [selectedCollectionTemplatesList, setSelectedCollectionTemplatesList ]);
+    //     setSelectedCollectionTemplatesList([...tempList]);
 
-        const closeHandler = useCallback(() => {
+    // }, [selectedCollectionTemplatesList, setSelectedCollectionTemplatesList ]);
+
+    const closeHandler = useCallback(() => {
+        setCreateProjectDialog(false);
+    }, [setCreateProjectDialog]);
+
+
+    const createHandler = useCallback(() => {
+        try {
+            setCreateProjectDialogExecuting(true);
+            createProject();
+            setCreateProjectDialogExecuting(false);
             setCreateProjectDialog(false);
-        }, [ setCreateProjectDialog ]);
+        }
+        catch {
 
+        }
+    }, [setCreateProjectDialogExecuting, createProject, setCreateProjectDialog, setParentAlert]);
 
-        const createHandler = useCallback(() => {
-            try{
-                setCreateProjectDialogExecuting(true);
-                createProject();
-                setCreateProjectDialogExecuting(false);
-                setCreateProjectDialog(false);
-            }
-            catch{
-
-            }
-        }, [ setCreateProjectDialogExecuting, createProject, setCreateProjectDialog, setParentAlert]);
-
-        // const patientHandler = useCallback((event) =>
-        // {
-        //     setUser(event.target.value);
-        // }, [ ]);
+    // const patientHandler = useCallback((event) =>
+    // {
+    //     setUser(event.target.value);
+    // }, [ ]);
 
     // Hooks ===
 
-    
-        // Fetch User List | First Render Only
-        useEffect( () =>
-        {
-            getCollectionTemplates();
-            // getPatients();
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ ]);
+
+    // Fetch User List | First Render Only
+    useEffect(() => {
+        getCollectionTemplates();
+        // getPatients();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // Render Section ===
 
-        return (
-            <>
-                {createProjectDialog? (
-                    <Dialog id="create-project-template-dialog"
-                        fullWidth
-                        maxWidth="md"
-                        open={createProjectDialog}
-                        onClose={() => { closeHandler(); }}
-                    >
-                        <DialogTitle>
-                            Create Project
-                        </DialogTitle>
-                        <DialogContent>
-                            {createProjectDialogExecuting? (
-                                <CircularProgress />
-                            ) : (
-                                <>
-                                    <DialogContentText>
-                                        Please select <em><u>Service(s)</u></em> to be apart of this new <em><u>Project</u></em>.
-                                    </DialogContentText>
-                                    <Box mx={1} my={1} boxShadow={0}>
-                                        <Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
-                                            <Grid item>
-                                                <TextField label="Project Name"
-                                                    size="small"
-                                                    variant="filled"
-                                                    error={projectName === ""? true : false}
-                                                    fullWidth
-                                                    value={projectName}
-                                                    onChange={ (event) => { projectNameHandler(event); }}
-                                                />
-                                            </Grid>
+    return (
+        <>
+            {createProjectDialog ? (
+                <Dialog id="create-project-template-dialog"
+                    fullWidth
+                    maxWidth="md"
+                    open={createProjectDialog}
+                    onClose={() => { closeHandler(); }}
+                >
+                    <DialogTitle>
+                        Create Project
+                    </DialogTitle>
+                    <DialogContent>
+                        {createProjectDialogExecuting ? (
+                            <CircularProgress />
+                        ) : (
+                            <>
+                                <DialogContentText>
+                                    Please select <em><u>Series(s)</u></em> to be apart of this new <em><u>Project</u></em>.
+                                </DialogContentText>
+                                <Box mx={1} my={1} boxShadow={0}>
+                                    <Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
+                                        <Grid item>
+                                            <TextField label="Project Name"
+                                                size="small"
+                                                variant="filled"
+                                                error={projectName === "" ? true : false}
+                                                fullWidth
+                                                value={projectName}
+                                                onChange={(event) => { projectNameHandler(event); }}
+                                            />
                                         </Grid>
-                                    </Box>
-                                    {/* <Box mx={1} my={1} boxShadow={0}>
+                                    </Grid>
+                                </Box>
+                                {/* <Box mx={1} my={1} boxShadow={0}>
                                         <Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>
                                         <Grid item xs container direction="row" justifyContent="space-between" alignItems="center" spacing={1}>
                                                 {collectionTemplateList? (
@@ -395,31 +380,31 @@ const CreateProjectDialog = (props) => { // Notice the arrow function... regular
                                             </Grid>
                                         </Grid>
                                     </Box> */}
-                                </>
-                            )}
-                        </DialogContent>
-                        <DialogActions>
-                            <Button color="primary" variant="contained" onClick={() => { closeHandler(); }} disabled={createProjectDialogExecuting}>
-                                Cancel
-                            </Button>
-                            {/* <Button color="primary" variant="contained" startIcon={<AddBoxOutlinedIcon />} onClick={() => { createHandler(); }} disabled={createProjectDialogExecuting || user == ""}>
+                            </>
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button color="primary" variant="contained" onClick={() => { closeHandler(); }} disabled={createProjectDialogExecuting}>
+                            Cancel
+                        </Button>
+                        {/* <Button color="primary" variant="contained" startIcon={<AddBoxOutlinedIcon />} onClick={() => { createHandler(); }} disabled={createProjectDialogExecuting || user == ""}>
                                 Create
                             </Button> */}
-                            <Button color="primary" variant="contained" startIcon={<AddBoxOutlinedIcon />} onClick={() => { createHandler(); }} disabled={createProjectDialogExecuting || projectName == ""}> {/* selectedCollectionTemplatesList.length == 0 || */}
-                                Create
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                ) : (
-                    null
-                )}
-            </>
-            
-        );
+                        <Button color="primary" variant="contained" startIcon={<AddBoxOutlinedIcon />} onClick={() => { createHandler(); }} disabled={createProjectDialogExecuting || projectName == ""}> {/* selectedCollectionTemplatesList.length == 0 || */}
+                            Create
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            ) : (
+                null
+            )}
+        </>
+
+    );
 }
 
 // ======================== Component PropType Check ========================
-CreateProjectDialog.propTypes = 
+CreateProjectDialog.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -433,14 +418,14 @@ CreateProjectDialog.propTypes =
 
 }
 
-CreateProjectDialog.defaultProps = 
+CreateProjectDialog.defaultProps =
 {
     appState: {},
-    setParentAlert: () => {},
-    getParentData:  () => {},
+    setParentAlert: () => { },
+    getParentData: () => { },
     userID: null,
-    setCreateProjectDialog:  () => {},
-    setCreateProjectDialogExecuting:  () => {}
+    setCreateProjectDialog: () => { },
+    setCreateProjectDialogExecuting: () => { }
 }
 
 export default CreateProjectDialog;  // You can even shorthand this line by adding this at the function [Component] declaration stage

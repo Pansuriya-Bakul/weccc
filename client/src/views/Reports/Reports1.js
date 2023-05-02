@@ -289,7 +289,7 @@ const Reports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      Your Reports
+                      Reports
                     </Typography>
                   </Grid>
                 </Grid>
@@ -385,8 +385,8 @@ const Reports = (props) => {
             <Grid item xs={12}>
               <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
-                {isLoading ? (<CircularProgress />)
-                  : <Grid
+                  {isLoading ? (<CircularProgress />)
+                    : <Grid
                       container
                       direction="column"
                       justifyContent="flex-start"

@@ -209,16 +209,16 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                         >
                             <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
 
-                                <Grid item>
+                                {/* <Grid item>
                                     <Typography variant="h6" component="h6">
                                         My Community
                                     </Typography>
                                     <Divider />
-                                </Grid>
+                                </Grid> */}
                                 <Grid item xs>
                                     <Box mx={3} my={1} boxShadow={0}>
-                                        <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                                            {/* <Grid item>
+                                        {/* <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}> */}
+                                        {/* <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
                                                         title="Unlock editable fields"
@@ -272,10 +272,10 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                                         </Typography>
                                                     </Collapse>
                                                 </Grid> */}
-                                        </Grid>
+                                        {/* </Grid> */}
                                     </Box>
                                 </Grid>
-                                <Grid item>
+                                {/* <Grid item>
                                     <Tooltip
                                         placement="left"
                                         title="This page views user information."
@@ -284,7 +284,7 @@ const UserCommunityTab = (props) => { // Notice the arrow function... regular fu
                                             <HelpOutlineIcon />
                                         </IconButton>
                                     </Tooltip>
-                                </Grid>
+                                </Grid> */}
                             </Grid>
                             <Grid item xs={12}>
                                 <UnassignUserDialog

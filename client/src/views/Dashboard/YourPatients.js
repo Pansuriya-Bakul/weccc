@@ -32,10 +32,8 @@ const styles = theme => ({
     error: theme.error
 });
 
-class YourPatients extends Component 
-{
-    constructor(props)
-    {
+class YourPatients extends Component {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -44,8 +42,7 @@ class YourPatients extends Component
         };
     }
 
-    componentDidMount = async() =>
-    {
+    componentDidMount = async () => {
         await this.props.UpdateUser();
 
         this.users = {};
@@ -56,14 +53,11 @@ class YourPatients extends Component
         this.checkAuth();
     }
 
-    checkAuth = () =>
-    {
+    checkAuth = () => {
         setTimeout(() => {
             this.props.ToggleDrawerClose();
-            this.props.CheckAuthenticationValidity((tokenValid) => 
-            {
-                if(tokenValid)
-                {
+            this.props.CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
                     this.getUsers();
                 }
             });
@@ -71,27 +65,21 @@ class YourPatients extends Component
     }
 
     // Get all patients that are assigned to logged in user
-    getUsers = () =>
-    {
+    getUsers = () => {
         let { appState } = this.props;
 
-        get("users/", appState.token, (error, response) => 
-        {
-            if(error)
-            {
+        get("users/", appState.token, (error, response) => {
+            if (error) {
                 this.setState({
                     error: error.message,
                     render: true
                 });
             }
-            else
-            {
-                if(response.status === 200 || response.status === 304)
-                {
+            else {
+                if (response.status === 200 || response.status === 304) {
                     this.populateStateData(response.data.response);
                 }
-                else
-                {
+                else {
                     this.setState({
                         error: "Unable to retrieve users.  Please refresh and try agian.",
                         render: true
@@ -101,15 +89,12 @@ class YourPatients extends Component
         });
     }
 
-    populateStateData = (data) => 
-    {
+    populateStateData = (data) => {
         let { appState } = this.props;
         let patientIndex = 0;
 
-        for (let index = 0; index < data.count; index++) 
-        {
-            if(appState.patients.includes(data.users[index]._id))
-            {
+        for (let index = 0; index < data.count; index++) {
+            if (appState.patients.includes(data.users[index]._id)) {
                 this.users.library[patientIndex] = {
                     _id: data.users[index]._id,
                     name: data.users[index].info.name,
@@ -130,97 +115,92 @@ class YourPatients extends Component
         });
     }
 
-    createUserCard = ( _id, name, role, email, createdAt) =>
-    {
+    createUserCard = (_id, name, role, email, createdAt) => {
         return { _id, name, role, email, createdAt }
     }
 
     // Renders all patient cards with profile information
-    renderCards = () =>
-    {
-        let { 
-            classes 
+    renderCards = () => {
+        let {
+            classes
         } = this.props;
 
         var rows = [];
 
-        for (let index = 0; index < this.users.length; index++) 
-        {
-            rows.push(this.createUserCard(this.users.library[index]._id, 
-                                          this.users.library[index].name, 
-                                          this.users.library[index].role,
-                                          this.users.library[index].email,
-                                          this.users.library[index].createdAt));
+        for (let index = 0; index < this.users.length; index++) {
+            rows.push(this.createUserCard(this.users.library[index]._id,
+                this.users.library[index].name,
+                this.users.library[index].role,
+                this.users.library[index].email,
+                this.users.library[index].createdAt));
         }
 
-        if(this.users.length === 0)
-        {
-            return(
+        if (this.users.length === 0) {
+            return (
                 <Typography>
                     You do not have any patients assigned to you yet.  Please wait for an administrator to assign you your members, or contact your administrator directly to ensure they know you currently have no one assigned to you.
                 </Typography>
             );
         }
-        else
-        {
-            return(
+        else {
+            return (
                 <div className={classes.userCardRoot}>
                     <Grid container spacing={10}>
                         {rows.map((row, index) => {
                             var createdAt = new Date(row.createdAt);
-                            return(
+                            return (
                                 <Grid item xs={12} sm={12} md={6} lg={4} xl={4} key={index}>
-                                        <Card raised={true} variant="outlined">
-                                            <CardHeader title={row.name} style={{backgroundColor: "aliceblue"}}
-                                                 avatar={
-                                                    <Avatar aria-label="profile">
-                                                      P
-                                                    </Avatar>
-                                                  }
-                                            />
-                                            <CardContent>
-                                                <Box mx={1} my={0} boxShadow={0}>
-                                                    <Grid
-                                                        container
-                                                        direction="column"
-                                                        justifyContent="flex-start"
-                                                        alignItems="stretch"
-                                                        spacing={1}
-                                                    >
-                                                        <Grid item xs={12}>
-                                                            
-                                                        </Grid>
-                                                        <Grid item xs={12}>
-                                                            <Typography variant="body1" color="textSecondary" component="h2">
-                                                                Role:
-                                                            </Typography>
-                                                            <Typography variant="body2" component="h2" gutterBottom>
-                                                                <em>{row.role}</em>
-                                                            </Typography>
-                                                            <Typography variant="body1" color="textSecondary" component="h2">
-                                                                Email:
-                                                            </Typography>
-                                                            <Typography variant="body2" component="h2" gutterBottom>
-                                                                <em>{row.email}</em>
-                                                            </Typography>
-                                                            <Typography variant="body1" color="textSecondary" component="h2">
-                                                                Joined:
-                                                            </Typography>
-                                                            <Typography variant="body2" component="h2" gutterBottom>
-                                                                <em>{createdAt.getMonth() + 1} / {createdAt.getDate() } / {createdAt.getFullYear()}</em>
-                                                            </Typography>
-                                                        </Grid>
+                                    <Card raised={true} variant="outlined">
+                                        <CardHeader title={row.name} style={{ backgroundColor: "aliceblue" }}
+                                            avatar={
+                                                <Avatar aria-label="profile">
+                                                    P
+                                                </Avatar>
+                                            }
+                                        />
+                                        <CardContent>
+                                            <Box mx={1} my={0} boxShadow={0}>
+                                                <Grid
+                                                    container
+                                                    direction="column"
+                                                    justifyContent="flex-start"
+                                                    alignItems="stretch"
+                                                    spacing={1}
+                                                >
+                                                    <Grid item xs={12}>
+
                                                     </Grid>
-                                                </Box>
-                                            </CardContent>
-                                            <CardActions>
-                                                <Tooltip title="View Profile">
-                                                    <Button size="small" color="primary" variant="contained" startIcon={<VisibilityIcon />} component={Link} to={"/profile/" + row._id}>
-                                                        View
-                                                    </Button>
-                                                </Tooltip>
-                                            </CardActions>
-                                        </Card>
+                                                    <Grid item xs={12}>
+                                                        <Typography variant="body1" color="textSecondary" component="h2">
+                                                            Role:
+                                                        </Typography>
+                                                        <Typography variant="body2" component="h2" gutterBottom>
+                                                            <em>{row.role}</em>
+                                                        </Typography>
+                                                        <Typography variant="body1" color="textSecondary" component="h2">
+                                                            Email:
+                                                        </Typography>
+                                                        <Typography variant="body2" component="h2" gutterBottom>
+                                                            <em>{row.email}</em>
+                                                        </Typography>
+                                                        <Typography variant="body1" color="textSecondary" component="h2">
+                                                            Joined:
+                                                        </Typography>
+                                                        <Typography variant="body2" component="h2" gutterBottom>
+                                                            <em>{createdAt.getMonth() + 1} / {createdAt.getDate()} / {createdAt.getFullYear()}</em>
+                                                        </Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </Box>
+                                        </CardContent>
+                                        <CardActions>
+                                            <Tooltip title="View Profile">
+                                                <Button size="small" color="primary" variant="contained" startIcon={<VisibilityIcon />} component={Link} to={"/profile/" + row._id}>
+                                                    View
+                                                </Button>
+                                            </Tooltip>
+                                        </CardActions>
+                                    </Card>
                                 </Grid>
                             );
                         })}
@@ -230,14 +210,13 @@ class YourPatients extends Component
         }
     }
 
-	render()
-	{
+    render() {
         let { classes } = this.props;
         let { error, render } = this.state;
 
-		return (
+        return (
             <div>
-                { render ? (
+                {render ? (
                     <Grid container
                         className={classes.rootGrid}
                         direction="row"
@@ -249,15 +228,15 @@ class YourPatients extends Component
                             <Box mx={1} my={1}>
                                 <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
                                     <Grid item>
-                                        <People color="primary"/>
+                                        <People color="primary" />
                                     </Grid>
                                     <Grid item xs>
                                         <Typography variant="h5" color="secondary" align="left" gutterBottom={false}>
-                                            Your Members
+                                            My Members
                                         </Typography>
                                     </Grid>
-                                </Grid>                
-                            </Box> 
+                                </Grid>
+                            </Box>
                         </Grid>
                         <Grid item xs={9}>
                             <Box mx={1} my={1}>
@@ -265,9 +244,9 @@ class YourPatients extends Component
                             </Box>
                         </Grid>
                         <Grid item xs={12}>
-                            <Card raised={true} style={{backgroundColor: "whitesmoke"}}>
+                            <Card raised={true} style={{ backgroundColor: "whitesmoke" }}>
                                 <CardContent>
-                                <Box mx={1} my={1} boxShadow={0}>
+                                    <Box mx={1} my={1} boxShadow={0}>
                                         <Grid
                                             container
                                             direction="column"
@@ -284,7 +263,7 @@ class YourPatients extends Component
                                                 {this.renderCards()}
                                             </Grid>
                                         </Grid>
-                                    </Box> 
+                                    </Box>
                                 </CardContent>
                             </Card>
                         </Grid>
@@ -292,9 +271,9 @@ class YourPatients extends Component
                 ) : (
                     <CircularProgress />
                 )}
-            </div>            
+            </div>
         );
-	}
+    }
 }
 
 YourPatients.propTypes = {
