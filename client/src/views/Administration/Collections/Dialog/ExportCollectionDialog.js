@@ -229,7 +229,7 @@ const ExportCollectionDialog = (props) => { // Notice the arrow function... regu
                 getParentData();
             }
             catch{
-                setParentAlert(new AlertType(`Unable export collection(s). Please refresh and try again.`, "error"));
+                setParentAlert(new AlertType(`Unable export series. Please refresh and try again.`, "error"));
             }
         }, [ setPdfWidth, setPdfHeight, exportCollectionChapters, selectedDataItemsList, setExportCollectionDialogExecuting, setExportCollectionDialog, setParentAlert, getParentData]);
 
@@ -302,7 +302,7 @@ const ExportCollectionDialog = (props) => { // Notice the arrow function... regu
                         onClose={() => { closeHandler(); }}
                     >
                         <DialogTitle>
-                            Export collection{selectedDataItemsList.length > 1? "s" : ""}
+                            Export Series{selectedDataItemsList.length > 1? "s" : ""}
                         </DialogTitle>
                         <DialogContent>
                             {exportCollectionDialogExecuting? (

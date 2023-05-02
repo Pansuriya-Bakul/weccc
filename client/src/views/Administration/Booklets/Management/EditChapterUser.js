@@ -214,7 +214,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
 
         survey.current.render();
 
-        setAlert(new AlertType('Restarted chapter survey to most recently completed page. You can continue to modify if you wish.', "info"));
+        setAlert(new AlertType('Restarted Module survey to most recently completed page. You can continue to modify if you wish.', "info"));
 
     }, [chapterCopy]);
 
@@ -407,7 +407,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                 <Grid item>
                                                                     <Tooltip
                                                                         placement="bottom"
-                                                                        title="Refresh Online Chapter"
+                                                                        title="Refresh Online Module"
                                                                     >
                                                                         <Button
                                                                             size="small"
@@ -441,7 +441,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                 <Grid item>
                                                                     <Tooltip
                                                                         placement="bottom"
-                                                                        title="Mark as Complete Chapter"
+                                                                        title="Mark as Complete Module"
                                                                     >
                                                                         <Button
                                                                             size="small"
@@ -459,7 +459,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                     {progress ? (
                                                                         <Tooltip
                                                                             placement="bottom"
-                                                                            title="Save Chapter"
+                                                                            title="Save Module"
                                                                         >
                                                                             <Button
                                                                                 size="small"
@@ -499,7 +499,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                     <Grid item>
                                                         <Tooltip
                                                             placement="left"
-                                                            title="Use this page to Fill in your chapter. Any information that a patient has answered in a previous chapter version along with the questions they answered will still exist. Only NEW chapters will be affected."
+                                                            title="Use this page to Fill in your Module. Any information that a patient has answered in a previous Module version along with the questions they answered will still exist. Only NEW Modules will be affected."
                                                         >
                                                             <IconButton>
                                                                 <HelpOutlineIcon />

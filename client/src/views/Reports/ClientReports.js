@@ -104,7 +104,7 @@ const ClientReports = (props) => {
       if (appState.patients.length <= 0) {
         setAlert(
           new AlertType(
-            "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
+            "You do not have any patients assigned. In order to start a series, you must first be assigned a member by an Administrator.",
             "error"
           )
         );
@@ -152,7 +152,7 @@ const ClientReports = (props) => {
           //Bad callback
           setAlert(
             new AlertType(
-              "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again."
+              "Unable to retrieve Neighbour Module Reports. Please refresh and try again."
             )
           );
         } else {
@@ -167,7 +167,7 @@ const ClientReports = (props) => {
             //Bad HTTP Response
             setAlert(
               new AlertType(
-                "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.",
+                "Unable to retrieve Neighbour Module Reports. Please refresh and try again.",
                 "error"
               )
             );
@@ -277,7 +277,7 @@ const ClientReports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      Your Reports
+                      My Reports
                     </Typography>
                   </Grid>
                 </Grid>
@@ -294,7 +294,7 @@ const ClientReports = (props) => {
             </Grid>
             {/* <Grid item xs={12}>
               <Card raised={true}> */}
-                {/* <Box mx={1} my={1} boxShadow={0}>
+            {/* <Box mx={1} my={1} boxShadow={0}>
                   {/* <Grid
                     container
                     direction="column"
@@ -330,7 +330,7 @@ const ClientReports = (props) => {
                         </Select>
                       </FormControl>
                     </Grid> */}
-                {/* <Grid item xs={12}>
+            {/* <Grid item xs={12}>
                       {reportsData ? (
                         <Pagination
                           count={reportsData.SRVNum_PRF_SD.length}
@@ -347,14 +347,14 @@ const ClientReports = (props) => {
                     </Grid> 
                   </Grid> *
                 </Box> */}
-              {/* </Card>
+            {/* </Card>
             </Grid> */}
             <Grid item xs={12}>
               <Card raised={true} style={{ padding: '10px' }}>
                 <Box mx={1} my={1} boxShadow={0}>
 
                   {isLoading ? (<CircularProgress />)
-                  :  <Grid
+                    : <Grid
                       container
                       direction="column"
                       justifyContent="flex-start"
@@ -379,7 +379,7 @@ const ClientReports = (props) => {
                               align="left"
                               gutterBottom
                             >
-                              Dashboard
+                              Highlights
                             </Typography>
                             <ReportDashboard
                               reports={reportsData}

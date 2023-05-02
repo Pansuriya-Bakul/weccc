@@ -18,27 +18,25 @@ import green from '@material-ui/core/colors/green';
 
 const styles = {
 	spinner: {
-        color: green[500],
-        position: 'absolute',
+		color: green[500],
+		position: 'absolute',
 		left: '50%',
 		top: '25%',
-        marginTop: -12,
-        marginLeft: -12,
-    }
+		marginTop: -12,
+		marginLeft: -12,
+	}
 }
 
 window.onbeforeunload = (event) => {
 	window.localStorage.clear();
 	return ''; // Legacy method for cross browser support
-  };
+};
 
-class App extends Component 
-{
-	constructor(props)
-    {
-        super(props);
+class App extends Component {
+	constructor(props) {
+		super(props);
 
-        this.state = {
+		this.state = {
 			_id: null,
 			name: null,
 			role: null,
@@ -49,20 +47,17 @@ class App extends Component
 			facilityName: null,
 			authenticated: false,
 			render: false
-        };
+		};
 	}
-	
-	componentDidMount = () =>
-	{
+
+	componentDidMount = () => {
 		this.CheckAuthentication();
 	}
 
-	CheckAuthentication = () =>
-	{
+	CheckAuthentication = () => {
 		let { token } = this.state;
 
-		if(token === null || token === undefined || token === '')
-		{
+		if (token === null || token === undefined || token === '') {
 			var _id = localStorage.getItem('_id');
 			var name = localStorage.getItem('name');
 			var role = localStorage.getItem('role');
@@ -72,12 +67,10 @@ class App extends Component
 			var facilityName = localStorage.getItem('facilityName');
 			var _token = localStorage.getItem('token');
 
-			if(_id == null || name == null || role == null || patients == null || workers == null || _token == null || facilityId == null || facilityName == null)
-			{
+			if (_id == null || name == null || role == null || patients == null || workers == null || _token == null || facilityId == null || facilityName == null) {
 				this.Logout();
 			}
-			else
-			{
+			else {
 				this.setState({
 					_id: _id,
 					name: name,
@@ -88,79 +81,68 @@ class App extends Component
 					facilityName: facilityName,
 					token: _token
 				}, () => this.CheckAuthenticationValidity(tokenValid => {
-					if(tokenValid)
-					{
+					if (tokenValid) {
 						this.setState({
 							authenticated: true,
 							render: true
 						});
 					}
-					else
-					{
+					else {
 						this.Logout();
 					}
 				}));
 			}
 		}
-		else
-		{
+		else {
 			this.CheckAuthenticationValidity(tokenValid => {
-				if(!tokenValid)
-				{
+				if (!tokenValid) {
 					this.Logout();
 				}
 			})
 		}
 	}
-	
-	CheckAuthenticationValidity = (callback) =>
-	{
+
+	CheckAuthenticationValidity = (callback) => {
 		let { token } = this.state;
 
-		validateToken(token, (error, response) => 
-		{
-            if(error)
-            {
+		validateToken(token, (error, response) => {
+			if (error) {
 				callback(false);
 				this.Logout();
 			}
-			else
-			{
-				if(response.status === 200 || response.status === 304)
-				{
+			else {
+				if (response.status === 200 || response.status === 304) {
 					callback(true);
 				}
-				else
-				{
+				else {
 					callback(false);
 					this.Logout();
 				}
 			}
-        });
+		});
 	}
 
-	UpdateUser = () => 
-	{
+	UpdateUser = () => {
 		let { _id, token } = this.state;
 
 		return get('users/' + _id, token, (error, response) => {
-			if(error) return;
-			if(response.status === 200 || response.status === 304)
-			{
+			if (error) return;
+			if (response.status === 200 || response.status === 304) {
 				localStorage.setItem("patients", JSON.stringify(response.data.user.patients));
 				localStorage.setItem("workers", JSON.stringify(response.data.user.workers));
 			}
 		});
 	}
 
-	Login = (token, user) =>
-	{
-		localStorage.setItem("_id",	user._id);
+	Login = (token, user) => {
+		localStorage.setItem("_id", user._id);
 		localStorage.setItem("name", user.info.name);
 		localStorage.setItem("role", user.role);
 		localStorage.setItem("patients", JSON.stringify(user.patients));
 		localStorage.setItem("workers", JSON.stringify(user.workers));
 		localStorage.setItem("facilityId", user.facilityId._id);
+		console.log(user.facilityId.name)
+		console.log("aksbhcbyyyy")
 		localStorage.setItem("facilityName", user.facilityId.name);
 		localStorage.setItem("token", token);
 
@@ -177,8 +159,7 @@ class App extends Component
 		});
 	}
 
-	Logout = () =>
-	{
+	Logout = () => {
 		localStorage.removeItem("_id");
 		localStorage.removeItem("name");
 		localStorage.removeItem("role");
@@ -187,7 +168,7 @@ class App extends Component
 		localStorage.removeItem("facilityId");
 		localStorage.removeItem("facilityName");
 		localStorage.removeItem("token");
-					
+
 		this.setState({
 			_id: null,
 			role: null,
@@ -198,46 +179,41 @@ class App extends Component
 			authenticated: false,
 			render: true
 		});
-		
-		if (window.location.pathname != '/'){
+
+		if (window.location.pathname != '/') {
 			window.history.replaceState(null, "Login", "/");
 		}
 	}
-	
-	render()
-	{
+
+	render() {
 		let { classes } = this.props;
 		let { authenticated, render } = this.state;
 
-		if(render)
-		{
-			if(authenticated)
-			{
+		if (render) {
+			if (authenticated) {
 				return (
 					<MuiThemeProvider theme={Theme}>
 						<Dashboard
-							appState={this.state} 
-							Logout={this.Logout} 
+							appState={this.state}
+							Logout={this.Logout}
 							CheckAuthenticationValidity={this.CheckAuthenticationValidity}
 							UpdateUser={this.UpdateUser}
 						/>
 					</MuiThemeProvider>
 				);
 			}
-			else
-			{
+			else {
 				return (
-					<Login 
+					<Login
 						Login={this.Login}
 					/>
 				);
 			}
 		}
-		else
-		{
+		else {
 			return (
 				<div align="center">
-					<CircularProgress className={classes.spinner} /> 
+					<CircularProgress className={classes.spinner} />
 				</div>
 			);
 		}

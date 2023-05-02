@@ -44,16 +44,16 @@ import SaveIcon from '@material-ui/icons/Save';
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            flexGrow: 1,     // CSS determined this way, flexbox properties
-            height: '100%'
-        },
-        rootGrid: {
-            height: '100%'
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        flexGrow: 1,     // CSS determined this way, flexbox properties
+        height: '100%'
+    },
+    rootGrid: {
+        height: '100%'
+    }
+}));
 
 
 // ================= Static Variables ================
@@ -70,470 +70,424 @@ const UserGeneralPropertiesTab = (props) => { // Notice the arrow function... re
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, userID, setParentAlert, getParentInfo, panelId, panelIndex, userOriginal } = props;
+    // Declaration of Stateful Variables ===
+    const { appState, userID, setParentAlert, getParentInfo, panelId, panelIndex, userOriginal } = props;
 
-        const [userEdit, setUserEdit] = useState(null);
+    const [userEdit, setUserEdit] = useState(null);
 
-        // Unlock editable fields
-        const [editable, setEditable] = useState(false);
+    // Unlock editable fields
+    const [editable, setEditable] = useState(false);
 
-        const [changedGeneralProperties, setChangedGeneralProperties] = useState(false);
+    const [changedGeneralProperties, setChangedGeneralProperties] = useState(false);
 
-        //  Editable Variables ==========
+    //  Editable Variables ==========
 
-            const [emailError, setEmailError] = useState(false);
-            
-            const [password, setPassword] = useState("");
-            const [passwordError, setPasswordError] = useState(false);
-            
-            const [confirmPassword, setConfirmPassword] = useState("");
-            const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
 
-            const [role, setRole] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordError, setPasswordError] = useState(false);
 
-            const [enabled, setEnabled] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
+    const [role, setRole] = useState("");
+
+    const [enabled, setEnabled] = useState(false);
 
     // Functions ===
 
-        const enabledHandler = useCallback((event) => {
+    const enabledHandler = useCallback((event) => {
 
-            // setUserEdit({
-            //     ...userEdit,
-            //     enabled: event.target.checked
-            // });
+        // setUserEdit({
+        //     ...userEdit,
+        //     enabled: event.target.checked
+        // });
 
-            setEnabled(event.target.checked);
+        setEnabled(event.target.checked);
 
-        }, [ setEnabled ]);
+    }, [setEnabled]);
 
-        const editablePropertiesHandler = useCallback((event) => {
+    const editablePropertiesHandler = useCallback((event) => {
 
-            setEditable(!editable);
+        setEditable(!editable);
 
-            if(userOriginal)
-            {
-                setUserEdit({
-                ...userOriginal
-                });
-
-                setEmailError(false);
-                setPassword("");
-                setPasswordError(false);
-                setConfirmPassword("");
-                setConfirmPasswordError(false);
-
-                setRole(userOriginal.role);
-                setEnabled(userOriginal.enabled); 
-            }
-
-        }, [ editable, setEditable, userOriginal, setEmailError, setPasswordError, setConfirmPasswordError, setRole, setEnabled ]);
-
-        const roleHandler = useCallback((event) => {
-
-            // setUserEdit({
-            //     ...userEdit,
-            //     role: event.target.value
-            // });
-
-            setRole(event.target.value);
-
-        }, [ setRole ]);
-
-        const emailHandler = useCallback((event) => 
-        {
-            if(emailRegex.test(String(event.target.value)))
-            {
-                setEmailError(false);
-            }
-            else
-            {   
-                setEmailError(true);
-            }
-
+        if (userOriginal) {
             setUserEdit({
-                ...userEdit,
-                email: event.target.value
-            });
-            
-        }, [ userEdit, setUserEdit, setEmailError, emailRegex ]);
-
-        const passwordHandler = useCallback((event) =>
-        {
-            if(passwordRegex.test(String(event.target.value)))
-            {
-                setPasswordError(false);
-            }
-            else
-            {   
-                setPasswordError(true);
-            }
-
-            setPassword(event.target.value);
-        }, [ setPassword, setPasswordError, passwordRegex ]);
-
-        const confirmPasswordHandler = useCallback((event) => 
-        {
-            if(event.target.value != password)
-            {
-                setConfirmPasswordError(true);
-            }
-            else
-            {
-                setConfirmPasswordError(false);
-            }
-            
-            setConfirmPassword(event.target.value);
-
-        }, [ setConfirmPassword, password ]);
-
-        const resetGeneralProperties = useCallback((event) => 
-        {
-            if(userOriginal)
-            {
-                setUserEdit({
                 ...userOriginal
-                });
+            });
 
-                setEmailError(false);
-                setPassword("");
-                setPasswordError(false);
-                setConfirmPassword("");
-                setConfirmPasswordError(false);
+            setEmailError(false);
+            setPassword("");
+            setPasswordError(false);
+            setConfirmPassword("");
+            setConfirmPasswordError(false);
 
-                setRole(userOriginal.role);
-                setEnabled(userOriginal.enabled); 
-            }
+            setRole(userOriginal.role);
+            setEnabled(userOriginal.enabled);
+        }
 
-        }, [ userOriginal, setUserEdit, setEmailError, setPassword, setPasswordError, setConfirmPassword, setConfirmPasswordError, setRole, setEnabled ]);
+    }, [editable, setEditable, userOriginal, setEmailError, setPasswordError, setConfirmPasswordError, setRole, setEnabled]);
 
-        const saveGeneralProperties = useCallback((event) =>
-        {
-            if(emailError || passwordError || confirmPasswordError)
-            {
-                setParentAlert(new AlertType('One or more fields have errors. Please correct them and try again.', "error"));
-                return;
-            }
+    const roleHandler = useCallback((event) => {
 
-            let updateData = {
-                email: userEdit.email,
-                role: role,
-                enabled: enabled,
-            };
+        // setUserEdit({
+        //     ...userEdit,
+        //     role: event.target.value
+        // });
 
-            if(password.length > 0 && confirmPassword.length > 0)
-            {
-                // Object.assign(updateData, {password: password});
-                updateData = { ...updateData, password: password };
-            }
-    
-            if(userID != null)
-            {
-                patch("users/" + userID, appState.token, updateData, (error, response) => 
-                {
-                    if(error)
-                    {
+        setRole(event.target.value);
+
+    }, [setRole]);
+
+    const emailHandler = useCallback((event) => {
+        if (emailRegex.test(String(event.target.value))) {
+            setEmailError(false);
+        }
+        else {
+            setEmailError(true);
+        }
+
+        setUserEdit({
+            ...userEdit,
+            email: event.target.value
+        });
+
+    }, [userEdit, setUserEdit, setEmailError, emailRegex]);
+
+    const passwordHandler = useCallback((event) => {
+        if (passwordRegex.test(String(event.target.value))) {
+            setPasswordError(false);
+        }
+        else {
+            setPasswordError(true);
+        }
+
+        setPassword(event.target.value);
+    }, [setPassword, setPasswordError, passwordRegex]);
+
+    const confirmPasswordHandler = useCallback((event) => {
+        if (event.target.value != password) {
+            setConfirmPasswordError(true);
+        }
+        else {
+            setConfirmPasswordError(false);
+        }
+
+        setConfirmPassword(event.target.value);
+
+    }, [setConfirmPassword, password]);
+
+    const resetGeneralProperties = useCallback((event) => {
+        if (userOriginal) {
+            setUserEdit({
+                ...userOriginal
+            });
+
+            setEmailError(false);
+            setPassword("");
+            setPasswordError(false);
+            setConfirmPassword("");
+            setConfirmPasswordError(false);
+
+            setRole(userOriginal.role);
+            setEnabled(userOriginal.enabled);
+        }
+
+    }, [userOriginal, setUserEdit, setEmailError, setPassword, setPasswordError, setConfirmPassword, setConfirmPasswordError, setRole, setEnabled]);
+
+    const saveGeneralProperties = useCallback((event) => {
+        if (emailError || passwordError || confirmPasswordError) {
+            setParentAlert(new AlertType('One or more fields have errors. Please correct them and try again.', "error"));
+            return;
+        }
+
+        let updateData = {
+            email: userEdit.email,
+            role: role,
+            enabled: enabled,
+        };
+
+        if (password.length > 0 && confirmPassword.length > 0) {
+            // Object.assign(updateData, {password: password});
+            updateData = { ...updateData, password: password };
+        }
+
+        if (userID != null) {
+            patch("users/" + userID, appState.token, updateData, (error, response) => {
+                if (error) {
+                    setParentAlert(new AlertType('Unable to save changes to User. Please refresh and try again.', "error"));
+                }
+                else {
+                    if (response.status === 200 || response.status === 304) {
+                        getParentInfo();
+                        resetGeneralProperties();
+                        setParentAlert(new AlertType('Successfully saved changes to user.', "success"));
+                    }
+                    else {
                         setParentAlert(new AlertType('Unable to save changes to User. Please refresh and try again.', "error"));
                     }
-                    else
-                    {
-                        if(response.status === 200 || response.status === 304)
-                        {
-                            getParentInfo();
-                            resetGeneralProperties();
-                            setParentAlert(new AlertType('Successfully saved changes to user.', "success"));
-                        }
-                        else
-                        {
-                            setParentAlert(new AlertType('Unable to save changes to User. Please refresh and try again.', "error"));
-                        }
-                    }
-                });
-            }
-            else
-            {
-                setParentAlert(new AlertType('Unable to save changes to User. Please refresh and try again.', "error"));
-            }
-            
+                }
+            });
+        }
+        else {
+            setParentAlert(new AlertType('Unable to save changes to User. Please refresh and try again.', "error"));
+        }
 
-        }, [ appState, userID, emailError, passwordError, confirmPasswordError, userEdit, role, enabled, password, confirmPassword, setParentAlert, getParentInfo ] );
+
+    }, [appState, userID, emailError, passwordError, confirmPasswordError, userEdit, role, enabled, password, confirmPassword, setParentAlert, getParentInfo]);
 
     // Hooks ===
 
-        useEffect( () => 
-        {
-            if(userOriginal && Object.keys(userOriginal).length > 0 && Object.getPrototypeOf(userOriginal) === Object.prototype)
-            {
-               setUserEdit(userOriginal);
+    useEffect(() => {
+        if (userOriginal && Object.keys(userOriginal).length > 0 && Object.getPrototypeOf(userOriginal) === Object.prototype) {
+            setUserEdit(userOriginal);
 
-               setRole(userOriginal.role);
+            setRole(userOriginal.role);
 
-               setEnabled(userOriginal.enabled);
+            setEnabled(userOriginal.enabled);
+        }
+
+    }, [userOriginal]);
+
+    useEffect(() => {
+        if (userOriginal) {
+            if (role !== userOriginal.role) {
+                setChangedGeneralProperties(true);
             }
-
-        }, [ userOriginal ]);
-
-        useEffect( () => 
-        {
-            if(userOriginal)
-            {
-                if(role !== userOriginal.role)
-                {
-                    setChangedGeneralProperties(true);
-                }
-                else
-                {
-                    setChangedGeneralProperties(false);
-                }
-            }
-
-        }, [ userOriginal, role ]);
-
-        useEffect( () => 
-        {
-            if(userOriginal)
-            {
-                if(enabled !== userOriginal.enabled)
-                {
-                    setChangedGeneralProperties(true);
-                }
-                else
-                {
-                    setChangedGeneralProperties(false);
-                }
-            }
-
-        }, [ userOriginal, enabled ]);
-
-        useEffect( () =>
-        {
-            if(panelIndex !== panelId)
-            {
-                resetGeneralProperties();
-            }
-
-        }, [ panelIndex, panelId, resetGeneralProperties]);
-
-        useEffect( () => 
-        {
-            if(JSON.stringify(userEdit) === JSON.stringify(userOriginal))
-            {
+            else {
                 setChangedGeneralProperties(false);
             }
-            else
-            {
+        }
+
+    }, [userOriginal, role]);
+
+    useEffect(() => {
+        if (userOriginal) {
+            if (enabled !== userOriginal.enabled) {
                 setChangedGeneralProperties(true);
             }
-          
-        }, [ userOriginal, userEdit, setChangedGeneralProperties ]);
-
-        useEffect( () => 
-        {
-            if((password.length > 0 && confirmPassword.length > 0) &&
-                (password === confirmPassword) && (!passwordError && !confirmPasswordError))
-            {
-                setChangedGeneralProperties(true);
+            else {
+                setChangedGeneralProperties(false);
             }
+        }
 
-        }, [ password, confirmPassword, passwordError, confirmPasswordError, setChangedGeneralProperties ]);
+    }, [userOriginal, enabled]);
 
-        useEffect( () => 
-        {
-            if(password.length === 0)
-            {
-                setConfirmPasswordError(false);
+    useEffect(() => {
+        if (panelIndex !== panelId) {
+            resetGeneralProperties();
+        }
+
+    }, [panelIndex, panelId, resetGeneralProperties]);
+
+    useEffect(() => {
+        if (JSON.stringify(userEdit) === JSON.stringify(userOriginal)) {
+            setChangedGeneralProperties(false);
+        }
+        else {
+            setChangedGeneralProperties(true);
+        }
+
+    }, [userOriginal, userEdit, setChangedGeneralProperties]);
+
+    useEffect(() => {
+        if ((password.length > 0 && confirmPassword.length > 0) &&
+            (password === confirmPassword) && (!passwordError && !confirmPasswordError)) {
+            setChangedGeneralProperties(true);
+        }
+
+    }, [password, confirmPassword, passwordError, confirmPasswordError, setChangedGeneralProperties]);
+
+    useEffect(() => {
+        if (password.length === 0) {
+            setConfirmPasswordError(false);
+        }
+        else if (password.length > 0) {
+            if (confirmPassword.length === 0) {
+                setConfirmPasswordError(true);
             }
-            else if(password.length > 0)
-            {
-                if(confirmPassword.length === 0)
-                {
+            else if (confirmPassword.length > 0) {
+                if (password === confirmPassword) {
+                    // Technically should check if valid password specifications as well
+                    setConfirmPasswordError(false);
+                }
+                else {
                     setConfirmPasswordError(true);
                 }
-                else if(confirmPassword.length > 0)
-                {
-                    if(password === confirmPassword)
-                    {
-                        // Technically should check if valid password specifications as well
-                        setConfirmPasswordError(false);
-                    }
-                    else
-                    {
-                        setConfirmPasswordError(true);
-                    }
-                }
             }
+        }
 
-        }, [ password, confirmPassword, setConfirmPasswordError ]);
+    }, [password, confirmPassword, setConfirmPasswordError]);
 
 
     // Render Section ===
 
-        return (
-            userOriginal != null? (
-                <div
-                    role="tabpanel"
-                    hidden={panelIndex !== panelId}
-                    id={`Panel-${panelId}`}
-                >
-                    <Collapse in={panelIndex == panelId? true : false}>
-                        {userEdit? (
-                            <Grid
-                                container
-                                direction="column"
-                                justifyContent="flex-start"
-                                alignItems="stretch"
-                                spacing={1}
-                            >
-                                <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
-                                    <Grid item>
-                                        <Typography variant="h6" component="h6">
-                                            General Properties
-                                        </Typography>
-                                        <Divider />
-                                    </Grid>
-                                    <Grid item xs>
-                                        <Box mx={3} my={1} boxShadow={0}>
-                                            <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                                                <Grid item>
-                                                    <Tooltip
-                                                        placement="bottom"
-                                                        title="Unlock editable fields"
-                                                    >
-                                                        <IconButton
-                                                            size="small"
-                                                            color="primary"
-                                                            onClick={() => { editablePropertiesHandler(); }}
-                                                        >
-                                                            {editable? (
-                                                                <LockOpenIcon />
-                                                            ) : (
-                                                                <LockIcon />
-                                                            )}
-                                                        </IconButton>
-                                                    </Tooltip> 
-                                                </Grid>
-                                                <Grid item
-                                                    hidden={!editable}
-                                                >
-                                                    <Collapse in={editable}>
-                                                        <ButtonGroup color="primary">
-                                                            <Button 
-                                                                size="small" 
-                                                                variant="outlined" 
-                                                                color="default"
-                                                                //  disabled={!changedGeneralProperties}
-                                                                startIcon={<RefreshIcon />}
-                                                                onClick={() => { resetGeneralProperties(); }}
-                                                            >
-                                                                Reset
-                                                            </Button>
-                                                            <Button 
-                                                                size="small" 
-                                                                variant="outlined" 
-                                                                color="secondary"
-                                                                disabled={!changedGeneralProperties}
-                                                                startIcon={<SaveIcon />}
-                                                                onClick={() => { saveGeneralProperties(); }}
-                                                            >
-                                                                Save
-                                                            </Button> 
-                                                        </ButtonGroup>
-                                                    </Collapse>
-                                                </Grid>
-                                                <Grid item
-                                                    // hidden={!editable}
-                                                >
-                                                    <Collapse in={changedGeneralProperties}>
-                                                        <Typography variant="caption" color="textSecondary" align="left" gutterBottom>
-                                                            { changedGeneralProperties? "Changes have been made." : "" }
-                                                        </Typography>
-                                                    </Collapse>
-                                                </Grid>
-                                            </Grid>
-                                        </Box>
-                                    </Grid>
-                                    <Grid item>
-                                        <Tooltip
-                                            placement="left"
-                                            title="This page views user properties."
-                                        >
-                                            <IconButton>
-                                                <HelpOutlineIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
+    return (
+        userOriginal != null ? (
+            <div
+                role="tabpanel"
+                hidden={panelIndex !== panelId}
+                id={`Panel-${panelId}`}
+            >
+                <Collapse in={panelIndex == panelId ? true : false}>
+                    {userEdit ? (
+                        <Grid
+                            container
+                            direction="column"
+                            justifyContent="flex-start"
+                            alignItems="stretch"
+                            spacing={1}
+                        >
+                            <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
+                                <Grid item>
+                                    <Typography variant="h6" component="h6">
+                                        Login Properties
+                                    </Typography>
+                                    <Divider />
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <Box mx={1} my={1} boxShadow={0}>
-                                        <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={3}>
+                                <Grid item xs>
+                                    <Box mx={3} my={1} boxShadow={0}>
+                                        <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                                            <Grid item>
+                                                <Tooltip
+                                                    placement="bottom"
+                                                    title="Unlock editable fields"
+                                                >
+                                                    <IconButton
+                                                        size="small"
+                                                        color="primary"
+                                                        onClick={() => { editablePropertiesHandler(); }}
+                                                    >
+                                                        {editable ? (
+                                                            <LockOpenIcon />
+                                                        ) : (
+                                                            <LockIcon />
+                                                        )}
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Grid>
+                                            <Grid item
+                                                hidden={!editable}
+                                            >
+                                                <Collapse in={editable}>
+                                                    <ButtonGroup color="primary">
+                                                        <Button
+                                                            size="small"
+                                                            variant="outlined"
+                                                            color="default"
+                                                            //  disabled={!changedGeneralProperties}
+                                                            startIcon={<RefreshIcon />}
+                                                            onClick={() => { resetGeneralProperties(); }}
+                                                        >
+                                                            Reset
+                                                        </Button>
+                                                        <Button
+                                                            size="small"
+                                                            variant="outlined"
+                                                            color="secondary"
+                                                            disabled={!changedGeneralProperties}
+                                                            startIcon={<SaveIcon />}
+                                                            onClick={() => { saveGeneralProperties(); }}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    </ButtonGroup>
+                                                </Collapse>
+                                            </Grid>
+                                            <Grid item
+                                            // hidden={!editable}
+                                            >
+                                                <Collapse in={changedGeneralProperties}>
+                                                    <Typography variant="caption" color="textSecondary" align="left" gutterBottom>
+                                                        {changedGeneralProperties ? "Changes have been made." : ""}
+                                                    </Typography>
+                                                </Collapse>
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                </Grid>
+                                <Grid item>
+                                    <Tooltip
+                                        placement="left"
+                                        title="This page allows to change password."
+                                    >
+                                        <IconButton>
+                                            <HelpOutlineIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Box mx={1} my={1} boxShadow={0}>
+                                    <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={3}>
 
-                                            <Grid item xs></Grid>
+                                        {/* <Grid item xs></Grid>
                                             <Grid item xs={12}>
                                                 <Typography variant="subtitle2" component="h6" color="textPrimary">
                                                     Login Properties
                                                 </Typography>
                                                 <Divider light/>
-                                            </Grid>
-                                            <Grid item xs={4}>
-                                                <TextField id="Email" size="small" variant="outlined" fullWidth label="Email" required onChange={(event) => { emailHandler(event); }} value={userEdit.email} error={emailError}
-                                                    readOnly={editable? false : true}
-                                                    disabled={editable? false : true}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={8}></Grid>
-                                            <Grid item xs={4}>
-                                                <TextField id="New-Password" size="small" variant="outlined" fullWidth type="password" label="New Password" required onChange={(event) => { passwordHandler(event); }} value={password} error={passwordError}
-                                                    readOnly={editable? false : true}
-                                                    disabled={editable? false : true}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={8}></Grid>
-                                            <Grid item xs={4}>
-                                                <TextField id="Confirm-New-Password" size="small" variant="outlined" fullWidth type="password" label="Confirm Password" required onChange={(event) => { confirmPasswordHandler(event); }} value={confirmPassword} error={confirmPasswordError}
-                                                    readOnly={editable? false : true}
-                                                    disabled={editable? false : true} 
-                                                />
-                                            </Grid>
+                                            </Grid> */}
+                                        <Grid item xs={4}>
+                                            <TextField id="Email" size="small" variant="outlined" fullWidth label="Email" required onChange={(event) => { emailHandler(event); }} value={userEdit.email} error={emailError}
+                                                readOnly={editable ? false : true}
+                                                disabled={editable ? false : true}
+                                            />
                                         </Grid>
+                                        <Grid item xs={8}></Grid>
+                                        <Grid item xs={4}>
+                                            <TextField id="New-Password" size="small" variant="outlined" fullWidth type="password" label="New Password" required onChange={(event) => { passwordHandler(event); }} value={password} error={passwordError}
+                                                readOnly={editable ? false : true}
+                                                disabled={editable ? false : true}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={8}></Grid>
+                                        <Grid item xs={4}>
+                                            <TextField id="Confirm-New-Password" size="small" variant="outlined" fullWidth type="password" label="Confirm Password" required onChange={(event) => { confirmPasswordHandler(event); }} value={confirmPassword} error={confirmPasswordError}
+                                                readOnly={editable ? false : true}
+                                                disabled={editable ? false : true}
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    ) : (
+                        <Grid
+                            container
+                            direction="column"
+                            justifyContent="flex-start"
+                            alignItems="stretch"
+                            spacing={1}
+                        >
+                            <Grid item xs={12} container direction="row" justifyContent="center" alignItems="stretch" spacing={1}>
+                                <Grid item>
+                                    <Box mx={1} my={1} boxShadow={0}>
+                                        <CircularProgress />
                                     </Box>
                                 </Grid>
                             </Grid>
-                        ) : (
-                            <Grid
-                                container
-                                direction="column"
-                                justifyContent="flex-start"
-                                alignItems="stretch"
-                                spacing={1}
-                            >
-                                <Grid item xs={12} container direction="row" justifyContent="center" alignItems="stretch" spacing={1}>
-                                    <Grid item>
-                                        <Box mx={1} my={1} boxShadow={0}>
-                                            <CircularProgress />
-                                        </Box>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        )}
-                    </Collapse>
-                </div>   
-            ) : (
-                <>
-                </>
-                // <Typography variant="h6" color="inherit" align="center" gutterBottom>
-                //     Not Authorized. Please refresh and try again.
-                // </Typography>
-            )
-            
-        );
+                        </Grid>
+                    )}
+                </Collapse>
+            </div>
+        ) : (
+            <>
+            </>
+            // <Typography variant="h6" color="inherit" align="center" gutterBottom>
+            //     Not Authorized. Please refresh and try again.
+            // </Typography>
+        )
+
+    );
 }
 
 
 // ======================== Component PropType Check ========================
-UserGeneralPropertiesTab.propTypes = 
+UserGeneralPropertiesTab.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -545,12 +499,12 @@ UserGeneralPropertiesTab.propTypes =
     userOriginal: PropTypes.object
 }
 
-UserGeneralPropertiesTab.defaultProps = 
+UserGeneralPropertiesTab.defaultProps =
 {
     appState: {},
     userID: null,
-    setParentAlert: () => {},
-    getParentInfo: () => {},
+    setParentAlert: () => { },
+    getParentInfo: () => { },
     panelId: null,
     panelIndex: null,
     userOriginal: {}

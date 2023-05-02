@@ -50,10 +50,8 @@ const styles = theme => ({
     success: theme.success
 });
 
-class StartACollection extends Component 
-{	
-    constructor(props)
-    {
+class StartACollection extends Component {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -67,8 +65,7 @@ class StartACollection extends Component
         };
     }
 
-    componentDidMount = () =>
-    {
+    componentDidMount = () => {
         this.users = {};
         this.users.library = {};
         this.users.length = 0;
@@ -76,14 +73,11 @@ class StartACollection extends Component
         this.checkAuth();
     }
 
-    checkAuth = () =>
-    {
+    checkAuth = () => {
         setTimeout(() => {
             this.props.ToggleDrawerClose();
-            this.props.CheckAuthenticationValidity((tokenValid) => 
-            {
-                if(tokenValid)
-                {
+            this.props.CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
                     this.getAllAssignedPatients();
                 }
             });
@@ -92,29 +86,26 @@ class StartACollection extends Component
 
     // Gets all patient users that are assigned to worker in the database
     //Summer 2021 update: allows patient to access and start booklets on their own behalf
-    getAllAssignedPatients = () =>
-    {
+    getAllAssignedPatients = () => {
         let { appState } = this.props;
 
-        if(appState.patients.length <= 0 && appState.role !== 'Patient')
-        {
+        if (appState.patients.length <= 0 && appState.role !== 'Patient') {
             this.setState({
-                loadError: "You do not have any patients assigned.  In order to start a collection, you must first be assigned a member by an Administrator.",
+                loadError: "You do not have any patients assigned.  In order to start a series, you must first be assigned a member by an Administrator.",
                 render: true
             });
         }
 
-        else 
-        {
+        else {
             var query;
 
-            if(appState.role ===  'Patient'){
+            if (appState.role === 'Patient') {
                 this.setState({
                     patientID: appState._id
                 })
-    
+
                 this.users.length = 1;
-    
+
                 query = {
                     _id: {
                         $in: appState._id
@@ -122,7 +113,7 @@ class StartACollection extends Component
                 };
             }
 
-            else{
+            else {
                 this.users.length = appState.patients.length;
 
                 query = {
@@ -132,24 +123,19 @@ class StartACollection extends Component
                 };
             }
 
-            post('users/query', appState.token, query, (error, response) => 
-            {
-                if(error)
-                {
-                        this.setState({
-                            loadError: error.message,
-                            render: true
-                        });
+            post('users/query', appState.token, query, (error, response) => {
+                if (error) {
+                    this.setState({
+                        loadError: error.message,
+                        render: true
+                    });
                 }
-                else
-                {
-                    if(response.status === 200 || response.status === 304)
-                    {
+                else {
+                    if (response.status === 200 || response.status === 304) {
                         this.users.length = response.data.response.count;
-                        this.populateUserData(response.data.response); 
+                        this.populateUserData(response.data.response);
                     }
-                    else
-                    {
+                    else {
                         this.setState({
                             loadError: "You are not authorized to use this page.  If you think this is a mistake, please log out and try again.",
                             render: true
@@ -161,19 +147,15 @@ class StartACollection extends Component
     }
 
 
-    populateUserData = (data) => 
-    {
-        if(this.users.length === 0)
-        {
+    populateUserData = (data) => {
+        if (this.users.length === 0) {
             this.setState({
                 loadError: "You do not have any members assigned.",
                 render: true
             });
         }
-        else
-        {
-            for (let index = 0; index < data.count; index++) 
-            {
+        else {
+            for (let index = 0; index < data.count; index++) {
                 this.users.library[index] = {
                     _id: data.users[index]._id,
                     name: data.users[index].info.name,
@@ -182,27 +164,25 @@ class StartACollection extends Component
                     createdAt: data.users[index].createdAt
                 };
             }
-    
+
             this.getAllCollections();
         }
     }
 
     handleChange = event => {
-        this.setState({ 
-            [event.target.name]: event.target.value 
+        this.setState({
+            [event.target.name]: event.target.value
         });
     };
 
     // Ask user to select patient assigned to them and a booklet,
     // then create a new "membersurvey" document in the database
     // and display the survey with the ability to fill it out.
-    handleStartCollection = () =>
-    {
+    handleStartCollection = () => {
         let { appState } = this.props;
         let { patientID } = this.state;
 
-        if(patientID === "")
-        {
+        if (patientID === "") {
             this.setState({
                 startError: "Please select a patient.",
                 render: true
@@ -222,19 +202,15 @@ class StartACollection extends Component
             starting: true
         });
 
-        post("collections/",  appState.token, data, (error, response) => 
-        {
-            if(error)
-            {
+        post("collections/", appState.token, data, (error, response) => {
+            if (error) {
                 this.setState({
                     startError: error.message,
                     starting: false
                 });
             }
-            else
-            {
-                if(response.status === 201)
-                {
+            else {
+                if (response.status === 201) {
                     // const memberSurveyID = response.data.memberSurvey._id;
 
                     this.setState({
@@ -246,35 +222,31 @@ class StartACollection extends Component
 
                     this.setState({ redirect: this.state.redirectTo });
                 }
-                else
-                {
+                else {
                     this.setState({
-                        startError: "Unable to start the collection. Please try again later.",
+                        startError: "Unable to start the series. Please try again later.",
                         starting: false
                     });
                 }
             }
-        });   
+        });
     }
 
-    createRow = (_id, name) =>
-    {
+    createRow = (_id, name) => {
         return { _id, name }
     }
 
-    renderSelect = () =>
-    {
+    renderSelect = () => {
         let { classes } = this.props;
         var { patientID } = this.state;
 
         var patientRows = [];
 
-        for (let index = 0; index < this.users.length; index++) 
-        {
+        for (let index = 0; index < this.users.length; index++) {
             patientRows.push(this.createRow(this.users.library[index]._id, this.users.library[index].name));
         }
 
-        return(
+        return (
             <form className={classes.root} autoComplete="off">
                 <FormControl className={classes.formControl} fullWidth>
                     <InputLabel htmlFor="selectPatient">Members</InputLabel>
@@ -290,9 +262,8 @@ class StartACollection extends Component
                             <em>Select Member</em>
                         </MenuItem>
                         {
-                            patientRows.map((row, index) => 
-                            {
-                                return(
+                            patientRows.map((row, index) => {
+                                return (
                                     <MenuItem value={row._id} key={index}>
                                         {row.name}
                                     </MenuItem>
@@ -305,25 +276,21 @@ class StartACollection extends Component
         );
     }
 
-	render()
-	{
+    render() {
         let { classes } = this.props;
         let { assigning, loadError, render, redirect, redirectTo, startError } = this.state;
 
-        if(redirect)
-        {
-            return(<Redirect to={redirectTo} />);
+        if (redirect) {
+            return (<Redirect to={redirectTo} />);
         }
 
-        if(render)
-        {
-            if(this.users.length === 0)
-            {
-                return(
+        if (render) {
+            if (this.users.length === 0) {
+                return (
                     <Card className={classes.card}>
                         <CardContent>
                             <Typography component="p" variant="h5" className={classes.title}>
-                                Start a Collection
+                                Start a Series
                             </Typography>
                             {loadError !== "" &&
                                 <StatusMessage color={classes.error}>
@@ -348,15 +315,15 @@ class StartACollection extends Component
                             <Box mx={1} my={1}>
                                 <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
                                     <Grid item>
-                                        <Ballot color="primary"/>
+                                        <Ballot color="primary" />
                                     </Grid>
                                     <Grid item xs>
                                         <Typography variant="h5" color="secondary" align="left" gutterBottom={false}>
-                                            Start a Collection
+                                            Start a Series
                                         </Typography>
                                     </Grid>
-                                </Grid>                
-                            </Box> 
+                                </Grid>
+                            </Box>
                         </Grid>
                         <Grid item xs={9}>
                             <Box mx={1} my={1}>
@@ -366,7 +333,7 @@ class StartACollection extends Component
                         <Grid item xs={12}>
                             <Card raised={true}>
                                 <CardContent>
-                                <Box mx={1} my={1} boxShadow={0}>
+                                    <Box mx={1} my={1} boxShadow={0}>
                                         <Grid
                                             container
                                             direction="column"
@@ -376,16 +343,16 @@ class StartACollection extends Component
                                         >
                                             <Grid item xs={12}>
                                                 <Typography variant="subtitle2" component="h2">
-                                                    Start a Collection
+                                                    Start a Series
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12}>
                                                 <Typography variant="body2" component="h2">
-                                                    Select a member to begin a collection of public chapter templates.  If you wish to continue a fillable chapter within a collection that has already been created, navigate to your members, click on the member profile and continue one of the 'In Progress' chapters.
+                                                    Select a member to begin a series of public Module templates.  If you wish to continue a fillable Module within a series that has already been created, navigate to your members, click on the member profile and continue one of the 'In Progress' Modules.
                                                 </Typography>
                                             </Grid>
                                         </Grid>
-                                    </Box> 
+                                    </Box>
                                 </CardContent>
                             </Card>
                         </Grid>
@@ -402,7 +369,7 @@ class StartACollection extends Component
                                         >
                                             <Grid item xs={12}>
                                                 <Typography variant="subtitle2" component="h2">
-                                                    Select your assigned Member &#38; Chapter
+                                                    Select your assigned Member &#38; Module
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12}>
@@ -418,8 +385,8 @@ class StartACollection extends Component
                                 </CardContent>
                                 <CardActions>
                                     <div className={classes.alignLeftSpacer}>
-                                        { assigning ? <CircularProgress className={classes.spinner}/> :
-                                            <Tooltip title="Start a Chapter">
+                                        {assigning ? <CircularProgress className={classes.spinner} /> :
+                                            <Tooltip title="Start a Module">
                                                 <Button size="small" color="primary" variant="contained" startIcon={<Description />} onClick={this.handleStartCollection}>
                                                     Start
                                                 </Button>
@@ -433,13 +400,12 @@ class StartACollection extends Component
                 </div>
             );
         }
-        else
-        {
-            return(
+        else {
+            return (
                 <CircularProgress />
             );
         }
-	}
+    }
 }
 
 export default withStyles(styles)(StartACollection);

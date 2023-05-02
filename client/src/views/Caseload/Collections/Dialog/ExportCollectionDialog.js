@@ -229,7 +229,7 @@ const ExportCollectionDialog = (props) => { // Notice the arrow function... regu
                 getParentData();
             }
             catch{
-                setParentAlert(new AlertType(`Unable export collection(s). Please refresh and try again.`, "error"));
+                setParentAlert(new AlertType(`Unable export series. Please refresh and try again.`, "error"));
             }
         }, [ setPdfWidth, setPdfHeight, exportCollectionChapters, selectedDataItemsList, setExportCollectionDialogExecuting, setExportCollectionDialog, setParentAlert, getParentData]);
 
@@ -310,7 +310,7 @@ const ExportCollectionDialog = (props) => { // Notice the arrow function... regu
                             ) : (
                                 <>
                                     <DialogContentText>
-                                        Exporting {selectedDataItemsList.length} collection{selectedDataItemsList.length > 1? "s" : ""}, totalling {totalExported} chapter{totalExported > 1? "s" : ""}. Please enter valid pdf width and height values for your export.
+                                        Exporting {selectedDataItemsList.length} series{selectedDataItemsList.length > 1? "s" : ""}, totalling {totalExported} chapter{totalExported > 1? "s" : ""}. Please enter valid pdf width and height values for your export.
                                     </DialogContentText>
                                     <Box mx={1} my={1} boxShadow={0}>
                                         <Grid container direction="column" justifyContent="flex-start" alignItems="stretch" spacing={1}>

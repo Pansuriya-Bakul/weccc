@@ -35,7 +35,7 @@ import Typography from '@material-ui/core/Typography';  //h1, p replacement Tag
 import PeopleIcon from '@material-ui/icons/People';
 
 // ==================== Styles ====================
-const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
 ({
     root: {
         flexGrow: 1     // CSS determined this way, flexbox properties
@@ -48,204 +48,185 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, ToggleDrawerClose, CheckAuthenticationValidity, mode } = props;
-        
-        // IsDense ; is the template table in compact form
-        const [isDense, setIsDense] = useState(true);
+    // Declaration of Stateful Variables ===
+    const { appState, ToggleDrawerClose, CheckAuthenticationValidity, mode } = props;
 
-        // Current dataList variable
-        const [dataList, setDataList] = useState(null);
+    // IsDense ; is the template table in compact form
+    const [isDense, setIsDense] = useState(true);
 
-        // Current dataList variable
-        const [searchFilteredDataList, setSearchFilteredDataList] = useState(null);
+    // Current dataList variable
+    const [dataList, setDataList] = useState(null);
 
-        // Current selected items dataList variable
-        const [selectedDataItemsList, setSelectedDataItemsList] = useState(null);
+    // Current dataList variable
+    const [searchFilteredDataList, setSearchFilteredDataList] = useState(null);
 
-        // Assign User Dialog Logic variables
-        const [assignUserDialog, setAssignUserDialog] = useState(false);
-        const [assignUserDialogExecuting, setAssignUserDialogExecuting] = useState(false);
+    // Current selected items dataList variable
+    const [selectedDataItemsList, setSelectedDataItemsList] = useState(null);
 
-        // Create User Dialog Logic variables
-        const [createUserDialog, setCreateUserDialog] = useState(false);
-        const [createUserDialogExecuting, setCreateUserDialogExecuting] = useState(false);
+    // Assign User Dialog Logic variables
+    const [assignUserDialog, setAssignUserDialog] = useState(false);
+    const [assignUserDialogExecuting, setAssignUserDialogExecuting] = useState(false);
 
-        // Delete User Dialog Logic variables
-        const [deleteUserDialog, setDeleteUserDialog] = useState(false);
-        const [deleteUserDialogExecuting, setDeleteUserDialogExecuting] = useState(false);
+    // Create User Dialog Logic variables
+    const [createUserDialog, setCreateUserDialog] = useState(false);
+    const [createUserDialogExecuting, setCreateUserDialogExecuting] = useState(false);
+
+    // Delete User Dialog Logic variables
+    const [deleteUserDialog, setDeleteUserDialog] = useState(false);
+    const [deleteUserDialogExecuting, setDeleteUserDialogExecuting] = useState(false);
 
 
-        // Alert variable
-        const [alert, setAlert] = useState(new AlertType());
+    // Alert variable
+    const [alert, setAlert] = useState(new AlertType());
 
     // Functions ===
 
-        const populateList = useCallback((data) => 
-        {
-            let tempArray = new Array();
+    const populateList = useCallback((data) => {
+        let tempArray = new Array();
 
-            if(data && Array.isArray(data))
-            {
-                data.forEach(item => {
+        if (data && Array.isArray(data)) {
+            data.forEach(item => {
 
-                    if(item._id === appState._id)
+                if (item._id === appState._id) {
+                    return;
+                }
+
+                tempArray.push(
                     {
-                        return;
+                        _id: item._id,
+                        sequenceId: item.sequenceId,
+                        collections: item.collections,
+                        email: item.email,
+                        enabled: item.enabled,
+                        info: item.info,
+                        patients: item.patients,
+                        workers: item.workers,
+                        research: item.research,
+                        role: item.role,
+                        createdBy: item.createdBy,
+                        createdAt: item.updatedAt,
+                        modifiedBy: item.modifiedBy,
+                        updatedAt: item.updatedAt
+                    });
+            });
+        }
+
+        setDataList([...tempArray]);
+        setSearchFilteredDataList([...tempArray]);
+        setSelectedDataItemsList([]);
+    }, [appState]);
+
+    // Retrieve the list of Users
+    const getUsers = useCallback(() => {
+
+        if (appState) {
+            if (mode === "Admin") {
+                get("users/", appState.token, (err, res) => {
+                    if (err) {
+                        //Bad callback call
+                        //setAlert(new AlertType(err.message, "error"));
+                        setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
+                    }
+                    else {
+                        if (res.status === 200) {
+                            if (appState.role === 'Admin') {
+                                populateList(res.data.response.users)
+                            }
+                            //test coordinator role
+                            else if (appState.role === 'Coordinator') {
+                                const datatest = [];
+                                //console.log(appState.facilityId);
+                                res.data.response.users.forEach(k => {
+                                    if (k.facid == appState.facilityId) {
+                                        //console.log(k._id, k.facid);
+                                        datatest.push(k);
+                                    }
+                                    //    populateList(res.k)
+                                    //}
+                                });
+                                //console.log(datatest);
+                                populateList(datatest); //Edited by P, filter users by facility ID
+                            }
+                        }
+                        else {
+                            //Bad HTTP Response
+                            setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
+                        }
                     }
 
-                    tempArray.push(
-                        {
-                            _id: item._id,
-                            sequenceId: item.sequenceId,
-                            collections: item.collections,
-                            email: item.email,
-                            enabled: item.enabled,
-                            info: item.info,
-                            patients: item.patients,
-                            workers: item.workers,
-                            research: item.research,
-                            role: item.role,
-                            createdBy: item.createdBy,
-                            createdAt: item.updatedAt,
-                            modifiedBy: item.modifiedBy,
-                            updatedAt: item.updatedAt
-                        });
+                });
+            }
+            else if (mode === "Other") {
+                get("users/" + appState._id, appState.token, (err, res) => {
+                    if (err) {
+                        //Bad callback call
+                        //setAlert(new AlertType(err.message, "error"));
+                        setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
+                    }
+                    else {
+                        if (res.status === 200) {
+                            populateList(res.data.user.patients);
+                        }
+                        else {
+                            //Bad HTTP Response
+                            setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
+                        }
+                    }
+
                 });
             }
 
-            setDataList([...tempArray]);
-            setSearchFilteredDataList([...tempArray]);
-            setSelectedDataItemsList([]);
-        }, [ appState ] );
+        }
 
-        // Retrieve the list of Users
-        const getUsers = useCallback(() => {
 
-            if(appState)
-            {
-                if(mode === "Admin")
-                {
-                    get("users/", appState.token, (err, res) => 
-                    {
-                        if(err)
-                        {   
-                            //Bad callback call
-                            //setAlert(new AlertType(err.message, "error"));
-                            setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
-                        }
-                        else
-                        {
-                            if(res.status === 200)
-                            {
-                                if (appState.role === 'Admin') {
-                                    populateList(res.data.response.users)
-                                }
-                                //test coordinator role
-                                else if (appState.role === 'Coordinator') {
-                                    const datatest=[];
-                                    //console.log(appState.facilityId);
-                                    res.data.response.users.forEach(k => {
-                                        if (k.facid == appState.facilityId){
-                                        //console.log(k._id, k.facid);
-                                            datatest.push(k);}
-                                        //    populateList(res.k)
-                                        //}
-                                    });
-                                    //console.log(datatest);
-                                    populateList(datatest); //Edited by P, filter users by facility ID
-                                }
-                            }
-                            else
-                            {
-                                //Bad HTTP Response
-                                setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
-                            }
-                        }
-
-                    }); 
-                }
-                else if(mode === "Other")
-                {
-                    get("users/" + appState._id, appState.token, (err, res) => 
-                    {
-                        if(err)
-                        {   
-                            //Bad callback call
-                            //setAlert(new AlertType(err.message, "error"));
-                            setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
-                        }
-                        else
-                        {
-                            if(res.status === 200)
-                            {
-                                populateList(res.data.user.patients);
-                            }
-                            else
-                            {
-                                //Bad HTTP Response
-                                setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
-                            }
-                        }
-
-                    }); 
-                }
-                
-            }
-
-            
-        }, [ populateList, appState, mode ] );
+    }, [populateList, appState, mode]);
 
     // Hooks ===
 
-        // Fetch DataList | First Render Only
-        useEffect( () =>
-        {
-            ToggleDrawerClose();
-            setTimeout(() => {
-                CheckAuthenticationValidity( (tokenValid) => 
-                {
-                    if(tokenValid)
-                    {
-                        getUsers();
-                    }
-                    else {
-                        //Bad HTTP Response
-                        setAlert(null);
-                    }
-                });
-            }, 200);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [ ]);
+    // Fetch DataList | First Render Only
+    useEffect(() => {
+        ToggleDrawerClose();
+        setTimeout(() => {
+            CheckAuthenticationValidity((tokenValid) => {
+                if (tokenValid) {
+                    getUsers();
+                }
+                else {
+                    //Bad HTTP Response
+                    setAlert(null);
+                }
+            });
+        }, 200);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-        useEffect( () =>
-        {
-            getUsers();
-        }, [ mode ]);
+    useEffect(() => {
+        getUsers();
+    }, [mode]);
 
-        useEffect( () => {
-            setSearchFilteredDataList(dataList);
-            setSelectedDataItemsList([]);
-        }, [ dataList ] );
+    useEffect(() => {
+        setSearchFilteredDataList(dataList);
+        setSelectedDataItemsList([]);
+    }, [dataList]);
 
     // Component Render Section ===
     return (
-        alert != null? (
+        alert != null ? (
             // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
             <div className={classes.root}>
                 <Grid container
-                direction="row"
-                justifyContent="flex-start"
-                alignItems="stretch"
-                style={ {"height": "100%"} }
-                spacing={1}
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="stretch"
+                    style={{ "height": "100%" }}
+                    spacing={1}
                 >
                     <Grid item xs={5}>
                         <Box mx={1} my={1}>
-                            {mode === "Admin"? (
+                            {mode === "Admin" ? (
                                 <Typography variant="h5" color="inherit" align="left" gutterBottom>
                                     Manage Users
                                 </Typography>
@@ -253,14 +234,14 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                                 <>
                                 </>
                             )}
-                            {mode === "Other"? (
+                            {mode === "Other" ? (
                                 <Grid container direction="row" justifyContent="flex-start" alignItems="flex-end" spacing={2}>
                                     <Grid item>
-                                        <PeopleIcon color="primary"/>
+                                        <PeopleIcon color="primary" />
                                     </Grid>
                                     <Grid item xs>
                                         <Typography variant="h5" color="secondary" align="left" gutterBottom={false}>
-                                            Your Members
+                                            My Members
                                         </Typography>
                                     </Grid>
                                 </Grid>
@@ -268,7 +249,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                                 <>
                                 </>
                             )}
-                        </Box> 
+                        </Box>
                     </Grid>
                     <Grid item xs={6}>
                         <Box mx={1} my={1}>
@@ -285,10 +266,10 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                                     alignItems="stretch"
                                     spacing={0}
                                 >
-                                    {dataList && searchFilteredDataList && selectedDataItemsList? (
+                                    {dataList && searchFilteredDataList && selectedDataItemsList ? (
                                         <Grid item xs={12}>
                                             <UsersManagementControlPanel
-                                                appState= {appState}
+                                                appState={appState}
                                                 mode={mode}
                                                 isDense={isDense}
                                                 setIsDense={setIsDense}
@@ -306,7 +287,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                                                 selectedDataItemsList={selectedDataItemsList}
                                                 setSelectedDataItemsList={setSelectedDataItemsList}
                                                 setParentDeleteUserDialog={setDeleteUserDialog}
-                                                // setParentExportChapterDialog={setExportChapterDialog}
+                                            // setParentExportChapterDialog={setExportChapterDialog}
                                             />
                                         </Grid>
                                     ) : (
@@ -320,7 +301,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                                     )}
                                 </Grid>
                             </Card>
-                        </Box>    
+                        </Box>
                     </Grid>
                 </Grid>
                 <AssignUserDialog
@@ -359,12 +340,12 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                 Not Authorized. Please refresh and try again.
             </Typography>
         )
-        
+
     );
 }
 
 // ======================== Component PropType Check ========================
-UsersManagement.propTypes = 
+UsersManagement.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -374,8 +355,8 @@ UsersManagement.propTypes =
 
 UsersManagement.defaultProps = {
     appState: {},
-    ToggleDrawerClose: () => {},
-    CheckAuthenticationValidity: () => {}
+    ToggleDrawerClose: () => { },
+    CheckAuthenticationValidity: () => { }
 }
 
 export default UsersManagement;  // You can even shorthand this line by adding this at the function [Component] declaration stage

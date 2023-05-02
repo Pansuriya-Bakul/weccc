@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';                     //Development Package to
 // ==================== Helpers =====================
 import AlertType from '../../../../helpers/models/AlertType';
 
-import patch from  '../../../../helpers/common/patch';
+import patch from '../../../../helpers/common/patch';
 
 // ==================== MUI =========================
 import { makeStyles } from '@material-ui/core/styles';  // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
@@ -31,16 +31,16 @@ import SaveIcon from '@material-ui/icons/Save';
 
 // ==================== MUI Styles ===================
 
-    const useStyles = makeStyles( (theme) =>    //Notice the hook useStyles
-    ({
-        root: {
-            flexGrow: 1,     // CSS determined this way, flexbox properties
-            height: '100%'
-        },
-        rootGrid: {
-            height: '100%'
-        }
-    }));
+const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
+({
+    root: {
+        flexGrow: 1,     // CSS determined this way, flexbox properties
+        height: '100%'
+    },
+    rootGrid: {
+        height: '100%'
+    }
+}));
 
 
 // ================= Static Variables ================
@@ -54,89 +54,79 @@ const SaveChapterDialog = (props) => { // Notice the arrow function... regular f
 
     // Variables ===
 
-        // Style variable declaration
-        const classes = useStyles();
+    // Style variable declaration
+    const classes = useStyles();
 
-        // Declaration of Stateful Variables ===
-        const { appState, setParentAlert, isTemplate, chapter, chapterID,
-            saveChapterDialog, setSaveChapterDialog,
-            saveChapterDialogExecuting, setSaveChapterDialogExecuting } = props;
+    // Declaration of Stateful Variables ===
+    const { appState, setParentAlert, isTemplate, chapter, chapterID,
+        saveChapterDialog, setSaveChapterDialog,
+        saveChapterDialogExecuting, setSaveChapterDialogExecuting } = props;
 
     // Functions ===
 
-        // Saves current state of chapter and updates it in the database
-        const saveChapter = useCallback(() =>
-        {
+    // Saves current state of chapter and updates it in the database
+    const saveChapter = useCallback(() => {
 
-            if(chapter)
-            {
-                let updateBody;
+        if (chapter) {
+            let updateBody;
 
-                if(isTemplate)
+            if (isTemplate) {
+                updateBody =
                 {
-                    updateBody =
-                    {
-                        name: chapter.name,
-                        surveyJSON: chapter.surveyJSON
-                    }
+                    name: chapter.name,
+                    surveyJSON: chapter.surveyJSON
                 }
-                else
-                {   
-                    updateBody =
-                    {
-                        completeness: chapter.completeness == 100 ? 100-1 : chapter.completeness,
-                        responseJSON: chapter.responseJSON,
-                        // memberCollection: chapter.memberCollection
-                    }
-                }
-
-                patch((isTemplate? "surveys/" : "membersurveys/") + chapterID, appState.token, updateBody, (error, response) => 
+            }
+            else {
+                updateBody =
                 {
-                    if(error)
-                    {
+                    completeness: chapter.completeness == 100 ? 100 - 1 : chapter.completeness,
+                    responseJSON: chapter.responseJSON,
+                    // memberCollection: chapter.memberCollection
+                }
+            }
+
+            patch((isTemplate ? "surveys/" : "membersurveys/") + chapterID, appState.token, updateBody, (error, response) => {
+                if (error) {
+                    setSaveChapterDialog(false);
+                    setParentAlert(new AlertType('Unable to retrieve save Module. Please try again.', "error"));
+                }
+                else {
+                    if (response.status === 200) {
+
+                    }
+                    else {
                         setSaveChapterDialog(false);
-                        setParentAlert(new AlertType('Unable to retrieve save chapter. Please try again.', "error"));
+                        setParentAlert(new AlertType('Unable to retrieve save Module. Please try again.', "error"));
                     }
-                    else
-                    {
-                        if(response.status === 200)
-                        {
-                            
-                        }
-                        else
-                        {
-                            setSaveChapterDialog(false);
-                            setParentAlert(new AlertType('Unable to retrieve save chapter. Please try again.', "error"));
-                        }
-                    }
-                });
-            }
-            else
-            {
-                setSaveChapterDialog(false);
-                setParentAlert(new AlertType('Unable to retrieve save chapter. Please try again.', "error"));
-            }
-            
-        }, [ setSaveChapterDialog, setParentAlert, chapter, chapterID, appState, isTemplate ]);
-
-        
-        const closeHandler = useCallback(() => {
+                }
+            });
+        }
+        else {
             setSaveChapterDialog(false);
-        }, [ setSaveChapterDialog ]);
+            setParentAlert(new AlertType('Unable to retrieve save Module. Please try again.', "error"));
+        }
+
+    }, [setSaveChapterDialog, setParentAlert, chapter, chapterID, appState, isTemplate]);
 
 
-        const saveHandler = useCallback(() => {
-            try{
-                setSaveChapterDialogExecuting(true);
-                saveChapter();
-                setSaveChapterDialogExecuting(false);
-                setSaveChapterDialog(false);
-                setParentAlert(new AlertType('Successfully Saved. You can continue editing if you wish.', "success")); 
-            }
-            catch{
+    const closeHandler = useCallback(() => {
+        setSaveChapterDialog(false);
+    }, [setSaveChapterDialog]);
 
-            }
-        }, [ setSaveChapterDialogExecuting, saveChapter, setSaveChapterDialog, setParentAlert]);
+
+    const saveHandler = useCallback(() => {
+        try {
+            setSaveChapterDialogExecuting(true);
+            saveChapter();
+            setSaveChapterDialogExecuting(false);
+            setSaveChapterDialog(false);
+            setParentAlert(new AlertType('Successfully Saved. You can continue editing if you wish.', "success"));
+        }
+        catch {
+
+        }
+    }, [setSaveChapterDialogExecuting, saveChapter, setSaveChapterDialog, setParentAlert]);
 
 
     // Hooks ===
@@ -144,47 +134,47 @@ const SaveChapterDialog = (props) => { // Notice the arrow function... regular f
 
     // Render Section ===
 
-        return (
-            <>
-                {chapter? (
-                    <Dialog id="save-chapter-dialog"
-                        fullWidth
-                        maxWidth="md"
-                        open={saveChapterDialog}
-                        onClose={() => { closeHandler(); }}
-                    >
-                        <DialogTitle>
-                            Save chapter {chapter.name? `"${chapter.name}"` : null}
-                        </DialogTitle>
-                        <DialogContent>
-                            {saveChapterDialogExecuting? (
-                                <CircularProgress />
-                            ) : (
-                                <DialogContentText>
-                                    Are you sure you would like to save the chapter?
-                                </DialogContentText>
-                            )}
-                        
-                        </DialogContent>
-                        <DialogActions>
-                            <Button color="primary" variant="contained" onClick={() => { closeHandler(); }} disabled={saveChapterDialogExecuting}>
-                                Cancel
-                            </Button>
-                            <Button color="primary" variant="contained" startIcon={<SaveIcon />} onClick={() => { saveHandler(); }} disabled={saveChapterDialogExecuting}>
-                                Save
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                ) : (
-                    null
-                )}
-            </>
-            
-        );
+    return (
+        <>
+            {chapter ? (
+                <Dialog id="save-chapter-dialog"
+                    fullWidth
+                    maxWidth="md"
+                    open={saveChapterDialog}
+                    onClose={() => { closeHandler(); }}
+                >
+                    <DialogTitle>
+                        Save chapter {chapter.name ? `"${chapter.name}"` : null}
+                    </DialogTitle>
+                    <DialogContent>
+                        {saveChapterDialogExecuting ? (
+                            <CircularProgress />
+                        ) : (
+                            <DialogContentText>
+                                Are you sure you would like to save the chapter?
+                            </DialogContentText>
+                        )}
+
+                    </DialogContent>
+                    <DialogActions>
+                        <Button color="primary" variant="contained" onClick={() => { closeHandler(); }} disabled={saveChapterDialogExecuting}>
+                            Cancel
+                        </Button>
+                        <Button color="primary" variant="contained" startIcon={<SaveIcon />} onClick={() => { saveHandler(); }} disabled={saveChapterDialogExecuting}>
+                            Save
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            ) : (
+                null
+            )}
+        </>
+
+    );
 }
 
 // ======================== Component PropType Check ========================
-SaveChapterDialog.propTypes = 
+SaveChapterDialog.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
@@ -194,22 +184,22 @@ SaveChapterDialog.propTypes =
     chapterID: PropTypes.string.isRequired,
     saveChapterDialog: PropTypes.bool.isRequired,
     setSaveChapterDialog: PropTypes.func.isRequired,
-    saveChapterDialogExecuting: PropTypes.bool.isRequired, 
+    saveChapterDialogExecuting: PropTypes.bool.isRequired,
     setSaveChapterDialogExecuting: PropTypes.func.isRequired
 
 }
 
-SaveChapterDialog.defaultProps = 
+SaveChapterDialog.defaultProps =
 {
     appState: {},
-    setParentAlert: () => {},
+    setParentAlert: () => { },
     isTemplate: {},
     chapter: {},
     chapterID: {},
     saveChapterDialog: {},
-    setSaveChapterDialog: () => {},
-    saveChapterDialogExecuting: {}, 
-    setSaveChapterDialogExecuting: () => {}
+    setSaveChapterDialog: () => { },
+    saveChapterDialogExecuting: {},
+    setSaveChapterDialogExecuting: () => { }
 }
 
 export default SaveChapterDialog;  // You can even shorthand this line by adding this at the function [Component] declaration stage
