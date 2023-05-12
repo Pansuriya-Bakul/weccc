@@ -1285,32 +1285,19 @@ exports.findClientSurveys = async (req, res, next) => {
 				}
 
 				for (let collectionId in collectionList) {
-
 					collectionNames.push(collectionList[collectionId].name)
+					const surveyList = collectionList[collectionId].surveyList
+					const temp = []
 
-					surveyList = collectionList[collectionId].surveyList
-					let temp = [];
-					let cs = null;
-					for (let surveyIndex in surveyList) {
-
-						if (clientSurveys.some(obj => util.isDeepStrictEqual(obj.surveyTemplate, surveyList[surveyIndex]))) {
-							clientSurveys.some(obj => {
-								if (util.isDeepStrictEqual(obj.surveyTemplate, surveyList[surveyIndex])) {
-									cs = obj;
-								}
-							})
-
-							await Survey.findById(cs.surveyTemplate)
-								.select('name')
-								.exec()
-								.then(foundSurvey => {
-									temp.push([cs._id, cs.completeness, foundSurvey.name])
-								});
-
+					for (let surveyIndex of surveyList) {
+						const obj = clientSurveys.find(obj => util.isDeepStrictEqual(obj.surveyTemplate, surveyIndex))
+						if (obj) {
+							const foundSurvey = await Survey.findById(obj.surveyTemplate).select('name').exec()
+							temp.push([obj._id, obj.completeness, foundSurvey.name])
 						}
 					}
-					collections.push(temp);
 
+					collections.push(temp)
 				}
 
 				// for (let surveyIndex in clientSurveys) {
