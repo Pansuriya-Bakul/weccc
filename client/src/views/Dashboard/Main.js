@@ -71,9 +71,10 @@ class Main extends Component {
 		})
 	}
 
-	setPToggle = (key) => {
+	setPToggle = (pkey, key) => {
 		const temp = this.state.pToggle
-		temp[key] = !(temp[key])
+		// temp[key] = !(temp[key])
+		temp[`${pkey}-${key}`] = !temp[`${pkey}-${key}`];
 		this.setState({
 			pToggle: temp
 		})
@@ -220,68 +221,6 @@ class Main extends Component {
 		}); // call the get request.
 	};
 
-	// getPatientSurveys = async (patientId) => {
-	// 	let { appState } = this.props;
-	// 	let url = ''
-	// 	url = `users/client/${patientId}`;
-
-
-	// 	const token = appState.token;
-	// 	get(url, token, (error, response) => {
-	// 		if (error) return;
-
-	// 		if (response.status === 200) {
-	// 			// this.setState({ clientData: response.data });
-	// 			// this.setState({ clientSurvey: response.data.surveys });
-	// 			// this.setState({ clientCompletedSurvey: response.data.completedSurveys });
-	// 			// this.setState({ clientNotCompletedSurvey: response.data.notCompletedSurveys });
-	// 			this.setState({ patientCollectionNames: response.data.collectionNames });
-	// 			this.setState({ patientCollections: response.data.collections });
-	// 			// this.setState({ userName: response.data.userName });
-	// 			// this.setState({ facilityName: response.data.facilityName });
-
-
-	// 			if (this.state.patientCollectionNames != undefined && this.state.patientCollections != undefined) {
-	// 				const pToggle = {}
-	// 				this.state.patientCollectionNames.map(key => {
-	// 					pToggle[key] = false;
-	// 				})
-	// 				this.setState({ pToggle: pToggle });
-	// 			}
-	// 			this.setState({ isLoading: false });
-	// 		}
-	// 	}); // call the get request.
-	// };
-
-	// getPatientSurveys = async (patientId) => {
-	// 	let { appState } = this.props;
-	// 	let url = 'users/client/' + patientId;
-	// 	const token = appState.token;
-
-	// 	try {
-	// 		const response = await new Promise((resolve, reject) => {
-	// 			get(url, token, (error, response) => {
-	// 				if (error) {
-	// 					reject(error);
-	// 				} else {
-	// 					resolve(response);
-	// 				}
-	// 			});
-	// 		});
-
-	// 		this.setState({
-	// 			patientCollectionNames: response.data.collectionNames,
-	// 			patientCollections: response.data.collections
-	// 		  }, () => {
-	// 			// the state has been updated, now resolve the Promise with the response
-	// 			resolve(response);
-	// 		  });
-
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 	}
-	// };
-
 	getPatientSurveys = async (patientId) => {
 		let { appState } = this.props;
 		let url = 'users/client/' + patientId;
@@ -366,7 +305,6 @@ class Main extends Component {
 							}
 						})
 						let tempArr = this.state.patientCollectionCompleteness
-						// console.log(tempArr);
 						this.setState({ patientCollectionCompleteness: [...tempArr, temp] })
 					}
 				})
@@ -390,23 +328,22 @@ class Main extends Component {
 		for (let user of this.state.patientsList) {
 			await this.getPatientSurveys(user._id);
 			await this.patientCheckComplete();
-			console.log(user);
-			console.log(this.state.collectionNames);
 			temp[user._id] = [this.state.patientCollectionNames, this.state.patientCollections, this.state.patientCollectionCompleteness];
 			this.setState({ patientCollectionCompleteness: [] });
 
 		}
 
 		this.setState({ pMapping: temp });
+		console.log(temp)
 	}
 
-	componentDidMount = () => {
+	componentDidMount = async () => {
 		let { appState } = this.props;
 		this.classes = styles();
 		this.bull = <span className={this.classes.bullet}>•</span>;
 
 		if (appState.role === 'Patient' || appState.role === 'Volunteer') {
-			this.createMapping();
+			await this.createMapping();
 			this.checkClientSurveys(() => {
 				this.checkComplete();
 			});
@@ -543,7 +480,7 @@ class Main extends Component {
 																						<>
 																							{(this.state.pMapping[pkey][2][index] == false) && <Grid item xs={12}>
 																								<div>
-																									<Box mt={1.5} p={1.5} className='box-container' onClick={() => this.setPToggle(key)}>
+																									<Box mt={1.5} p={1.5} className='box-container' onClick={() => this.setPToggle(pkey, key)}>
 																										<div
 																											size="small"
 																											variant="contained"
@@ -556,7 +493,7 @@ class Main extends Component {
 																											<h3>{key} - {this.state.patientsList[pindex].info.name}</h3>
 																										</div>
 																									</Box>
-																									{this.state.pToggle[key] &&
+																									{this.state.pToggle[`${pkey}-${key}`] &&
 																										(<
 																											Box m={0} p={1.5} className='bottom-container'>
 																											<div className="survey-div">

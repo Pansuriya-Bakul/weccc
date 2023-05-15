@@ -1246,10 +1246,10 @@ exports.createResearchID = (req, res, next) => {
 exports.findClientSurveys = async (req, res, next) => {
 	// Look for the client:
 	const id = req.params.userID;
-	let surveysNotCompleted = [];
-	let surveysNotCompletedNames = [];
+	// let surveysNotCompleted = [];
+	// let surveysNotCompletedNames = [];
 	// let surveysCompleted = [];
-	let surveysCompletedNames = [];
+	// let surveysCompletedNames = [];
 	let collectionNames = [];
 	let collections = [];
 
@@ -1285,20 +1285,21 @@ exports.findClientSurveys = async (req, res, next) => {
 				}
 
 				for (let collectionId in collectionList) {
-					collectionNames.push(collectionList[collectionId].name)
-					const surveyList = collectionList[collectionId].surveyList
-					const temp = []
+					collectionNames.push(collectionList[collectionId].name);
+					const surveyList = collectionList[collectionId].surveyList;
+					const temp = [];
 
 					for (let surveyIndex of surveyList) {
-						const obj = clientSurveys.find(obj => util.isDeepStrictEqual(obj.surveyTemplate, surveyIndex))
-						if (obj) {
-							const foundSurvey = await Survey.findById(obj.surveyTemplate).select('name').exec()
-							temp.push([obj._id, obj.completeness, foundSurvey.name])
+						const objList = clientSurveys.filter(obj => util.isDeepStrictEqual(obj.surveyTemplate, surveyIndex));
+						for (let obj of objList) {
+							const foundSurvey = await Survey.findById(obj.surveyTemplate).select('name').exec();
+							temp.push([obj._id, obj.completeness, foundSurvey.name]);
 						}
 					}
 
-					collections.push(temp)
+					collections.push(temp);
 				}
+
 
 				// for (let surveyIndex in clientSurveys) {
 				// 	log.info(`${surveyIndex}: Completeness score: ${clientSurveys[surveyIndex].completeness}`);

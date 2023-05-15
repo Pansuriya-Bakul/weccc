@@ -141,8 +141,6 @@ class App extends Component {
 		localStorage.setItem("patients", JSON.stringify(user.patients));
 		localStorage.setItem("workers", JSON.stringify(user.workers));
 		localStorage.setItem("facilityId", user.facilityId._id);
-		console.log(user.facilityId.name)
-		console.log("aksbhcbyyyy")
 		localStorage.setItem("facilityName", user.facilityId.name);
 		localStorage.setItem("token", token);
 
