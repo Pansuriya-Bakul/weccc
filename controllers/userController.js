@@ -171,6 +171,67 @@ exports.check = (req, res, next) => {
 };
 
 // ====================================================
+// Check if email already exists
+// ====================================================
+// exports.checkDups = (req, res, next) => {
+// 	const email = req.body.email;
+// 	let exists;
+
+// 	User.find({ email: email })
+// 	  .exec()
+// 	  .then(emailQuery => {
+// 		if(emailQuery.length == 0){
+// 		  exists = false;
+// 		} else {
+// 		  exists = true;
+// 		}
+// 		return res.status(200).json({
+// 		  exists: exists
+// 		});
+// 	  })
+// 	  .catch(err => {
+// 		// handle error
+// 		return res.status(500).json({
+// 		  error: err
+// 		});
+// 	  });
+//   };
+
+exports.checkDups = (req, res, next) => {
+	const email = req.body.email;
+	const phone = req.body.phone;
+	let exists;
+
+	if (email) {
+		// Check for email duplicates
+		User.find({ email: email })
+			.exec()
+			.then(emailQuery => {
+				exists = emailQuery.length > 0;
+				return res.status(200).json({ exists: exists });
+			})
+			.catch(err => {
+				return res.status(500).json({ error: err });
+			});
+	} else if (phone) {
+		// Check for phone number duplicates
+		User.find({ phone: phone })
+			.exec()
+			.then(phoneQuery => {
+				exists = phoneQuery.length > 0;
+				return res.status(200).json({ exists: exists });
+			})
+			.catch(err => {
+				return res.status(500).json({ error: err });
+			});
+	} else {
+		return res.status(400).json({ error: "Missing email or phone number in request body" });
+	}
+};
+
+
+
+// ====================================================
 // Create a new user
 // ----------------------------------------------------
 // Input:
