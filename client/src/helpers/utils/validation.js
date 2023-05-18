@@ -39,8 +39,8 @@ function ValidatePhoneNo(input) {
     error = "";
     // error = "Cannot be whitespace alone";
   } else if (!input) {
-    error = "";
-    // error = "Cannot be empty";
+    // error = "";
+    error = "Cannot be empty";
   } else if (!input.match(/^[1-9]\d*$/)) {
     error = "Invalid phone number";
   } else if (input.length < 10) {

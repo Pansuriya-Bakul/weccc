@@ -158,6 +158,7 @@ const CreateUserDialog = (props) => {
 
   const [enabled, setEnabled] = useState(true);
 
+
   // Non-Required Parameters ========================================
 
   const [phone, setPhone] = useState("");
@@ -426,6 +427,16 @@ const CreateUserDialog = (props) => {
           lastName: ValidateName(lastName),
           phone: (ValidateEmail(phone) == '') ? (phoneDup ? 'Phone number already exists' : '') : ValidatePhoneNo(phone),
         };
+
+        if(error.email == 'Cannot be empty' && error.phone == 'Cannot be empty'){
+          error.email = 'Enter either email or phone number';
+          error.phone = '';
+        } else if (error.email == "Cannot be empty") {
+          error.email = '';
+        } else if (error.phone == "Cannot be empty") {
+          error.phone = "";
+        }
+
         seterrorMessages({ ...errorMessages, ...error });
         if (
           error.email === "" &&
@@ -495,44 +506,19 @@ const CreateUserDialog = (props) => {
     }
   };
 
-  // const emailHandler = (event) => {
-  //   //   if (emailRegex.test(String(event.target.value))) {
-  //   //     setEmailError(false);
-  //   //   } else {
-  //   //     setEmailError(true);
-  //   //   }
-  //   let error = ValidateEmail(event.target.value);
-  //   if (error !== "") {
-  //     setEmailError(true);
-  //   } else {
-  //     setEmailError(false);
-  //     let data = { email: event.target.value };
-  //     post("users/checkdups", appState.token, data, (error, response) => {
 
-  //       if (response.status === 200) {
-  //         // getParentData();
-  //         if (response.data.exists == true) {
-  //           error = 'Email already exists';
-  //           console.log(error);
-  //           setEmailError(true);
-  //         }
-  //       }
-  //     });
-      
-  //   }
-  //   seterrorMessages({ ...errorMessages, email: error });
-  //   setEmail(event.target.value);
-  // };
 
   const emailHandler = (event) => {
     const email = event.target.value;
     const emailValidation = ValidateEmail(email);
     let emailError = '';
+
     
-    if (emailValidation !== "") {
+    
+    if (emailValidation !== "" && emailValidation !== 'Cannot be empty') {
       setEmailError(true);
       seterrorMessages({...errorMessages, email: emailValidation});
-    } else {
+    } else if (email.length>0) {
       let data = { email: email };
       post("users/checkdups", appState.token, data, (error, response) => {
         if (response.status === 200) {
@@ -551,6 +537,9 @@ const CreateUserDialog = (props) => {
         }
         seterrorMessages({...errorMessages, email: emailValidation ? emailValidation : emailError});
       });
+    } else {
+      setEmailError(false);
+      seterrorMessages({...errorMessages, email: ""});
     }
     setEmail(email);
     // setEmailError(!!emailError);
@@ -560,11 +549,15 @@ const CreateUserDialog = (props) => {
     const phone = event.target.value;
     const phoneValidation = ValidatePhoneNo(phone);
     let phoneError = '';
+
+    if(errorMessages.email == 'Enter either email or phone number'){
+      errorMessages.email = '';
+    }
     
-    if (phoneValidation !== "") {
+    if (phoneValidation !== "" && phoneValidation !== 'Cannot be empty') {
       setPhoneError(true);
       seterrorMessages({...errorMessages, phone: phoneValidation});
-    } else {
+    } else if (phone.length>0) {
       let data = { phone: phone };
       post("users/checkdups", appState.token, data, (error, response) => {
         if (response.status === 200) {
@@ -573,6 +566,7 @@ const CreateUserDialog = (props) => {
             setPhoneDup(true);
             setPhoneError(true);
           } else {
+            phoneError = '';
             setPhoneDup(false);
             setPhoneError(false);
           }
@@ -583,6 +577,9 @@ const CreateUserDialog = (props) => {
         }
         seterrorMessages({...errorMessages, phone: phoneValidation ? phoneValidation : phoneError});
       });
+    } else {
+      setPhoneError(false);
+      seterrorMessages({...errorMessages, phone: ""});
     }
     setPhone(phone);
     // setEmailError(!!emailError);
@@ -812,7 +809,7 @@ const CreateUserDialog = (props) => {
                               id="Email"
                               fullWidth
                               label="Email"
-                              required
+                              // required
                               onChange={(event) => {
                                 emailHandler(event);
                               }}
@@ -875,6 +872,23 @@ const CreateUserDialog = (props) => {
                         alignItems="stretch"
                         spacing={2}
                       >
+                         <Grid item>
+                          <Box mx={2} my={0} boxShadow={0}>
+                            <TextField
+                              id="phone"
+                              fullWidth
+                              label="Phone Number"
+                              onChange={(event) => {
+                                phoneHandler(event);
+                              }}
+                              helperText={errorMessages.phone}
+                              value={phone}
+                              error={
+                                errorMessages.phone === "" ? false : true
+                              }
+                            />
+                          </Box>
+                        </Grid>
                         <Grid item>
                           <Box mx={2} my={0} boxShadow={0}>
                             <TextField
@@ -911,23 +925,7 @@ const CreateUserDialog = (props) => {
                             />
                           </Box>
                         </Grid>
-                        <Grid item>
-                          <Box mx={2} my={0} boxShadow={0}>
-                            <TextField
-                              id="phone"
-                              fullWidth
-                              label="Phone Number"
-                              onChange={(event) => {
-                                phoneHandler(event);
-                              }}
-                              helperText={errorMessages.phone}
-                              value={phone}
-                              error={
-                                errorMessages.phone === "" ? false : true
-                              }
-                            />
-                          </Box>
-                        </Grid>
+                       
                       </Grid>
                     </Grid>
                   </Collapse>
