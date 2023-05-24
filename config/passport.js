@@ -19,49 +19,96 @@ const log = logger.passport;
 const User = require("../models/user");
 
 //if there was an attempt at logging into the system
+// passport.use('Local', new LocalStrategy({
+//     usernameField: 'email',
+//     passwordField: 'password'
+// }, (email, password, done) => {
+//     User.findOne({ email: email })
+//     .populate('facilityId', '_id name enabled prefix')
+//     .exec()
+//     .then(user => {
+//         if(user)
+//         {
+//             bcrypt.compare(password, user.password, (error, result) => 
+//             {
+//                 if(error)
+//                 {
+//                     log.warn("Bad login attempt for " + email);
+//                     done(error, false);
+//                 }
+//                 else
+//                 {
+//                     if(result)
+//                     {
+//                         log.info("Login attempt for " + email + " succesful, generating token ...");
+//                         done(null, user);
+//                     }
+//                     else
+//                     {
+//                         log.warn("Unsuccesful login attempt for " + email);
+//                         done(null, false);
+//                     }
+//                 }
+//             });
+//         }
+//         else
+//         {
+//             log.warn("Bad login attempt for " + email);
+//             done(null, false);
+//         }
+//     })
+//     .catch(error => {
+//         log.error("Error authenticating " + email + " through local strategy: " + error.message);
+//         done(error, false);
+//     })
+// }));
+
+// Passport strategy to handle both email or phone login
 passport.use('Local', new LocalStrategy({
-    usernameField: 'email',
+    usernameField: 'emailOrPhone', // Use a common field name to accept both email and phone number
     passwordField: 'password'
-}, (email, password, done) => {
-    User.findOne({ email: email })
-    .populate('facilityId', '_id name enabled prefix')
-    .exec()
-    .then(user => {
-        if(user)
-        {
-            bcrypt.compare(password, user.password, (error, result) => 
-            {
-                if(error)
-                {
-                    log.warn("Bad login attempt for " + email);
-                    done(error, false);
-                }
-                else
-                {
-                    if(result)
-                    {
-                        log.info("Login attempt for " + email + " succesful, generating token ...");
-                        done(null, user);
+}, (emailOrPhone, password, done) => {
+    // Check if the emailOrPhone is an email or a phone number
+    const query = {
+        $or: [
+            { email: emailOrPhone },
+            { 'info.phone': emailOrPhone }
+        ]
+    };
+
+    User.findOne(query)
+        .populate('facilityId', '_id name enabled prefix')
+        .exec()
+        .then(user => {
+            if (user) {
+                bcrypt.compare(password, user.password, (error, result) => {
+                    if (error) {
+                        log.warn("Bad login attempt for " + emailOrPhone);
+                        done(error, false);
+                    } else {
+                        if (result) {
+                            log.info("Login attempt for " + emailOrPhone + " successful, generating token ...");
+                            done(null, user);
+                        } else {
+                            log.warn("Unsuccessful login attempt for " + emailOrPhone);
+                            done(null, false);
+                        }
                     }
-                    else
-                    {
-                        log.warn("Unsuccesful login attempt for " + email);
-                        done(null, false);
-                    }
-                }
-            });
-        }
-        else
-        {
-            log.warn("Bad login attempt for " + email);
-            done(null, false);
-        }
-    })
-    .catch(error => {
-        log.error("Error authenticating " + email + " through local strategy: " + error.message);
-        done(error, false);
-    })
+                });
+            } else {
+                log.warn("Bad login attempt for " + emailOrPhone);
+                done(null, false);
+            }
+        })
+        .catch(error => {
+            log.error("Error authenticating " + emailOrPhone + " through local strategy: " + error.message);
+            done(error, false);
+        });
 }));
+
+
+
+
 
 //checking the generated token against JWT authentication
 passport.use('JwtToken', new JwtStrategy({

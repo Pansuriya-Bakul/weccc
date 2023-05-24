@@ -143,10 +143,13 @@ class Login extends Component
             });
         }
         
+        
+
         var data = {
-            email: email,
+            emailOrPhone: email,
             password: password
         };
+
 
         this.setState({
             authenticating: true
@@ -338,7 +341,7 @@ class Login extends Component
                     </Typography>
                     <div className={classes.form}>
                         <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="email">Email Address</InputLabel>
+                            <InputLabel htmlFor="email">Email or Phone number</InputLabel>
                             <Input 
                                 id="email" 
                                 name="email" 

@@ -3,6 +3,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import DashboardPie from "./Summary/DashbordPie";
 import DashboardCombo from "./Summary/DashboardCombo";
+import DashboardBarGraph from "./Summary/DashboardBarGraph";
 
 
 
@@ -39,11 +40,12 @@ export default class ReportDashboard extends Component {
                 </Typography> */}
                 <div className="dashboard-flex">
                     <div className="dashboard-item">
-                        <DashboardPie data={this.findDashboardValues(this.props.reports, this.props.collection)}></DashboardPie>
+                        {/* <DashboardPie data={this.findDashboardValues(this.props.reports, this.props.collection)}></DashboardPie> */}
+                        <DashboardBarGraph data={this.findDashboardValues(this.props.reports, this.props.collection)}></DashboardBarGraph>
                     </div>
-                    <div className="dashboard-item">
+                    {/* <div className="dashboard-item">
                         <DashboardCombo data={this.findDashboardValues(this.props.reports, this.props.collection)}></DashboardCombo>
-                    </div>
+                    </div> */}
                 </div>
             </>
         )

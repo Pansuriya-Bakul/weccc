@@ -39,7 +39,7 @@ module.exports = {
         },
         auth: {
             register: Joi.object().keys({
-                email: Joi.string().email().required(),
+                email: Joi.string().email().allow(''),
                 password: Joi.string().required(),
                 enabled: Joi.bool().required(),
                 role: Joi.string().required(),
@@ -60,10 +60,20 @@ module.exports = {
                     
                 })
             }),
-            login: Joi.object().keys({
-                email: Joi.string().email().required(),
-                password: Joi.string().required()
-            })
+            // login: Joi.object().keys({
+            //     emailOrPhone: Joi.string().email().required(),
+            //     password: Joi.string().required()
+            // })
+            login: Joi.alternatives().try(
+                Joi.object().keys({
+                  emailOrPhone: Joi.string().email().required(),
+                  password: Joi.string().required(),
+                }),
+                Joi.object().keys({
+                  emailOrPhone: Joi.string().required(),
+                  password: Joi.string().required(),
+                })
+              ),
         },
         stickyNote: {
             create: Joi.object().keys({
