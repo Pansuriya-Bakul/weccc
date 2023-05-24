@@ -26,9 +26,10 @@ const userSchema = mongoose.Schema({
     email: { 
         type: String,
         unique: true,
-        required: function() {
-            return this.role != "Patient";
-        }
+        // required: function() {
+        //     return this.role != "Patient";
+        // }
+        required: false
     },
     password: { 
         type: String

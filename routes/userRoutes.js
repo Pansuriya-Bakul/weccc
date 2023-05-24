@@ -16,6 +16,7 @@ const UsersController = require('../controllers/userController');
 const authenticate = passport.authenticate('JwtToken', { session: false });
 
 router.get('/install', UsersController.install);
+router.post('/checkdups', UsersController.checkDups);
 router.get('/validate', authenticate, UsersController.check);
 router.post('/register', validateBody(schemas.auth.register), authenticate, UsersController.signup);
 router.post(
