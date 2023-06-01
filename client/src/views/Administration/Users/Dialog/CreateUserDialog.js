@@ -425,7 +425,7 @@ const CreateUserDialog = (props) => {
               : ValidatePassword(confirmPassword),
           firstName: ValidateName(firstName),
           lastName: ValidateName(lastName),
-          phone: (ValidateEmail(phone) == '') ? (phoneDup ? 'Phone number already exists' : '') : ValidatePhoneNo(phone),
+          phone: (ValidatePhoneNo(phone) == '') ? (phoneDup ? 'Phone number already exists' : '') : ValidatePhoneNo(phone),
         };
 
         if(error.email == 'Cannot be empty' && error.phone == 'Cannot be empty'){

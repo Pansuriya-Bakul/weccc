@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
 
 
 // ================= Static Variables ================
-const selectFilterOptions = [{ key: "Name", value: "name", display: "Name" }, { key: "SequenceId", value: "sequenceId", display: "Sequence ID" }, { key: "Email", value: "email", display: "Email" }, { key: "Role", value: "role", display: "Role" }, { key: "Enabled", value: "enabled", display: "Status" }]
+const selectFilterOptions = [{ key: "Name", value: "name", display: "Name" }, { key: "Email", value: "email", display: "Email" }, { key: "Role", value: "role", display: "Role" }, { key: "Enabled", value: "enabled", display: "Status" }]
 
 // ================= Static Functions ================
 

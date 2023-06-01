@@ -5,6 +5,41 @@ import { ListItem } from '@material-ui/core';
 
 export default class PersonalWellBeingAlert extends Component {
 
+	state = {
+		redAlert: false,
+		yellowAlert: false
+	};
+
+	componentDidMount() {
+		const { reports, collection } = this.props;
+	
+		// Check all the conditions and set the state variable
+		if (reports.PWI_QofL3_COMB[collection] <= 60 ||
+		  reports.SL_QofL3_SD[collection] <= 5 ||
+		  reports.YH_QofL3_SD[collection] <= 5 ||
+		  reports.AL_QofL3_SD[collection] <= 5 ||
+		  reports.PR_QofL3_SD[collection] <= 5 ||
+		  reports.HSF_QofL3_SD[collection] <= 5 ||
+		  reports.FPC_QofL3_SD[collection] <= 5 ||
+		  reports.FS_QofL3_SD[collection] <= 5 ||
+		  reports.SR_QofL3_SD[collection] <= 5 ||
+		  reports.PAG_QofL1_SD[collection] === 3) {
+			this.setState({redAlert: true});
+		}
+		
+		if(reports.SL_QofL3_SD[collection] === 6 ||
+		  reports.YH_QofL3_SD[collection] === 6 ||
+		  reports.AL_QofL3_SD[collection] === 6 ||
+		  reports.PR_QofL3_SD[collection] === 6 ||
+		  reports.HSF_QofL3_SD[collection] === 6 ||
+		  reports.FPC_QofL3_SD[collection] === 6 ||
+		  reports.FS_QofL3_SD[collection] === 6 ||
+		  reports.SR_QofL3_SD[collection] === 6 ||
+		  reports.PAG_QofL1_SD[collection] === 2) {
+		  	this.setState({ yellowAlert: true });
+		}
+	}
+
 	render() {
 		return (
 			<Grid container item xs={12} spacing={2}>
@@ -15,7 +50,15 @@ export default class PersonalWellBeingAlert extends Component {
 				</Grid>
 
 				{/* Red Flags */}
-				<Grid item xs={5}>
+				{this.state.redAlert == false ?
+					<Grid item xs={5}>
+						<ListItem>
+							<Typography variant="body1" color="inherit" align="left" gutterBottom>
+								None
+							</Typography>
+						</ListItem>
+					</Grid>
+				: <Grid item xs={5}>
 				{/* Not satisfied with life as a whole (PWI 60 or less) */}
 				{this.props.reports.PWI_QofL3_COMB[this.props.collection] <= 60 &&
 						<ListItem>
@@ -96,10 +139,18 @@ export default class PersonalWellBeingAlert extends Component {
 							</Typography>
 						</ListItem>
 					}
-				</Grid>
+				</Grid>}
 
 				{/* Yellow Flags */}
-				<Grid item xs={5}>
+				{this.state.yellowAlert == false ?
+					<Grid item xs={5}>
+						<ListItem>
+							<Typography variant="body1" color="inherit" align="left" gutterBottom>
+								None
+							</Typography>
+						</ListItem>
+					</Grid>
+				: <Grid item xs={5}>
 					{/* sometimes unsatisfied with standard of living (6) */}
 					{this.props.reports.SL_QofL3_SD[this.props.collection] == 6 &&
 						<ListItem>
@@ -172,7 +223,7 @@ export default class PersonalWellBeingAlert extends Component {
 							</Typography>
 						</ListItem>
 					}
-				</Grid>				
+				</Grid>	}			
 			</Grid>
 			)
 	}
