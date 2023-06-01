@@ -579,7 +579,7 @@ exports.login = async (req, res, next) => {
 						enabled: req.user.enabled,
 						role: req.user.role,
 						facilityId: {
-							_id: req.user.facilityId,
+							_id: req.user.facilityId._id,
 							name: facilityName,
 							prefix: fPrefix
 						},
@@ -1606,7 +1606,7 @@ exports.getAllUsers = (req, res, next) => {
 			if (err) return res.status(400).json({ message: err.message });
 
 			if (!foundUser) return res.status(404).json({ message: 'User does not exist' });
-
+			console.log(foundUser.role);
 			// Check the role first:
 			if (foundUser.role === 'Admin') {
 				// Admin: can send notes to everyone (staff, volunteer, patient).
@@ -1675,6 +1675,7 @@ exports.getAllUsers = (req, res, next) => {
 						return res.status(200).json({ user: dataToSend });
 					});
 			} else if (foundUser.role === 'Coordinator') {
+				
 				// Staff/Coordinator: can send notes to admin and corresponding volunteer.
 				const coordinatorsList = [];
 				User.find({ facilityId: { $in: [foundUser.facilityId] } })
