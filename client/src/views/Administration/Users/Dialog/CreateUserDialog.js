@@ -12,6 +12,7 @@ import PropTypes from "prop-types"; //Development Package to validate prop types
 import AlertType from "../../../../helpers/models/AlertType";
 
 import post from "../../../../helpers/common/post";
+import get from "../../../../helpers/common/get";
 
 // ==================== MUI =========================
 import { makeStyles } from "@material-ui/core/styles"; // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
@@ -50,6 +51,7 @@ import {
   ValidateEmail,
   ValidateName,
   ValidatePassword,
+  ValidatePhoneNo
 } from "../../../../helpers/utils/validation";
 
 // ==================== MUI Styles ===================
@@ -85,6 +87,7 @@ const initialErrorMessages = {
   confirmPassword: "",
   firstName: "",
   lastName: "",
+  phone: "",
   dateOfBirth: "",
   gender: "",
   gender2: "",
@@ -119,6 +122,7 @@ const CreateUserDialog = (props) => {
   // console.log(errorMessages);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
+  const [emailDup, setEmailDup] = useState(false);
 
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
@@ -154,7 +158,12 @@ const CreateUserDialog = (props) => {
 
   const [enabled, setEnabled] = useState(true);
 
+
   // Non-Required Parameters ========================================
+
+  const [phone, setPhone] = useState("");
+  const [phoneError, setPhoneError] = useState(false);
+  const [phoneDup, setPhoneDup] = useState(false);
 
   const [street, setStreet] = useState("");
   const [streetError, setStreetError] = useState(false);
@@ -203,7 +212,7 @@ const CreateUserDialog = (props) => {
         name: sanatized_firstName + " " + sanatized_lastName,
         gender: gender == "NonBinary" && isGender2 ? sanatized_gender2 : gender,
         dateOfBirth: new Date(dateOfBirth),
-        // phone: phone,
+        phone: phone,
         language:
           language == "Other" && isLanguage2 ? sanatized_language2 : language,
         address: {
@@ -246,6 +255,7 @@ const CreateUserDialog = (props) => {
     password,
     firstName,
     lastName,
+    phone,
     enabled,
     role,
     gender,
@@ -277,6 +287,9 @@ const CreateUserDialog = (props) => {
 
     setLastName("");
     setLastNameError(false);
+
+    setPhone("");
+    setPhoneError(false);
 
     setRole("");
     setRoleError(false);
@@ -325,6 +338,8 @@ const CreateUserDialog = (props) => {
     setFirstNameError,
     setLastName,
     setLastNameError,
+    setPhone,
+    setPhoneError,
     setRole,
     setRoleError,
     setGender,
@@ -400,7 +415,7 @@ const CreateUserDialog = (props) => {
     switch (page) {
       case 0: {
         let error = {
-          email: ValidateEmail(email),
+          email: (ValidateEmail(email) == '') ? (emailDup ? 'Email already exists' : '') : ValidateEmail(email),
           password: ValidatePassword(password),
           confirmPassword:
             ValidatePassword(confirmPassword) === ""
@@ -410,7 +425,18 @@ const CreateUserDialog = (props) => {
               : ValidatePassword(confirmPassword),
           firstName: ValidateName(firstName),
           lastName: ValidateName(lastName),
+          phone: (ValidateEmail(phone) == '') ? (phoneDup ? 'Phone number already exists' : '') : ValidatePhoneNo(phone),
         };
+
+        if(error.email == 'Cannot be empty' && error.phone == 'Cannot be empty'){
+          error.email = 'Enter either email or phone number';
+          error.phone = '';
+        } else if (error.email == "Cannot be empty") {
+          error.email = '';
+        } else if (error.phone == "Cannot be empty") {
+          error.phone = "";
+        }
+
         seterrorMessages({ ...errorMessages, ...error });
         if (
           error.email === "" &&
@@ -418,6 +444,7 @@ const CreateUserDialog = (props) => {
           error.confirmPassword === "" &&
           error.firstName === "" &&
           error.lastName === "" &&
+          error.phone === "" &&
           confirmPassword === password
         ) {
           setPage(page + 1);
@@ -478,21 +505,86 @@ const CreateUserDialog = (props) => {
         break;
     }
   };
+
+
+
   const emailHandler = (event) => {
-    //   if (emailRegex.test(String(event.target.value))) {
-    //     setEmailError(false);
-    //   } else {
-    //     setEmailError(true);
-    //   }
-    let error = ValidateEmail(event.target.value);
-    if (error !== "") {
+    const email = event.target.value;
+    const emailValidation = ValidateEmail(email);
+    let emailError = '';
+
+    
+    
+    if (emailValidation !== "" && emailValidation !== 'Cannot be empty') {
       setEmailError(true);
+      seterrorMessages({...errorMessages, email: emailValidation});
+    } else if (email.length>0) {
+      let data = { email: email };
+      post("users/checkdups", appState.token, data, (error, response) => {
+        if (response.status === 200) {
+          if (response.data.exists == true) {
+            emailError = 'Email already exists';
+            setEmailDup(true);
+            setEmailError(true);
+          } else {
+            setEmailDup(false);
+            setEmailError(false);
+          }
+        } else {
+          emailError = 'Error checking email';
+          // console.log(emailError);
+          setEmailError(true);
+        }
+        seterrorMessages({...errorMessages, email: emailValidation ? emailValidation : emailError});
+      });
     } else {
       setEmailError(false);
+      seterrorMessages({...errorMessages, email: ""});
     }
-    seterrorMessages({ ...errorMessages, email: error });
-    setEmail(event.target.value);
+    setEmail(email);
+    // setEmailError(!!emailError);
   };
+  
+  const phoneHandler = (event) => {
+    const phone = event.target.value;
+    const phoneValidation = ValidatePhoneNo(phone);
+    let phoneError = '';
+
+    if(errorMessages.email == 'Enter either email or phone number'){
+      errorMessages.email = '';
+    }
+    
+    if (phoneValidation !== "" && phoneValidation !== 'Cannot be empty') {
+      setPhoneError(true);
+      seterrorMessages({...errorMessages, phone: phoneValidation});
+    } else if (phone.length>0) {
+      let data = { phone: phone };
+      post("users/checkdups", appState.token, data, (error, response) => {
+        if (response.status === 200) {
+          if (response.data.exists == true) {
+            phoneError = 'Phone number already exists';
+            setPhoneDup(true);
+            setPhoneError(true);
+          } else {
+            phoneError = '';
+            setPhoneDup(false);
+            setPhoneError(false);
+          }
+        } else {
+          phoneError = 'Error checking phone number';
+          // console.log(emailError);
+          setPhoneError(true);
+        }
+        seterrorMessages({...errorMessages, phone: phoneValidation ? phoneValidation : phoneError});
+      });
+    } else {
+      setPhoneError(false);
+      seterrorMessages({...errorMessages, phone: ""});
+    }
+    setPhone(phone);
+    // setEmailError(!!emailError);
+  };
+  
 
   const passwordHandler = (event) => {
     //   if (passwordRegex.test(String(event.target.value))) {
@@ -536,6 +628,17 @@ const CreateUserDialog = (props) => {
     seterrorMessages({ ...errorMessages, firstName: error });
     setFirstName(event.target.value);
   };
+
+  // const phoneHandler = (event) => {
+  //   let error = ValidatePhoneNo(event.target.value);
+  //   if (error !== "") {
+  //     setPhoneError(true);
+  //   } else {
+  //     setPhoneError(false);
+  //   }
+  //   seterrorMessages({ ...errorMessages, phone: error });
+  //   setPhone(event.target.value);
+  // };
 
   const lastNameHandler = (event) => {
     let error = ValidateName(event.target.value);
@@ -706,7 +809,7 @@ const CreateUserDialog = (props) => {
                               id="Email"
                               fullWidth
                               label="Email"
-                              required
+                              // required
                               onChange={(event) => {
                                 emailHandler(event);
                               }}
@@ -769,6 +872,23 @@ const CreateUserDialog = (props) => {
                         alignItems="stretch"
                         spacing={2}
                       >
+                         <Grid item>
+                          <Box mx={2} my={0} boxShadow={0}>
+                            <TextField
+                              id="phone"
+                              fullWidth
+                              label="Phone Number"
+                              onChange={(event) => {
+                                phoneHandler(event);
+                              }}
+                              helperText={errorMessages.phone}
+                              value={phone}
+                              error={
+                                errorMessages.phone === "" ? false : true
+                              }
+                            />
+                          </Box>
+                        </Grid>
                         <Grid item>
                           <Box mx={2} my={0} boxShadow={0}>
                             <TextField
@@ -805,6 +925,7 @@ const CreateUserDialog = (props) => {
                             />
                           </Box>
                         </Grid>
+                       
                       </Grid>
                     </Grid>
                   </Collapse>

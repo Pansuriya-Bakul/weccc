@@ -171,6 +171,68 @@ exports.check = (req, res, next) => {
 };
 
 // ====================================================
+// Check if email already exists
+// ====================================================
+// exports.checkDups = (req, res, next) => {
+// 	const email = req.body.email;
+// 	let exists;
+
+// 	User.find({ email: email })
+// 	  .exec()
+// 	  .then(emailQuery => {
+// 		if(emailQuery.length == 0){
+// 		  exists = false;
+// 		} else {
+// 		  exists = true;
+// 		}
+// 		return res.status(200).json({
+// 		  exists: exists
+// 		});
+// 	  })
+// 	  .catch(err => {
+// 		// handle error
+// 		return res.status(500).json({
+// 		  error: err
+// 		});
+// 	  });
+//   };
+
+exports.checkDups = (req, res, next) => {
+	const email = req.body.email;
+	const phone = req.body.phone;
+	let exists;
+
+	if (email) {
+		// Check for email duplicates
+		User.find({ email: email })
+			.exec()
+			.then(emailQuery => {
+				exists = emailQuery.length > 0;
+				return res.status(200).json({ exists: exists });
+			})
+			.catch(err => {
+				return res.status(500).json({ error: err });
+			});
+	} else if (phone) {
+		// Check for phone number duplicates
+		User.find({ 'info.phone': phone })
+			.exec()
+			.then(phoneQuery => {
+				// console.log(phoneQuery);
+				exists = phoneQuery.length > 0;
+				return res.status(200).json({ exists: exists });
+			})
+			.catch(err => {
+				return res.status(500).json({ error: err });
+			});
+	} else {
+		return res.status(400).json({ error: "Missing email or phone number in request body" });
+	}
+};
+
+
+
+// ====================================================
 // Create a new user
 // ----------------------------------------------------
 // Input:
@@ -207,128 +269,241 @@ exports.signup = (req, res, next) => {
 		country: _address.country
 	});
 
+	// address
+	// 	.save()
+	// 	.then(newAddress => {
+	// 		User.find({ email: email })
+	// 			.exec()
+	// 			.then(emailQuery => {
+	// 				if (emailQuery.length == 0) {
+	// 					bcrypt.hash(password, 10, (hashError, hash) => {
+	// 						if (hashError) {
+	// 							log.error('There was an error hashing a signup password');
+
+	// 							return res.status(401).json({
+	// 								message: hashError
+	// 							});
+	// 						}
+
+	// 						//Sort by -Id time-stamp in descending order which gets the last object
+	// 						User.findOne()
+	// 							.sort({ createdAt: -1 })
+	// 							.exec()
+	// 							.then(lastUser => {
+	// 								if (lastUser) {
+	// 									if (lastUser.sequence_id && lastUser.sequence_id > 0) {
+	// 										const getNextSequenceValue = lastUser.sequence_id + 1;
+
+	// 										const user = new User({
+	// 											_id: new mongoose.Types.ObjectId(),
+	// 											sequence_id: getNextSequenceValue,
+	// 											email: email,
+	// 											password: hash,
+	// 											enabled: enabled,
+	// 											role: role,
+	// 											facilityId: facility,
+	// 											patients: new Array(),
+	// 											workers: new Array(),
+	// 											projectList: new Array(),
+	// 											collectionList: new Array(),
+	// 											memberCollectionList: new Array(),
+	// 											memberSurveyList: new Array(),
+	// 											research: {
+	// 												full: ''
+	// 											},
+	// 											info: {
+	// 												name: name,
+	// 												gender: gender,
+	// 												dateOfBirth: dateOfBirth,
+	// 												phone: phone,
+	// 												language: language,
+	// 												currentAddress: newAddress._id
+	// 											}
+	// 										});
+
+	// 										user
+	// 											.save()
+	// 											.then(newUser => {
+	// 												if (newUser) {
+	// 													log.info('New user for email ' + newUser.email + ' created');
+
+	// 													return res.status(201).json({
+	// 														_id: newUser._id,
+	// 														request: {
+	// 															type: 'GET',
+	// 															url:
+	// 																config.server.protocol +
+	// 																'://' +
+	// 																config.server.hostname +
+	// 																':' +
+	// 																config.server.port +
+	// 																config.server.extension +
+	// 																'/users/' +
+	// 																newUser._id
+	// 														}
+	// 													});
+	// 												} else {
+	// 													return res.status(401).json({
+	// 														message: 'Email or password is invalid.'
+	// 													});
+	// 												}
+	// 											})
+	// 											.catch(error => {
+	// 												log.error(error.message);
+
+	// 												return res.status(500).json({
+	// 													message: error.message
+	// 												});
+	// 											});
+	// 									} else {
+	// 										log.error('There was an error forming a unique sequence id ' + sequence_id);
+
+	// 										return res.status(401).json({
+	// 											message: 'Invalid Sequence ID'
+	// 										});
+	// 									}
+	// 								} else {
+	// 									return res.status(401).json({
+	// 										message: 'Null Sequence ID Find'
+	// 									});
+	// 								}
+	// 							})
+	// 							.catch(error => {
+	// 								log.error(error.message);
+
+	// 								return res.status(500).json({
+	// 									message: error.message
+	// 								});
+	// 							});
+	// 					});
+	// 				} else {
+	// 					log.warn('Email ' + email + ' already exists in the database');
+
+	// 					return res.status(401).json({
+	// 						message: 'The email ' + email + ' is already in use.'
+	// 					});
+	// 				}
+	// 			})
+	// 			.catch(error => {
+	// 				log.error(error.message);
+
+	// 				return res.status(500).json({
+	// 					message: error.message
+	// 				});
+	// 			});
+	// 	})
+	// 	.catch(error => {
+	// 		log.error(error.message);
+
+	// 		return res.status(500).json({
+	// 			message: error.message
+	// 		});
+	// 	});
+
 	address
 		.save()
 		.then(newAddress => {
-			User.find({ email: email })
-				.exec()
-				.then(emailQuery => {
-					if (emailQuery.length == 0) {
-						bcrypt.hash(password, 10, (hashError, hash) => {
-							if (hashError) {
-								log.error('There was an error hashing a signup password');
 
-								return res.status(401).json({
-									message: hashError
+			bcrypt.hash(password, 10, (hashError, hash) => {
+				if (hashError) {
+					log.error('There was an error hashing a signup password');
+
+					return res.status(401).json({
+						message: hashError
+					});
+				}
+
+				//Sort by -Id time-stamp in descending order which gets the last object
+				User.findOne()
+					.sort({ createdAt: -1 })
+					.exec()
+					.then(lastUser => {
+						if (lastUser) {
+							if (lastUser.sequence_id && lastUser.sequence_id > 0) {
+								const getNextSequenceValue = lastUser.sequence_id + 1;
+
+								const user = new User({
+									_id: new mongoose.Types.ObjectId(),
+									sequence_id: getNextSequenceValue,
+									email: email,
+									password: hash,
+									enabled: enabled,
+									role: role,
+									facilityId: facility,
+									patients: new Array(),
+									workers: new Array(),
+									projectList: new Array(),
+									collectionList: new Array(),
+									memberCollectionList: new Array(),
+									memberSurveyList: new Array(),
+									research: {
+										full: ''
+									},
+									info: {
+										name: name,
+										gender: gender,
+										dateOfBirth: dateOfBirth,
+										phone: phone,
+										language: language,
+										currentAddress: newAddress._id
+									}
 								});
-							}
 
-							//Sort by -Id time-stamp in descending order which gets the last object
-							User.findOne()
-								.sort({ createdAt: -1 })
-								.exec()
-								.then(lastUser => {
-									if (lastUser) {
-										if (lastUser.sequence_id && lastUser.sequence_id > 0) {
-											const getNextSequenceValue = lastUser.sequence_id + 1;
+								user
+									.save()
+									.then(newUser => {
+										if (newUser) {
+											log.info('New user for email ' + newUser.email + ' created');
 
-											const user = new User({
-												_id: new mongoose.Types.ObjectId(),
-												sequence_id: getNextSequenceValue,
-												email: email,
-												password: hash,
-												enabled: enabled,
-												role: role,
-												facilityId: facility,
-												patients: new Array(),
-												workers: new Array(),
-												projectList: new Array(),
-												collectionList: new Array(),
-												memberCollectionList: new Array(),
-												memberSurveyList: new Array(),
-												research: {
-													full: ''
-												},
-												info: {
-													name: name,
-													gender: gender,
-													dateOfBirth: dateOfBirth,
-													phone: phone,
-													language: language,
-													currentAddress: newAddress._id
+											return res.status(201).json({
+												_id: newUser._id,
+												request: {
+													type: 'GET',
+													url:
+														config.server.protocol +
+														'://' +
+														config.server.hostname +
+														':' +
+														config.server.port +
+														config.server.extension +
+														'/users/' +
+														newUser._id
 												}
 											});
-
-											user
-												.save()
-												.then(newUser => {
-													if (newUser) {
-														log.info('New user for email ' + newUser.email + ' created');
-
-														return res.status(201).json({
-															_id: newUser._id,
-															request: {
-																type: 'GET',
-																url:
-																	config.server.protocol +
-																	'://' +
-																	config.server.hostname +
-																	':' +
-																	config.server.port +
-																	config.server.extension +
-																	'/users/' +
-																	newUser._id
-															}
-														});
-													} else {
-														return res.status(401).json({
-															message: 'Email or password is invalid.'
-														});
-													}
-												})
-												.catch(error => {
-													log.error(error.message);
-
-													return res.status(500).json({
-														message: error.message
-													});
-												});
 										} else {
-											log.error('There was an error forming a unique sequence id ' + sequence_id);
-
 											return res.status(401).json({
-												message: 'Invalid Sequence ID'
+												message: 'Email or password is invalid.'
 											});
 										}
-									} else {
-										return res.status(401).json({
-											message: 'Null Sequence ID Find'
+									})
+									.catch(error => {
+										log.error(error.message);
+
+										return res.status(500).json({
+											message: error.message
 										});
-									}
-								})
-								.catch(error => {
-									log.error(error.message);
-
-									return res.status(500).json({
-										message: error.message
 									});
+							} else {
+								log.error('There was an error forming a unique sequence id ' + sequence_id);
+
+								return res.status(401).json({
+									message: 'Invalid Sequence ID'
 								});
-						});
-					} else {
-						log.warn('Email ' + email + ' already exists in the database');
+							}
+						} else {
+							return res.status(401).json({
+								message: 'Null Sequence ID Find'
+							});
+						}
+					})
+					.catch(error => {
+						log.error(error.message);
 
-						return res.status(401).json({
-							message: 'The email ' + email + ' is already in use.'
+						return res.status(500).json({
+							message: error.message
 						});
-					}
-				})
-				.catch(error => {
-					log.error(error.message);
-
-					return res.status(500).json({
-						message: error.message
 					});
-				});
+			});
 		})
 		.catch(error => {
 			log.error(error.message);
@@ -384,7 +559,8 @@ exports.login = async (req, res, next) => {
 							gender: key_private.decrypt(req.user.info.gender, 'utf8'),
 							dateOfBirth: req.user.info.dateOfBirth,
 							language: req.user.info.language,
-							currentAddress: req.user.info.currentAddress
+							currentAddress: req.user.info.currentAddress,
+							phone: req.user.info.phone
 						},
 						research: {
 							enabled: req.user.research.enabled,
@@ -1246,10 +1422,10 @@ exports.createResearchID = (req, res, next) => {
 exports.findClientSurveys = async (req, res, next) => {
 	// Look for the client:
 	const id = req.params.userID;
-	let surveysNotCompleted = [];
-	let surveysNotCompletedNames = [];
+	// let surveysNotCompleted = [];
+	// let surveysNotCompletedNames = [];
 	// let surveysCompleted = [];
-	let surveysCompletedNames = [];
+	// let surveysCompletedNames = [];
 	let collectionNames = [];
 	let collections = [];
 
@@ -1285,33 +1461,21 @@ exports.findClientSurveys = async (req, res, next) => {
 				}
 
 				for (let collectionId in collectionList) {
+					collectionNames.push(collectionList[collectionId].name);
+					const surveyList = collectionList[collectionId].surveyList;
+					const temp = [];
 
-					collectionNames.push(collectionList[collectionId].name)
-
-					surveyList = collectionList[collectionId].surveyList
-					let temp = [];
-					let cs = null;
-					for (let surveyIndex in surveyList) {
-
-						if (clientSurveys.some(obj => util.isDeepStrictEqual(obj.surveyTemplate, surveyList[surveyIndex]))) {
-							clientSurveys.some(obj => {
-								if (util.isDeepStrictEqual(obj.surveyTemplate, surveyList[surveyIndex])) {
-									cs = obj;
-								}
-							})
-
-							await Survey.findById(cs.surveyTemplate)
-								.select('name')
-								.exec()
-								.then(foundSurvey => {
-									temp.push([cs._id, cs.completeness, foundSurvey.name])
-								});
-
+					for (let surveyIndex of surveyList) {
+						const objList = clientSurveys.filter(obj => util.isDeepStrictEqual(obj.surveyTemplate, surveyIndex));
+						for (let obj of objList) {
+							const foundSurvey = await Survey.findById(obj.surveyTemplate).select('name').exec();
+							temp.push([obj._id, obj.completeness, foundSurvey.name]);
 						}
 					}
-					collections.push(temp);
 
+					collections.push(temp);
 				}
+
 
 				// for (let surveyIndex in clientSurveys) {
 				// 	log.info(`${surveyIndex}: Completeness score: ${clientSurveys[surveyIndex].completeness}`);
