@@ -357,13 +357,27 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
     }, [wordsRegex, setLanguage2, setLanguage2Error]);
 
+    function extractDigits(phoneNumber) {
+        // Remove all non-digit characters from the phone number
+        const strippedNumber = phoneNumber.replace(/\D/g, '');
+      
+        // Extract the first 10 digits
+        const extractedDigits = strippedNumber.slice(0, 10);
+      
+        return extractedDigits;
+      }
+      
+
     const phoneHandler = useCallback((event) => {
-        if (phoneRegex.test(String(event.target.value))) {
+        const digits = extractDigits(event.target.value);
+
+        if (phoneRegex.test(String(digits))) {
+            
             setPhoneError(false);
         }
         else {
             if (event.target.value.length === 0) {
-                setPhoneError(false);
+                setPhoneError(false); 
             }
             else {
                 setPhoneError(true);
@@ -379,7 +393,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         //     }
         // });
 
-        setPhone(event.target.value);
+        setPhone(digits);
 
     }, [setPhone, setPhoneError, phoneRegex]);
 

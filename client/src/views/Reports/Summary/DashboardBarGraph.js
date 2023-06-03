@@ -90,7 +90,9 @@ export default class DashboardBarGraph extends Component {
 						}
 					},
 					y: {
-						beginAtZero: true, // Start the y-axis from zero
+						// beginAtZero: true, // Start the y-axis from zero
+						min: 0,
+						max: 100,
 						ticks: {
 							stepSize: 20, // Set the step size for y-axis labels
 							callback: (value) => `${value}%`, // Format y-axis labels as percentages
