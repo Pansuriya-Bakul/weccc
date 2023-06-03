@@ -11,11 +11,19 @@ export default class ReportDashboard extends Component {
     findDashboardValues = (reports, collection) => {
         var health = (reports.HT_QofL2_SD[collection] + (reports.PH_QofL2_SD[collection] * 25) + (reports.YH_QofL3_SD[collection] * 10)) / 3;
 
+        health = health > 100 ? 0 : health;
+
         var mentalHealth = ((reports.MH_QofL2_SD[collection] * 25) + (reports.AD_QofL2_SD[collection] * 25)) / 2;
+
+        mentalHealth = mentalHealth > 100 ? 0 : mentalHealth;
 
         var wellBeing = reports.PWI_QofL3_COMB[collection];
 
+        wellBeing = wellBeing > 100 ? 0 : wellBeing;
+
         var lifeSatisfaction = reports.LS_QofL3_SD[collection] * 10;
+
+        lifeSatisfaction = lifeSatisfaction > 100 ? 0 : lifeSatisfaction;
 
         var loneliness = reports.PL_QofL1_COMB[collection]; // average score
 

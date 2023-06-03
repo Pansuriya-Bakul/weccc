@@ -4,6 +4,32 @@ import Grid from '@material-ui/core/Grid';
 import { ListItem } from '@material-ui/core';
 
 export default class SupportAvailabilityAlert extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			redAlert: false,
+			yellowAlert: false,
+		};
+	}
+
+	componentDidMount() {
+		const { reports, collection } = this.props;
+		// Check conditions for Red Flags
+		if (
+			reports.PSS_QofL1_COMB[collection] >= 2.5 &&
+			reports.PSS_QofL1_COMB[collection] <= 3
+		) {
+			this.setState({ redAlert: true });
+		}
+
+		// Check conditions for Yellow Flags
+		if (
+			reports.PSS_QofL1_COMB[collection] >= 1.6 &&
+			reports.PSS_QofL1_COMB[collection] <= 2.4
+		) {
+			this.setState({ yellowAlert: true });
+		}
+	}
 
 	render() {
 		return (
@@ -15,7 +41,15 @@ export default class SupportAvailabilityAlert extends Component {
 				</Grid>
 
 				{/* Red Flags */}
-				<Grid item xs={5}>
+				{this.state.redAlert == false ?
+					<Grid item xs={5}>
+						<ListItem>
+							<Typography variant="body1" color="inherit" align="left" gutterBottom>
+								None
+							</Typography>
+						</ListItem>
+					</Grid>
+				: <Grid item xs={5}>
 					{/* Average of answers scored 0-3 trigger if PSS_QofL1_COMB 2.5-3 */}
 					{this.props.reports.PSS_QofL1_COMB[this.props.collection] >= 2.5 && this.props.reports.PSS_QofL1_COMB[this.props.collection] <= 3 &&
 						<ListItem>
@@ -24,10 +58,18 @@ export default class SupportAvailabilityAlert extends Component {
 							</Typography>
 						</ListItem>
 					}
-				</Grid>
+				</Grid>}
 
 				{/* Yellow Flags */}
-				<Grid item xs={5}>
+				{this.state.yellowAlert == false ?
+					<Grid item xs={5}>
+						<ListItem>
+							<Typography variant="body1" color="inherit" align="left" gutterBottom>
+								None
+							</Typography>
+						</ListItem>
+					</Grid>
+				:<Grid item xs={5}>
 					{/* Average of answers scored 0-3 trigger if PSS_QofL1_COMB 1.6-2.4 */}
 					{this.props.reports.PSS_QofL1_COMB[this.props.collection] >= 1.6 && this.props.reports.PSS_QofL1_COMB[this.props.collection] <= 2.4 &&
 						<ListItem>
@@ -52,7 +94,7 @@ export default class SupportAvailabilityAlert extends Component {
 							</Typography>
 						</ListItem>
 					} */}
-				</Grid>
+				</Grid>}
 			</Grid>
 		)
 	}

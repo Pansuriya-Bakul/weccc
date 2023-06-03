@@ -75,42 +75,51 @@ export default class PersonalWellBeing extends Component {
         </Typography>
         <Box m={1} mb={2}>
           {/* PWI determined sentence */}
-          {PWI_QofL3_COMB !== 999 && PWI_QofL3_COMB >= 70 && PWI_QofL3_COMB <= 100 && (
-            <Typography display="block" component="div" align="left" gutterBottom>
-              <Typography display="inline" variant="body1" component="div" color="primary" align="left" gutterBottom>
-                I am satisfied with my life right now&nbsp;
+          {PWI_QofL3_COMB !== 999 ? <>
+            {PWI_QofL3_COMB !== 999 && PWI_QofL3_COMB >= 70 && PWI_QofL3_COMB <= 100 && (
+              <Typography display="block" component="div" align="left" gutterBottom>
+                <Typography display="inline" variant="body1" component="div" color="primary" align="left" gutterBottom>
+                  I am satisfied with my life right now&nbsp;
+                </Typography>
               </Typography>
-            </Typography>
-          )}
+            )}
 
-          {PWI_QofL3_COMB !== 999 && PWI_QofL3_COMB >= 46 && PWI_QofL3_COMB <= 69 && (
-            <Typography display="block" component="div" align="left" gutterBottom>
-              <Typography display="inline" variant="body1" component="div" color="primary" align="left" gutterBottom>
-                I am not satisfied with a few aspects of my life right now&nbsp;
+            {PWI_QofL3_COMB !== 999 && PWI_QofL3_COMB >= 46 && PWI_QofL3_COMB <= 69 && (
+              <Typography display="block" component="div" align="left" gutterBottom>
+                <Typography display="inline" variant="body1" component="div" color="primary" align="left" gutterBottom>
+                  I am not satisfied with a few aspects of my life right now&nbsp;
+                </Typography>
               </Typography>
-            </Typography>
-          )}
+            )}
 
-          {PWI_QofL3_COMB !== 999 && PWI_QofL3_COMB >= 20 && PWI_QofL3_COMB <= 45 && (
-            <Typography display="block" component="div" align="left" gutterBottom>
-              <Typography display="inline" variant="body1" component="div" color="primary" align="left" gutterBottom>
-                I am not satisfied with many aspects of my life right now&nbsp;
+            {PWI_QofL3_COMB !== 999 && PWI_QofL3_COMB >= 20 && PWI_QofL3_COMB <= 45 && (
+              <Typography display="block" component="div" align="left" gutterBottom>
+                <Typography display="inline" variant="body1" component="div" color="primary" align="left" gutterBottom>
+                  I am not satisfied with many aspects of my life right now&nbsp;
+                </Typography>
               </Typography>
-            </Typography>
-          )}
+            )}
 
-          {PWI_QofL3_COMB !== 999 && PWI_QofL3_COMB >= 0 && PWI_QofL3_COMB <= 19 && (
-            <Typography display="block" component="div" align="left" gutterBottom>
-              <Typography display="inline" variant="body1" component="div" color="primary" align="left" gutterBottom>
-                I am not at all satisfied with my life right now&nbsp;
+            {PWI_QofL3_COMB !== 999 && PWI_QofL3_COMB >= 0 && PWI_QofL3_COMB <= 19 && (
+              <Typography display="block" component="div" align="left" gutterBottom>
+                <Typography display="inline" variant="body1" component="div" color="primary" align="left" gutterBottom>
+                  I am not at all satisfied with my life right now&nbsp;
+                </Typography>
               </Typography>
-            </Typography>
-          )}
+            )}
 
-          {PWI_QofL3_COMB !== 999 && <Typography display="block" variant="subtitle1" align="left" gutterBottom>
-            Personal Well-Being Score: {PWI_QofL3_COMB}
+            {PWI_QofL3_COMB !== 999 && <Typography display="block" variant="subtitle1" align="left" gutterBottom>
+              Personal Well-Being Score: {PWI_QofL3_COMB}
+            </Typography>}</> : <Typography
+              variant="subtitle2"
+              color="textSecondary"
+              align="left"
+              gutterBottom
+            >
+            Data not available
           </Typography>}
         </Box>
+
       </>
     );
   }

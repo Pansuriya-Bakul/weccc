@@ -25,9 +25,10 @@ import ContactInfo from "./ContactInfo";
 
 // ==================== Helpers =====================
 import AlertType from "../../helpers/models/AlertType";
-
+import checkAlerts from "./ConcernAlerts/checkAlerts";
 import get from "../../helpers/common/get";
 import post from "../../helpers/common/post";
+
 // ==================== MUI =========================
 import { makeStyles } from "@material-ui/core/styles"; // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
 
@@ -89,78 +90,9 @@ const Reports = (props) => {
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [memberName, setMemberName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [anyFlags, setAnyFlags] = useState(false);
 
   // Functions ===
-
-  // const getPatients = useCallback(() => {
-
-  //   if (appState.role == "Patient") {
-  //     setAlert(
-  //       new AlertType("You do not have Permission to recieve Patients", "error")
-  //     );
-  //     return;
-  //   } else {
-  //     if (appState.role == "Admin" || appState.role == "Coordinator") {
-  //       get("users/" + currentPatient, appState.token, (error, response) => {
-  //         if (error) {
-  //           setAlert(new AlertType('Unable to retrieve User. Please refresh and try again.', "error"));
-  //         }
-  //         else {
-  //           if (response.status === 200) {
-  //             setPatientData([response.data.user]);
-  //             return;
-  //             // setAlert(new AlertType('Successfully pulled user.', "success"));
-  //           }
-  //           else {
-  //             setAlert(new AlertType('Unable to retrieve User. Please refresh and try again.', "error"));
-  //           }
-  //         }
-  //       });
-  //     }
-
-  //     if (appState.patients.length <= 0) {
-  //       setAlert(
-  //         new AlertType(
-  //           "You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
-  //           "error"
-  //         )
-  //       );
-  //       return;
-  //     }
-
-  //     let http_query = {
-  //       _id: {
-  //         $in: appState.patients,
-  //       },
-  //     };
-
-  //     post("users/query", appState.token, http_query, (err, res) => {
-  //       if (err) {
-  //         //Bad callback
-  //         setAlert(
-  //           new AlertType(
-  //             "Unable to retrieve Patients. Please refresh and try again.",
-  //             "error"
-  //           )
-  //         );
-  //       } else {
-  //         if (res.status === 200) {
-  //           console.log(res.data.response.users)
-  //           setPatientData(res.data.response.users);
-  //         } else {
-  //           //Bad HTTP Response
-
-  //           setAlert(
-  //             new AlertType(
-  //               "Unable to retrieve Patients. Please refresh and try again.",
-  //               "error"
-  //             )
-  //           );
-  //         }
-  //       }
-  //     });
-  //   }
-  // }, [appState]);
 
   const getNeighbours = useCallback(
     (userId) => {
@@ -200,39 +132,6 @@ const Reports = (props) => {
     [appState]
   );
 
-  // const getScreen = useCallback(
-  //   (userId) => {
-  //     get("reports/Screen/user/" + userId, appState.token, (err, res) => {
-  //       if (err) {
-  //         //Bad callback
-  //         setAlert(
-  //           new AlertType(
-  //             "Unable to retrieve Screen Chapter Reports. Please refresh and try again.",
-  //             "error"
-  //           )
-  //         );
-  //       } else {
-  //         if (res.status === 200) {
-
-  //           if (Object.keys(res.data).length === 0) {
-  //             setReportsData(null);
-  //           } else {
-  //             setReportsData(res.data);
-  //           }
-  //         } else {
-  //           //Bad HTTP Response
-  //           setAlert(
-  //             new AlertType(
-  //               "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.",
-  //               "error"
-  //             )
-  //           );
-  //         }
-  //       }
-  //     });
-  //   },
-  //   [appState]
-  // );
 
   const patientSelectHandler = useCallback((event) => {
     setCurrentPatient(event.target.value);
@@ -263,6 +162,14 @@ const Reports = (props) => {
 
   }, [currentPatient]);
 
+
+  useEffect(() => {
+    if (reportsData !== null) {
+      const flags = checkAlerts(reportsData, currentReportIndex);
+      console.log("Flags: ", flags);
+      setAnyFlags(flags);
+    }
+  }, [reportsData, currentReportIndex]);
 
   // useEffect( () =>
   // {
@@ -451,7 +358,7 @@ const Reports = (props) => {
                             />
                           </Grid>
 
-                          <Grid item xs={12} id="possible concerns">
+                          {anyFlags && <Grid item xs={12} id="possible concerns">
                             <Typography
                               variant="h5"
                               color="textSecondary"
@@ -464,9 +371,9 @@ const Reports = (props) => {
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
-                          </Grid>
+                          </Grid>}
 
-                          <Grid item xs={12} id="suggestions">
+                          {anyFlags && <Grid item xs={12} id="suggestions">
                             <Typography
                               variant="h5"
                               color="textSecondary"
@@ -479,7 +386,7 @@ const Reports = (props) => {
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
-                          </Grid>
+                          </Grid>}
                         </>
                       ) : (
                         <>
@@ -489,7 +396,7 @@ const Reports = (props) => {
                             align="left"
                             gutterBottom
                           >
-                            No available reports.
+                            No available data
                           </Typography>
                         </>
                       )}

@@ -24,7 +24,7 @@ import ContactInfo from "./ContactInfo";
 
 // ==================== Helpers =====================
 import AlertType from "../../helpers/models/AlertType";
-
+import checkAlerts from "./ConcernAlerts/checkAlerts";
 import get from "../../helpers/common/get";
 import post from "../../helpers/common/post";
 // ==================== MUI =========================
@@ -91,6 +91,7 @@ const ClientReports = (props) => {
   );
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [anyFlags, setAnyFlags] = useState(false);
 
   // Functions ===
 
@@ -237,6 +238,14 @@ const ClientReports = (props) => {
       // getScreen(currentPatient);
     }
   }, [currentPatient]);
+
+  useEffect(() => {
+    if (reportsData !== null) {
+      const flags = checkAlerts(reportsData, currentReportIndex);
+      console.log("Flags: ", flags);
+      setAnyFlags(flags);
+    }
+  }, [reportsData, currentReportIndex]);
 
   // useEffect( () =>
   // {
@@ -417,7 +426,7 @@ const ClientReports = (props) => {
                             />
                           </Grid> */}
 
-                          <Grid item xs={12} id="possible concerns">
+                          {anyFlags && <Grid item xs={12} id="possible concerns">
                             <Typography
                               variant="h5"
                               color="textSecondary"
@@ -430,9 +439,9 @@ const ClientReports = (props) => {
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
-                          </Grid>
+                          </Grid>}
 
-                          <Grid item xs={12} id="suggestions">
+                          {anyFlags && <Grid item xs={12} id="suggestions">
                             <Typography
                               variant="h5"
                               color="textSecondary"
@@ -445,7 +454,7 @@ const ClientReports = (props) => {
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
-                          </Grid>
+                          </Grid>}
                         </>
                       ) : (
 
