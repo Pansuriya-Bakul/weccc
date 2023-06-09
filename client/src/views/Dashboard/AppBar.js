@@ -131,7 +131,7 @@ class AppBarContent extends Component {
                     <div className={classes.grow}>
                         <Typography variant="h6" color="inherit" noWrap>
                             <Button color="inherit" component={Link} to="/">
-                                Health and Wellness Friendly Communities Platform (IMS)
+                                CATALYST (Caring to be Healthy System)
                             </Button>
                         </Typography>
                     </div>

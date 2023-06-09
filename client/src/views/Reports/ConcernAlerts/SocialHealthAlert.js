@@ -45,7 +45,7 @@ export default class SocialHealthAlert extends Component {
 				(null_flag = null_flag + 1) &&
                 <Typography>
                     <ul>
-                        <li>Community belonging is a concern. Community belonging is strongly associated with physical health and increased risk of chronic disease. People who lack a sense of community belonging may need to pay special attention to finding ways they can connect with others, and enjoy ways of give back to their community.</li>
+                        <li>Community belonging is a concern. Community belonging is strongly associated with physical health and risk of disease. People who lack a sense of community belonging need to find different and enjoyable ways of connecting with others and giving back to their community.</li>
                     </ul>
                 </Typography> : null
                 }

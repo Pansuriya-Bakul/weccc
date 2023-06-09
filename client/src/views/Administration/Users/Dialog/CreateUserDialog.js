@@ -374,21 +374,22 @@ const CreateUserDialog = (props) => {
   const createHandler = () => {
     if (page == 3) {
       let error = {
-        province:
-          MandatoryFieldCheck(province) !== ""
-            ? MandatoryFieldCheck(province)
-            : "",
-        country:
-          MandatoryFieldCheck(country) !== ""
-            ? MandatoryFieldCheck(country)
-            : "",
-        street:
-          MandatoryFieldCheck(street) !== "" ? MandatoryFieldCheck(street) : "",
-        city: MandatoryFieldCheck(city) !== "" ? MandatoryFieldCheck(city) : "",
-        postalCode:
-          MandatoryFieldCheck(postalCode) !== ""
-            ? MandatoryFieldCheck(postalCode)
-            : "",
+        province: "",
+          // MandatoryFieldCheck(province) !== ""
+          //   ? MandatoryFieldCheck(province)
+          //   : "",
+        country: "",
+          // MandatoryFieldCheck(country) !== ""
+          //   ? MandatoryFieldCheck(country)
+          //   : "",
+        street: "",
+          // MandatoryFieldCheck(street) !== "" ? MandatoryFieldCheck(street) : "",
+        city: "",
+        // MandatoryFieldCheck(city) !== "" ? MandatoryFieldCheck(city) : "",
+        postalCode: ""
+          // MandatoryFieldCheck(postalCode) !== ""
+          //   ? MandatoryFieldCheck(postalCode)
+          //   : "",
       };
       seterrorMessages({ ...errorMessages, ...error });
       if (
@@ -453,25 +454,25 @@ const CreateUserDialog = (props) => {
       }
       case 1: {
         let error = {
-          language:
-            MandatoryFieldCheck(language) !== ""
-              ? MandatoryFieldCheck(language)
-              : "",
-          gender:
-            MandatoryFieldCheck(gender) !== ""
-              ? MandatoryFieldCheck(gender)
-              : "",
+          language: "",
+            // MandatoryFieldCheck(language) !== ""
+            //   ? MandatoryFieldCheck(language)
+            //   : "",
+          gender:"",
+            // MandatoryFieldCheck(gender) !== ""
+            //   ? MandatoryFieldCheck(gender)
+            //   : "",
           language2:
-            language === "Other"
-              ? MandatoryFieldCheck(language2) !== ""
-                ? MandatoryFieldCheck(language2)
-                : ""
+            language === "Other" ? ""
+              // ? MandatoryFieldCheck(language2) !== ""
+              //   ? MandatoryFieldCheck(language2)
+              //   : ""
               : "",
           gender2:
-            gender === "NonBinary"
-              ? MandatoryFieldCheck(gender2) !== ""
-                ? MandatoryFieldCheck(gender2)
-                : ""
+            gender === "NonBinary" ? ""
+              // ? MandatoryFieldCheck(gender2) !== ""
+              //   ? MandatoryFieldCheck(gender2)
+              //   : ""
               : "",
         };
         seterrorMessages({ ...errorMessages, ...error });
@@ -487,10 +488,10 @@ const CreateUserDialog = (props) => {
       }
       case 2: {
         let error = {
-          dateOfBirth:
-            MandatoryFieldCheck(dateOfBirth) !== ""
-              ? MandatoryFieldCheck(dateOfBirth)
-              : "",
+          dateOfBirth: "",
+            // MandatoryFieldCheck(dateOfBirth) !== ""
+            //   ? MandatoryFieldCheck(dateOfBirth)
+            //   : "",
           role:
             MandatoryFieldCheck(role) !== "" ? MandatoryFieldCheck(role) : "",
         };
@@ -509,7 +510,7 @@ const CreateUserDialog = (props) => {
 
 
   const emailHandler = (event) => {
-    const email = event.target.value;
+    const email = event.target.value.toLowerCase();
     const emailValidation = ValidateEmail(email);
     let emailError = '';
 
@@ -681,7 +682,8 @@ const CreateUserDialog = (props) => {
     //   } else {
     //     setStreetError(true);
     //   }
-    let error = MandatoryFieldCheck(event.target.value);
+    // let error = MandatoryFieldCheck(event.target.value);
+    let error = ""
     if (error !== "") {
       setStreetError(true);
     } else {
@@ -692,7 +694,8 @@ const CreateUserDialog = (props) => {
   };
 
   const cityHandler = (event) => {
-    let error = MandatoryFieldCheck(event.target.value);
+    // let error = MandatoryFieldCheck(event.target.value);
+    let error = ""
     if (error !== "") {
       setCityError(true);
     } else {
@@ -712,7 +715,8 @@ const CreateUserDialog = (props) => {
     //   } else {
     //     setPostalCodeError(true);
     //   }
-    let error = MandatoryFieldCheck(event.target.value);
+    // let error = MandatoryFieldCheck(event.target.value);
+    let error = ""
     if (error !== "") {
       setPostalCodeError(true);
     } else {
@@ -953,7 +957,6 @@ const CreateUserDialog = (props) => {
                             <TextField
                               id="Language"
                               select
-                              required
                               fullWidth
                               label="Language"
                               value={language}
@@ -981,7 +984,6 @@ const CreateUserDialog = (props) => {
                               id="Language2"
                               fullWidth
                               label="Specify Language"
-                              required={isLanguage2}
                               onChange={(event) => {
                                 language2Handler(event);
                               }}
@@ -1010,7 +1012,6 @@ const CreateUserDialog = (props) => {
                             <TextField
                               id="Gender"
                               select
-                              required
                               fullWidth
                               label="Gender"
                               value={gender}
@@ -1039,7 +1040,6 @@ const CreateUserDialog = (props) => {
                               id="Gender2"
                               fullWidth
                               label="Specify Gender"
-                              required={isGender2}
                               onChange={(event) => {
                                 gender2Handler(event);
                               }}
@@ -1079,7 +1079,6 @@ const CreateUserDialog = (props) => {
                             <TextField
                               id="DateOfBirth"
                               fullWidth
-                              required
                               label="Date of Birth"
                               type="date"
                               defaultValue={dateOfBirth}
@@ -1171,7 +1170,6 @@ const CreateUserDialog = (props) => {
                               id="Street"
                               fullWidth
                               label="Street"
-                              required
                               onChange={(event) => {
                                 streetHandler(event);
                               }}
@@ -1187,7 +1185,6 @@ const CreateUserDialog = (props) => {
                               id="City"
                               fullWidth
                               label="City"
-                              required
                               onChange={(event) => {
                                 cityHandler(event);
                               }}
@@ -1203,7 +1200,6 @@ const CreateUserDialog = (props) => {
                               id="PostalCode"
                               fullWidth
                               label="Postal Code"
-                              required
                               onChange={(event) => {
                                 postalCodeHandler(event);
                               }}
@@ -1231,7 +1227,6 @@ const CreateUserDialog = (props) => {
                             <TextField
                               id="Province"
                               select
-                              required
                               fullWidth
                               label="Province"
                               value={province}
@@ -1291,7 +1286,6 @@ const CreateUserDialog = (props) => {
                             <TextField
                               id="Country"
                               select
-                              required
                               fullWidth
                               label="Country"
                               value={country}

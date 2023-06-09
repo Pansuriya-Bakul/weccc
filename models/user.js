@@ -70,18 +70,18 @@ const userSchema = mongoose.Schema({
         },
         gender: {
             type: String,
-            required: true        
+            // required: true        
         },
         dateOfBirth: {
             type: Date,
-            required: true
+            // required: true
         },
         phone: {
             type: String,
         },
         language: {
             type: String,
-            required: true
+            // required: true
         },
         currentAddress: {
             type: mongoose.Schema.Types.ObjectId,
