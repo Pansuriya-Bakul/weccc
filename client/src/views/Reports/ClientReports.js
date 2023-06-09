@@ -103,12 +103,12 @@ const ClientReports = (props) => {
       return;
     } else {
       if (appState.patients.length <= 0) {
-        setAlert(
-          new AlertType(
-            "You do not have any patients assigned. In order to start a series, you must first be assigned a member by an Administrator.",
-            "error"
-          )
-        );
+        // setAlert(
+        //   new AlertType(
+        //     "You do not have any patients assigned. In order to start a series, you must first be assigned a member by an Administrator.",
+        //     "error"
+        //   )
+        // );
         return;
       }
 
@@ -510,53 +510,3 @@ ClientReports.defaultProps = {
 };
 
 export default ClientReports; // You can even shorthand this line by adding this at the function [Component] declaration stage
-
-/*
-
-                                    <Card raised={true}>
-                                        <Box mx={1} my={1} boxShadow={0}>
-                                            <Grid
-                                                container
-                                                direction="column"
-                                                justifyContent="flex-start"
-                                                alignItems="stretch"
-                                                spacing={1}
-                                            >
-                                                <Grid item xs={12}>
-                                                    <FormControl fullWidth variant="filled" size="small" className={classes.formControl}>
-                                                        <InputLabel id="select-label-Member">Member</InputLabel>
-                                                        <Select
-        
-                                                            className={classes.selectEmpty}
-                                                            labelId="select-label-Member"
-                                                            id="select-Member"
-                                                            defaultValue = ""
-                                                            disabled={patientData? false : true}
-                                                            onChange={(event) => { patientSelectHandler(event); } }
-                                                        >
-                                                            {patientData.map( (item, index) => 
-                                                            {
-                                                                return(
-                                                                    <MenuItem key={item._id} value={item._id}>
-                                                                        <em>{item.info.name}</em>
-                                                                    </MenuItem>  
-                                                                )
-                                                            })}
-                                                        </Select>
-                                                    </FormControl>
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    {reportsData? (
-                                                        <Pagination count={reportsData.SRVNum_PRF_SD.length} showFirstButton showLastButton
-                                                            disabled={!reportsData}
-                                                            onChange={(event, page) => { reportsPaginationHandler(event, page); }}
-                                                        />
-                                                    ) : (
-                                                        <> </>
-                                                    )}
-                                                </Grid>
-                                            </Grid>
-                                        </Box>
-                                    </Card>
-
-*/

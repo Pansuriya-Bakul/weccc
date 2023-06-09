@@ -90,7 +90,7 @@ class Login extends Component
     handleEmailChange = (event) =>
     {
         this.setState({
-            email: event.target.value,
+            email: event.target.value.toLowerCase(),
         });
     }
 
@@ -337,7 +337,7 @@ class Login extends Component
                         <LockIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        WECCC IMS
+                        CATALYST IMS
                     </Typography>
                     <div className={classes.form}>
                         <FormControl margin="normal" required fullWidth>

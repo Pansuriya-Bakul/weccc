@@ -29,12 +29,19 @@ module.exports = {
     },
     schemas: {
         address: {
+            // create: Joi.object().keys({
+            //     street: Joi.string().required(),
+            //     city: Joi.string().required(),
+            //     state: Joi.string().required(),
+            //     code: Joi.string().required(),
+            //     country: Joi.string().required()
+            // })
             create: Joi.object().keys({
-                street: Joi.string().required(),
-                city: Joi.string().required(),
-                state: Joi.string().required(),
-                code: Joi.string().required(),
-                country: Joi.string().required()
+                street: Joi.string(),
+                city: Joi.string(),
+                state: Joi.string(),
+                code: Joi.string(),
+                country: Joi.string()
             })
         },
         auth: {
@@ -46,16 +53,16 @@ module.exports = {
                 facilityId: Joi.string().required(),
                 info: Joi.object().keys({
                     name: Joi.string().required(),
-                    gender: Joi.string().required(),
-                    dateOfBirth: Joi.date().required(),
+                    gender: Joi.string().allow(''),
+                    dateOfBirth: Joi.date().allow('').allow(null),
                     phone: Joi.string().allow(''),
-                    language: Joi.string().required(),
+                    language: Joi.string().allow(''),
                     address: Joi.object().keys({
-                        street: Joi.string().required(),
-                        city: Joi.string().required(),
-                        state: Joi.string().required(),
-                        code: Joi.string().required(),
-                        country: Joi.string().required()
+                        street: Joi.string().allow(''),
+                        city: Joi.string().allow(''),
+                        state: Joi.string().allow(''),
+                        code: Joi.string().allow(''),
+                        country: Joi.string().allow('')
                     })
                     
                 })

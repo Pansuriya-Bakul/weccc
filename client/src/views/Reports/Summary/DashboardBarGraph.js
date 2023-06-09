@@ -5,6 +5,7 @@ export default class DashboardBarGraph extends Component {
 
 	chartRef = React.createRef();
 
+	// maps score to appropriate colors
 	findColour = (score) => {
 		if (score < 0) {	//identity and handle reverse scoring reflected in colour gauge
 			score = score * - 1;
@@ -31,6 +32,18 @@ export default class DashboardBarGraph extends Component {
 		}
 	}
 
+	// Map percentages to labels to diplay in the chart
+	getPercentageLabel = (value) => {
+		if (value <= 0) return 'Poor';
+		else if (value <= 25) return 'Fair';
+		else if (value <= 50) return 'Good';
+		else if (value <= 75) return 'Very Good';
+		else if (value <= 100) return 'Excellent';
+		else return '';
+	};
+	  
+
+	
 	isComplete = (score) => {
 		if (score < -100 || score > 100) return false;
 		return true;
@@ -76,7 +89,16 @@ export default class DashboardBarGraph extends Component {
 					title: {
 						display: true,
 						text: "At a glance"
-					}
+					},
+					tooltip: {
+						callbacks: {
+						  label: (context) => {
+							const value = context.raw;
+							const label = this.getPercentageLabel(value);
+							return `${label}`;
+						  },
+						},
+					  },
 				},
 				scales: {
 					x: {
@@ -94,8 +116,8 @@ export default class DashboardBarGraph extends Component {
 						min: 0,
 						max: 100,
 						ticks: {
-							stepSize: 20, // Set the step size for y-axis labels
-							callback: (value) => `${value}%`, // Format y-axis labels as percentages
+							stepSize: 25, // Set the step size for y-axis labels
+							callback: (value) => this.getPercentageLabel(value), // Format y-axis labels as percentages
 							font: {
 								weight: 'bold'
 							}
