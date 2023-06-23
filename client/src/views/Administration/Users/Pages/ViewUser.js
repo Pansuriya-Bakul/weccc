@@ -19,6 +19,9 @@ import UserCommunityTab from '../Components/UserCommunityTab/UserCommunityTab';
 import UserNotesTab from '../Components/UserNotesTab/UserNotesTab';
 import UserInformationTab from '../Components/UserInformationTab/UserInformationTab';
 import UserGeneralPropertiesTab from '../Components/UserGeneralPropertiesTab/UserGeneralPropertiesTab';
+// import UserStatusTab from '../Components/UserStatusTab/UserStatusTab';
+import VolStatusTab from '../Components/UserStatusTab/VolStatusTab';
+import MemberStatusTab from '../Components/UserStatusTab/MemberStatusTab';
 
 import LinearProgressWithLabel from '../Components/LinearProgressWithLabel/LinearProgressWithLabel';
 import CircularProgressWithLabel from '../Components/CircularProgressWithLabel/CircularProgressWithLabel';
@@ -207,7 +210,12 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
     // Render Section ===
 
     return (
-        alert != null ? (
+        <>
+            { userOriginal === null ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                    <CircularProgress />
+                </div>):
+            alert != null ? (
 
             // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
             <div className={classes.root}>
@@ -261,22 +269,24 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                     <Grid item xs={12}>
                         <Card raised={true}>
                             <AppBar position="static" disabled={userEdit ? false : true}>
-                                {appState.role == "Volunteer" ? (
+                                {userOriginal && userOriginal.role === "Volunteer" ? (
                                     <Tabs value={panelIndex} onChange={(event, newValue) => { panelHandler(event, newValue); }} aria-label="Account Tabs">
                                         {/* <Tab label="Collections" id={`Tab-${0}`} aria-controls={`Tab-${0}`} /> */}
 
                                         <Tab label="Intake" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
                                         <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
-                                        <Tab label="Assigned Members" id={`Tab-${2}`} aria-controls={`Tab-${0}`} />
-                                        <Tab label="Change password" id={`Tab-${3}`} aria-controls={`Tab-${2}`} />
+                                        <Tab label="Assigned Members" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
+                                        <Tab label="Status" id={`Tab-${3}`} aria-controls={`Tab-${3}`} />
+                                        <Tab label="Change password" id={`Tab-${4}`} aria-controls={`Tab-${4}`} />
                                     </Tabs>
                                 ) : (
                                     <Tabs value={panelIndex} onChange={(event, newValue) => { panelHandler(event, newValue); }} aria-label="Account Tabs">
 
                                         <Tab label="Intake" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
                                         <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
-                                        <Tab label="Assigned Volunteers" id={`Tab-${2}`} aria-controls={`Tab-${0}`} />
-                                        <Tab label="Change password" id={`Tab-${3}`} aria-controls={`Tab-${2}`} />
+                                        <Tab label="Assigned Volunteers" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
+                                        <Tab label="Status" id={`Tab-${3}`} aria-controls={`Tab-${3}`} />
+                                        <Tab label="Change password" id={`Tab-${4}`} aria-controls={`Tab-${4}`} />
                                     </Tabs>
                                 )}
                             </AppBar>
@@ -318,12 +328,21 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                             panelIndex={panelIndex}
                                             userOriginal={userOriginal}
                                         />
-                                        <UserGeneralPropertiesTab
+                                        <MemberStatusTab
                                             appState={appState}
                                             userID={userID}
                                             setParentAlert={setAlert}
                                             getParentInfo={getUser}
                                             panelId={3}
+                                            panelIndex={panelIndex}
+                                            userOriginal={userOriginal}
+                                        />
+                                        <UserGeneralPropertiesTab
+                                            appState={appState}
+                                            userID={userID}
+                                            setParentAlert={setAlert}
+                                            getParentInfo={getUser}
+                                            panelId={4}
                                             panelIndex={panelIndex}
                                             userOriginal={userOriginal}
                                         />
@@ -346,12 +365,12 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                     appState={appState}
                 />
             </div>
-        ) : (
+            ) : (
             <Typography variant="h6" color="inherit" align="center" gutterBottom>
                 Not Authorized. Please refresh and try again.
             </Typography>
-        )
-
+            )}
+        </>
     );
 }
 

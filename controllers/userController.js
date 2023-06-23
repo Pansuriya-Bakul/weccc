@@ -817,6 +817,8 @@ exports.read = (req, res, next) => {
 							name: user.facilityId.name,
 							prefix: user.facilityId.prefix
 						},
+						volInfo : user.volInfo ? user.volInfo : null,
+						memberStatusInfo: user.memberStatusInfo ? user.memberStatusInfo : null,
 						status: user.status,
 						createdAt: user.createdAt,
 						updatedAt: user.updatedAt,
@@ -1043,6 +1045,7 @@ exports.update = (req, res, next) => {
 				});
 			} else {
 				let updatedQuery = query;
+
 				if ('patients' in updatedQuery) {
 					let queryPatients = Object.values(updatedQuery)[0];
 					user.patients.forEach(patient => {
@@ -1615,7 +1618,6 @@ exports.getAllUsers = (req, res, next) => {
 			if (err) return res.status(400).json({ message: err.message });
 
 			if (!foundUser) return res.status(404).json({ message: 'User does not exist' });
-			console.log(foundUser.role);
 			// Check the role first:
 			if (foundUser.role === 'Admin') {
 				// Admin: can send notes to everyone (staff, volunteer, patient).
