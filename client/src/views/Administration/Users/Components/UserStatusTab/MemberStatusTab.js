@@ -117,8 +117,10 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                     activeType: userOriginal.memberStatusInfo.activeType,
                     startDate: userOriginal.memberStatusInfo.startDate,
                     endDate: userOriginal.memberStatusInfo.endDate,
-                    fieldOfStudy: userOriginal.memberStatusInfo.fieldOfStudy,
-                    school: userOriginal.memberStatusInfo.school
+                    referralDate: userOriginal.memberStatusInfo.referralDate,
+                    terminationReason: userOriginal.memberStatusInfo.terminationReason,
+                    deceasedDate: userOriginal.memberStatusInfo.deceasedDate,
+                    statusHistory: userOriginal.memberStatusInfo.statusHistory || [],
                 });
             }
 
@@ -139,6 +141,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
         });
 
         setSelectedStatus(event.target.value);
+        setStatusHistory({ ...statusHistory, status: event.target.value, startDate: new Date().toISOString() });
 
     }, [setSelectedStatus]);
 
@@ -147,6 +150,16 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
         switch (key) {
             case "activeType":
                 setMemberStatusInfo({ ...memberStatusInfo, activeType: event.target.value });
+                setStatusHistory({ ...statusHistory, status: selectedStatus, activeType: event.target.value, startDate: new Date().toISOString() });
+                break;
+            case "referralDate":
+                setMemberStatusInfo({ ...memberStatusInfo, referralDate: event.target.value });
+                break;
+            case "terminationReason":
+                setMemberStatusInfo({ ...memberStatusInfo, terminationReason: event.target.value });
+                break;
+            case "deceasedDate":
+                setMemberStatusInfo({ ...memberStatusInfo, deceasedDate: event.target.value });
                 break;
         }
     }, [userEdit, setUserEdit, memberStatusInfo, setMemberStatusInfo]);
@@ -160,7 +173,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                     status: userOriginal.status,
                     activeType: userOriginal.memberStatusInfo.activeType || "",
                     startDate: userOriginal.createdAt,
-                    endDate: ""
+                    endDate: userOriginal.memberStatusInfo.endDate || ""
                 }
 
                 let updateData = {
@@ -225,6 +238,9 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
 
     // Reset the editable fields to the original values
     const resetGeneralProperties = useCallback((event) => {
+
+        setStatusHistory({ status: "", activeType: "", startDate: "", endDate: "" });
+
         if (userOriginal) {
             setUserEdit({
                 ...userOriginal
@@ -235,6 +251,8 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
             setEnabled(userOriginal.enabled);
 
             setSelectedStatus(userOriginal.status);
+            setStatusHistory({ status: userOriginal.status, activeType: "", startDate: "", endDate: "", referralDate: "", terminationReason: "", deceasedDate: "" });
+
 
             // setMemberStatusInfo({
             //     activeType: userOriginal.memberStatusInfo.activeType, 
@@ -249,8 +267,10 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                     activeType: userOriginal.memberStatusInfo.activeType,
                     startDate: userOriginal.memberStatusInfo.startDate,
                     endDate: userOriginal.memberStatusInfo.endDate,
-                    fieldOfStudy: userOriginal.memberStatusInfo.fieldOfStudy,
-                    school: userOriginal.memberStatusInfo.school
+                    referralDate: userOriginal.memberStatusInfo.referralDate,
+                    terminationReason: userOriginal.memberStatusInfo.terminationReason,
+                    deceasedDate: userOriginal.memberStatusInfo.deceasedDate,
+                    statusHistory: userOriginal.memberStatusInfo.statusHistory || [],
                 });
             }
         }
@@ -258,9 +278,30 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
     }, [userOriginal, setUserEdit, setRole, setEnabled]);
 
 
+    // update the last status history end date
+    const updateLastStatusEndDate = () => {
+
+            let history = memberStatusInfo.statusHistory;
+
+            let lastStatus = history[history.length - 1];
+    
+            if (lastStatus) {
+                lastStatus.endDate = new Date().toISOString();
+                history[history.length - 1] = lastStatus;
+                setMemberStatusInfo({ ...memberStatusInfo, statusHistory: history });
+            }
+    };
+
+
     // Save the editable fields to the database
     const saveGeneralProperties = useCallback((event) => {
 
+        if (statusHistory) {
+            updateLastStatusEndDate();
+            let history = memberStatusInfo.statusHistory;
+            history.push(statusHistory);
+            setMemberStatusInfo({ ...memberStatusInfo, statusHistory: history });
+        }
 
         let updateData = {
             status: selectedStatus,
@@ -289,15 +330,18 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
         }
 
 
-    }, [appState, userID, userEdit, role, enabled, memberStatusInfo, setParentAlert, getParentInfo]);
+    }, [appState, userID, userEdit, role, enabled, memberStatusInfo, setParentAlert, getParentInfo, statusHistory]);
 
     // Hooks ===
+    useEffect(() => {
+        setMemberStatusInfo({ activeType: "", statusHistory: [], referralDate: "", terminationReason: '', deceasedDate: "" });
+    }, []);
 
     useEffect(() => {
         if (userOriginal) {
             setInitHistory();
         }
-    }, []);
+    }, [userOriginal]);
 
     useEffect(() => {
         if (userOriginal) {
@@ -306,7 +350,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
             setEnabled(userOriginal.enabled);
             setSelectedStatus(userOriginal.status);
 
-           
+
 
             if (userOriginal.memberStatusInfo) {
                 setMemberStatusInfo({
@@ -314,14 +358,15 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                     statusHistory: userOriginal.memberStatusInfo.statusHistory,
                     referralDate: userOriginal.memberStatusInfo.referralDate,
                     terminationReason: userOriginal.memberStatusInfo.terminationReason,
-                    deceasedDate: userOriginal.memberStatusInfo.deceasedDate
+                    deceasedDate: userOriginal.memberStatusInfo.deceasedDate,
+                    statusHistory: userOriginal.memberStatusInfo.statusHistory ? userOriginal.memberStatusInfo.statusHistory : []
                 });
             }
             setUserEdit(userOriginal);
         }
 
 
-    }, [userOriginal, setInitHistory]);
+    }, [userOriginal]);
 
     useEffect(() => {
         if (userOriginal) {
@@ -644,8 +689,58 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                                                         disabled={editable ? false : true}
                                                     />
                                                 </Grid>);
+                                            } else if (selectedStatus === 'terminated') { // terminated
+                                                return (<Grid item xs={3}>
+                                                    <TextField
+                                                        id="term-reason"
+                                                        fullWidth
+                                                        label="Termination Reason"
+                                                        select
+                                                        value={memberStatusInfo.terminationReason ? memberStatusInfo.terminationReason : ""}
+                                                        // error={dateOfBirthError}
+                                                        onChange={(event) => { activeTypeHandler(event, "terminationReason"); }}
+                                                        size="small"
+                                                        variant="outlined"
+                                                        // required
+                                                        readOnly={editable ? false : true}
+                                                        disabled={editable ? false : true}
+
+                                                    >
+                                                        <MenuItem key={'user-request'} value={'user-request'}>Request for record to be removed from system</MenuItem>
+                                                        <MenuItem key={'deceased'} value={'deceased'}>Deceased</MenuItem>
+                                                    </TextField>
+
+                                                    {memberStatusInfo.terminationReason === 'deceased' && // waitlist
+                                                        <TextField
+                                                            id="deceased-date"
+                                                            fullWidth
+                                                            label="Deceased Date (Optional)"
+                                                            type="date"
+                                                            value={memberStatusInfo.deceasedDate ? new Date(memberStatusInfo.deceasedDate).toISOString().split('T')[0] : ''}
+                                                            // error={dateOfBirthError}
+                                                            onChange={(event) => { activeTypeHandler(event, "deceasedDate"); }}
+                                                            InputLabelProps={{
+                                                                shrink: true
+                                                            }}
+                                                            inputProps={
+                                                                {
+                                                                    // required: true,
+                                                                    max: new Date().toISOString().split('T')[0]
+                                                                }
+                                                            }
+                                                            style={{ marginTop: '24px' }}
+                                                            size="small"
+                                                            variant="outlined"
+                                                            // required
+                                                            readOnly={editable ? false : true}
+                                                            disabled={editable ? false : true}
+                                                        />
+                                                    }
+                                                </Grid>);
+
                                             }
                                         })()}
+
 
 
 
@@ -678,9 +773,9 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
 
                         <Divider />
 
-                        {memberStatusInfo.statusHistory &&
+                        {userOriginal.memberStatusInfo.statusHistory &&
                             <StatusHistoryTable
-                                data={memberStatusInfo.statusHistory ? memberStatusInfo.statusHistory : []}
+                                data={userOriginal.memberStatusInfo.statusHistory ? userOriginal.memberStatusInfo.statusHistory : []}
                             />
                         }
                     </Grid>
