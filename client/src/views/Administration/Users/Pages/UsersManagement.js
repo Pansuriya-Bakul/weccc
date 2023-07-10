@@ -101,6 +101,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                         collections: item.collections,
                         email: item.email,
                         enabled: item.enabled,
+                        status: item.status,
                         info: item.info,
                         patients: item.patients,
                         workers: item.workers,

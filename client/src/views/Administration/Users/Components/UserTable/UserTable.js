@@ -244,8 +244,9 @@ export default function UserTable(props) {
                                                 </TableCell> */}
 
                                                 <TableCell align="left" padding="none">
-                                                    <Typography color="primary" variant="body2" style={{ display: 'inline-block', color: item.enabled ? 'green' : 'red' }}>
-                                                        {item.enabled ? "Active" : "Inactive"}
+                                                    {/* <Typography color="primary" variant="body2" style={{ display: 'inline-block', color: item.enabled ? 'green' : 'red' }}> */}
+                                                    <Typography color="primary" variant="body2" style={{ display: 'inline-block', color: item.status == 'active' ? 'green' : item.status == 'waitlist' ? 'orange': 'red'}}>
+                                                        {item.status}
                                                     </Typography>
                                                 </TableCell>
 
