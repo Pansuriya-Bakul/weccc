@@ -139,6 +139,9 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
     const [country, setCountry] = useState("");
     const [countryError, setCountryError] = useState(false);
 
+    const [referral, setReferral] = useState("");
+    const [referralError, setReferralError] = useState(false);
+
     // Functions ===
 
     const editablePropertiesHandler = useCallback((event) => {
@@ -260,11 +263,20 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             }
 
             setCountryError(false);
+
+            if (userOriginal.info && userOriginal.info.referral) {
+                setReferral(userOriginal.info.referral);
+            }
+            else {
+                setReferral("");
+            }
+
+            setReferralError(false);
         }
 
     }, [editable, setEditable, userOriginal, setUserEdit, setName, setNameError, setDateOfBirth, setDateOfBirthError, setGender, setGenderError, setIsGender2, setGender2, setGender2Error,
         setLanguage, setLanguageError, setIsLanguage2, setLanguage2, setLanguage2Error, setPhone, setPhoneError, setStreet, setStreetError, setPostalCode, setPostalCodeError, setCity, setCityError,
-        setProvince, setProvinceError, setCountry, setCountryError, setFacility]);
+        setProvince, setProvinceError, setCountry, setCountryError, setFacility, setReferral, setReferralError]);
 
     const nameHandler = useCallback((event) => {
 
@@ -360,24 +372,24 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
     function extractDigits(phoneNumber) {
         // Remove all non-digit characters from the phone number
         const strippedNumber = phoneNumber.replace(/\D/g, '');
-      
+
         // Extract the first 10 digits
         const extractedDigits = strippedNumber.slice(0, 10);
-      
+
         return extractedDigits;
-      }
-      
+    }
+
 
     const phoneHandler = useCallback((event) => {
         const digits = extractDigits(event.target.value);
 
         if (phoneRegex.test(String(digits))) {
-            
+
             setPhoneError(false);
         }
         else {
             if (event.target.value.length === 0) {
-                setPhoneError(false); 
+                setPhoneError(false);
             }
             else {
                 setPhoneError(true);
@@ -502,6 +514,12 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
     }, [setCountry]);
 
+    const referralHandler = useCallback((event) => {
+
+        setReferral(event.target.value);
+
+    }, [setReferral]);
+
     const resetInformationProperties = useCallback((event) => {
         if (userOriginal) {
             setUserEdit(
@@ -618,15 +636,24 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             }
 
             setCountryError(false);
+
+            if (userOriginal.info && userOriginal.info.referral) {
+                setReferral(userOriginal.info.referral);
+            }
+            else {
+                setReferral("");
+            }
+
+            setReferralError(false);
         }
 
     }, [userOriginal, setUserEdit, setName, setNameError, setDateOfBirth, setDateOfBirthError, setGender, setGenderError, setIsGender2, setGender2, setGender2Error,
         setLanguage, setLanguageError, setIsLanguage2, setLanguage2, setLanguage2Error, setPhone, setPhoneError, setStreet, setStreetError, setPostalCode, setPostalCodeError, setCity, setCityError,
-        setProvince, setProvinceError, setCountry, setCountryError]);
+        setProvince, setProvinceError, setCountry, setCountryError, setReferral, setReferralError]);
 
     const saveInformationProperties = useCallback((event) => {
         if (nameError || genderError || gender2Error || dateOfBirthError || languageError || language2Error
-            || phoneError || streetError || cityError || postalCodeError || provinceError || countryError) {
+            || phoneError || streetError || cityError || postalCodeError || provinceError || countryError || referralError) {
             setParentAlert(new AlertType('One or more fields have errors. Please correct them and try again.', "error"));
             return;
         }
@@ -645,7 +672,8 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                 },
                 gender: userEdit.info.gender,
                 language: userEdit.info.language,
-                phone: userEdit.info.phone
+                phone: userEdit.info.phone,
+                referral: userEdit.info.referral
             }
         };
 
@@ -701,6 +729,16 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                 info: {
                     ...updateData.info,
                     phone: phone
+                }
+            };
+        }
+
+        if (referral !== userEdit.info.referral) {
+            updateData = {
+                ...updateData,
+                info: {
+                    ...updateData.info,
+                    referral: referral
                 }
             };
         }
@@ -772,8 +810,6 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             };
         }
 
-        // console.log(updateData);
-
         if (userID != null) {
             patch("users/" + userID, appState.token, updateData, (error, response) => {
                 if (error) {
@@ -798,12 +834,14 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
     }, [appState, userID, userEdit, setParentAlert, getParentInfo,
         nameError, genderError, gender2Error, dateOfBirthError, languageError, language2Error, phoneError, streetError, cityError, postalCodeError, provinceError, countryError,
-        gender, isGender2, gender2, language, isLanguage2, language2, phone, street, city, postalCode, province, facility, setFacility]);
+        gender, isGender2, gender2, language, isLanguage2, language2, phone, street, city, postalCode, province, facility, setFacility, referral, referralError]);
 
     // Hooks ===
 
     useEffect(() => {
         setUserEdit(userOriginal);
+        console.log("userEdit")
+        console.log(userEdit)
 
         if (userOriginal) {
             if (userOriginal.facilityId.name) {
@@ -883,6 +921,13 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             }
 
             setCountryError(false);
+
+            if (userOriginal.info && userOriginal.info.referral) {
+                setReferral(userOriginal.info.referral);
+            }
+            else {
+                setReferral("");
+            }
 
         }
 
@@ -1083,6 +1128,21 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         }
     }, [province, userOriginal, setChangedInformationProperties]);
 
+    useEffect(() => {
+        if (userOriginal && userOriginal.info) {
+            if (referral !== userOriginal.info.referral) {
+                if (referral.length === 0 && userOriginal.info.referral === undefined) {
+                    setChangedInformationProperties(false);
+                }
+                else {
+                    setChangedInformationProperties(true);
+                }
+            }
+            else {
+                setChangedInformationProperties(false);
+            }
+        }
+    }, [referral, userOriginal, setChangedInformationProperties]);
 
     // Render Section ===
 
@@ -1438,6 +1498,15 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 value={country} error={countryError}
                                                 required
                                                 readOnly
+                                                disabled={editable ? false : true}
+                                            />
+                                        </Grid>
+
+                                        <Grid item xs={7}></Grid>
+                                        <Grid item xs={3}>
+                                            <TextField id="Referral" size="small" variant="outlined" fullWidth label="Referral Details" onChange={(event) => { referralHandler(event); }}
+                                                value={referral} error={referralError}
+                                                readOnly={editable ? false : true}
                                                 disabled={editable ? false : true}
                                             />
                                         </Grid>

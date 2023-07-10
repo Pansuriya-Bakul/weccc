@@ -1338,7 +1338,7 @@ function activities(question_activities, question_activities_others) {
 
     if (question_activities && Array.isArray(question_activities)) {
         question_activities.forEach(item => {
-            answer_array.push(String(item).toLowerCase().trim());
+            answer_array.push(String(item).trim());
         });
     }
 
@@ -1347,7 +1347,7 @@ function activities(question_activities, question_activities_others) {
     if (question_activities_others && Array.isArray(question_activities_others)) {
         question_activities_others.forEach(item => {
             if (item.hasOwnProperty('column1')) {
-                answer_array.push(String(item.column1).toLowerCase().trim());
+                answer_array.push(String(item.column1).trim());
             };
         });
     }
@@ -1372,7 +1372,8 @@ function meaningful_activities(question) {
     if (question && Array.isArray(question)) {
         question.forEach(item => {
             if (item.hasOwnProperty('column1')) {
-                answer_array.push(String(item.column1).toLowerCase().trim());
+                // answer_array.push(String(item.column1).toLowerCase().trim());
+                answer_array.push(item.column1.charAt(0).toUpperCase() + item.column1.slice(1).toLowerCase().trim());
             };
         });
     }
@@ -1397,7 +1398,8 @@ function challenging_activities(question) {
     if (question && Array.isArray(question)) {
         question.forEach(item => {
             if (item.hasOwnProperty('column1')) {
-                answer_array.push(String(item.column1).toLowerCase().trim());
+                // answer_array.push(String(item.column1).toLowerCase().trim());
+                answer_array.push(item.column1.charAt(0).toUpperCase() + item.column1.slice(1).toLowerCase().trim());
             };
         });
     }
