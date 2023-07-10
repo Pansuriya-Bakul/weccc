@@ -19,6 +19,9 @@ import UserCommunityTab from '../Components/UserCommunityTab/UserCommunityTab';
 import UserNotesTab from '../Components/UserNotesTab/UserNotesTab';
 import UserInformationTab from '../Components/UserInformationTab/UserInformationTab';
 import UserGeneralPropertiesTab from '../Components/UserGeneralPropertiesTab/UserGeneralPropertiesTab';
+// import UserStatusTab from '../Components/UserStatusTab/UserStatusTab';
+import VolStatusTab from '../Components/UserStatusTab/VolStatusTab';
+import MemberStatusTab from '../Components/UserStatusTab/MemberStatusTab';
 
 import LinearProgressWithLabel from '../Components/LinearProgressWithLabel/LinearProgressWithLabel';
 import CircularProgressWithLabel from '../Components/CircularProgressWithLabel/CircularProgressWithLabel';
@@ -207,21 +210,26 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
     // Render Section ===
 
     return (
-        alert != null ? (
+        <>
+            {userOriginal === null ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                    <CircularProgress />
+                </div>) :
+                alert != null ? (
 
-            // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
-            <div className={classes.root}>
-                <Grid container
-                    className={classes.rootGrid}
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="stretch"
-                    spacing={1}
-                >
-                    <Grid item xs={5}>
-                        <Box mx={1} my={1}>
-                            <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>
-                                {/* {appState._id !== userID? (
+                    // Notice the shorthand React render Fragment <> & </> instead of <div> & </div>, both work the same
+                    <div className={classes.root}>
+                        <Grid container
+                            className={classes.rootGrid}
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="stretch"
+                            spacing={1}
+                        >
+                            <Grid item xs={5}>
+                                <Box mx={1} my={1}>
+                                    <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={1}>
+                                        {/* {appState._id !== userID? (
                                         <Grid item>
                                             <IconButton component={Link} to={backLink}>
                                                 <ArrowBackIosIcon />
@@ -231,59 +239,61 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                         <>
                                         </>
                                     )} */}
-                                <Grid item xs>
-                                    {appState._id === userID ? (
-                                        <Grid container direction="row" justifyContent="flex-start" alignItems="flex-end" spacing={2}>
-                                            <Grid item>
-                                                <AccountBoxIcon color="primary" />
-                                            </Grid>
-                                            <Grid item xs>
-                                                <Typography variant="h5" color="secondary" align="left" gutterBottom={false}>
-                                                    My Profile
+                                        <Grid item xs>
+                                            {appState._id === userID ? (
+                                                <Grid container direction="row" justifyContent="flex-start" alignItems="flex-end" spacing={2}>
+                                                    <Grid item>
+                                                        <AccountBoxIcon color="primary" />
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        <Typography variant="h5" color="secondary" align="left" gutterBottom={false}>
+                                                            My Profile
+                                                        </Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            ) : (
+                                                <Typography variant="h5" color="inherit" align="left" gutterBottom>
+                                                    Viewing User {userOriginal ? `"${userOriginal.info.name}"` : null}
                                                 </Typography>
-                                            </Grid>
+                                            )}
+
                                         </Grid>
-                                    ) : (
-                                        <Typography variant="h5" color="inherit" align="left" gutterBottom>
-                                            Viewing User {userOriginal ? `"${userOriginal.info.name}"` : null}
-                                        </Typography>
-                                    )}
-
-                                </Grid>
+                                    </Grid>
+                                </Box>
                             </Grid>
-                        </Box>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Box mx={1} my={1}>
-                            <AlertMessage alert={alert} setParentAlert={setAlert} />
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Card raised={true}>
-                            <AppBar position="static" disabled={userEdit ? false : true}>
-                                {appState.role == "Volunteer" ? (
-                                    <Tabs value={panelIndex} onChange={(event, newValue) => { panelHandler(event, newValue); }} aria-label="Account Tabs">
-                                        {/* <Tab label="Collections" id={`Tab-${0}`} aria-controls={`Tab-${0}`} /> */}
+                            <Grid item xs={6}>
+                                <Box mx={1} my={1}>
+                                    <AlertMessage alert={alert} setParentAlert={setAlert} />
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Card raised={true}>
+                                    <AppBar position="static" disabled={userEdit ? false : true}>
+                                        {userOriginal && userOriginal.role === "Volunteer" ? (
+                                            <Tabs value={panelIndex} onChange={(event, newValue) => { panelHandler(event, newValue); }} aria-label="Account Tabs">
+                                                {/* <Tab label="Collections" id={`Tab-${0}`} aria-controls={`Tab-${0}`} /> */}
 
-                                        <Tab label="Intake" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
-                                        <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
-                                        <Tab label="Assigned Members" id={`Tab-${2}`} aria-controls={`Tab-${0}`} />
-                                        <Tab label="Change password" id={`Tab-${3}`} aria-controls={`Tab-${2}`} />
-                                    </Tabs>
-                                ) : (
-                                    <Tabs value={panelIndex} onChange={(event, newValue) => { panelHandler(event, newValue); }} aria-label="Account Tabs">
+                                                <Tab label="Intake" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
+                                                <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
+                                                <Tab label="Assigned Members" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
+                                                <Tab label="Status" id={`Tab-${3}`} aria-controls={`Tab-${3}`} />
+                                                <Tab label="Change password" id={`Tab-${4}`} aria-controls={`Tab-${4}`} />
+                                            </Tabs>
+                                        ) : (
+                                            <Tabs value={panelIndex} onChange={(event, newValue) => { panelHandler(event, newValue); }} aria-label="Account Tabs">
 
-                                        <Tab label="Intake" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
-                                        <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
-                                        <Tab label="Assigned Volunteers" id={`Tab-${2}`} aria-controls={`Tab-${0}`} />
-                                        <Tab label="Change password" id={`Tab-${3}`} aria-controls={`Tab-${2}`} />
-                                    </Tabs>
-                                )}
-                            </AppBar>
-                            <Box mx={2} my={1} boxShadow={0}>
-                                {
-                                    <>
-                                        {/* <UserCollectionsTab
+                                                <Tab label="Intake" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
+                                                <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
+                                                <Tab label="Assigned Volunteers" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
+                                                <Tab label="Status" id={`Tab-${3}`} aria-controls={`Tab-${3}`} />
+                                                <Tab label="Change password" id={`Tab-${4}`} aria-controls={`Tab-${4}`} />
+                                            </Tabs>
+                                        )}
+                                    </AppBar>
+                                    <Box mx={2} my={1} boxShadow={0}>
+                                        {
+                                            <>
+                                                {/* <UserCollectionsTab
                                                 appState={appState}
                                                 userID={userID}
                                                 setParentAlert={setAlert}
@@ -291,67 +301,87 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                                 panelIndex={panelIndex}
                                                 userOriginal={userOriginal}
                                             /> */}
-                                        <UserCommunityTab
-                                            appState={appState}
-                                            userID={userID}
-                                            setParentAlert={setAlert}
-                                            getParentInfo={getUser}
-                                            panelId={2}
-                                            panelIndex={panelIndex}
-                                            userOriginal={userOriginal}
-                                        />
-                                        <UserNotesTab
-                                            appState={appState}
-                                            userID={userID}
-                                            setParentAlert={setAlert}
-                                            getParentInfo={getUser}
-                                            panelId={1}
-                                            panelIndex={panelIndex}
-                                            userOriginal={userOriginal}
-                                        />
-                                        <UserInformationTab
-                                            appState={appState}
-                                            userID={userID}
-                                            setParentAlert={setAlert}
-                                            getParentInfo={getUser}
-                                            panelId={0}
-                                            panelIndex={panelIndex}
-                                            userOriginal={userOriginal}
-                                        />
-                                        <UserGeneralPropertiesTab
-                                            appState={appState}
-                                            userID={userID}
-                                            setParentAlert={setAlert}
-                                            getParentInfo={getUser}
-                                            panelId={3}
-                                            panelIndex={panelIndex}
-                                            userOriginal={userOriginal}
-                                        />
-                                    </>
-                                }
-                            </Box>
-                        </Card>
-                    </Grid>
-                </Grid>
-                <ChangesUserDialog
-                    changesUserDialog={changesUserDialog}
-                    setChangesUserDialog={setChangesUserDialog}
-                    changesUserDialogExecuting={changesUserDialogExecuting}
-                    setChangesUserDialogExecuting={setChangesUserDialogExecuting}
-                    toBePanelIndex={toBePanelIndex}
-                    setPanelIndex={setPanelIndex}
-                    user={userEdit}
-                    setParentAlert={setAlert}
-                    getParentData={getUser}
-                    appState={appState}
-                />
-            </div>
-        ) : (
-            <Typography variant="h6" color="inherit" align="center" gutterBottom>
-                Not Authorized. Please refresh and try again.
-            </Typography>
-        )
+                                                <UserCommunityTab
+                                                    appState={appState}
+                                                    userID={userID}
+                                                    setParentAlert={setAlert}
+                                                    getParentInfo={getUser}
+                                                    panelId={2}
+                                                    panelIndex={panelIndex}
+                                                    userOriginal={userOriginal}
+                                                />
+                                                <UserNotesTab
+                                                    appState={appState}
+                                                    userID={userID}
+                                                    setParentAlert={setAlert}
+                                                    getParentInfo={getUser}
+                                                    panelId={1}
+                                                    panelIndex={panelIndex}
+                                                    userOriginal={userOriginal}
+                                                />
+                                                <UserInformationTab
+                                                    appState={appState}
+                                                    userID={userID}
+                                                    setParentAlert={setAlert}
+                                                    getParentInfo={getUser}
+                                                    panelId={0}
+                                                    panelIndex={panelIndex}
+                                                    userOriginal={userOriginal}
+                                                />
+                                                {userOriginal && userOriginal.role === "Volunteer" ? (
+                                                    <VolStatusTab
+                                                        appState={appState}
+                                                        userID={userID}
+                                                        setParentAlert={setAlert}
+                                                        getParentInfo={getUser}
+                                                        panelId={3}
+                                                        panelIndex={panelIndex}
+                                                        userOriginal={userOriginal}
+                                                    />
+                                                ) : userOriginal && userOriginal.role === "Patient" ? (                                                <MemberStatusTab
+                                                    appState={appState}
+                                                    userID={userID}
+                                                    setParentAlert={setAlert}
+                                                    getParentInfo={getUser}
+                                                    panelId={3}
+                                                    panelIndex={panelIndex}
+                                                    userOriginal={userOriginal}
+                                                />):""}
 
+                                                <UserGeneralPropertiesTab
+                                                    appState={appState}
+                                                    userID={userID}
+                                                    setParentAlert={setAlert}
+                                                    getParentInfo={getUser}
+                                                    panelId={4}
+                                                    panelIndex={panelIndex}
+                                                    userOriginal={userOriginal}
+                                                />
+                                            </>
+                                        }
+                                    </Box>
+                                </Card>
+                            </Grid>
+                        </Grid>
+                        <ChangesUserDialog
+                            changesUserDialog={changesUserDialog}
+                            setChangesUserDialog={setChangesUserDialog}
+                            changesUserDialogExecuting={changesUserDialogExecuting}
+                            setChangesUserDialogExecuting={setChangesUserDialogExecuting}
+                            toBePanelIndex={toBePanelIndex}
+                            setPanelIndex={setPanelIndex}
+                            user={userEdit}
+                            setParentAlert={setAlert}
+                            getParentData={getUser}
+                            appState={appState}
+                        />
+                    </div>
+                ) : (
+                    <Typography variant="h6" color="inherit" align="center" gutterBottom>
+                        Not Authorized. Please refresh and try again.
+                    </Typography>
+                )}
+        </>
     );
 }
 

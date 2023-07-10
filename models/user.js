@@ -95,6 +95,40 @@ const userSchema = mongoose.Schema({
             type: String,
         },
     },
+    volInfo: {
+        volType: {
+            type: String,
+        },
+        startDate: {
+            type: Date,
+        },
+        endDate: {
+            type: Date,
+        },
+        fieldOfStudy: {
+            type: String,
+        },
+        school: {
+            type: String,
+        },
+    },
+    memberStatusInfo: {
+        activeType: {
+            type: String,
+        },
+        statusHistory: {
+            type: Array,
+        },
+        referralDate: {
+            type: Date,
+        },
+        terminationReason: {
+            type: String,
+        },
+        deceasedDate: {
+            type: Date,
+        },
+    },
     research: {
         full: {
             type: String
@@ -109,6 +143,10 @@ const userSchema = mongoose.Schema({
             type: Boolean,
             default: false
         }
+    },
+    status : {
+        type: String,
+        required: true
     }
 },
     {
