@@ -178,7 +178,6 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
                     arr.push(obj);
                 }
 
-
                 setUserData(arr);
             });
         }

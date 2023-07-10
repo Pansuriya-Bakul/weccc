@@ -27,9 +27,12 @@ import { withStyles } from '@material-ui/core/styles';
 
 // ==================== Icons ====================
 import LockIcon from '@material-ui/icons/LockOutlined';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
+
 
 // ==================== Colors ====================
 import green from '@material-ui/core/colors/green';
+import { IconButton, InputAdornment } from '@material-ui/core';
 
 const styles = theme => ({
     main: {
@@ -70,10 +73,8 @@ const styles = theme => ({
     }
 });
 
-class Login extends Component 
-{
-    constructor(props)
-    {
+class Login extends Component {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -83,67 +84,66 @@ class Login extends Component
             redirectTo: "",
             authenticating: false,
             redirect: false,
+            showPassword: false,
         };
     }
 
     // Change state of user's email address
-    handleEmailChange = (event) =>
-    {
+    handleEmailChange = (event) => {
         this.setState({
             email: event.target.value.toLowerCase(),
         });
     }
 
     // Change state of user's password
-    handlePasswordChange = (event) =>
-    {
+    handlePasswordChange = (event) => {
         this.setState({
             password: event.target.value
         });
     }
 
+
+    togglePasswordVisibility = () => {
+        this.setState((prevState) => ({ showPassword: !prevState.showPassword }));
+    };
+
     handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             this.handleLogin();
-          }
+        }
     }
 
     // Normal login scenario
-    handleLogin = () =>
-    {
+    handleLogin = () => {
         let { email, password } = this.state;
 
-        if(email === "")
-        {
+        if (email === "") {
             this.setState({
                 loginValidText: "Please enter an email."
             });
 
             return;
         }
-        else
-        {
+        else {
             this.setState({
                 loginValidText: ""
             });
         }
 
-        if(password === "")
-        {
+        if (password === "") {
             this.setState({
                 loginValidText: "Please enter your password."
             });
 
             return;
         }
-        else
-        {
+        else {
             this.setState({
                 loginValidText: ""
             });
         }
-        
-        
+
+
 
         var data = {
             emailOrPhone: email,
@@ -154,48 +154,39 @@ class Login extends Component
         this.setState({
             authenticating: true
         });
-        
-        login(data, (error, response) => 
-        {
-            if(error)
-            {
-                if(error.status === 401)
-                {
+
+        login(data, (error, response) => {
+            if (error) {
+                if (error.status === 401) {
                     this.setState({
                         loginValidText: "Your email or password is incorrect.",
                         authenticating: false
                     });
                 }
-                else if(error.status === 400)
-                {
+                else if (error.status === 400) {
                     this.setState({
                         loginValidText: "Your email or password is incorrect.",
                         authenticating: false
                     });
                 }
-                else if(error.status === 500)
-                {
+                else if (error.status === 500) {
                     this.setState({
                         loginValidText: "There was a problem contacting the server.  Please try again later.",
                         authenticating: false
                     });
                 }
-                else
-                {
+                else {
                     this.setState({
                         loginValidText: "There was a problem contacting the server.  Please try again later.",
                         authenticating: false
                     });
                 }
             }
-            else
-            {
-                if((response.status === 200 || response.status === 304) && response)
-                {
+            else {
+                if ((response.status === 200 || response.status === 304) && response) {
                     this.props.Login(response.data.token, response.data.user);
                 }
-                else
-                {
+                else {
                     this.setState({
                         loginValidText: "Either your email or password is incorrect, or your Account is Disabled.",
                         authenticating: false
@@ -206,35 +197,30 @@ class Login extends Component
     }
 
     // WECCC login scenario
-    handleWECCLogin = () =>
-    {
+    handleWECCLogin = () => {
         let { email, password } = this.state;
 
-        if(email === "")
-        {
+        if (email === "") {
             this.setState({
                 loginValidText: "Please enter an email/username for WECC."
             });
 
             return;
         }
-        else
-        {
+        else {
             this.setState({
                 loginValidText: ""
             });
         }
 
-        if(password === "")
-        {
+        if (password === "") {
             this.setState({
                 loginValidText: "Please enter your password."
             });
 
             return;
         }
-        else
-        {
+        else {
             this.setState({
                 loginValidText: ""
             });
@@ -249,54 +235,42 @@ class Login extends Component
             authenticating: true
         });
 
-        WECClogin(data, (error, response) => 
-        {
-            if(error)
-            {
+        WECClogin(data, (error, response) => {
+            if (error) {
                 this.setState({
                     loginValidText: "There was a problem contacting the WECC server.  Please try again later.",
                     authenticating: false
                 });
             }
-            else
-            {
-                if(response.status === 200 || response.status === 304)
-                {
-                    if(response.data.success)
-                    {
+            else {
+                if (response.status === 200 || response.status === 304) {
+                    if (response.data.success) {
                         var data = {
                             token: response.data.token,
                             email: email
                         };
 
-                        WECCPost('users/wecc', data, (error, response) => 
-                        {
+                        WECCPost('users/wecc', data, (error, response) => {
 
-                            if(error)
-                            {
-                                if(error.response.status === 401)
-                                {
+                            if (error) {
+                                if (error.response.status === 401) {
                                     this.setState({
                                         loginValidText: "Your WECC email does not have an account associated with the Palliative IMS.",
                                         authenticating: false
                                     });
                                 }
-                                else
-                                {
+                                else {
                                     this.setState({
                                         loginValidText: "There was a problem verifying your WECC email.",
                                         authenticating: false
                                     });
                                 }
                             }
-                            else
-                            {
-                                if(response.status === 200 || response.status === 304)
-                                {
+                            else {
+                                if (response.status === 200 || response.status === 304) {
                                     this.props.Login(response.data.token, response.data.user);
                                 }
-                                else
-                                {
+                                else {
                                     this.setState({
                                         loginValidText: "Your WECC email does not have an account associated with the Palliative IMS.",
                                         authenticating: false
@@ -305,16 +279,14 @@ class Login extends Component
                             }
                         });
                     }
-                    else
-                    {
+                    else {
                         this.setState({
                             loginValidText: "Either your WECC email or password is incorrect.",
                             authenticating: false
                         });
                     }
                 }
-                else
-                {
+                else {
                     this.setState({
                         loginValidText: "Either your WECC email or password is incorrect.",
                         authenticating: false
@@ -324,12 +296,11 @@ class Login extends Component
         });
     }
 
-    render() 
-    {
+    render() {
         let { classes } = this.props;
-        let { email, loginValidText, password, authenticating } = this.state;
+        let { email, loginValidText, password, authenticating, showPassword } = this.state;
 
-        return(
+        return (
             <div className={classes.main}>
                 <CssBaseline />
                 <Paper className={classes.paper}>
@@ -342,26 +313,33 @@ class Login extends Component
                     <div className={classes.form}>
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="email">Email or Phone number</InputLabel>
-                            <Input 
-                                id="email" 
-                                name="email" 
-                                autoComplete="email" 
-                                value={email} 
-                                onChange={this.handleEmailChange} 
+                            <Input
+                                id="email"
+                                name="email"
+                                autoComplete="email"
+                                value={email}
+                                onChange={this.handleEmailChange}
                                 autoFocus
                                 onKeyDown={this.handleKeyDown}
                             />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="password">Password</InputLabel>
-                            <Input 
-                                name="password" 
-                                type="password" 
+                            <Input
+                                name="password"
+                                type={showPassword ? "text" : "password"}
                                 id="password"
-                                value={password} 
-                                onChange={this.handlePasswordChange} 
+                                value={password}
+                                onChange={this.handlePasswordChange}
                                 autoComplete="current-password"
                                 onKeyDown={this.handleKeyDown}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton onClick={this.togglePasswordVisibility}>
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
                             />
                         </FormControl>
                         {loginValidText !== "" &&
