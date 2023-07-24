@@ -104,7 +104,8 @@ exports.install = (req, res, next) => {
 									gender: 'Undisclosed',
 									dateOfBirth: new Date(),
 									language: 'English'
-								}
+								},
+								status: 'active'
 							});
 
 							/* Save User */
@@ -247,6 +248,7 @@ exports.signup = (req, res, next) => {
 	const facility = req.body.facilityId;
 	const name = key_public.encrypt(req.body.info.name, 'base64');
 	const phone = req.body.info.phone;
+	const status = req.body.status;
 
 	const gender = key_public.encrypt(req.body.info.gender, 'base64');
 	const dateOfBirth = req.body.info.dateOfBirth;
@@ -446,7 +448,8 @@ exports.signup = (req, res, next) => {
 										phone: phone,
 										language: language,
 										currentAddress: newAddress._id
-									}
+									},
+									status: status
 								});
 
 								user
@@ -583,6 +586,7 @@ exports.login = async (req, res, next) => {
 							name: facilityName,
 							prefix: fPrefix
 						},
+						status: req.user.status,
 						createdAt: req.user.createdAt,
 						updatedAt: req.user.updatedAt,
 						__v: req.user.__v
@@ -642,7 +646,7 @@ exports.WECClogin = (req, res, next) => {
 
 				return User.findOne({ email: email })
 					.select('-password')
-					.populate('facilityId', '_id name enabled prefix')
+					.populate('facilityId', '_id name enabled status prefix')
 					.exec()
 					.then(user => {
 						if (user) {
@@ -683,6 +687,7 @@ exports.WECClogin = (req, res, next) => {
 											name: 'Palliative IMS Facility',
 											prefix: 'YQG'
 										},
+										status: req.user.status,
 										createdAt: req.user.createdAt,
 										updatedAt: req.user.updatedAt,
 										__v: req.user.__v
@@ -742,8 +747,8 @@ exports.read = (req, res, next) => {
 	User.findById(id)
 		.select('-password')
 		.populate('facilityId')
-		.populate('patients', '_id email role info  research enabled facilityId patients workers createdAt updatedAt')
-		.populate('workers', '_id email role info research enabled facilityId patients workers createdAt updatedAt')
+		.populate('patients', '_id email role info  research enabled status facilityId patients workers createdAt updatedAt')
+		.populate('workers', '_id email role info research enabled status facilityId patients workers createdAt updatedAt')
 		.populate('info.currentAddress')
 		.exec()
 		.then(user => {
@@ -767,6 +772,7 @@ exports.read = (req, res, next) => {
 							language: user.info.language,
 							currentAddress: user.info.currentAddress,
 							phone: user.info.phone,
+							referral: user.info.referral
 						},
 						research: {
 							enabled: user.research.enabled,
@@ -782,6 +788,7 @@ exports.read = (req, res, next) => {
 									language: patients.info.language,
 									currentAddress: patients.info.currentAddress,
 									phone: patients.info.phone,
+									referral: user.info.referral
 								},
 								research: patients.research,
 								patients: patients.patients,
@@ -790,6 +797,7 @@ exports.read = (req, res, next) => {
 								email: patients.email,
 								enabled: patients.enabled,
 								role: patients.role,
+								status: patients.status,
 								facilityId: patients.facilityId,
 								createdAt: patients.createdAt,
 								updatedAt: patients.updatedAt
@@ -811,6 +819,9 @@ exports.read = (req, res, next) => {
 							name: user.facilityId.name,
 							prefix: user.facilityId.prefix
 						},
+						volInfo : user.volInfo ? user.volInfo : null,
+						memberStatusInfo: user.memberStatusInfo ? user.memberStatusInfo : null,
+						status: user.status,
 						createdAt: user.createdAt,
 						updatedAt: user.updatedAt,
 						__v: user.__v
@@ -876,6 +887,7 @@ exports.readall = (req, res, next) => {
 							currentAddress: user.info.currentAddress,
 							phone: user.info.phone,
 						},
+						status: user.status,
 						research: user.research,
 						createdAt: user.createdAt,
 						createdBy: user.createdBy,
@@ -936,6 +948,7 @@ exports.query = (req, res, next) => {
 							currentAddress: user.info.currentAddress,
 							phone: user.info.phone,
 						},
+						status: user.status,
 						patients: user.patients,
 						workers: user.workers,
 						projectList: user.projectList,
@@ -1034,6 +1047,7 @@ exports.update = (req, res, next) => {
 				});
 			} else {
 				let updatedQuery = query;
+
 				if ('patients' in updatedQuery) {
 					let queryPatients = Object.values(updatedQuery)[0];
 					user.patients.forEach(patient => {
@@ -1202,8 +1216,8 @@ exports.fullread = (req, res, next) => {
 	User.findById(id)
 		.select('-password')
 		.populate('info.currentAddress', '_id street city state code country createdAt updatedAt')
-		.populate('patients', '_id email role info research enabled facilityId patients workers createdAt updatedAt')
-		.populate('workers', '_id email role info research enabled facilityId patients workers createdAt updatedAt')
+		.populate('patients', '_id email role info research enabled status facilityId patients workers createdAt updatedAt')
+		.populate('workers', '_id email role info research enabled status facilityId patients workers createdAt updatedAt')
 		.exec()
 		.then(user => {
 			if (user) {
@@ -1345,7 +1359,7 @@ exports.createResearchID = (req, res, next) => {
 	log.info('Incoming research creation for user with ID ' + id);
 
 	User.findById(id)
-		.select('_id info email role info research enabled facilityId patients workers createdAt updatedAt')
+		.select('_id info email role info research enabled status facilityId patients workers createdAt updatedAt')
 		.populate('facilityId', '_id name prefix')
 		.exec()
 		.then(user => {
@@ -1601,12 +1615,12 @@ exports.getAllUsers = (req, res, next) => {
 		.select('_id info.name role facilityId')
 		.populate({ path: 'patients', select: 'info.name role' })
 		.populate({ path: 'workers', select: 'info.name role' })
-		.exec((err, foundUser) => {
+		.exec(async (err, foundUser) => {
 			log.info(`Role: ${foundUser.role}`);
 			if (err) return res.status(400).json({ message: err.message });
 
 			if (!foundUser) return res.status(404).json({ message: 'User does not exist' });
-			console.log(foundUser.role);
+
 			// Check the role first:
 			if (foundUser.role === 'Admin') {
 				// Admin: can send notes to everyone (staff, volunteer, patient).
@@ -1675,115 +1689,142 @@ exports.getAllUsers = (req, res, next) => {
 						return res.status(200).json({ user: dataToSend });
 					});
 			} else if (foundUser.role === 'Coordinator') {
-				
+
 				// Staff/Coordinator: can send notes to admin and corresponding volunteer.
-				const coordinatorsList = [];
-				User.find({ facilityId: { $in: [foundUser.facilityId] } })
-					.select('_id info role patients workers')
-					.exec((err, foundAll) => {
+				try {
+					const foundAll = await User.find({ facilityId: { $in: [foundUser.facilityId] } })
+						.select('_id info role patients workers')
+						.exec();
+
+					if (foundAll.length === 0) {
+						return res.status(404).json({ message: 'Not found' });
+					}
+
+					const coordinatorsList = [];
+					for (let i = 0; i < foundAll.length; i++) {
+						const currentUser = foundAll[i];
+						if (JSON.stringify(currentUser._id) === JSON.stringify(foundUser._id)) {
+							continue; // Skip adding foundUser to coordinatorsList
+						}
+						currentUser.info.name =
+							currentUser.info.name.length > 60
+								? key_private.decrypt(currentUser.info.name, 'utf8')
+								: currentUser.info.name;
+						coordinatorsList.push(currentUser);
+					}
+
+					const foundAdmins = await User.find({ role: 'Admin' })
+						.select('_id info.name')
+						.exec();
+
+					if (foundAdmins.length === 0) {
+						return res.status(404).json({ message: 'No admins exist!' });
+					}
+
+					const adminsList = [];
+					for (let i = 0; i < foundAdmins.length; i++) {
+						const currentUser = foundAdmins[i];
+						currentUser.info.name =
+							currentUser.info.name.length > 60
+								? key_private.decrypt(currentUser.info.name, 'utf8')
+								: currentUser.info.name;
+						adminsList.push(currentUser);
+					}
+
+					const patientsList = [];
+					for (let i = 0; i < foundUser.patients.length; i++) {
+						const currentUser = foundUser.patients[i];
+						currentUser.info.name =
+							currentUser.info.name.length > 60
+								? key_private.decrypt(currentUser.info.name, 'utf8')
+								: currentUser.info.name;
+						patientsList.push(currentUser);
+					}
+
+					const volunteersList = [];
+					for (let i = 0; i < foundUser.workers.length; i++) {
+						const currentUser = foundUser.workers[i];
+						currentUser.info.name =
+							currentUser.info.name.length > 60
+								? key_private.decrypt(currentUser.info.name, 'utf8')
+								: currentUser.info.name;
+						volunteersList.push(currentUser);
+					}
+
+					const dataToSend = {
+						_id: foundUser._id,
+						name:
+							foundUser.info.name.length > 60
+								? key_private.decrypt(foundUser.info.name, 'utf8')
+								: foundUser.info.name,
+						role: foundUser.role,
+						admins: adminsList,
+						volunteers: volunteersList,
+						patients: patientsList,
+						coordinators: coordinatorsList,
+					};
+
+					return res.status(200).json({ user: dataToSend });
+				} catch (err) {
+					return res.status(400).json({ message: err.message });
+				}
+
+			} else if (foundUser.role === 'Volunteer') {
+				// Volunteer: can send notes to their corresponding client and staff
+				try {
+
+					const foundAll = await User.find({ facilityId: { $in: [foundUser.facilityId] } })
+						.select('_id info role patients workers')
+						.exec();
 
 
-						if (err) return res.status(400).json({ message: err.message });
-
-						if (foundAll.length === 0) return res.status(404).json({ message: 'Not found' });
-
-						foundAll.forEach(currentUser => {
+					const coordinatorsList = [];
+					for (let i = 0; i < foundAll.length; i++) {
+						const currentUser = foundAll[i];
+						if (currentUser.role === 'Coordinator') {
 							currentUser.info.name =
 								currentUser.info.name.length > 60
 									? key_private.decrypt(currentUser.info.name, 'utf8')
 									: currentUser.info.name;
 							coordinatorsList.push(currentUser);
-						});
+						}
+					}
+
+					const patientsList = [];
+					foundUser.patients.forEach(currentUser => {
+						currentUser.info.name =
+							currentUser.info.name.length > 60
+								? key_private.decrypt(currentUser.info.name, 'utf8')
+								: currentUser.info.name;
+						patientsList.push(currentUser);
 					});
-				User.find({ role: 'Admin' })
-					.select('_id info.name')
-					.exec((err, foundAdmins) => {
-						if (err) return res.status(400).json({ message: err.message });
 
-						if (foundAdmins.length === 0) return res.status(404).json({ message: 'No admins exists!' });
+					// const volunteersList = [];
+					// foundUser.workers.forEach(currentUser => {
+					// 	currentUser.info.name =
+					// 		currentUser.info.name.length > 60
+					// 			? key_private.decrypt(currentUser.info.name, 'utf8')
+					// 			: currentUser.info.name;
+					// 	volunteersList.push(currentUser);
+					// });
 
-						const adminsList = [];
-						foundAdmins.forEach(currentUser => {
-							currentUser.info.name =
-								currentUser.info.name.length > 60
-									? key_private.decrypt(currentUser.info.name, 'utf8')
-									: currentUser.info.name;
-							adminsList.push(currentUser);
-						});
+					const dataToSend = {
+						_id: foundUser._id,
+						name:
+							foundUser.info.name.length > 60 ? key_private.decrypt(foundUser.info.name, 'utf8') : foundUser.info.name,
+						role: foundUser.role,
+						coordinators: coordinatorsList,
+						// coordinators: foundUser.workers,
+						// patients: foundUser.patients,
+						patients: patientsList,
+						volunteers: [],
+						admins: []
+					};
 
-						const patientsList = [];
-						foundUser.patients.forEach(currentUser => {
-							currentUser.info.name =
-								currentUser.info.name.length > 60
-									? key_private.decrypt(currentUser.info.name, 'utf8')
-									: currentUser.info.name;
-							patientsList.push(currentUser);
-						});
-
-						const volunteersList = [];
-						foundUser.workers.forEach(currentUser => {
-							currentUser.info.name =
-								currentUser.info.name.length > 60
-									? key_private.decrypt(currentUser.info.name, 'utf8')
-									: currentUser.info.name;
-							volunteersList.push(currentUser);
-						});
-
-						const dataToSend = {
-							_id: foundUser._id,
-							name:
-								foundUser.info.name.length > 60
-									? key_private.decrypt(foundUser.info.name, 'utf8')
-									: foundUser.info.name,
-							role: foundUser.role,
-							admins: adminsList,
-							volunteers: volunteersList,
-							patients: patientsList,
-							// volunteers: [],
-							// patients: [],
-							// volunteers: foundUser.workers,
-							// patients: foundUser.patients,
-							// coordinators: []
-							coordinators: coordinatorsList
-						};
-
-						return res.status(200).json({ user: dataToSend });
-					});
-			} else if (foundUser.role === 'Volunteer') {
-				// Volunteer: can send notes to their corresponding client and staff
-
-				const patientsList = [];
-				foundUser.patients.forEach(currentUser => {
-					currentUser.info.name =
-						currentUser.info.name.length > 60
-							? key_private.decrypt(currentUser.info.name, 'utf8')
-							: currentUser.info.name;
-					patientsList.push(currentUser);
-				});
-
-				const volunteersList = [];
-				foundUser.workers.forEach(currentUser => {
-					currentUser.info.name =
-						currentUser.info.name.length > 60
-							? key_private.decrypt(currentUser.info.name, 'utf8')
-							: currentUser.info.name;
-					volunteersList.push(currentUser);
-				});
-
-				const dataToSend = {
-					_id: foundUser._id,
-					name:
-						foundUser.info.name.length > 60 ? key_private.decrypt(foundUser.info.name, 'utf8') : foundUser.info.name,
-					role: foundUser.role,
-					coordinators: volunteersList,
-					// coordinators: foundUser.workers,
-					// patients: foundUser.patients,
-					patients: patientsList,
-					volunteers: [],
-					admins: []
-				};
-
-				return res.status(200).json({ user: dataToSend });
+					return res.status(200).json({ user: dataToSend });
+				} catch (err) {
+					return res.status(400).json({ message: err.message });
+				}
 			} else if (foundUser.role === 'Patient') {
 				// Client/Patient: can only send notes to their assigned volunteer.'
 

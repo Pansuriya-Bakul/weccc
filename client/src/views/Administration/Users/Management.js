@@ -112,6 +112,7 @@ class UsersManagement extends Component
                 name: data.users[index].info.name,
                 role: data.users[index].role,
                 email: data.users[index].email,
+                status: data.users[index].status,
                 createdAt: data.users[index].createdAt
             };
         }
@@ -122,9 +123,9 @@ class UsersManagement extends Component
         });
     }
 
-    createUserCard = ( _id, enabled, name, role, email, createdAt) =>
+    createUserCard = ( _id, enabled, status, name, role, email, createdAt) =>
     {
-        return { _id, enabled, name, role, email, createdAt }
+        return { _id, enabled, status, name, role, email, createdAt }
     }
 
     renderCards = () =>
@@ -137,6 +138,7 @@ class UsersManagement extends Component
         {
             rows.push(this.createUserCard(this.users.library[index]._id,
                                           this.users.library[index].enabled,
+                                          this.users.library[index].status,
                                           this.users.library[index].name,
                                           this.users.library[index].role,
                                           this.users.library[index].email,
@@ -173,7 +175,7 @@ class UsersManagement extends Component
                                                     Email: {row.email}
                                                 </Typography>
                                                 <Typography component="p">
-                                                    Status: {row.enabled ? "Enabled" : "Disabled"}
+                                                    Status: {row.status}
                                                 </Typography>
                                                 <Typography component="p">
                                                     Joined: {createdAt.getMonth() + 1} / {createdAt.getDate() } / {createdAt.getFullYear()}

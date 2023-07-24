@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         required: true
     },
-    email: { 
+    email: {
         type: String,
         unique: true,
         // required: function() {
@@ -31,13 +31,13 @@ const userSchema = mongoose.Schema({
         // }
         required: false
     },
-    password: { 
+    password: {
         type: String
     },
     role: {
         type: String,
         enum: ["Admin", "Coordinator", "Volunteer", "Patient"],
-        required: true,        
+        required: true,
     },
     patients: {
         type: [mongoose.Schema.Types.ObjectId],
@@ -90,10 +90,47 @@ const userSchema = mongoose.Schema({
         pastAddresses: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: 'Address'
-        }
+        },
+        referral: {
+            type: String,
+        },
+    },
+    volInfo: {
+        volType: {
+            type: String,
+        },
+        startDate: {
+            type: Date,
+        },
+        endDate: {
+            type: Date,
+        },
+        fieldOfStudy: {
+            type: String,
+        },
+        school: {
+            type: String,
+        },
+    },
+    memberStatusInfo: {
+        activeType: {
+            type: String,
+        },
+        statusHistory: {
+            type: Array,
+        },
+        referralDate: {
+            type: Date,
+        },
+        terminationReason: {
+            type: String,
+        },
+        deceasedDate: {
+            type: Date,
+        },
     },
     research: {
-        full : {
+        full: {
             type: String
         },
         prefix: {
@@ -106,10 +143,14 @@ const userSchema = mongoose.Schema({
             type: Boolean,
             default: false
         }
+    },
+    status : {
+        type: String,
+        required: true
     }
 },
-{
-    timestamps: true
-});
+    {
+        timestamps: true
+    });
 
 module.exports = mongoose.model('User', userSchema);

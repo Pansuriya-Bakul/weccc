@@ -65,7 +65,8 @@ module.exports = {
                         country: Joi.string().allow('')
                     })
                     
-                })
+                }),
+                status: Joi.string().required(),
             }),
             // login: Joi.object().keys({
             //     emailOrPhone: Joi.string().email().required(),

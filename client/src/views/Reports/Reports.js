@@ -101,7 +101,7 @@ const Reports = (props) => {
           //Bad callback
           setAlert(
             new AlertType(
-              "Unable to retrieve Neighbour Module Reports. Please refresh and try again.",
+              "Unable to retrieve Community Connection Series Report. Please refresh and try again.",
               "error"
             )
           );
@@ -121,7 +121,7 @@ const Reports = (props) => {
             //Bad HTTP Response
             setAlert(
               new AlertType(
-                "Unable to retrieve Neighbour Module Reports. Please refresh and try again.",
+                "Unable to retrieve Community Connection Series Report. Please refresh and try again.",
                 "error"
               )
             );
