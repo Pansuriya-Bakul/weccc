@@ -649,13 +649,13 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                                                             readOnly={editable ? false : true}
                                                             disabled={editable ? false : true}
                                                         >
-                                                            <MenuItem key={'screener-pending'} value={'screener-pending'}>Screener - Pending</MenuItem>
-                                                            <MenuItem key={'quality life at home'} value={'quality life at home'}>Quality Life at Home – in home program </MenuItem>
-                                                            <MenuItem key={'connections program'} value={'connections program'}>Connections Program</MenuItem>
-                                                            <MenuItem key={'education program'} value={'education program'}>Education/Group Support Program</MenuItem>
-                                                            <MenuItem key={'check-in program'} value={'check-in program'}>Check-in - Monitoring Program</MenuItem>
-                                                            <MenuItem key={'student research program'} value={'student research program'}>Student Research Program - Check-in</MenuItem>
-                                                            <MenuItem key={'no contact'} value={'no contact'}>No Contact - Self User</MenuItem>
+                                                            <MenuItem key={'screener-pending'} value={'Screener-Pending'}>Screener - Pending</MenuItem>
+                                                            <MenuItem key={'quality life at home'} value={'Quality Life at Home - in home program'}>Quality Life at Home – in home program </MenuItem>
+                                                            <MenuItem key={'connections program'} value={'Connections program'}>Connections Program</MenuItem>
+                                                            <MenuItem key={'education program'} value={'Education program'}>Education/Group Support Program</MenuItem>
+                                                            <MenuItem key={'check-in program'} value={'Check-in - Monitoring Program'}>Check-in - Monitoring Program</MenuItem>
+                                                            <MenuItem key={'student research program'} value={'Student Research Program - Check-in'}>Student Research Program - Check-in</MenuItem>
+                                                            <MenuItem key={'no contact'} value={'No Contact - Self User'}>No Contact - Self User</MenuItem>
 
                                                         </TextField>
                                                     </Grid>
