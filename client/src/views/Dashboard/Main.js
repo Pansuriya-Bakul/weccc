@@ -470,14 +470,17 @@ class Main extends Component {
 															{/* {this.state.clientData.message ? (
 															<p>{this.state.clientData.message}</p>
 														) : ('')} */}
-															{(this.state.pMapping !== {})
+														
+															{(JSON.stringify(this.state.pMapping) !== '{}')
 																? (
+																	console.log(this.state.pMapping),
 																	Object.keys(this.state.pMapping).map((pkey, pindex) => (
 																		(this.state.pMapping[pkey][0] && this.state.pMapping[pkey][1])
 																			? (
 																				this.state.pMapping[pkey][0].map((key, index) => {
 																					return (
 																						<>
+
 																							{(this.state.pMapping[pkey][2][index] == false) && <Grid item xs={12}>
 																								<div>
 																									<Box mt={1.5} p={1.5} className='box-container' onClick={() => this.setPToggle(pkey, key)}>
@@ -535,7 +538,7 @@ class Main extends Component {
 																																);
 																															})
 																														)
-																														: ('')
+																														: ('No series assigned')
 																												}
 																											</div>
 																										</Box>
@@ -546,12 +549,12 @@ class Main extends Component {
 																					);
 																				})
 																			)
-																			: ('')
+																			: ('No series assigned')
 
 																	))
 
 																)
-																: ('')}
+																: ('No series assigned')}
 
 														</Typography>
 													</Grid>
@@ -627,7 +630,7 @@ class Main extends Component {
 																											);
 																										})
 																									) : (
-																										''
+																										'No Series assigned'
 																									)}
 																						</div>
 																					</Box>)}

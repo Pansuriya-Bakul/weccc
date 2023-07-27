@@ -597,7 +597,7 @@ const ClientReports = (props) => {
             align="left"
             gutterBottom
           >
-            Persons Data Not Available
+            Person's Data Not Available
           </Typography>
         )}
       </Grid>
