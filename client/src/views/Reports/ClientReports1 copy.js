@@ -1,5 +1,5 @@
 // ================================================
-// Code associated with ClientReport.js
+// OLD SCREENER REPORT NOT BEING USED CURRENTLY SEE ClientReports1.js
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
