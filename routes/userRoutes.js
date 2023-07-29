@@ -19,6 +19,7 @@ router.get('/install', UsersController.install);
 router.post('/checkdups', UsersController.checkDups);
 router.get('/validate', authenticate, UsersController.check);
 router.post('/register', validateBody(schemas.auth.register), authenticate, UsersController.signup);
+router.post('/selfRegister', validateBody(schemas.auth.selfRegister), UsersController.selfRegister);
 router.post(
 	'/login',
 	validateBody(schemas.auth.login),

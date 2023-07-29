@@ -20,6 +20,38 @@ function ValidateName(input) {
   }
   return error;
 }
+function ValidateFullName(input) {
+  let error = "";
+  if (input && input.trim().length === 0) {
+    error = "Cannot be whitespace alone";
+  } else if (!input) {
+    error = "Cannot be empty";
+  } else if (!/^[a-zA-Z\s]+$/.test(input)) {
+    error = "Invalid name";
+  } else if (input.length > 60) {
+    error = "Name is too long";
+  }
+  return error;
+}
+function ValidateCity(input) {
+  let error = "";
+  if (input && input.trim().length === 0) {
+    error = "Cannot be whitespace alone";
+  } else if (input && input.match("[^a-zA-Z]")) {
+    error = "Invalid city name";
+  } else if (input && input.length > 60) {
+    error = "City name is too long";
+  }
+  return error;
+}
+function ValidatePostalCode(input) {
+  const postalCodeRegex = /^([A-CEGHJ-NPR-TVXY]\d[A-CEGHJ-NPR-TV-Z])\s?(\d[A-CEGHJ-NPR-TV-Z]\d)$|^\d{5}(?:[-\s]\d{4})?$/i;
+  if (!input || !input.match(postalCodeRegex)) {
+    return "Invalid postal code";
+  }
+  return "";
+}
+
 function ValidateUserName(input) {
   let error = "";
   if (input && input.trim().length === 0) {
@@ -91,8 +123,11 @@ function ValidatePassword(input) {
 export {
   ValidateUserName,
   ValidateName,
+  ValidateFullName,
   ValidatePhoneNo,
   ValidateEmail,
   ValidatePassword,
   MandatoryFieldCheck,
+  ValidatePostalCode,
+  ValidateCity
 };

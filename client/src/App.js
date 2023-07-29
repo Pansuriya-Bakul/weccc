@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import AppRouter from './AppRouter';
+
 // ==================== Helpers ====================
 import validateToken from './helpers/authorization/validateToken';
 import get from './helpers/common/get';
@@ -187,26 +189,48 @@ class App extends Component {
 		let { classes } = this.props;
 		let { authenticated, render } = this.state;
 
+		// if (render) {
+		// 	if (authenticated) {
+		// 		return (
+		// 			<MuiThemeProvider theme={Theme}>
+		// 				<Dashboard
+		// 					appState={this.state}
+		// 					Logout={this.Logout}
+		// 					CheckAuthenticationValidity={this.CheckAuthenticationValidity}
+		// 					UpdateUser={this.UpdateUser}
+		// 				/>
+		// 			</MuiThemeProvider>
+		// 		);
+		// 	}
+		// 	else {
+		// 		return (
+		// 			<Login
+		// 				Login={this.Login}
+		// 			/>
+		// 		);
+		// 	}
+		// }
 		if (render) {
-			if (authenticated) {
-				return (
-					<MuiThemeProvider theme={Theme}>
-						<Dashboard
-							appState={this.state}
-							Logout={this.Logout}
-							CheckAuthenticationValidity={this.CheckAuthenticationValidity}
-							UpdateUser={this.UpdateUser}
+			return (
+				<>
+					{authenticated ? (
+						<MuiThemeProvider theme={Theme}>
+							<AppRouter
+								appState={this.state}
+								Logout={this.Logout}
+								CheckAuthenticationValidity={this.CheckAuthenticationValidity}
+								UpdateUser={this.UpdateUser}
+								authenticated={authenticated}
+							/>
+						</MuiThemeProvider>
+					) : (
+						<AppRouter
+							Login={this.Login}
 						/>
-					</MuiThemeProvider>
-				);
-			}
-			else {
-				return (
-					<Login
-						Login={this.Login}
-					/>
-				);
-			}
+					)}
+
+				</>
+			);
 		}
 		else {
 			return (

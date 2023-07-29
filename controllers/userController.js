@@ -514,6 +514,61 @@ exports.signup = (req, res, next) => {
 		});
 };
 
+
+exports.selfRegister = (req, res) => {
+	// Extract user registration data from the request body
+	const { name, city, postalCode, email, phone, password } = req.body;
+
+	// Perform form validation and other checks if required
+
+	// Check if the email is already registered in the database
+	User.findOne({ email: email })
+		.then(existingUser => {
+			if (existingUser) {
+				// User with the provided email already exists
+				return res.status(400).json({ error: 'Email already registered' });
+			}
+
+			// If the email is not registered, proceed with user registration
+			bcrypt.hash(password, 10, (hashError, hashedPassword) => {
+				if (hashError) {
+					console.error('Error hashing password:', hashError);
+					return res.status(500).json({ error: 'Internal server error' });
+				}
+
+				// Create a new user object with the registration data
+				const newUser = new User({
+					name: name,
+					city: city,
+					postalCode: postalCode,
+					email: email,
+					phone: phone,
+					password: hashedPassword,
+					// Other user properties if needed
+				});
+
+
+				log.warn('newUser')
+				log.warn(newUser)
+				// Save the new user to the database
+				// newUser.save()
+				// 	.then(savedUser => {
+				// 		console.log('User registered successfully:', savedUser);
+				// 		// Respond with a success message or relevant data
+				// 		return res.status(201).json({ message: 'Registration successful', user: savedUser });
+				// 	})
+				// 	.catch(saveError => {
+				// 		console.error('Error saving user to database:', saveError);
+				// 		return res.status(500).json({ error: 'Internal server error' });
+				// 	});
+			});
+		})
+		.catch(findError => {
+			console.error('Error finding user in database:', findError);
+			return res.status(500).json({ error: 'Internal server error' });
+		});
+};
+
 // ====================================================
 // Login
 // ----------------------------------------------------

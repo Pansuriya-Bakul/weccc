@@ -14,7 +14,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Dashboard from '@material-ui/icons/Dashboard';
 import { CircularProgress } from '@material-ui/core';
-import FormatQuoteIcon from '@material-ui/icons/FormatQuote';
 import './main.css';
 
 const styles = theme => ({
@@ -351,9 +350,6 @@ class ViewUserDashboard extends Component {
 						<Grid item xs={4}>
 							<Card variant="outlined" style={{ backgroundColor: 'aliceblue' }}>
 								<CardContent>
-									<Typography color="textSecondary" gutterBottom>
-										<FormatQuoteIcon fontSize='large' />
-									</Typography>
 									<Typography variant="h6" component="h2">
 										Thought{this.bull}for{this.bull}the{this.bull}Day
 									</Typography>
