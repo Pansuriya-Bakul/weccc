@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import axios from 'axios';
 
 // ==================== Components ====================
-import StatusMessage from '../../components/StatusMessage';
 import ConsentStatement from './ConsentStatement';
 import {
     ValidateEmail,
@@ -80,6 +79,10 @@ const styles = theme => ({
     agreeButton: {
         marginTop: theme.spacing(2),
     },
+    errorMessage: {
+        color: 'red',
+        marginTop: theme.spacing(1),
+    },
 });
 
 const Register = ({ classes }) => {
@@ -98,6 +101,7 @@ const Register = ({ classes }) => {
     const [errors, setErrors] = useState({});
     const [agreedToConsent, setAgreedToConsent] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
 
     const handleTogglePasswordVisibility = () => {
@@ -111,10 +115,14 @@ const Register = ({ classes }) => {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
+        let trimmedValue = value;
+        if (name === 'name' || name === 'city' || name === 'email') {
+            trimmedValue = value.trimStart(); // Trim leading spaces
+        }
+        setFormData({ ...formData, [name]: trimmedValue });
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
 
         event.preventDefault();
         // Perform form validation
@@ -132,10 +140,22 @@ const Register = ({ classes }) => {
             formErrors.postalCode = ValidatePostalCode(postalCode);
         }
 
+        if (!email && !phone) {
+            formErrors.general = 'Please enter either Email or Phone number.';
+        } else {
+            // Clear the error for phone and email fields if either one is entered
+            if (email) {
+                formErrors.phone = '';
+            }
+            if (phone) {
+                formErrors.email = '';
+            }
+        }
+
         if (password !== confirmPassword) {
             formErrors.confirmPassword = "Passwords do not match";
         }
-
+        console.log(formErrors)
         setErrors(formErrors);
 
         // Check if there are any errors
@@ -145,26 +165,44 @@ const Register = ({ classes }) => {
         // Form is valid, proceed with registration logic
         setIsSubmitting(true);
 
-        axios.post('/api/users/selfRegister', formData)
-            .then((response) => {
-                // Handle the response from the server (if needed)
-                console.log('Registration successful!', response.data);
-                // You can do any post-registration actions here (e.g., redirect to a success page)
-            })
-            .catch((error) => {
-                // Handle errors (if needed)
+        const requestData = {
+            email: email || undefined, // Omit email if it's empty
+            phone: phone || undefined, // Omit phone if it's empty
+            name,
+            password,
+            phone,
+            city: city || undefined, // Omit city if it's empty
+            postalCode: postalCode || undefined, // Omit postalCode if it's empty
+        };
+
+        try {
+            const response = await axios.post('/api/users/selfRegister', requestData);
+            console.log('Registration successful!', response.data);
+            alert('Registration successful! Please log in to continue.');
+            setRegistrationSuccess(true);
+            // You can do any post-registration actions here (e.g., redirect to a success page)
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                if (error.response.data.error === 'Email already registered') {
+                    setErrors({ emailError: 'Email is already registered. Please use a different email address.' });
+                } else if (error.response.data.error === 'Phone number already registered') {
+                    setErrors({ phoneError: 'Phone number is already registered. Please use a different phone number.' });
+                } else {
+                    console.error('Registration error:', error);
+                    setErrors({ general: 'An error occurred. Please try again later.' });
+                }
+            } else {
                 console.error('Registration error:', error);
-            })
-            .finally(() => {
-                setIsSubmitting(false);
-            });
-
-
-        // Simulate a delay for the registration process
-        setTimeout(() => {
+                setErrors({ general: 'An error occurred. Please try again later.' });
+            }
+        } finally {
             setIsSubmitting(false);
-        }, 2000);
+        }
     };
+
+    if (registrationSuccess) {
+        return <Redirect to="/" />;
+    }
 
     return (
         <div className={classes.main}>
@@ -183,6 +221,11 @@ const Register = ({ classes }) => {
                             onChange={handleInputChange}
                         />
                     </FormControl>
+                    {errors.name && (
+                        <Typography variant="body2" className={classes.errorMessage}>
+                            {errors.name}
+                        </Typography>
+                    )}
                     <FormControl margin="normal" fullWidth>
                         <InputLabel htmlFor="city">City</InputLabel>
                         <Input
@@ -193,6 +236,11 @@ const Register = ({ classes }) => {
                             onChange={handleInputChange}
                         />
                     </FormControl>
+                    {errors.city && (
+                        <Typography variant="body2" className={classes.errorMessage}>
+                            {errors.city}
+                        </Typography>
+                    )}
                     <FormControl margin="normal" fullWidth>
                         <InputLabel htmlFor="postalCode">Postal Code</InputLabel>
                         <Input
@@ -203,7 +251,12 @@ const Register = ({ classes }) => {
                             onChange={handleInputChange}
                         />
                     </FormControl>
-                    <FormControl margin="normal" required fullWidth>
+                    {errors.postalCode && (
+                        <Typography variant="body2" className={classes.errorMessage}>
+                            {errors.postalCode}
+                        </Typography>
+                    )}
+                    <FormControl margin="normal" fullWidth>
                         <InputLabel htmlFor="email">Email</InputLabel>
                         <Input
                             id="email"
@@ -214,7 +267,12 @@ const Register = ({ classes }) => {
                             onChange={handleInputChange}
                         />
                     </FormControl>
-                    <FormControl margin="normal" required fullWidth>
+                    {errors.emailError && (
+                        <Typography variant="body2" className={classes.errorMessage}>
+                            {errors.emailError}
+                        </Typography>
+                    )}
+                    <FormControl margin="normal" fullWidth>
                         <InputLabel htmlFor="phone">Phone</InputLabel>
                         <Input
                             id="phone"
@@ -225,6 +283,11 @@ const Register = ({ classes }) => {
                             onChange={handleInputChange}
                         />
                     </FormControl>
+                    {errors.phoneError && (
+                        <Typography variant="body2" className={classes.errorMessage}>
+                            {errors.phoneError}
+                        </Typography>
+                    )}
                     <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="password">Password</InputLabel>
                         <Input
@@ -245,7 +308,7 @@ const Register = ({ classes }) => {
                                 </InputAdornment>
                             }
                         />
-                        {errors.password && <StatusMessage color="error">{errors.password}</StatusMessage>}
+                        {errors.password && <Typography variant="body2" className={classes.errorMessage}>{errors.password}</Typography>}
                     </FormControl>
 
                     <FormControl margin="normal" required fullWidth>
@@ -259,7 +322,7 @@ const Register = ({ classes }) => {
                             onChange={handleInputChange}
                         />
                         {errors.confirmPassword && (
-                            <StatusMessage color="error">{errors.confirmPassword}</StatusMessage>
+                            <Typography variant="body2" className={classes.errorMessage}>{errors.confirmPassword}</Typography>
                         )}
                     </FormControl>
                     <FormControl margin="normal" fullWidth>
@@ -284,7 +347,7 @@ const Register = ({ classes }) => {
                         />
                     </FormControl>
                     {errors.general && (
-                        <StatusMessage color="error">{errors.general}</StatusMessage>
+                        <Typography variant="body2" className={classes.errorMessage}>{errors.general}</Typography>
                     )}
                     <Button
                         type="submit"

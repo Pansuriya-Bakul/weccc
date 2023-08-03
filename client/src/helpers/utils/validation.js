@@ -115,7 +115,7 @@ function ValidatePassword(input) {
     error = "Atleast one small letter required";
   } else if (!input.match(".*[A-Z].*")) {
     error = "Atleast one capital letter required";
-  } else if (!input.match(".*[@!#%&()^~{}].*")) {
+  } else if (!input.match(/[*@!#%&()^~{}]/)) {
     error = "Atleast one special character is required";
   }
   return error;
