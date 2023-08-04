@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { TextField, Button, Box, Typography, Grid, Select, MenuItem } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import purple from '@material-ui/core/colors/purple';
+import { pink } from '@material-ui/core/colors';
 import axios from 'axios';
 
 import ScreenerQuestions from './ScreenerQuestions';
@@ -16,6 +17,7 @@ import {
 } from "../../helpers/utils/validation";
 import { error } from 'jquery';
 import { set } from 'joi/lib/types/lazy';
+import PublicScreenerReport from './PublicScreenerReport';
 
 
 // ================= Static Variables ================
@@ -61,6 +63,7 @@ const PublicScreenerSurvey = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [reportsData, setReportsData] = useState({});
 
     const [answered, setAnswered] = useState(true);
 
@@ -120,7 +123,7 @@ const PublicScreenerSurvey = () => {
             setPage(page + 1);
             setAnswered(false);
         }
-        
+
     };
 
 
@@ -160,7 +163,15 @@ const PublicScreenerSurvey = () => {
 
         try {
             // Send the data as a POST request using Axios with await
-            const response = await axios.post('publicsurveys/create', data);
+            const response = await axios({
+                method: 'post',
+                url: '/api/publicsurveys/create',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify(data),
+                timeout: 5000
+            })
             console.log('Data sent successfully!', response.data);
             setIsLoading(false);
             setIsSubmitted(true);
@@ -173,6 +184,34 @@ const PublicScreenerSurvey = () => {
         }
 
     };
+
+    const generateReport = () => {
+
+        setReportsData({
+            "household2_size": household_size,
+            "community_activity_participate": community_participation,
+            "life_satisfaction2": life_satisfaction,
+            "local_community_belonging": community_belonging,
+            "lack_companionship": lack_companionship,
+            "feel_leftout": felt_left_out,
+            "feel_isolated": isolation,
+            "con_que": confidentiality
+        });
+        setReportsData({
+            "household2_size": "0",
+            "community_activity_participate": "1",
+            "life_satisfaction2": "6",
+            "local_community_belonging": "1",
+            "lack_companionship": "1",
+            "feel_leftout": "2",
+            "feel_isolated": "1",
+            "con_que": "1"
+        });
+
+        setPage(page + 1);
+
+    }
+
 
     const emailHandler = (event) => {
         const email = event.target.value.toLowerCase();
@@ -237,8 +276,9 @@ const PublicScreenerSurvey = () => {
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                width: '100vw', // Take up the entire viewport width
-                height: '100vh', // Take up the entire viewport height
+                right: 0,
+                maxWidth: '100vw', // Take up the entire viewport width
+                minHeight: '100vh', // Take up the entire viewport height
                 backgroundColor: '#f0f0f0', // Set the background color
                 display: 'flex',
                 flexDirection: 'column',
@@ -247,13 +287,13 @@ const PublicScreenerSurvey = () => {
             }}
         >
             <Box
-                bgcolor={purple[700]}
+                bgcolor={pink[500]}
                 color="#fff"
                 textAlign="center"
                 style={{
                     top: 0,
                     position: 'absolute',
-                    width: '100vw',
+                    width: '100%',
                     height: '240px',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -268,161 +308,179 @@ const PublicScreenerSurvey = () => {
                 </div>
                 <Typography variant="h2">How Good is Your Social Health?</Typography>
             </Box>
-            <Box my={8} /> {/* Spacer */}
-            {/* Survey box container */}
-            <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-                minHeight="400px"
-                padding="16px"
-                bgcolor="#ffffff"
-                borderRadius="8px"
-                maxWidth="60rem"
-                width="90%"
-            >
-                {isLoading && page == 10 ? (
-                    // Show loading indicator and "Submitting" Typography
-                    <Box width="80%">
-                        <CircularProgress />
-                        <Typography align="center" variant="h5" gutterBottom style={{ paddingBottom: "16px" }}>
-                            Submitting your survey...
-                        </Typography>
-                    </Box>
-                ) : isSubmitted && page == 10 ? (
-                    // Show the content inside the box when isSubmitted is true and page is 10
-                    <Box width="80%">
-                        <Typography align="center" variant="h5" gutterBottom style={{ paddingBottom: "16px" }}>
-                            Thank you for completing the survey!
-                        </Typography>
-                        <Typography align="center" variant="h6" gutterBottom style={{ paddingBottom: "16px", fontWeight: "400" }}>
-                            Click the button below to view your results.
-                        </Typography>
-                        <Box my={2} /> {/* Spacer */}
-                        <Box textAlign="center"> {/* Center the next button */}
-                            <Button variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
-                                View Results
-                            </Button>
-                        </Box>
-                    </Box>
-                ) : (
-                    // Show the error message when isSubmitted is false or page is not 10
-                    page == 10 && <Box width="80%">
-                        <Typography align="center" variant="h5" gutterBottom style={{ paddingBottom: "16px" }}>
-                            Error submitting your survey. Please try again.
-                        </Typography>
-                    </Box>
-                )}
+            <Box my={page == 11 ? 16 : 8} /> {/* Spacer */}
 
-
-                {page === 1 && (
-                    <div style={{ padding: '32px' }}>
-                        <Box width="100%">
-                            <Typography variant="h6" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
-                                Social connection is the foundation of good health and is as fundamental a human need as food and water. Did you know that people with poor social health are sicker, less happy, and may even die earlier compared to others?
-                                <br /><br />
-                                Take our two-minute survey to help you understand risk factors and receive helpful information based on your personalized results.
+            {page == 11 ? (
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    // minHeight="400px"
+                    padding="16px"
+                    bgcolor="#ffffff"
+                    borderRadius="8px"
+                    maxWidth="64rem"
+                    width="100%"
+                    height= '100%'
+                >
+                    <PublicScreenerReport reportsData={reportsData} />
+                </Box>
+            ) :
+                < Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    minHeight="400px"
+                    padding="16px"
+                    bgcolor="#ffffff"
+                    borderRadius="8px"
+                    maxWidth="60rem"
+                    width="90%"
+                >
+                    {isLoading && page == 10 ? (
+                        // Show loading indicator and "Submitting" Typography
+                        <Box width="80%">
+                            <CircularProgress />
+                            <Typography align="center" variant="h5" gutterBottom style={{ paddingBottom: "16px" }}>
+                                Submitting your survey...
                             </Typography>
-                            <Grid container spacing={4}>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        label="First Name"
-                                        value={firstName}
-                                        onChange={firstNameHandler}
-                                        required
-                                        fullWidth
-                                        error={errorMessages.firstName == "" ? false : true} // Add error prop
-                                        helperText={errorMessages.firstName}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        label="Last Name"
-                                        value={lastName}
-                                        onChange={lastNameHandler}
-                                        required
-                                        fullWidth
-                                        error={errorMessages.lastName == "" ? false : true} // Add error prop
-                                        helperText={errorMessages.lastName}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Box my={1} /> {/* Spacer */}
-                            <Grid container spacing={4} >
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        label="Email"
-                                        type="email"
-                                        value={email}
-                                        onChange={emailHandler}
-                                        fullWidth
-                                        error={errorMessages.email == "" ? false : true} // Add error prop
-                                        helperText={errorMessages.email}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        label="Phone Number"
-                                        value={phone}
-                                        onChange={phoneHandler}
-                                        fullWidth
-                                        error={errorMessages.phone==""? false : true} // Add error prop
-                                        helperText={errorMessages.phone}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Box my={1} /> {/* Spacer */}
-                            <Grid container spacing={4} >
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        label="Postal Code"
-                                        value={postalCode}
-                                        onChange={(e) => setPostalCode(e.target.value)}
-                                        // error={postalCodeError} // Add error prop
-                                        // helperText={postalCodeError ? 'Enter a valid postal code.' : ''}
-                                        fullWidth
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        select
-                                        label="How did you hear about this?"
-                                        value={howDidYouHear}
-                                        onChange={(e) => setHowDidYouHear(e.target.value)}
-                                        fullWidth
-                                    >
-                                        {options.map((option) => (
-                                            <MenuItem key={option} value={option}>
-                                                {option}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
-                            </Grid>
-
                         </Box>
-                    </div>
-                )}
-                <ScreenerQuestions page={page} onOptionChange={handleOptionChange} />
+                    ) : isSubmitted && page == 10 ? (
+                        // Show the content inside the box when isSubmitted is true and page is 10
+                        <Box width="80%">
+                            <Typography align="center" variant="h5" gutterBottom style={{ paddingBottom: "16px" }}>
+                                Thank you for completing the survey!
+                            </Typography>
+                            <Typography align="center" variant="h6" gutterBottom style={{ paddingBottom: "16px", fontWeight: "400" }}>
+                                Click the button below to view your results.
+                            </Typography>
+                            <Box my={2} /> {/* Spacer */}
+                            <Box textAlign="center"> {/* Center the next button */}
+                                <Button variant="contained" color="primary" onClick={generateReport} style={{ width: '200px' }}>
+                                    View Results
+                                </Button>
+                            </Box>
+                        </Box>
+                    ) : (
+                        // Show the error message when isSubmitted is false or page is not 10
+                        page == 10 && <Box width="80%">
+                            <Typography align="center" variant="h5" gutterBottom style={{ paddingBottom: "16px" }}>
+                                Error submitting your survey. Please try again.
+                            </Typography>
+                        </Box>
+                    )}
 
-                {page < 9 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
-                    <Box my={2} /> {/* Spacer */}
-                    <Button disabled={!answered} variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
-                        Next
-                    </Button>
+
+                    {page === 1 && (
+                        <div style={{ padding: '32px' }}>
+                            <Box width="100%">
+                                <Typography variant="h6" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
+                                    Social connection is the foundation of good health and is as fundamental a human need as food and water. Did you know that people with poor social health are sicker, less happy, and may even die earlier compared to others?
+                                    <br /><br />
+                                    Take our two-minute survey to help you understand risk factors and receive helpful information based on your personalized results.
+                                </Typography>
+                                <Box my={1} /> {/* Spacer */}
+                                <Grid container spacing={4}>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="First Name"
+                                            value={firstName}
+                                            onChange={firstNameHandler}
+                                            required
+                                            fullWidth
+                                            error={errorMessages.firstName == "" ? false : true} // Add error prop
+                                            helperText={errorMessages.firstName}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Last Name"
+                                            value={lastName}
+                                            onChange={lastNameHandler}
+                                            required
+                                            fullWidth
+                                            error={errorMessages.lastName == "" ? false : true} // Add error prop
+                                            helperText={errorMessages.lastName}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Box my={1} /> {/* Spacer */}
+                                <Grid container spacing={4} >
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Email"
+                                            type="email"
+                                            value={email}
+                                            onChange={emailHandler}
+                                            fullWidth
+                                            error={errorMessages.email == "" ? false : true} // Add error prop
+                                            helperText={errorMessages.email}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Phone Number"
+                                            value={phone}
+                                            onChange={phoneHandler}
+                                            fullWidth
+                                            error={errorMessages.phone == "" ? false : true} // Add error prop
+                                            helperText={errorMessages.phone}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Box my={1} /> {/* Spacer */}
+                                <Grid container spacing={4} >
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Postal Code"
+                                            value={postalCode}
+                                            onChange={(e) => setPostalCode(e.target.value)}
+                                            // error={postalCodeError} // Add error prop
+                                            // helperText={postalCodeError ? 'Enter a valid postal code.' : ''}
+                                            fullWidth
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            select
+                                            label="How did you hear about this?"
+                                            value={howDidYouHear}
+                                            onChange={(e) => setHowDidYouHear(e.target.value)}
+                                            fullWidth
+                                        >
+                                            {options.map((option) => (
+                                                <MenuItem key={option} value={option}>
+                                                    {option}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                </Grid>
+
+                            </Box>
+                        </div>
+                    )}
+                    <ScreenerQuestions page={page} onOptionChange={handleOptionChange} />
+
+                    {page < 9 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+                        <Box my={2} /> {/* Spacer */}
+                        <Button disabled={!answered} variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
+                            Next
+                        </Button>
+                    </Box>}
+
+                    {page == 9 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+                        <Box my={2} /> {/* Spacer */}
+                        <Button disabled={!answered} variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
+                            Submit Survey
+                        </Button>
+                    </Box>}
+
+                    {/* Add other pages and their questions here */}
                 </Box>}
-
-                {page == 9 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
-                    <Box my={2} /> {/* Spacer */}
-                    <Button disabled={!answered} variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
-                        Submit Survey
-                    </Button>
-                </Box>}
-
-                {/* Add other pages and their questions here */}
-            </Box>
-        </div>
+        </div >
     );
 };
 

@@ -38,7 +38,7 @@ exports.create = (req, res, next) => {
         surveyTemplate: req.body.surveyTemplate,
         memberInfo: memberInfo,
         source: req.body.source,
-        responseJSON: req.body.responseJSON,
+        responseJSON: JSON.stringify(req.body.responseJSON),
     });
     publicSurvey.save()
         .then(result => {
