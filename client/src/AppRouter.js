@@ -4,7 +4,10 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 // Import your components
 import Login from './views/Authentication/Login';
 import Dashboard from './views/Dashboard/Dashboard';
+
 import Register from './views/Authentication/Register';
+import PublicScreenerSurvey from './views/PublicSurveys/PublicScreenerSurvey';
+
 
 class AppRouter extends Component {
     render() {
@@ -12,6 +15,8 @@ class AppRouter extends Component {
             <Router>
                 <Switch>
                     <Route path="/register" component={Register} />
+                    <Route path="/socialrisk" component={PublicScreenerSurvey} />
+
                     <Route path="/" render={() => (
                         this.props.authenticated ?
                             <Dashboard

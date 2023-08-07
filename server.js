@@ -44,6 +44,7 @@ const memberCollectionRoutes = require('./routes/memberCollectionRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const noteRoutes = require('./routes/noteRoutes');
+const publicSurveyRoutes = require('./routes/publicSurveyRoutes');
 
 // ============================================
 // Mongoose Setup
@@ -101,6 +102,7 @@ app.use("/api/membercollections", memberCollectionRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/publicsurveys", publicSurveyRoutes);
 
 // ============================================
 // Heroku Addition

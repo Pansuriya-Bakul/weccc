@@ -150,6 +150,7 @@ function neighbourChapterDates(collection_list) {
 }
 
 function formatDate(date) {
+    if (!date) return "";
     let newDate = new Date(date);
     let yyyy = date.getFullYear();
     let mm = String(date.getMonth() + 1).padStart(2, '0');

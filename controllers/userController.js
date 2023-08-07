@@ -104,7 +104,8 @@ exports.install = (req, res, next) => {
 									gender: 'Undisclosed',
 									dateOfBirth: new Date(),
 									language: 'English'
-								}
+								},
+								status: 'active'
 							});
 
 							/* Save User */
@@ -247,6 +248,7 @@ exports.signup = (req, res, next) => {
 	const facility = req.body.facilityId;
 	const name = key_public.encrypt(req.body.info.name, 'base64');
 	const phone = req.body.info.phone;
+	const status = req.body.status;
 
 	const gender = key_public.encrypt(req.body.info.gender, 'base64');
 	const dateOfBirth = req.body.info.dateOfBirth;
@@ -446,7 +448,8 @@ exports.signup = (req, res, next) => {
 										phone: phone,
 										language: language,
 										currentAddress: newAddress._id
-									}
+									},
+									status: status
 								});
 
 								user
@@ -694,6 +697,7 @@ exports.login = async (req, res, next) => {
 							name: facilityName,
 							prefix: fPrefix
 						},
+						status: req.user.status,
 						createdAt: req.user.createdAt,
 						updatedAt: req.user.updatedAt,
 						__v: req.user.__v
@@ -753,7 +757,7 @@ exports.WECClogin = (req, res, next) => {
 
 				return User.findOne({ email: email })
 					.select('-password')
-					.populate('facilityId', '_id name enabled prefix')
+					.populate('facilityId', '_id name enabled status prefix')
 					.exec()
 					.then(user => {
 						if (user) {
@@ -794,6 +798,7 @@ exports.WECClogin = (req, res, next) => {
 											name: 'Palliative IMS Facility',
 											prefix: 'YQG'
 										},
+										status: req.user.status,
 										createdAt: req.user.createdAt,
 										updatedAt: req.user.updatedAt,
 										__v: req.user.__v
@@ -853,8 +858,8 @@ exports.read = (req, res, next) => {
 	User.findById(id)
 		.select('-password')
 		.populate('facilityId')
-		.populate('patients', '_id email role info  research enabled facilityId patients workers createdAt updatedAt')
-		.populate('workers', '_id email role info research enabled facilityId patients workers createdAt updatedAt')
+		.populate('patients', '_id email role info  research enabled status facilityId patients workers createdAt updatedAt')
+		.populate('workers', '_id email role info research enabled status facilityId patients workers createdAt updatedAt')
 		.populate('info.currentAddress')
 		.exec()
 		.then(user => {
@@ -903,6 +908,7 @@ exports.read = (req, res, next) => {
 								email: patients.email,
 								enabled: patients.enabled,
 								role: patients.role,
+								status: patients.status,
 								facilityId: patients.facilityId,
 								createdAt: patients.createdAt,
 								updatedAt: patients.updatedAt
@@ -924,6 +930,9 @@ exports.read = (req, res, next) => {
 							name: user.facilityId.name,
 							prefix: user.facilityId.prefix
 						},
+						volInfo : user.volInfo ? user.volInfo : null,
+						memberStatusInfo: user.memberStatusInfo ? user.memberStatusInfo : null,
+						status: user.status,
 						createdAt: user.createdAt,
 						updatedAt: user.updatedAt,
 						__v: user.__v
@@ -989,6 +998,7 @@ exports.readall = (req, res, next) => {
 							currentAddress: user.info.currentAddress,
 							phone: user.info.phone,
 						},
+						status: user.status,
 						research: user.research,
 						createdAt: user.createdAt,
 						createdBy: user.createdBy,
@@ -1049,6 +1059,7 @@ exports.query = (req, res, next) => {
 							currentAddress: user.info.currentAddress,
 							phone: user.info.phone,
 						},
+						status: user.status,
 						patients: user.patients,
 						workers: user.workers,
 						projectList: user.projectList,
@@ -1147,6 +1158,7 @@ exports.update = (req, res, next) => {
 				});
 			} else {
 				let updatedQuery = query;
+
 				if ('patients' in updatedQuery) {
 					let queryPatients = Object.values(updatedQuery)[0];
 					user.patients.forEach(patient => {
@@ -1315,8 +1327,8 @@ exports.fullread = (req, res, next) => {
 	User.findById(id)
 		.select('-password')
 		.populate('info.currentAddress', '_id street city state code country createdAt updatedAt')
-		.populate('patients', '_id email role info research enabled facilityId patients workers createdAt updatedAt')
-		.populate('workers', '_id email role info research enabled facilityId patients workers createdAt updatedAt')
+		.populate('patients', '_id email role info research enabled status facilityId patients workers createdAt updatedAt')
+		.populate('workers', '_id email role info research enabled status facilityId patients workers createdAt updatedAt')
 		.exec()
 		.then(user => {
 			if (user) {
@@ -1458,7 +1470,7 @@ exports.createResearchID = (req, res, next) => {
 	log.info('Incoming research creation for user with ID ' + id);
 
 	User.findById(id)
-		.select('_id info email role info research enabled facilityId patients workers createdAt updatedAt')
+		.select('_id info email role info research enabled status facilityId patients workers createdAt updatedAt')
 		.populate('facilityId', '_id name prefix')
 		.exec()
 		.then(user => {

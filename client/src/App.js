@@ -48,7 +48,7 @@ class App extends Component {
 			facilityId: null,
 			facilityName: null,
 			authenticated: false,
-			render: false
+			render: true
 		};
 	}
 

@@ -157,6 +157,7 @@ const CreateUserDialog = (props) => {
   const [roleError, setRoleError] = useState(false);
 
   const [enabled, setEnabled] = useState(true);
+  const [status, setStatus] = useState('active');
 
 
   // Non-Required Parameters ========================================
@@ -223,6 +224,7 @@ const CreateUserDialog = (props) => {
           country: country,
         },
       },
+      status: status,
     };
 
     post("users/register", appState.token, data, (error, response) => {
@@ -257,6 +259,7 @@ const CreateUserDialog = (props) => {
     lastName,
     phone,
     enabled,
+    status,
     role,
     gender,
     isGender2,

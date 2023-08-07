@@ -38,6 +38,10 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 //import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
+import highrisk from "./riskhigh.png";
+import moderaterisk from "./riskmoderate.png";
+import lowrisk from "./risklow.png";
+import ScreenerResults from "./ScreenerResults";
 
 // ==================== MUI Icons ====================
 
@@ -87,6 +91,7 @@ const Reports = (props) => {
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [memberName, setMemberName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [riskScore, setRiskScore] = useState(0);
 
 
   // Functions ===
@@ -221,6 +226,44 @@ const Reports = (props) => {
     setCurrentReportIndex(page - 1);
   }, []);
 
+  const checkRisk = () => {
+
+    if (reportsData) {
+      let score = 0;
+      if (reportsData['household2_size'] == 'Lives alone') {
+        score = score + 1;
+      }
+      if (reportsData['community_activity_participate'] == 'No') {
+        score = score + 1;
+      }
+      if (reportsData['life_satisfaction2'] <= 6) {
+        score = score + 1;
+
+      }
+      if (reportsData['local_community_belonging'] == 'Somewhat weak' || reportsData['local_community_belonging'] == 'Very weak') {
+        score = score + 1;
+      }
+      if ((reportsData['lack_companionship'] == 'Often' || reportsData['feel_isolated'] == 'Often' || reportsData['feel_leftout'] == 'Often') || (reportsData['lack_companionship'] == 'Sometimes' && reportsData['feel_isolated'] == 'Sometimes') || (reportsData['feel_leftout'] == 'Sometimes' && reportsData['feel_isolated'] == 'Sometimes') || (reportsData['lack_companionship'] == 'Sometimes' && reportsData['feel_leftout'] == 'Sometimes')) {
+        score = score + 1;
+      }
+      setRiskScore(score);
+    }
+  }
+
+  const getRiskText = () => {
+    let riskText = ''
+    if (riskScore == 0) {
+      riskText = "You are currently at a low risk of experiencing the negative effects of social isolation. However, it's still important to maintain social connections and engage in activities that promote well-being."
+    }
+    else if (riskScore < 3) {
+      riskText = "You may be experiencing some of the negative emotional and physical effects of social isolation. We recommend taking steps to strengthen your social skills and connect more deeply with the world around you. Engaging in social activities, seeking support from friends and family, and exploring new hobbies can help mitigate the impact of social isolation."
+    }
+    else if (riskScore >= 3) {
+      riskText = "You are at a high risk of experiencing the detrimental effects of social isolation. It's crucial to prioritize your social well-being and seek support from your social network or professionals. Consider reaching out to friends, family, or support groups for assistance, and explore resources that can help you combat the effects of social isolation."
+    }
+    return riskText;
+  }
+
   // Hooks ===
 
   // First Render only because of the [ ] empty array tracking with the useEffect
@@ -242,6 +285,11 @@ const Reports = (props) => {
     }
   }, [currentPatient]);
 
+  useEffect(() => {
+    if (reportsData) {
+      checkRisk();
+    }
+  }, [reportsData]);
 
 
   // patientData.map((item, index) => {
@@ -418,7 +466,7 @@ const Reports = (props) => {
                           {/*    collection={currentReportIndex}*/}
                           {/*  ></ReportDashboard>*/}
                           {/*</Grid>*/}
-
+                          {/* 
                           <Grid item xs={12} id="summary">
                             <Typography
                               variant="h5"
@@ -432,9 +480,38 @@ const Reports = (props) => {
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
+                          </Grid> */}
+
+                          <Grid item xs={12} id="overall-risk" style={{ marginTop: '24px' }}>
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Your Social Isolation Risk
+                            </Typography>
+                            <Grid container spacing={2}>
+                              <Grid item xs={12} sm={6} md={4} lg={3}>
+                                <img
+                                  src={riskScore > 0 && riskScore < 3 ? moderaterisk : riskScore >= 3 ? highrisk : lowrisk}
+                                  alt="risk meter"
+                                  width="360px"
+                                  height="238px"
+                                />
+                              </Grid>
+                              <Grid item xs={12} sm={6} md={8} lg={9} style={{ paddingTop: '40px', paddingLeft: '40px' }}>
+                                <Typography variant="h6" color="textSecondary" gutterBottom style={{ color: riskScore > 0 && riskScore < 3 ? "orange" : riskScore >= 3 ? "red" : "green" }}>
+                                  {riskScore > 0 && riskScore < 3 ? "Moderate Risk" : riskScore >= 3 ? "High Risk" : "Low Risk"}
+                                </Typography>
+                                <Typography variant="body1">
+                                  {getRiskText()}
+                                </Typography>
+                              </Grid>
+                            </Grid>
                           </Grid>
 
-                          <Grid item xs={12} id="possible concerns1">
+                          {/* <Grid item xs={12} id="possible concerns1">
                             <Typography
                               variant="h5"
                               color="textSecondary"
@@ -447,9 +524,28 @@ const Reports = (props) => {
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
+                          </Grid> */}
+
+                          <Grid item xs={12} id="summary1">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Results
+                            </Typography>
+                            {/* <Summary1
+                                  reports={reportsData}
+                                  collection={currentReportIndex}
+                                /> */}
+                            <ScreenerResults
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
                           </Grid>
 
-                          <Grid item xs={12} id="suggestions1">
+                          {/* <Grid item xs={12} id="suggestions1">
                             <Typography
                               variant="h5"
                               color="textSecondary"
@@ -462,6 +558,54 @@ const Reports = (props) => {
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
+                          </Grid> */}
+
+                          <Grid item xs={12} id="suggestions1" style={{ paddingTop: '24px' }}>
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+
+                            >
+                              Feedback – Suggested Follow-up
+                            </Typography>
+                            {/* <Suggestions
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            /> */}
+                            <Typography
+                              variant="body1"
+                              align="left"
+                              gutterBottom
+                            >
+                              Maintaining good social health and addressing social health concerns will improve your physical and mental health in both the short and the long-term. Please schedule a call with one of our trained community connectors to help you set goals and find resources and information to address these social health concerns.
+
+                            </Typography>
+                          </Grid>
+
+                          <Grid item xs={12} id="contact-us" style={{ paddingTop: '24px' }}>
+                            {/* <Typography
+                              variant="h6"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+
+                            >
+                              Contact Us
+                            </Typography>
+                            {/* <Suggestions
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            /> */}
+                            <Typography
+                              variant="body1"
+                              align="left"
+                              gutterBottom
+                            >
+                              Contact us at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a>
+
+                            </Typography>
                           </Grid>
                         </>
                       ) : (
@@ -489,7 +633,7 @@ const Reports = (props) => {
             align="left"
             gutterBottom
           >
-            Persons Data Not Available
+            Person's Data Not Available
           </Typography>
         )}
       </Grid>
