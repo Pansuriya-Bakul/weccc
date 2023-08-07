@@ -40,9 +40,11 @@ import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 // import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 
-import highrisk from "./riskhigh.png";
-import moderaterisk from "./riskmoderate.png";
-import lowrisk from "./risklow.png";
+import risk1 from "./risk1.png";
+import risk2 from "./risk2.png";
+import risk3 from "./risk3.png";
+import risk4 from "./risk4.png";
+import risk5 from "./risk5.png";
 import ScreenerResults from "./ScreenerResults";
 import { set } from "joi/lib/types/lazy";
 
@@ -255,14 +257,25 @@ const ClientReports = (props) => {
 
   const getRiskText = () => {
     let riskText = ''
-    if (riskScore == 0) {
-      riskText = "You are currently at a low risk of experiencing the negative effects of social isolation. However, it's still important to maintain social connections and engage in activities that promote well-being."
-    }
-    else if (riskScore < 3) {
-      riskText = "You may be experiencing some of the negative emotional and physical effects of social isolation. We recommend taking steps to strengthen your social skills and connect more deeply with the world around you. Engaging in social activities, seeking support from friends and family, and exploring new hobbies can help mitigate the impact of social isolation."
-    }
-    else if (riskScore >= 3) {
-      riskText = "You are at a high risk of experiencing the detrimental effects of social isolation. It's crucial to prioritize your social well-being and seek support from your social network or professionals. Consider reaching out to friends, family, or support groups for assistance, and explore resources that can help you combat the effects of social isolation."
+    switch (riskScore) {
+      case 0:
+        riskText = "Social health is vital to your overall well-being, as well as your physical and mental health. You're doing great - no risks are flagged currently. See recommendations to learn more about risk factors and the steps you can take to maintain good health."
+        break;
+      case 1:
+        riskText = "Did you know that good social health is vital to your overall well-being, as well as your physical and mental health? At least one risk factor affecting your social health is currently flagged. See recommendations to learn more about your current risk, and the steps you can take now."
+        break;
+      case 2:
+        riskText = "Did you know that good social health is vital to your overall well-being, as well as your physical and mental health? Some risk factors affecting your social health are currently flagged. See recommendations to learn more about your current risks, and the steps you can take now"
+        break;
+      case 3:
+        riskText = "You are at risk of experiencing negative emotional and physical effects of poor social health –some risk factors are currently flagged. See recommendations to learn more about your current risks, and the steps you can take now to reduce future harm"
+        break;
+      case 4:
+        riskText = "You are at high risk of experiencing negative emotional and physical effects of poor social health – several risk factors are currently flagged. See recommendations to learn more about your current risks, and the steps you can take now to reduce future harm."
+        break;
+      case 5:
+        riskText = "You are at high risk of experiencing negative emotional and physical effects of poor social health – several risk factors are currently flagged. See recommendations to learn more about your current risks, and the steps you can take now to reduce future harm."
+        break;
     }
     return riskText;
   }
@@ -471,15 +484,15 @@ const ClientReports = (props) => {
                             <Grid container spacing={2}>
                               <Grid item xs={12} sm={6} md={4} lg={3}>
                                 <img
-                                  src={riskScore > 0 && riskScore < 3 ? moderaterisk : riskScore >= 3 ? highrisk : lowrisk}
+                                  src={riskScore == 0 ? risk1 : riskScore == 1 ? risk2 : riskScore == 2 ? risk3 : riskScore == 3 ? risk4 : risk5 }
                                   alt="risk meter"
                                   width="360px"
                                   height="238px"
                                 />
                               </Grid>
                               <Grid item xs={12} sm={6} md={8} lg={9} style={{ paddingTop: '40px', paddingLeft: '40px' }}>
-                                <Typography variant="h6" color="textSecondary" gutterBottom style={{ color: riskScore > 0 && riskScore < 3 ? "orange" : riskScore >= 3 ? "red" : "green" }}>
-                                  {riskScore > 0 && riskScore < 3 ? "Moderate Risk" : riskScore >= 3 ? "High Risk" : "Low Risk"}
+                                <Typography variant="h5" color="textSecondary" gutterBottom style={{fontWeight: "500", color: riskScore == 0 ? "#42b74a" : riskScore == 1 ? "#cfdf28" : riskScore == 2 ? "#ffbb10" : riskScore == 3 ? "#f76420" : "#cf2020" }}>
+                                  {riskScore == 0 ? "Lowest Risk" : riskScore == 1 ? "Some Risk" : riskScore == 2 ? "Some Risk" : riskScore == 3 ? "Moderate Risk" : "High Risk" }
                                 </Typography>
                                 <Typography variant="body1">
                                   {getRiskText()}
@@ -494,6 +507,7 @@ const ClientReports = (props) => {
                               color="textSecondary"
                               align="left"
                               gutterBottom
+                              style={{ paddingBottom: '12px' }}
                             >
                               Results
                             </Typography>
@@ -522,7 +536,7 @@ const ClientReports = (props) => {
                             />
                           </Grid> */}
 
-                          <Grid item xs={12} id="suggestions1" style={{ paddingTop: '24px' }}>
+                          <Grid item xs={12} id="suggestions1" style={{ paddingTop: '30px' }}>
                             <Typography
                               variant="h5"
                               color="textSecondary"
@@ -530,7 +544,7 @@ const ClientReports = (props) => {
                               gutterBottom
 
                             >
-                              Feedback – Suggested Follow-up
+                              What Now?
                             </Typography>
                             {/* <Suggestions
                               reports={reportsData}
@@ -541,35 +555,11 @@ const ClientReports = (props) => {
                               align="left"
                               gutterBottom
                             >
-                              Maintaining good social health and addressing social health concerns will improve your physical and mental health in both the short and the long-term. Please schedule a call with one of our trained community connectors to help you set goals and find resources and information to address these social health concerns.
+                              Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
 
                             </Typography>
                           </Grid>
 
-
-                          <Grid item xs={12} id="contact-us" style={{ paddingTop: '24px' }}>
-                            {/* <Typography
-                              variant="h6"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-
-                            >
-                              Contact Us
-                            </Typography>
-                            {/* <Suggestions
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            /> */} 
-                            <Typography
-                              variant="body1"
-                              align="left"
-                              gutterBottom
-                            >
-                              Contact us at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a>
-
-                            </Typography>
-                          </Grid>
                         </>
                       ) : (
 

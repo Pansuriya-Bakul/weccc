@@ -4,6 +4,7 @@
 // ================================================
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 // ==================== Helpers ====================
 import login from '../../helpers/authorization/login';
@@ -22,7 +23,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import { Typography, Box } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 // ==================== Icons ====================
@@ -149,7 +150,6 @@ class Login extends Component {
             emailOrPhone: email,
             password: password
         };
-
 
         this.setState({
             authenticating: true
@@ -359,6 +359,14 @@ class Login extends Component {
                             Sign in
                             {authenticating && <CircularProgress size={24} className={classes.spinner} />}
                         </Button>
+                        <Box mt={2}>
+                            <Typography variant="body2" color="primary" style={{ textAlign: 'right' }}>
+                                Don't have an account?{' '}
+                                <Link to="/register" style={{ textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}>
+                                    Register here
+                                </Link>
+                            </Typography>
+                        </Box>
                     </div>
                 </Paper>
             </div>

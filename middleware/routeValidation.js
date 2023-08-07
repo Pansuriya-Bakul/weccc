@@ -1,7 +1,7 @@
 /*
 =============================================================
 This middleware file will have access to the 
-request, and the response objec tof the current cycle.
+request, and the response object of the current cycle.
 This helps control the next response from this server.
 Once the middleware is complete it is passed off to the next
 file in the stack.
@@ -13,17 +13,16 @@ const Joi = require('joi');
 //here authenticsation keys are made for each specific request
 module.exports = {
     validateBody: (schema) => {
+
         return (req, res, next) => {
             const result = Joi.validate(req.body, schema);
-
-            if(result.error)
-            {
+            if (result.error) {
                 console.log(result.error)
                 return res.status(400).json({
                     message: result.error
                 });
             }
-           
+
             next();
         }
     },
@@ -63,8 +62,7 @@ module.exports = {
                         state: Joi.string().allow(''),
                         code: Joi.string().allow(''),
                         country: Joi.string().allow('')
-                    })
-                    
+                    })                    
                 }),
                 status: Joi.string().required(),
             }),
@@ -74,14 +72,22 @@ module.exports = {
             // })
             login: Joi.alternatives().try(
                 Joi.object().keys({
-                  emailOrPhone: Joi.string().email().required(),
-                  password: Joi.string().required(),
+                    emailOrPhone: Joi.string().email().required(),
+                    password: Joi.string().required(),
                 }),
                 Joi.object().keys({
-                  emailOrPhone: Joi.string().required(),
-                  password: Joi.string().required(),
+                    emailOrPhone: Joi.string().required(),
+                    password: Joi.string().required(),
                 })
-              ),
+            ),
+            selfRegister: Joi.object().keys({
+                email: Joi.string().email().allow(''),
+                password: Joi.string().required(),
+                name: Joi.string().required(),
+                phone: Joi.string().allow(''),
+                city: Joi.string().allow(''),
+                postalCode: Joi.string().allow(''),
+            })
         },
         stickyNote: {
             create: Joi.object().keys({
