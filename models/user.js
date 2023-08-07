@@ -25,7 +25,7 @@ const userSchema = mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true,
+        // unique: true,
         // required: function() {
         //     return this.role != "Patient";
         // }
@@ -109,6 +109,10 @@ const userSchema = mongoose.Schema({
             type: Boolean,
             default: false
         }
+    },
+    status: {
+        type: String,
+        required: true
     }
 },
     {
