@@ -517,6 +517,112 @@ exports.signup = (req, res, next) => {
 		});
 };
 
+const getNextSequenceValue = async () => {
+	try {
+		const lastUser = await User.findOne()
+			.sort({ sequence_id: -1 }) // Sort by sequence_id in descending order
+			.exec();
+		if (lastUser && lastUser.sequence_id && lastUser.sequence_id > 0) {
+			return lastUser.sequence_id + 1;
+		} else {
+			return 1;
+		}
+	} catch (error) {
+		console.error('Error getting next sequence value:', error);
+		throw new Error('Internal server error');
+	}
+};
+
+exports.selfRegister = async (req, res) => {
+	try {
+
+		const email = req.body.email ? req.body.email.toLowerCase() : '';
+		const password = req.body.password;
+		const name = key_public.encrypt(req.body.name, 'base64');
+		const phone = req.body.phone || '';
+		const city = req.body.city || '';
+		const postalCode = req.body.code || '';
+		const facilityId = mongoose.Types.ObjectId('6450133a0c602dd58d84a7be');
+
+		// Check if the email is provided before checking for an existing user
+		if (email) {
+			const existingUserByEmail = await User.findOne({ email: email });
+			if (existingUserByEmail) {
+				// User with the provided email already exists
+				return res.status(400).json({ error: 'Email already registered' });
+			}
+		}
+
+		// Check if the phone number is provided before checking for an existing user
+		if (phone) {
+			const existingUserByPhone = await User.findOne({ 'info.phone': phone });
+			if (existingUserByPhone) {
+				// User with the provided phone number already exists
+				return res.status(400).json({ error: 'Phone number already registered' });
+			}
+		}
+
+		// Hash the password
+		const hashedPassword = await bcrypt.hash(password, 10);
+
+		// Create a new address object with the rest of the fields as empty strings
+		const address = new Address({
+			_id: new mongoose.Types.ObjectId(),
+			street: '',
+			city: city,
+			state: '',
+			code: postalCode,
+			country: ''
+		});
+
+		// Save the address to the database
+		const savedAddress = await address.save();
+
+		// Get the next sequence value for the new user
+		const sequence_id = await getNextSequenceValue();
+
+		// Create a new user object with the registration data and other fields as empty strings
+		const newUser = new User({
+			_id: new mongoose.Types.ObjectId(),
+			sequence_id: sequence_id,
+			email: email,
+			password: hashedPassword,
+			enabled: true,
+			role: 'Patient',
+			facilityId: facilityId,
+			patients: [], // Empty array
+			workers: [], // Empty array
+			projectList: [], // Empty array
+			collectionList: [], // Empty array
+			memberCollectionList: [], // Empty array
+			memberSurveyList: [], // Empty array
+			research: {
+				full: ''
+			},
+			info: {
+				name: name,
+				gender: '', // Empty string
+				dateOfBirth: '', // Empty string
+				phone: phone,
+				language: '', // Empty string
+				currentAddress: savedAddress._id
+			},
+			status: 'active'
+		});
+
+		// Save the new user to the database
+		const savedUser = await newUser.save();
+
+		console.log('User registered successfully:', savedUser);
+		// Respond with a success message or relevant data
+		return res.status(201).json({ message: 'Registration successful', user: savedUser });
+	} catch (error) {
+		console.error('Error during self registration:', error);
+		return res.status(500).json({ error: 'Internal server error' });
+	}
+};
+
+
 // ====================================================
 // Login
 // ----------------------------------------------------
@@ -548,6 +654,11 @@ exports.login = async (req, res, next) => {
 						fPrefix = facility.prefix;
 					})
 
+				let decryptedGender = '';
+				if (req.user.info.gender) {
+					decryptedGender = key_private.decrypt(req.user.info.gender, 'utf8');
+				}
+
 				const token = signToken(req.user);
 
 				log.info('User ' + req.user.email + ' succesful authenticated.');
@@ -559,7 +670,7 @@ exports.login = async (req, res, next) => {
 						info: {
 							pastAddresses: req.user.info.pastAddresses,
 							name: key_private.decrypt(req.user.info.name, 'utf8'),
-							gender: key_private.decrypt(req.user.info.gender, 'utf8'),
+							gender: decryptedGender,
 							dateOfBirth: req.user.info.dateOfBirth,
 							language: req.user.info.language,
 							currentAddress: req.user.info.currentAddress,
