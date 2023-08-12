@@ -133,7 +133,7 @@ const PublicScreenerReport = (props) => {
     // Render Section ===
 
     return alert != null ? (
-        <div className={classes.root} >
+        <div className={classes.root} style={{}} >
             <Grid
                 container
                 className={classes.rootGrid}
@@ -141,6 +141,10 @@ const PublicScreenerReport = (props) => {
                 // justifyContent="flex-start"
                 // alignItems="stretch"
                 spacing={1}
+                style={{
+                    margin: "0px",
+                    top: "0px",
+                }}
             >
 
                 <Grid item xs={4}>

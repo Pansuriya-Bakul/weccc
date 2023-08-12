@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { TextField, Button, Box, Typography, Grid, Select, MenuItem } from '@material-ui/core';
+import { Checkbox, FormControlLabel } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import purple from '@material-ui/core/colors/purple';
 import { pink } from '@material-ui/core/colors';
@@ -37,7 +38,7 @@ const initialErrorMessages = {
 
 const PublicScreenerSurvey = () => {
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(9);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -63,7 +64,20 @@ const PublicScreenerSurvey = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [reportsData, setReportsData] = useState({});
+    const [reportsData, setReportsData] = useState({
+
+
+        "household2_size": "0",
+        "community_activity_participate": "1",
+        "life_satisfaction2": "6",
+        "local_community_belonging": "1",
+        "lack_companionship": "1",
+        "feel_leftout": "2",
+        "feel_isolated": "1",
+        "con_que": "1"
+
+
+    });
 
     const [answered, setAnswered] = useState(true);
 
@@ -76,6 +90,7 @@ const PublicScreenerSurvey = () => {
     const [felt_left_out, setFelt_left_out] = useState('');
     const [isolation, setIsolation] = useState('');
     const [confidentiality, setConfidentiality] = useState('');
+    const [termsChecked, setTermsChecked] = useState(false);
 
 
     const handleOptionChange = (option) => {
@@ -139,27 +154,40 @@ const PublicScreenerSurvey = () => {
         let sanatized_lastName = lastName.trim().charAt(0).toUpperCase() + lastName.trim().slice(1).toLowerCase();
         let sanatized_email = email ? email.trim().toLowerCase() : "";
         let responseJSON = {
-            "household2_size": household_size,
-            "community_activity_participate": community_participation,
-            "life_satisfaction2": life_satisfaction,
-            "local_community_belonging": community_belonging,
-            "lack_companionship": lack_companionship,
-            "feel_leftout": felt_left_out,
-            "feel_isolated": isolation,
-            "con_que": confidentiality
+            "household2_size": "0",
+            "community_activity_participate": "1",
+            "life_satisfaction2": "6",
+            "local_community_belonging": "1",
+            "lack_companionship": "1",
+            "feel_leftout": "2",
+            "feel_isolated": "1",
+            "con_que": "1"
         }
 
+        // var data = {
+        //     surveyTemplate: surveyTemplate,
+        //     memberInfo: {
+        //         name: sanatized_firstName + " " + sanatized_lastName,
+        //         email: sanatized_email,
+        //         phone: phone,
+        //         postalCode: postalCode,
+        //     },
+        //     source: howDidYouHear,
+        //     responseJSON: responseJSON
+        // };
+
         var data = {
-            surveyTemplate: surveyTemplate,
+            surveyTemplate: mongoose.Types.ObjectId("6327c88700c8944dc44dae38"),
             memberInfo: {
-                name: sanatized_firstName + " " + sanatized_lastName,
-                email: sanatized_email,
-                phone: phone,
-                postalCode: postalCode,
+                name: "John Doe",
+                email: "abc@abc.com",
+                phone: "123456789",
+                postalCode: "N9A 4N5",
             },
-            source: howDidYouHear,
+            source: "HWFC Lab",
             responseJSON: responseJSON
         };
+
 
         try {
             // Send the data as a POST request using Axios with await
@@ -187,16 +215,16 @@ const PublicScreenerSurvey = () => {
 
     const generateReport = () => {
 
-        setReportsData({
-            "household2_size": household_size,
-            "community_activity_participate": community_participation,
-            "life_satisfaction2": life_satisfaction,
-            "local_community_belonging": community_belonging,
-            "lack_companionship": lack_companionship,
-            "feel_leftout": felt_left_out,
-            "feel_isolated": isolation,
-            "con_que": confidentiality
-        });
+        // setReportsData({
+        //     "household2_size": household_size,
+        //     "community_activity_participate": community_participation,
+        //     "life_satisfaction2": life_satisfaction,
+        //     "local_community_belonging": community_belonging,
+        //     "lack_companionship": lack_companionship,
+        //     "feel_leftout": felt_left_out,
+        //     "feel_isolated": isolation,
+        //     "con_que": confidentiality
+        // });
         setReportsData({
             "household2_size": "0",
             "community_activity_participate": "1",
@@ -273,17 +301,21 @@ const PublicScreenerSurvey = () => {
     return (
         <div
             style={{
-                position: 'absolute',
+                position: 'fixed',
                 top: 0,
                 left: 0,
                 right: 0,
+                margin: 0,
+                padding: 0,
+                bottom: 0,
                 maxWidth: '100vw', // Take up the entire viewport width
                 minHeight: '100vh', // Take up the entire viewport height
                 backgroundColor: '#f0f0f0', // Set the background color
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
+                // justifyContent: 'center',
+                overflow: "auto"
             }}
         >
             <Box
@@ -292,9 +324,13 @@ const PublicScreenerSurvey = () => {
                 textAlign="center"
                 style={{
                     top: 0,
-                    position: 'absolute',
+                    margin: 0,
+                    // position: 'absolute',
                     width: '100%',
-                    height: '240px',
+                    // minWidth: '100vw',
+                    // zIndex: 1,
+                    // 
+                    padding: '24px 0',
                     alignItems: 'center',
                     justifyContent: 'center',
                     display: 'flex',
@@ -308,7 +344,7 @@ const PublicScreenerSurvey = () => {
                 </div>
                 <Typography variant="h2">How Good is Your Social Health?</Typography>
             </Box>
-            <Box my={page == 11 ? 16 : 8} /> {/* Spacer */}
+            <Box my={page == 11 ? 4 : 4} /> {/* Spacer */}
 
             {page == 11 ? (
                 <Box
@@ -321,8 +357,8 @@ const PublicScreenerSurvey = () => {
                     bgcolor="#ffffff"
                     borderRadius="8px"
                     maxWidth="64rem"
-                    width="100%"
-                    height= '100%'
+                // width="100%"
+                // height='100%'
                 >
                     <PublicScreenerReport reportsData={reportsData} />
                 </Box>
@@ -332,7 +368,7 @@ const PublicScreenerSurvey = () => {
                     flexDirection="column"
                     alignItems="center"
                     justifyContent="center"
-                    minHeight="400px"
+                    // minHeight="400px"
                     padding="16px"
                     bgcolor="#ffffff"
                     borderRadius="8px"
@@ -471,15 +507,28 @@ const PublicScreenerSurvey = () => {
                         </Button>
                     </Box>}
 
-                    {page == 9 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+                    {page == 9 && <Box textAlign="center" style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}> {/* Center the next button */}
                         <Box my={2} /> {/* Spacer */}
-                        <Button disabled={!answered} variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={termsChecked}
+                                    onChange={(event) => setTermsChecked(event.target.checked)}
+                                    name="termsCheckbox"
+                                    color="primary"
+                                />
+                            }
+                            label="By checking this box, agree to be contacted in the future to receive your private and confidential personal results of the Neighbours mini screening questions, along with suggested community resources, programs and support options, and agree to our terms and conditions" 
+                            style={{width: "80%"}}
+                        />
+                        <Button disabled={!termsChecked} variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
                             Submit Survey
                         </Button>
                     </Box>}
 
                     {/* Add other pages and their questions here */}
                 </Box>}
+            <Box my={4} /> {/* Spacer */}
         </div >
     );
 };
