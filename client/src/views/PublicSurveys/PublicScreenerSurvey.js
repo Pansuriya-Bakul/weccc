@@ -38,7 +38,7 @@ const initialErrorMessages = {
 
 const PublicScreenerSurvey = () => {
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(11);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -68,14 +68,14 @@ const PublicScreenerSurvey = () => {
         
         //Testing data
 
-        // "household2_size": "0",
-        // "community_activity_participate": "1",
-        // "life_satisfaction2": "6",
-        // "local_community_belonging": "1",
-        // "lack_companionship": "1",
-        // "feel_leftout": "2",
-        // "feel_isolated": "1",
-        // "con_que": "1"
+        "household2_size": "0",
+        "community_activity_participate": "1",
+        "life_satisfaction2": "6",
+        "local_community_belonging": "1",
+        "lack_companionship": "1",
+        "feel_leftout": "2",
+        "feel_isolated": "1",
+        "con_que": "1"
 
 
     });
