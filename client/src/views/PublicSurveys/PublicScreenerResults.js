@@ -99,7 +99,7 @@ return (
         <Grid container spacing={2}>
             {reports.household2_size && reports.household2_size !== 999 &&
                 <>
-                    <Grid item xs={12} sm={6} md={4} lg={3} style={{ paddingTop: "24px" }}>
+                    <Grid item xs={12} sm={6} md={4} lg={3} style={{ paddingTop: "24px", backgroundColor:"#faf7ff"}}>
                         <Typography variant="subtitle1">
                             How many people do you live with?
                         </Typography>
@@ -108,14 +108,14 @@ return (
                         </Typography>
                         {reports.household2_size === '0' && <RedFlagIcon />}
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px" }}>
+                    <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px",backgroundColor:"#faf7ff"  }}>
                         <Typography variant="body1" style={{ paddingBottom: "24px" }}>
 
                             People who live alone have fewer opportunities for daily social interaction and support and are at increased risk of loneliness. Studies have shown that living alone, particularly for men, is hazardous to your health
 
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={5} style={{ paddingLeft: '40px', paddingTop: "24px" }}>
+                    <Grid item xs={12} sm={6} md={4} lg={5} style={{ paddingLeft: '40px', paddingTop: "24px" , backgroundColor:"#faf7ff"}}>
                         <Typography variant="body1" style={{ paddingBottom: "24px", whiteSpace: "pre-line" }}>
                             {reports.household2_size === '0' ?
                                 "Recognize the risks of living alone by prioritizing social relationships to make sure you are getting enough social interaction. One to three hours of social interaction per day is recommended - or between seven and 21 hours of social time per week. \n\n Social interactions can include a wide variety of activities: chatting with people on your street, a phone call to a friend, or join an activity that involves others."
@@ -125,7 +125,7 @@ return (
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Divider light />
+                        {/* <Divider light /> */}
                     </Grid>
                 </>
             }
@@ -156,14 +156,14 @@ return (
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Divider light />
+                        {/* <Divider light /> */}
                     </Grid>
                 </>
             }
 
             {reports.life_satisfaction2 && reports.life_satisfaction2 !== 999 &&
                 <>
-                    <Grid item xs={12} sm={6} md={4} lg={3} style={{ paddingTop: "24px" }}>
+                    <Grid item xs={12} sm={6} md={4} lg={3} style={{ paddingTop: "24px" , backgroundColor:"#faf7ff"}}>
                         <Typography variant="subtitle1">
                             Using a scale of 1 to 10 where 1 means "Very dissatisfied" and 10 means "Very satisfied", how do you feel about your life as a whole right now?
                         </Typography>
@@ -172,14 +172,14 @@ return (
                         </Typography>
                         {reports.life_satisfaction2 <= 6 && <RedFlagIcon />}
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px" }}>
+                    <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px" , backgroundColor:"#faf7ff"}}>
                         <Typography variant="body1" style={{ paddingBottom: "24px" }}>
 
                             Low life satisfaction more than doubles the risk of chronic disease and early death. Life satisfaction is strongly associated with sleep problems, pain, obesity, smoking, anxiety, physical activity, diagnosed mental disease, and with higher healthcare utilization and costs.
 
                         </Typography>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4} lg={5} style={{ paddingLeft: '40px', paddingTop: "24px" }}>
+                    <Grid item xs={12} sm={6} md={4} lg={5} style={{ paddingLeft: '40px', paddingTop: "24px" , backgroundColor:"#faf7ff"}}>
                         <Typography variant="body1" style={{ paddingBottom: "24px", whiteSpace: "pre-line" }}>
                             {reports.life_satisfaction2 <= 6 ?
                                 "Life satisfaction is a concern.\n\nFeeling dissatisfied with your life is a sign that you may be experiencing some stressful challenges and may need extra support. Setting goals for what you would like to change, and what you can do to make this happen, can help. Each day, think about what you can do to achieve something that's important, develop good personal relationships with others, and try to find meaning in what's happening to you right now.\n\nYou may benefit from developing a plan and building a network of care that is responsive to all aspects of your physical, emotional, social and spiritual health"
@@ -189,7 +189,7 @@ return (
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Divider light />
+                        {/* <Divider light /> */}
                     </Grid>
                 </>
             }
@@ -220,11 +220,11 @@ return (
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                        <Divider light />
+                        {/* <Divider light /> */}
                     </Grid>
                 </>
             }
-            <Grid item xs={12} sm={6} md={4} lg={3} style={{ paddingTop: "24px" }}>
+            <Grid item xs={12} sm={6} md={4} lg={3} style={{ paddingTop: "24px", backgroundColor:"#faf7ff" }}>
                 {reports.lack_companionship && reports.lack_companionship !== 999 &&
                     <>
                         <Grid item xs={12}>
@@ -268,18 +268,18 @@ return (
                     (reports.feel_leftout == '1' && reports.feel_isolated == '1') ||
                     (reports.lack_companionship == '1' && reports.feel_leftout == '1')) && <RedFlagIcon />}
             </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px" }}>
+            <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px", backgroundColor:"#faf7ff" }}>
                 <Typography variant="body1" style={{ paddingBottom: "24px" }}>
                     Perceived loneliness (even if you are around other people) is worse for health than smoking 15 cigarettes a day or being obese - it is associated with higher risk of stress, anxiety; depression; heart disease; stroke; dementia; falls; use of long-term care; and early death.
                 </Typography>
             </Grid>
-            <Grid item xs={12} sm={6} md={4} lg={5} style={{ paddingLeft: '40px', paddingTop: "24px" }}>
+            <Grid item xs={12} sm={6} md={4} lg={5} style={{ paddingLeft: '40px', paddingTop: "24px", backgroundColor:"#faf7ff" }}>
                 <Typography variant="body1" style={{ paddingBottom: "24px", whiteSpace: "pre-line" }}>
                     {checkConcern()}
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <Divider light />
+                {/* <Divider light /> */}
             </Grid>
         </Grid>
 
