@@ -133,7 +133,7 @@ const PublicScreenerReport = (props) => {
     // Render Section ===
 
     return alert != null ? (
-        <div className={classes.root} >
+        <div className={classes.root} style={{}} >
             <Grid
                 container
                 className={classes.rootGrid}
@@ -141,6 +141,10 @@ const PublicScreenerReport = (props) => {
                 // justifyContent="flex-start"
                 // alignItems="stretch"
                 spacing={1}
+                style={{
+                    margin: "0px",
+                    top: "0px",
+                }}
             >
 
                 <Grid item xs={4}>
@@ -220,7 +224,7 @@ const PublicScreenerReport = (props) => {
                                                 />
                                             </Grid>
 
-
+{/* 
                                             <Grid item xs={12} id="suggestions1" style={{ paddingTop: '30px' }}>
                                                 <Typography
                                                     variant="h5"
@@ -240,7 +244,7 @@ const PublicScreenerReport = (props) => {
                                                     Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
 
                                                 </Typography>
-                                            </Grid>
+                                            </Grid> */}
 
                                         </>
                                     ) : (

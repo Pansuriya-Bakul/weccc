@@ -1,23 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Box, Typography, Container, Grid } from '@material-ui/core';
 import purple from '@material-ui/core/colors/purple';
-import { Radio, RadioGroup, FormControlLabel, FormControl, Rating } from '@material-ui/core';
+import { Radio, RadioGroup, Checkbox, FormControlLabel, FormControl, Rating } from '@material-ui/core';
 
 
 const ScreenerQuestions = (props) => {
     const page = props.page;
     const onOptionChange = props.onOptionChange;
 
+    // const [termsChecked, setTermsChecked] = useState(false);
+
+
+
     const handleChange = (event, value) => {
         // Call the callback function with the selected option
         onOptionChange(value);
     };
 
-    const [rating, setRating] = useState(5); // Default rating value
+    // const [rating, setRating] = useState(5); // Default rating value
 
-    const handleRatingChange = (event, value) => {
-        setRating(value);
-    };
+    // const handleRatingChange = (event, value) => {
+    //     setRating(value);
+    // };
+
+    // const handleTermsCheckChange = (event) => {
+    //     setTermsChecked(event.target.checked);
+    //     onOptionChange('termsCheckbox', event.target.checked);
+    // };
 
 
 
@@ -147,23 +156,6 @@ const ScreenerQuestions = (props) => {
 
             )}
 
-            {page === 9 && (
-                <Box width="80%">
-                    <FormControl component="fieldset">
-                        <Typography variant="h5" align="center" style={{ marginBottom: '1rem' }}>
-                            Confidentiality Question
-                        </Typography>
-                        <Typography variant="h6" align="center" style={{ marginBottom: '1rem' }}>
-                            Do you agree to be contacted in the future to receive your private and confidential personal results of the Neighbours mini screening questions, along with suggested community resources, programs and support options?
-                        </Typography>
-                        <RadioGroup name="livingWith" onChange={(event) => handleChange(event, event.target.value)}>
-                            <FormControlLabel value="1" control={<Radio />} label="Yes" />
-                            <FormControlLabel value="0" control={<Radio />} label="No" />
-                        </RadioGroup>
-                    </FormControl>
-                </Box>
-
-            )}
         </>
     )
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { TextField, Button, Box, Typography, Grid, Select, MenuItem } from '@material-ui/core';
+import { Checkbox, FormControlLabel } from '@material-ui/core';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import purple from '@material-ui/core/colors/purple';
 import { pink } from '@material-ui/core/colors';
@@ -56,14 +57,28 @@ const PublicScreenerSurvey = () => {
     const [emailAndPhoneError, setEmailAndPhoneError] = useState(false);
 
     const [howDidYouHear, setHowDidYouHear] = useState('');
-    const options = ['HWFC Lab', 'WECCC', 'CARP', 'media', 'other'];
+    const options = ['HWFC Lab', 'WECCC', 'CARP', 'Media', 'Other'];
 
     const [isFormTouched, setIsFormTouched] = useState(false);
     const [isFormValid, setIsFormValid] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [reportsData, setReportsData] = useState({});
+    const [reportsData, setReportsData] = useState({
+        
+        //Testing data
+
+        // "household2_size": "0",
+        // "community_activity_participate": "1",
+        // "life_satisfaction2": "6",
+        // "local_community_belonging": "1",
+        // "lack_companionship": "1",
+        // "feel_leftout": "2",
+        // "feel_isolated": "1",
+        // "con_que": "1"
+
+
+    });
 
     const [answered, setAnswered] = useState(true);
 
@@ -76,6 +91,7 @@ const PublicScreenerSurvey = () => {
     const [felt_left_out, setFelt_left_out] = useState('');
     const [isolation, setIsolation] = useState('');
     const [confidentiality, setConfidentiality] = useState('');
+    const [termsChecked, setTermsChecked] = useState(false);
 
 
     const handleOptionChange = (option) => {
@@ -161,6 +177,20 @@ const PublicScreenerSurvey = () => {
             responseJSON: responseJSON
         };
 
+        // Test data
+        // var data = {
+        //     surveyTemplate: mongoose.Types.ObjectId("6327c88700c8944dc44dae38"),
+        //     memberInfo: {
+        //         name: "John Doe",
+        //         email: "abc@abc.com",
+        //         phone: "123456789",
+        //         postalCode: "N9A 4N5",
+        //     },
+        //     source: "HWFC Lab",
+        //     responseJSON: responseJSON
+        // };
+
+
         try {
             // Send the data as a POST request using Axios with await
             const response = await axios({
@@ -196,16 +226,6 @@ const PublicScreenerSurvey = () => {
             "feel_leftout": felt_left_out,
             "feel_isolated": isolation,
             "con_que": confidentiality
-        });
-        setReportsData({
-            "household2_size": "0",
-            "community_activity_participate": "1",
-            "life_satisfaction2": "6",
-            "local_community_belonging": "1",
-            "lack_companionship": "1",
-            "feel_leftout": "2",
-            "feel_isolated": "1",
-            "con_que": "1"
         });
 
         setPage(page + 1);
@@ -273,17 +293,21 @@ const PublicScreenerSurvey = () => {
     return (
         <div
             style={{
-                position: 'absolute',
+                position: 'fixed',
                 top: 0,
                 left: 0,
                 right: 0,
+                margin: 0,
+                padding: 0,
+                bottom: 0,
                 maxWidth: '100vw', // Take up the entire viewport width
                 minHeight: '100vh', // Take up the entire viewport height
                 backgroundColor: '#f0f0f0', // Set the background color
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
+                // justifyContent: 'center',
+                overflow: "auto"
             }}
         >
             <Box
@@ -292,9 +316,13 @@ const PublicScreenerSurvey = () => {
                 textAlign="center"
                 style={{
                     top: 0,
-                    position: 'absolute',
+                    margin: 0,
+                    // position: 'absolute',
                     width: '100%',
-                    height: '240px',
+                    // minWidth: '100vw',
+                    // zIndex: 1,
+                    // 
+                    padding: '24px 0',
                     alignItems: 'center',
                     justifyContent: 'center',
                     display: 'flex',
@@ -303,12 +331,12 @@ const PublicScreenerSurvey = () => {
                 }}
             >
                 <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '16px' }}>
-                    <img src={hwfclogo} alt="HWFC Logo" style={{ height: '40px' }} />
+                    <a href="https://hwfc.ca/activation/"><img src={hwfclogo} alt="HWFC Logo" style={{ height: '40px' }} /></a>
                     <Typography variant="h6">Social Health Screener - Take the Survey</Typography>
                 </div>
                 <Typography variant="h2">How Good is Your Social Health?</Typography>
             </Box>
-            <Box my={page == 11 ? 16 : 8} /> {/* Spacer */}
+            <Box my={page == 11 ? 4 : 4} /> {/* Spacer */}
 
             {page == 11 ? (
                 <Box
@@ -321,10 +349,13 @@ const PublicScreenerSurvey = () => {
                     bgcolor="#ffffff"
                     borderRadius="8px"
                     maxWidth="64rem"
-                    width="100%"
-                    height= '100%'
+                // width="100%"
+                // height='100%'
                 >
                     <PublicScreenerReport reportsData={reportsData} />
+                    <Button variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
+                        What Next?
+                    </Button>
                 </Box>
             ) :
                 < Box
@@ -332,7 +363,7 @@ const PublicScreenerSurvey = () => {
                     flexDirection="column"
                     alignItems="center"
                     justifyContent="center"
-                    minHeight="400px"
+                    // minHeight="400px"
                     padding="16px"
                     bgcolor="#ffffff"
                     borderRadius="8px"
@@ -471,15 +502,46 @@ const PublicScreenerSurvey = () => {
                         </Button>
                     </Box>}
 
-                    {page == 9 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+                    {page == 9 && <Box textAlign="center" style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
                         <Box my={2} /> {/* Spacer */}
-                        <Button disabled={!answered} variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={termsChecked}
+                                    onChange={(event) => setTermsChecked(event.target.checked)}
+                                    name="termsCheckbox"
+                                    color="primary"
+                                />
+                            }
+                            label="By checking this box, agree to be contacted in the future to receive your private and confidential personal results of the Neighbours mini screening questions, along with suggested community resources, programs and support options, and agree to our terms and conditions"
+                            style={{ width: "80%" }}
+                        />
+                        <Button disabled={!termsChecked} variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
                             Submit Survey
                         </Button>
                     </Box>}
+                    {page == 12 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
+                        <Typography
+                            variant="h5"
+                            align="center"
+                            gutterBottom
 
-                    {/* Add other pages and their questions here */}
+                        >
+                            Next Steps
+                        </Typography>
+                        <Typography
+                            variant="body1"
+                            align="left"
+                            gutterBottom
+                        >
+                            Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br><br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
+                        </Typography>
+                        <Button variant="contained" color="primary" onClick={()=>{setPage(page-1)}} style={{ width: '200px' }}>
+                            Back to My Report
+                        </Button>
+                    </Box>}
                 </Box>}
+            <Box my={4} /> {/* Spacer */}
         </div >
     );
 };
