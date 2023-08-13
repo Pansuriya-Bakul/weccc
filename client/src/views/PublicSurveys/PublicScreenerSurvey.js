@@ -38,7 +38,7 @@ const initialErrorMessages = {
 
 const PublicScreenerSurvey = () => {
 
-    const [page, setPage] = useState(9);
+    const [page, setPage] = useState(1);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -57,7 +57,7 @@ const PublicScreenerSurvey = () => {
     const [emailAndPhoneError, setEmailAndPhoneError] = useState(false);
 
     const [howDidYouHear, setHowDidYouHear] = useState('');
-    const options = ['HWFC Lab', 'WECCC', 'CARP', 'media', 'other'];
+    const options = ['HWFC Lab', 'WECCC', 'CARP', 'Media', 'Other'];
 
     const [isFormTouched, setIsFormTouched] = useState(false);
     const [isFormValid, setIsFormValid] = useState(false);
@@ -65,16 +65,17 @@ const PublicScreenerSurvey = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [reportsData, setReportsData] = useState({
+        
+        //Testing data
 
-
-        "household2_size": "0",
-        "community_activity_participate": "1",
-        "life_satisfaction2": "6",
-        "local_community_belonging": "1",
-        "lack_companionship": "1",
-        "feel_leftout": "2",
-        "feel_isolated": "1",
-        "con_que": "1"
+        // "household2_size": "0",
+        // "community_activity_participate": "1",
+        // "life_satisfaction2": "6",
+        // "local_community_belonging": "1",
+        // "lack_companionship": "1",
+        // "feel_leftout": "2",
+        // "feel_isolated": "1",
+        // "con_que": "1"
 
 
     });
@@ -154,39 +155,40 @@ const PublicScreenerSurvey = () => {
         let sanatized_lastName = lastName.trim().charAt(0).toUpperCase() + lastName.trim().slice(1).toLowerCase();
         let sanatized_email = email ? email.trim().toLowerCase() : "";
         let responseJSON = {
-            "household2_size": "0",
-            "community_activity_participate": "1",
-            "life_satisfaction2": "6",
-            "local_community_belonging": "1",
-            "lack_companionship": "1",
-            "feel_leftout": "2",
-            "feel_isolated": "1",
-            "con_que": "1"
+            "household2_size": household_size,
+            "community_activity_participate": community_participation,
+            "life_satisfaction2": life_satisfaction,
+            "local_community_belonging": community_belonging,
+            "lack_companionship": lack_companionship,
+            "feel_leftout": felt_left_out,
+            "feel_isolated": isolation,
+            "con_que": confidentiality
         }
 
-        // var data = {
-        //     surveyTemplate: surveyTemplate,
-        //     memberInfo: {
-        //         name: sanatized_firstName + " " + sanatized_lastName,
-        //         email: sanatized_email,
-        //         phone: phone,
-        //         postalCode: postalCode,
-        //     },
-        //     source: howDidYouHear,
-        //     responseJSON: responseJSON
-        // };
-
         var data = {
-            surveyTemplate: mongoose.Types.ObjectId("6327c88700c8944dc44dae38"),
+            surveyTemplate: surveyTemplate,
             memberInfo: {
-                name: "John Doe",
-                email: "abc@abc.com",
-                phone: "123456789",
-                postalCode: "N9A 4N5",
+                name: sanatized_firstName + " " + sanatized_lastName,
+                email: sanatized_email,
+                phone: phone,
+                postalCode: postalCode,
             },
-            source: "HWFC Lab",
+            source: howDidYouHear,
             responseJSON: responseJSON
         };
+
+        // Test data
+        // var data = {
+        //     surveyTemplate: mongoose.Types.ObjectId("6327c88700c8944dc44dae38"),
+        //     memberInfo: {
+        //         name: "John Doe",
+        //         email: "abc@abc.com",
+        //         phone: "123456789",
+        //         postalCode: "N9A 4N5",
+        //     },
+        //     source: "HWFC Lab",
+        //     responseJSON: responseJSON
+        // };
 
 
         try {
@@ -215,25 +217,15 @@ const PublicScreenerSurvey = () => {
 
     const generateReport = () => {
 
-        // setReportsData({
-        //     "household2_size": household_size,
-        //     "community_activity_participate": community_participation,
-        //     "life_satisfaction2": life_satisfaction,
-        //     "local_community_belonging": community_belonging,
-        //     "lack_companionship": lack_companionship,
-        //     "feel_leftout": felt_left_out,
-        //     "feel_isolated": isolation,
-        //     "con_que": confidentiality
-        // });
         setReportsData({
-            "household2_size": "0",
-            "community_activity_participate": "1",
-            "life_satisfaction2": "6",
-            "local_community_belonging": "1",
-            "lack_companionship": "1",
-            "feel_leftout": "2",
-            "feel_isolated": "1",
-            "con_que": "1"
+            "household2_size": household_size,
+            "community_activity_participate": community_participation,
+            "life_satisfaction2": life_satisfaction,
+            "local_community_belonging": community_belonging,
+            "lack_companionship": lack_companionship,
+            "feel_leftout": felt_left_out,
+            "feel_isolated": isolation,
+            "con_que": confidentiality
         });
 
         setPage(page + 1);
@@ -339,7 +331,7 @@ const PublicScreenerSurvey = () => {
                 }}
             >
                 <div style={{ display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '16px' }}>
-                    <img src={hwfclogo} alt="HWFC Logo" style={{ height: '40px' }} />
+                    <a href="https://hwfc.ca/activation/"><img src={hwfclogo} alt="HWFC Logo" style={{ height: '40px' }} /></a>
                     <Typography variant="h6">Social Health Screener - Take the Survey</Typography>
                 </div>
                 <Typography variant="h2">How Good is Your Social Health?</Typography>
@@ -361,6 +353,9 @@ const PublicScreenerSurvey = () => {
                 // height='100%'
                 >
                     <PublicScreenerReport reportsData={reportsData} />
+                    <Button variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
+                        What Next?
+                    </Button>
                 </Box>
             ) :
                 < Box
@@ -507,7 +502,7 @@ const PublicScreenerSurvey = () => {
                         </Button>
                     </Box>}
 
-                    {page == 9 && <Box textAlign="center" style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}> {/* Center the next button */}
+                    {page == 9 && <Box textAlign="center" style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
                         <Box my={2} /> {/* Spacer */}
                         <FormControlLabel
                             control={
@@ -518,15 +513,33 @@ const PublicScreenerSurvey = () => {
                                     color="primary"
                                 />
                             }
-                            label="By checking this box, agree to be contacted in the future to receive your private and confidential personal results of the Neighbours mini screening questions, along with suggested community resources, programs and support options, and agree to our terms and conditions" 
-                            style={{width: "80%"}}
+                            label="By checking this box, agree to be contacted in the future to receive your private and confidential personal results of the Neighbours mini screening questions, along with suggested community resources, programs and support options, and agree to our terms and conditions"
+                            style={{ width: "80%" }}
                         />
                         <Button disabled={!termsChecked} variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
                             Submit Survey
                         </Button>
                     </Box>}
+                    {page == 12 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
+                        <Typography
+                            variant="h5"
+                            align="center"
+                            gutterBottom
 
-                    {/* Add other pages and their questions here */}
+                        >
+                            Next Steps
+                        </Typography>
+                        <Typography
+                            variant="body1"
+                            align="left"
+                            gutterBottom
+                        >
+                            Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br><br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
+                        </Typography>
+                        <Button variant="contained" color="primary" onClick={()=>{setPage(page-1)}} style={{ width: '200px' }}>
+                            Back to My Report
+                        </Button>
+                    </Box>}
                 </Box>}
             <Box my={4} /> {/* Spacer */}
         </div >
