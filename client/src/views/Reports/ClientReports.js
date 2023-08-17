@@ -39,7 +39,8 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from "@material-ui/core";
+import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
 
 // ==================== MUI Icons ====================
 
@@ -143,8 +144,6 @@ const ClientReports = (props) => {
       });
     }
   }, [appState]);
-
-
 
   const getNeighbours = useCallback(
     (userId) => {
@@ -359,11 +358,12 @@ const ClientReports = (props) => {
             {/* </Card>
             </Grid> */}
             <Grid item xs={12}>
-              <Card raised={true} style={{ padding: '10px' }}>
+              <Card raised={true} style={{ padding: "10px" }}>
                 <Box mx={1} my={1} boxShadow={0}>
-
-                  {isLoading ? (<CircularProgress />)
-                    : <Grid
+                  {isLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    <Grid
                       container
                       direction="column"
                       justifyContent="flex-start"
@@ -371,8 +371,9 @@ const ClientReports = (props) => {
                       spacing={1}
                     >
                       {reportsData &&
-                        Object.keys(reportsData).length != 0 &&
-                        Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                      Object.keys(reportsData).length != 0 &&
+                      Object.getPrototypeOf(reportsData) ===
+                        Object.prototype ? (
                         <>
                           <Grid item xs={12}>
                             <Typography variant="h4" color="textPrimary">
@@ -410,6 +411,20 @@ const ClientReports = (props) => {
                               collection={currentReportIndex}
                             />
                           </Grid>
+                          <Grid item xs={12} id="summary">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Social and Community Connections
+                            </Typography>
+                            <SocialAndCommunityConnections
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
 
                           {/* <Grid item xs={12} id="summary1">
                             <Typography
@@ -426,38 +441,41 @@ const ClientReports = (props) => {
                             />
                           </Grid> */}
 
-                          {anyFlags && <Grid item xs={12} id="possible concerns">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Possible Concerns
-                            </Typography>
-                            <PossibleConcerns
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid>}
+                          {anyFlags && (
+                            <Grid item xs={12} id="possible concerns">
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                              >
+                                Possible Concerns
+                              </Typography>
+                              <PossibleConcerns
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
+                          )}
 
-                          {anyFlags && <Grid item xs={12} id="suggestions">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Suggestions
-                            </Typography>
-                            <Suggestions
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid>}
+                          {anyFlags && (
+                            <Grid item xs={12} id="suggestions">
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                              >
+                                Suggestions
+                              </Typography>
+                              <Suggestions
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
+                          )}
                         </>
                       ) : (
-
                         <>
                           <Typography
                             variant="subtitle2"
@@ -466,12 +484,11 @@ const ClientReports = (props) => {
                             gutterBottom
                           >
                             No available reports.
-
                           </Typography>
                         </>
                       )}
                     </Grid>
-                  }
+                  )}
                 </Box>
               </Card>
             </Grid>
@@ -505,8 +522,8 @@ ClientReports.propTypes = {
 
 ClientReports.defaultProps = {
   appState: {},
-  ToggleDrawerClose: () => { },
-  CheckAuthenticationValidity: () => { },
+  ToggleDrawerClose: () => {},
+  CheckAuthenticationValidity: () => {},
 };
 
 export default ClientReports; // You can even shorthand this line by adding this at the function [Component] declaration stage
