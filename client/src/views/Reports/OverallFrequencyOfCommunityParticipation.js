@@ -50,7 +50,7 @@ export default function OverallFrequencyOfCommunityParticipation({ source }) {
           {text} Community Connection
         </Typography>
         {/* avg is 0-5 */}
-        Community Connection Score: {avg}
+        Community Connection Score: {avg.toFixed(2)}
       </Box>
     </>
   );
