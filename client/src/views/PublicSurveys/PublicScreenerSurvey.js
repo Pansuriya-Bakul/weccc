@@ -16,8 +16,7 @@ import {
     ValidateName,
     ValidatePhoneNo
 } from "../../helpers/utils/validation";
-import { error } from 'jquery';
-import { set } from 'joi/lib/types/lazy';
+
 import PublicScreenerReport from './PublicScreenerReport';
 
 
@@ -65,7 +64,7 @@ const PublicScreenerSurvey = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [reportsData, setReportsData] = useState({
-        
+
         //Testing data
 
         // "household2_size": "0",
@@ -91,7 +90,7 @@ const PublicScreenerSurvey = () => {
     const [felt_left_out, setFelt_left_out] = useState('');
     const [isolation, setIsolation] = useState('');
     const [confidentiality, setConfidentiality] = useState('');
-    const [termsChecked, setTermsChecked] = useState(false);
+    // const [termsChecked, setTermsChecked] = useState(false);
 
 
     const handleOptionChange = (option) => {
@@ -117,13 +116,12 @@ const PublicScreenerSurvey = () => {
 
             };
 
-            if (error.email == 'Cannot be empty' && error.phone == 'Cannot be empty') {
-                error.email = 'Enter either email or phone number';
-                error.phone = '';
-            } else if (error.email == "Cannot be empty") {
+            if (error.email == 'Cannot be empty' || error.email == '') { // email is not a required field
                 error.email = '';
-            } else if (error.phone == "Cannot be empty") {
-                error.phone = '';
+            }
+
+            if (error.phone == 'cannot be empty' || error.email == '') { // phone is not a required field
+                error.phone = ''
             }
 
             seterrorMessages({ ...errorMessages, ...error });
@@ -253,9 +251,9 @@ const PublicScreenerSurvey = () => {
         const phoneValidation = ValidatePhoneNo(phone);
         let phoneError = '';
 
-        if (errorMessages.email == 'Enter either email or phone number') {
-            errorMessages.email = '';
-        }
+        // if (errorMessages.email == 'Enter either email or phone number') {
+        //     errorMessages.email = '';
+        // }
 
         if (phoneValidation !== "" && phoneValidation !== 'Cannot be empty') {
             setPhoneError(true);
@@ -502,21 +500,16 @@ const PublicScreenerSurvey = () => {
                         </Button>
                     </Box>}
 
-                    {page == 9 && <Box textAlign="center" style={{ paddingBottom: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
+                    {page == 9 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
                         <Box my={2} /> {/* Spacer */}
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={termsChecked}
-                                    onChange={(event) => setTermsChecked(event.target.checked)}
-                                    name="termsCheckbox"
-                                    color="primary"
-                                />
-                            }
-                            label="By checking this box, agree to be contacted in the future to receive your private and confidential personal results of the Neighbours mini screening questions, along with suggested community resources, programs and support options, and agree to our terms and conditions"
-                            style={{ width: "80%" }}
-                        />
-                        <Button disabled={!termsChecked} variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
+                        <Typography
+                            variant="h6"
+                            align="center"
+                            gutterBottom
+                        >
+                            By clicking the "Submit Survey" button, I agree to be contacted in the future to receive helpful information about this topic. I also confirm I have reviewed and agree to HWFC Lab terms and conditions regarding collection of my personal information.
+                        </Typography>
+                        <Button variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
                             Submit Survey
                         </Button>
                     </Box>}
@@ -536,7 +529,7 @@ const PublicScreenerSurvey = () => {
                         >
                             Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br><br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
                         </Typography>
-                        <Button variant="contained" color="primary" onClick={()=>{setPage(page-1)}} style={{ width: '200px' }}>
+                        <Button variant="contained" color="primary" onClick={() => { setPage(page - 1) }} style={{ width: '200px' }}>
                             Back to My Report
                         </Button>
                     </Box>}
