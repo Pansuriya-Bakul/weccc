@@ -45,7 +45,7 @@ function ValidatePhoneNo(input) {
     error = "Invalid phone number";
   } else if (input.length < 10) {
     error = "Invalid phone number. Please enter 10 digits";
-  } else if (input.length > 10) {
+  } else if (input.length > 11) {
     error = "Invalid phone number. Please enter 10 digits";
   }
   return error;
