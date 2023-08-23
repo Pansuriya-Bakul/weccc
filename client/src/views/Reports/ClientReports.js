@@ -42,6 +42,9 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 import { CircularProgress } from "@material-ui/core";
 import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
 
+import GaugeChart from "react-gauge-chart";
+import "../../css/gauge-chart.css";
+
 // ==================== MUI Icons ====================
 
 // ==================== MUI Styles ===================
@@ -93,6 +96,8 @@ const ClientReports = (props) => {
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
+
+  const [gaugeValue, setgaugeValue] = useState(26);
 
   // Functions ===
 
@@ -391,6 +396,25 @@ const ClientReports = (props) => {
                             >
                               Highlights
                             </Typography>
+                            {/* chart */}
+                            <div className="gauge-chart">
+                              <div class="c-circle c-circle--background">
+                                {[1, 2, 3, 4, 5, 6, 7].map((index, i) => (
+                                  <div
+                                    class={`c-circle__segment c-circle__segment--${index}`}
+                                  ></div>
+                                ))}
+                              </div>
+                              <GaugeChart
+                                id="gauge-chart2"
+                                nrOfLevels={20}
+                                percent={gaugeValue / 100}
+                                colors={["#FF5F6D", "#FFC371"]}
+                                arcWidth={0.3}
+                              />
+                              <span className="value">{gaugeValue}</span>
+                            </div>
+                            {/* ///// */}
                             <ReportDashboard
                               reports={reportsData}
                               collection={currentReportIndex}
