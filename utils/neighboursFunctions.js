@@ -548,7 +548,7 @@ function quality_of_social_contact(question) {
   let DF2 = parseInt(question.DF7) || 0;
   let DF3 = parseInt(question.DF8) || 0;
 
-  DF_array = [DF6, DF7, DF8];
+  DF_array = [DF1, DF2, DF3];
   sum_array = new Array();
 
   DF_array.forEach((item) => {
@@ -556,18 +556,18 @@ function quality_of_social_contact(question) {
       sum_array.push(item);
     }
   });
-
+  console.log(DF1, DF2, DF3, sum_array);
   if (sum_array.length == 0) {
     return 0;
   }
 
   let sum = sum_array.reduce((a, b) => a + b, 0);
-
-  if (sum >= 2) {
-    return 2;
-  } else if (sum >= 0 && sum < 2) {
-    return 1;
-  }
+  return sum;
+  // if (sum >= 2) {
+  //   return 2;
+  // } else if (sum >= 0 && sum < 2) {
+  //   return 1;
+  // }
 }
 
 function perceived_social_support(question) {
