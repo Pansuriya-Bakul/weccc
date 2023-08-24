@@ -48,7 +48,7 @@
   display: block;
   width: 200%;
   height: 200%;
-  border: solid 140px #172951;
+  /* border: solid 140px #172951; */
   border-radius: 50%;
   box-sizing: border-box;
   transform: skewX(-60deg);
@@ -56,7 +56,7 @@
 .c-circle--background .c-circle__segment:before {
   border-style: solid;
   border-width: 50px;
-  border-color: #f00;
+  /* border-color: #f00; */
   transform: skewX(-56deg);
 }
 

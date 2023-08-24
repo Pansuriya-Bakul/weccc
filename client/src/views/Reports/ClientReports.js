@@ -402,6 +402,7 @@ const ClientReports = (props) => {
                                 {[1, 2, 3, 4, 5, 6, 7].map((index, i) => (
                                   <div
                                     class={`c-circle__segment c-circle__segment--${index}`}
+                                    style={{ color: "green" }}
                                   ></div>
                                 ))}
                               </div>
