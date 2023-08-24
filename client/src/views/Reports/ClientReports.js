@@ -396,7 +396,7 @@ const ClientReports = (props) => {
                             ></ReportDashboard>
                           </Grid>
 
-                          <Grid item xs={12} id="summary">
+                          <Grid item xs={12} id="summary" style={{marginTop:'18px'}}>
                             <Typography
                               variant="h5"
                               color="textSecondary"
