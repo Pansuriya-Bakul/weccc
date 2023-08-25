@@ -1277,7 +1277,7 @@ function meaningful_activities(question) {
         // answer_array.push(String(item.column1).toLowerCase().trim());
         answer_array.push(
           item.column1.charAt(0).toUpperCase() +
-            item.column1.slice(1).toLowerCase().trim()
+          item.column1.slice(1).toLowerCase().trim()
         );
       }
     });
@@ -1303,7 +1303,7 @@ function challenging_activities(question) {
         // answer_array.push(String(item.column1).toLowerCase().trim());
         answer_array.push(
           item.column1.charAt(0).toUpperCase() +
-            item.column1.slice(1).toLowerCase().trim()
+          item.column1.slice(1).toLowerCase().trim()
         );
       }
     });
@@ -1963,19 +1963,19 @@ function problem_walking(question) {
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 0) {
-    DF = "Inability";
-  } else if (DF == 1) {
-    DF = "Severe Problem";
-  } else if (DF == 2) {
-    DF = "Moderate Problem";
-  } else if (DF == 3) {
-    DF = "Slight Problem";
-  } else if (DF == 4) {
-    DF = "No Problem";
-  } else {
-    DF = 999;
-  }
+  // if (DF == 0) {
+  //   DF = "Inability";
+  // } else if (DF == 1) {
+  //   DF = "Severe Problem";
+  // } else if (DF == 2) {
+  //   DF = "Moderate Problem";
+  // } else if (DF == 3) {
+  //   DF = "Slight Problem";
+  // } else if (DF == 4) {
+  //   DF = "No Problem";
+  // } else {
+  //   DF = 999;
+  // }
 
   return DF;
 }
@@ -1994,19 +1994,19 @@ function problem_washing_dressing(question) {
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 0) {
-    DF = "Inability";
-  } else if (DF == 1) {
-    DF = "Severe Problem";
-  } else if (DF == 2) {
-    DF = "Moderate Problem";
-  } else if (DF == 3) {
-    DF = "Slight Problem";
-  } else if (DF == 4) {
-    DF = "No Problem";
-  } else {
-    DF = 999;
-  }
+  // if (DF == 0) {
+  //   DF = "Inability";
+  // } else if (DF == 1) {
+  //   DF = "Severe Problem";
+  // } else if (DF == 2) {
+  //   DF = "Moderate Problem";
+  // } else if (DF == 3) {
+  //   DF = "Slight Problem";
+  // } else if (DF == 4) {
+  //   DF = "No Problem";
+  // } else {
+  //   DF = 999;
+  // }
 
   return DF;
 }
@@ -2025,19 +2025,19 @@ function problem_usual_activities(question) {
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 0) {
-    DF = "Inability";
-  } else if (DF == 1) {
-    DF = "Severe Problem";
-  } else if (DF == 2) {
-    DF = "Moderate Problem";
-  } else if (DF == 3) {
-    DF = "Slight Problem";
-  } else if (DF == 4) {
-    DF = "No Problem";
-  } else {
-    DF = 999;
-  }
+  // if (DF == 0) {
+  //   DF = "Inability";
+  // } else if (DF == 1) {
+  //   DF = "Severe Problem";
+  // } else if (DF == 2) {
+  //   DF = "Moderate Problem";
+  // } else if (DF == 3) {
+  //   DF = "Slight Problem";
+  // } else if (DF == 4) {
+  //   DF = "No Problem";
+  // } else {
+  //   DF = 999;
+  // }
 
   return DF;
 }
@@ -2056,19 +2056,19 @@ function problem_pain_discomfort(question) {
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 0) {
-    DF = "Inability";
-  } else if (DF == 1) {
-    DF = "Severe Problem";
-  } else if (DF == 2) {
-    DF = "Moderate Problem";
-  } else if (DF == 3) {
-    DF = "Slight Problem";
-  } else if (DF == 4) {
-    DF = "No Problem";
-  } else {
-    DF = 999;
-  }
+  // if (DF == 0) {
+  //   DF = "Inability";
+  // } else if (DF == 1) {
+  //   DF = "Severe Problem";
+  // } else if (DF == 2) {
+  //   DF = "Moderate Problem";
+  // } else if (DF == 3) {
+  //   DF = "Slight Problem";
+  // } else if (DF == 4) {
+  //   DF = "No Problem";
+  // } else {
+  //   DF = 999;
+  // }
 
   return DF;
 }
@@ -2087,19 +2087,19 @@ function problem_anxious_depressed(question) {
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 0) {
-    DF = "Inability";
-  } else if (DF == 1) {
-    DF = "Severe Problem";
-  } else if (DF == 2) {
-    DF = "Moderate Problem";
-  } else if (DF == 3) {
-    DF = "Slight Problem";
-  } else if (DF == 4) {
-    DF = "No Problem";
-  } else {
-    DF = 999;
-  }
+  // if (DF == 0) {
+  //   DF = "Inability";
+  // } else if (DF == 1) {
+  //   DF = "Severe Problem";
+  // } else if (DF == 2) {
+  //   DF = "Moderate Problem";
+  // } else if (DF == 3) {
+  //   DF = "Slight Problem";
+  // } else if (DF == 4) {
+  //   DF = "No Problem";
+  // } else {
+  //   DF = 999;
+  // }
 
   return DF;
 }
@@ -2286,7 +2286,8 @@ function goals(question) {
 
   question.forEach((item) => {
     if (item.hasOwnProperty("goal") && item.hasOwnProperty("first_step")) {
-      answer_array.push(String(item.goal).toLowerCase().trim());
+      // answer_array.push(String(item.goal).toLowerCase().trim());
+      answer_array.push(item.goal.charAt(0).toUpperCase() + item.goal.slice(1).toLowerCase().trim());
     }
   });
 

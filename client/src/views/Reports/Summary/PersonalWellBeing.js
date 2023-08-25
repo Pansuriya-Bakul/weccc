@@ -63,10 +63,22 @@
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import HealthToday from './HealthToday';
+import PersonalWellBeingBar from './PersonalWellBeingBar';
 
 export default class PersonalWellBeing extends Component {
   render() {
     const PWI_QofL3_COMB = this.props.reports.PWI_QofL3_COMB[this.props.collection];
+
+    console.log(this.props.reports.LS_QofL3_SD[this.props.collection])
+    console.log(this.props.reports.SL_QofL3_SD[this.props.collection])
+    console.log(this.props.reports.YH_QofL3_SD[this.props.collection])
+    console.log(this.props.reports.FPC_QofL3_SD[this.props.collection])
+    console.log(this.props.reports.AL_QofL3_SD[this.props.collection])
+    console.log(this.props.reports.PR_QofL3_SD[this.props.collection])
+    console.log(this.props.reports.HSF_QofL3_SD[this.props.collection])
+    console.log(this.props.reports.FS_QofL3_SD[this.props.collection])
+    console.log(this.props.reports.SR_QofL3_SD[this.props.collection])
 
     return (
       <>
@@ -109,7 +121,11 @@ export default class PersonalWellBeing extends Component {
             )}
 
             {PWI_QofL3_COMB !== 999 && <Typography display="block" variant="subtitle1" align="left" gutterBottom>
-              Personal Well-Being Score: {PWI_QofL3_COMB}
+              <div style={{ width: '200px', height: '200px' }}>
+                <HealthToday data={PWI_QofL3_COMB} label="Personal Well-Being Score" />
+              </div>
+
+              {/* Personal Well-Being Score: {PWI_QofL3_COMB} */}
             </Typography>}</> : <Typography
               variant="subtitle2"
               color="textSecondary"
@@ -118,6 +134,34 @@ export default class PersonalWellBeing extends Component {
             >
             Data not available
           </Typography>}
+
+          {this.props.reports.LS_QofL3_SD[this.props.collection] !== 999 &&
+            this.props.reports.SL_QofL3_SD[this.props.collection] !== 999 &&
+            this.props.reports.YH_QofL3_SD[this.props.collection] !== 999 &&
+            this.props.reports.FPC_QofL3_SD[this.props.collection] !== 999 &&
+            this.props.reports.AL_QofL3_SD[this.props.collection] !== 999 &&
+            this.props.reports.PR_QofL3_SD[this.props.collection] !== 999 &&
+            this.props.reports.HSF_QofL3_SD[this.props.collection] !== 999 &&
+            this.props.reports.FS_QofL3_SD[this.props.collection] !== 999 &&
+            this.props.reports.SR_QofL3_SD[this.props.collection] !== 999 ? (
+            <>
+              <PersonalWellBeingBar id="personalWellBeingChart"
+                life_satisfaction={this.props.reports.LS_QofL3_SD[this.props.collection]}
+                your_standard_of_living={this.props.reports.SL_QofL3_SD[this.props.collection]}
+                your_health={this.props.reports.YH_QofL3_SD[this.props.collection]}
+                feeling_part_of_the_community={this.props.reports.FPC_QofL3_SD[this.props.collection]}
+                what_you_are_achieving_in_life={this.props.reports.AL_QofL3_SD[this.props.collection]}
+                personal_relationships={this.props.reports.PR_QofL3_SD[this.props.collection]}
+                how_safe_you_feel={this.props.reports.HSF_QofL3_SD[this.props.collection]}
+                future_security={this.props.reports.FS_QofL3_SD[this.props.collection]}
+                your_spirituality_or_religion={this.props.reports.SR_QofL3_SD[this.props.collection]}
+              />
+            </>
+          ) : (
+            <Typography display="block" variant="subtitle2" color="textSecondary" align="left" gutterBottom>
+              Data not available.
+            </Typography>
+          )}
         </Box>
 
       </>
