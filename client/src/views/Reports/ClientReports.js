@@ -410,7 +410,7 @@ const ClientReports = (props) => {
                                 id="gauge-chart2"
                                 nrOfLevels={20}
                                 percent={gaugeValue / 100}
-                                colors={["#FF5F6D", "#FFC371"]}
+                                colors={["#000000", "#FFC371"]}
                                 arcWidth={0.3}
                               />
                               <span className="value">{gaugeValue}</span>
