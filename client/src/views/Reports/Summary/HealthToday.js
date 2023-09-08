@@ -1,102 +1,53 @@
-import React, { Component } from 'react';
-import Chart from 'chart.js/auto';
+import React from 'react';
+import './ProgressBar.css';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 
-export default class HealthToday extends Component {
-    chartRef = React.createRef();
+const HealthToday = ({ data }) => {
+    let colorClass;
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            score: this.props.data,
-            label: '',
-        };
+    if (data >= 0 && data <= 15) {
+        colorClass = "red";
+    } else if (data <= 30) {
+        colorClass = "orange";
+    } else if (data <= 55) {
+        colorClass = "yellow";
+    } else if (data <= 80) {
+        colorClass = "olive";
+    } else {
+        colorClass = "green";
     }
 
-    componentDidUpdate() {
-        const ctx = this.chartRef.current.getContext('2d');
+    // Calculate the left position for the arrow based on the data value
+    const arrowLeftPosition = `${data}%`;
 
-        new Chart(ctx, {
-            type: 'doughnut',
-            options: {
-                rotation: 270,
-                circumference: 180,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            font: {
-                                size: 12,
-                            },
-                        },
-                    },
-                    title: {
-                        display: true,
-                        text: 'Health Today',
-                    },
-                    tooltip: {
-                        enabled: false,
-                    },
-                },
-            },
-            data: {
-                labels: [this.state.label],
-                datasets: [
-                    {
-                        data: [this.state.score, 100 - this.state.score],
-                        borderColor: '#0',
-                        backgroundColor: [
-                            this.findColour(this.state.score),
-                            '#FFFFFF',
-                        ],
-                        fill: false,
-                    },
-                ],
-            },
-        });
-    }
+    return (
+        <div className="progress-bar">
+            <div className={`progress ${colorClass}`} >
+                <div className="tick-container">
+                    {[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map(value => (
+                        <React.Fragment key={value}>
+                            <div className="tick" style={{ left: `${value}%` }}></div>
+                            <div className="small-tick" style={{ left: `${value + 1}%` }}></div>
+                            <div className="small-tick" style={{ left: `${value + 2}%` }}></div>
+                            <div className="small-tick" style={{ left: `${value + 3}%` }}></div>
+                            <div className="small-tick" style={{ left: `${value + 4}%` }}></div>
+                            <div className="medium-tick" style={{ left: `${value + 5}%` }}></div>
+                            <div className="small-tick" style={{ left: `${value + 6}%` }}></div>
+                            <div className="small-tick" style={{ left: `${value + 7}%` }}></div>
+                            <div className="small-tick" style={{ left: `${value + 8}%` }}></div>
+                            <div className="small-tick" style={{ left: `${value + 9}%` }}></div>
 
-    componentDidMount() {
-        const { score } = this.state;
-        const label = this.findLabel(score);
-
-        this.setState({ label });
-    }
-
-    findColour = (score) => {
-        if (score < 25) {
-            return '#E74C3C'; // red
-        } else if (score < 50) {
-            return '#F4D03F'; // orange
-        } else if (score < 75) {
-            return '#F39C12'; // yellow
-        } else if (score < 101) {
-            return '#27AE60'; // green
-        } else {
-            return '#7D3C98'; // purple / incomplete / missing
-        }
-    };
-
-    findLabel = (score) => {
-        if (score < 25) {
-            return 'Poor';
-        } else if (score < 50) {
-            return 'Fair';
-        } else if (score < 75) {
-            return 'Good';
-        } else if (score < 101) {
-            return 'Excellent';
-        } else {
-            return '';
-        }
-    };
-
-    render() {
-        return (
-            <div>
-                <canvas id="myChart" ref={this.chartRef} />
+                            <span className="tick-label" style={{ left: `${value}%` }}>{value}</span>
+                        </React.Fragment>
+                    ))}
+                </div>
             </div>
-        );
-    }
-}
+            <div className="data-arrow" style={{ left: arrowLeftPosition }}>
+                <ArrowDropUpIcon fontSize="large" />
+                <span className="data-value">{data}</span>
+            </div>
+        </div>
+    );
+};
+
+export default HealthToday;

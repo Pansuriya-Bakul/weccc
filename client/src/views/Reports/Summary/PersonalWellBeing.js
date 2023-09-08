@@ -70,16 +70,6 @@ export default class PersonalWellBeing extends Component {
   render() {
     const PWI_QofL3_COMB = this.props.reports.PWI_QofL3_COMB[this.props.collection];
 
-    console.log(this.props.reports.LS_QofL3_SD[this.props.collection])
-    console.log(this.props.reports.SL_QofL3_SD[this.props.collection])
-    console.log(this.props.reports.YH_QofL3_SD[this.props.collection])
-    console.log(this.props.reports.FPC_QofL3_SD[this.props.collection])
-    console.log(this.props.reports.AL_QofL3_SD[this.props.collection])
-    console.log(this.props.reports.PR_QofL3_SD[this.props.collection])
-    console.log(this.props.reports.HSF_QofL3_SD[this.props.collection])
-    console.log(this.props.reports.FS_QofL3_SD[this.props.collection])
-    console.log(this.props.reports.SR_QofL3_SD[this.props.collection])
-
     return (
       <>
         <Typography variant="h6" color="secondary" align="left" gutterBottom>
@@ -118,22 +108,32 @@ export default class PersonalWellBeing extends Component {
                   I am not at all satisfied with my life right now&nbsp;
                 </Typography>
               </Typography>
-            )}
+            )}</> : (
+            <Typography variant="subtitle2" color="textSecondary" align="left" gutterBottom>
+              Data not available
+            </Typography>
+          )}
 
-            {PWI_QofL3_COMB !== 999 && <Typography display="block" variant="subtitle1" align="left" gutterBottom>
-              <div style={{ width: '200px', height: '200px' }}>
-                <HealthToday data={PWI_QofL3_COMB} label="Personal Well-Being Score" />
+          {PWI_QofL3_COMB !== 999 ? (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div>
+                <Typography display="block" variant="subtitle1" align="center" gutterBottom>
+                  Personal Well-Being
+                </Typography>
+                <div style={{ width: '600px', height: '100px', margin: '0 auto' }}>
+                  <HealthToday data={PWI_QofL3_COMB} />
+                </div>
+                <Typography display="block" component="div" align="center">
+                  Overall Score: {PWI_QofL3_COMB}
+                </Typography>
               </div>
+            </div>
+          ) : (
+            <Typography variant="subtitle2" color="textSecondary" align="left" gutterBottom>
+              Data not available
+            </Typography>
+          )}
 
-              {/* Personal Well-Being Score: {PWI_QofL3_COMB} */}
-            </Typography>}</> : <Typography
-              variant="subtitle2"
-              color="textSecondary"
-              align="left"
-              gutterBottom
-            >
-            Data not available
-          </Typography>}
 
           {this.props.reports.LS_QofL3_SD[this.props.collection] !== 999 &&
             this.props.reports.SL_QofL3_SD[this.props.collection] !== 999 &&

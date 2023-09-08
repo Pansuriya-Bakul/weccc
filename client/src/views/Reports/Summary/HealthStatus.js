@@ -89,13 +89,22 @@ export default class HealthStatus extends Component {
           )} */}
 
           {this.props.reports.HT_QofL2_SD[this.props.collection] !== 999 && (
-            <Typography display="block" component="div" align="left" gutterBottom>
-              <div style={{ width: '200px', height: '200px' }}>
-                <HealthToday data={this.props.reports.HT_QofL2_SD[this.props.collection]} label="Health Today" />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div>
+                <Typography display="block" component="div" align="center" gutterBottom>
+                  Health Today
+                </Typography>
+                <div style={{ width: '600px', height: '100px', margin: '0 auto' }}>
+                  <HealthToday data={this.props.reports.HT_QofL2_SD[this.props.collection]} />
+                </div>
+                <Typography display="block" component="div" align="center">
+                  Overall Score: {this.props.reports.HT_QofL2_SD[this.props.collection]}
+                </Typography>
               </div>
-            </Typography>
-
+            </div>
           )}
+
+
 
           {this.props.reports.problem_walking[this.props.collection] !== 999 &&
             this.props.reports.problem_washing_dressing[this.props.collection] !== 999 &&
