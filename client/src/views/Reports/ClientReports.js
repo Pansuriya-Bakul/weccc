@@ -397,9 +397,14 @@ const ClientReports = (props) => {
                               Highlights
                             </Typography>
                             {/* chart */}
+                            <div className="gauge-boxes">
+                              <div className="gauge-box-health">
+                                <span>Health</span>
+                              </div>
+                            </div>
                             <div className="gauge-chart">
                               <div class="c-circle c-circle--background">
-                                {[1, 2, 3, 4, 5, 6, 7].map((index, i) => (
+                                {[1, 2, 3, 4, 5, 6, 7, 8].map((index, i) => (
                                   <div
                                     class={`c-circle__segment c-circle__segment--${index}`}
                                     style={{ color: "green" }}
@@ -407,19 +412,21 @@ const ClientReports = (props) => {
                                 ))}
                               </div>
                               <GaugeChart
-                                id="gauge-chart2"
+                                className="gauge-chart2"
                                 nrOfLevels={20}
                                 percent={gaugeValue / 100}
                                 colors={["#000000", "#FFC371"]}
                                 arcWidth={0.3}
+                                style={{ width: "80%"}}
+                                hideText={true}
                               />
                               <span className="value">{gaugeValue}</span>
                             </div>
                             {/* ///// */}
-                            <ReportDashboard
+                            {/* <ReportDashboard
                               reports={reportsData}
                               collection={currentReportIndex}
-                            ></ReportDashboard>
+                            ></ReportDashboard> */}
                           </Grid>
 
                           <Grid item xs={12} id="summary">
