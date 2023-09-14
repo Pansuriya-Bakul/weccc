@@ -28,15 +28,16 @@ const satisfactionLabels = [
 ];
 
 const getColorFromScore = (score) => {
-    if (score === 0) return '#B22222'; // Red
-    else if (score === 10) return '#27AE60'; // Green
+    if (score >= 0 && score <= 2) return '#E74C3C'; // Red
+    else if (score >= 3 && score <= 4) return '#F4D03F'; // Orange
+    else if (score >= 5 && score <= 6) return '#F39C12'; // Yellow
+    else if (score >= 7 && score <= 8) return '#a9c517'; // olive
+    else if (score >= 9 && score <= 10) return '#27AE60'; // Green
     else {
-        // Calculate gradient color between red and green based on score
-        const r = Math.floor((10 - score) * 22.5);
-        const g = Math.floor(score * 22.5);
-        return `rgb(${r},${g},0)`;
+        throw new Error('Invalid score range. Score should be between 0 and 10.');
     }
 };
+
 
 const PersonalWellBeingBar = ({
     life_satisfaction,
@@ -70,7 +71,17 @@ const PersonalWellBeingBar = ({
                             future_security,
                             your_spirituality_or_religion
                         ],
-                        backgroundColor: labels.map((label, index) => getColorFromScore(index)),
+                        backgroundColor: [
+                            getColorFromScore(life_satisfaction),
+                            getColorFromScore(your_standard_of_living),
+                            getColorFromScore(your_health),
+                            getColorFromScore(feeling_part_of_the_community),
+                            getColorFromScore(what_you_are_achieving_in_life),
+                            getColorFromScore(personal_relationships),
+                            getColorFromScore(how_safe_you_feel),
+                            getColorFromScore(future_security),
+                            getColorFromScore(your_spirituality_or_religion)
+                        ],
                         borderColor: 'rgba(0, 0, 0, 0)'
                     }
                 ]
@@ -120,24 +131,8 @@ const PersonalWellBeingBar = ({
                                 switch (value) {
                                     case 0:
                                         return 'No Satisfaction';
-                                    case 1:
-                                        return 'Very Low Satisfaction';
-                                    case 2:
-                                        return 'Low Satisfaction';
-                                    case 3:
-                                        return 'Below Average Satisfaction';
-                                    case 4:
-                                        return 'Average Satisfaction';
                                     case 5:
-                                        return 'Above Average Satisfaction';
-                                    case 6:
-                                        return 'Moderate Satisfaction';
-                                    case 7:
-                                        return 'High Satisfaction';
-                                    case 8:
-                                        return 'Very High Satisfaction';
-                                    case 9:
-                                        return 'Extremely High Satisfaction';
+                                        return 'Average Satisfaction';
                                     case 10:
                                         return 'Complete Satisfaction';
                                     default:
