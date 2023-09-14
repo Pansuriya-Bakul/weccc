@@ -5,6 +5,7 @@ import DashboardPie from "./Summary/DashbordPie";
 import DashboardCombo from "./Summary/DashboardCombo";
 import DashboardBarGraph from "./Summary/DashboardBarGraph";
 import HighlightBox from "./Summary/HighlightBox";
+import CircleGraphic from "./Summary/CircleGraphic";
 
 
 
@@ -51,7 +52,8 @@ export default class ReportDashboard extends Component {
                     <div className="dashboard-item">
                         {/* <DashboardPie data={this.findDashboardValues(this.props.reports, this.props.collection)}></DashboardPie> */}
                         {/* <DashboardBarGraph data={this.findDashboardValues(this.props.reports, this.props.collection)}></DashboardBarGraph> */}
-                        <HighlightBox data={this.findDashboardValues(this.props.reports, this.props.collection)}></HighlightBox>
+                        {/* <HighlightBox data={this.findDashboardValues(this.props.reports, this.props.collection)}></HighlightBox> */}
+                        <CircleGraphic />
                     </div>
                     {/* <div className="dashboard-item">
                         <DashboardCombo data={this.findDashboardValues(this.props.reports, this.props.collection)}></DashboardCombo>
