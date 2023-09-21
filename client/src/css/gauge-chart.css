@@ -158,6 +158,7 @@
   z-index: 2;
   background-color: white;
   border: 2px solid red;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
   width: 128px;
   height: 56px;
   position: absolute;

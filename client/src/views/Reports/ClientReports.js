@@ -45,7 +45,9 @@ import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
 import GaugeChart from "react-gauge-chart";
 import "../../css/gauge-chart.css";
 
-// ==================== MUI Icons ====================
+// ==================== FontAwesome Icons ====================
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 // ==================== MUI Styles ===================
 
