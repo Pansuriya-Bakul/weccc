@@ -1,6 +1,6 @@
 import React from 'react';
 import './ProgressBar.css';
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
 const HealthToday = ({ data }) => {
     let colorClass;
@@ -42,9 +42,10 @@ const HealthToday = ({ data }) => {
                     ))}
                 </div>
             </div>
-            <div className="data-arrow" style={{ left: arrowLeftPosition }}>
-                <ArrowDropUpIcon fontSize="large" />
-                <span className="data-value">{data}</span>
+            <div className="data-value-container" style={{ left: arrowLeftPosition }}>
+                <div className={`data-value-oval`}>
+                    <span className="data-value">{data}</span>
+                </div>
             </div>
         </div>
     );
