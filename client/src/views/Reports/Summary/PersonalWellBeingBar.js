@@ -93,7 +93,7 @@ const PersonalWellBeingBar = ({
                             label: (context) => {
                                 const yValue = context.parsed.y;
                                 const yLabel = satisfactionLabels[yValue];
-                                return `${labels[context.dataIndex]}: ${yLabel}`;
+                                return `${labels[context.dataIndex]}: ${yValue}`;
                             }
                         }
                     },
