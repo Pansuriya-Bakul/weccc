@@ -401,7 +401,17 @@ const ClientReports = (props) => {
                             {/* chart */}
                             <div className="gauge-boxes">
                               <div className="gauge-box-health">
+                                <div className="gauge-box-health-inner">
+                                <div className="gauge-box-health-icon">
+                                  <FontAwesomeIcon icon={faHeartPulse} />
+                                </div>
+                                <div className="gauge-box-health-text">
                                 <span>Health</span>
+                                </div>
+                                </div>
+                              </div>
+                              <div className="gauge-box-function">
+                                <span>Function</span>
                               </div>
                             </div>
                             <div className="gauge-chart">
