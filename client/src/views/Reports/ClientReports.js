@@ -47,7 +47,7 @@ import "../../css/gauge-chart.css";
 
 // ==================== FontAwesome Icons ====================
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers, faPersonCane } from '@fortawesome/free-solid-svg-icons'
+import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers, faPersonCane, faHandshake, faPerson } from '@fortawesome/free-solid-svg-icons'
 
 // ==================== MUI Styles ===================
 
@@ -99,7 +99,7 @@ const ClientReports = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
 
-  const [gaugeValue, setgaugeValue] = useState(26);
+  const [gaugeValue, setgaugeValue] = useState(56);
 
   // Functions ===
 
@@ -399,6 +399,7 @@ const ClientReports = (props) => {
                               Highlights
                             </Typography>
                             {/* chart */}
+
                             <div className="gauge-boxes">
                               <div className="gauge-box-health">
                                 <div className="gauge-box-inner">
@@ -406,8 +407,8 @@ const ClientReports = (props) => {
                                     <FontAwesomeIcon icon={faHeartPulse} />
                                   </div>
                                   <div className="gauge-box-text">
-                                    <span style={{ fontWeight: 500 }}>Health</span>
-                                    <span>Excellent</span>
+                                    <span className="guage-box-text-title">Health</span>
+                                    <span className="guage-box-text-score">Excellent</span>
                                   </div>
                                 </div>
                               </div>
@@ -418,8 +419,8 @@ const ClientReports = (props) => {
                                     <FontAwesomeIcon icon={faPersonCane} />
                                   </div>
                                   <div className="gauge-box-text">
-                                    <span style={{ fontWeight: 500 }}>Function</span>
-                                    <span>Excellent</span>
+                                    <span className="guage-box-text-title">Function</span>
+                                    <span className="guage-box-text-score">Excellent</span>
                                   </div>
                                 </div>
                               </div>
@@ -430,8 +431,8 @@ const ClientReports = (props) => {
                                     <FontAwesomeIcon icon={faBrain} />
                                   </div>
                                   <div className="gauge-box-text">
-                                    <span style={{ fontWeight: 500 }}>Mental Health</span>
-                                    <span>Excellent</span>
+                                    <span className="guage-box-text-title">Mental Health</span>
+                                    <span className="guage-box-text-score">Excellent</span>
                                   </div>
                                 </div>
                               </div>
@@ -439,41 +440,93 @@ const ClientReports = (props) => {
                               <div className="gauge-box-wellbeing">
                                 <div className="gauge-box-inner">
                                   <div className="gauge-box-icon">
-                                    <FontAwesomeIcon icon={faFaceSmile} />
+                                    <FontAwesomeIcon icon={faSpa} />
                                   </div>
                                   <div className="gauge-box-text">
-                                    <span style={{ fontWeight: 500 }}>Mental Health</span>
-                                    <span>Excellent</span>
+                                    <span className="guage-box-text-title">Well-being</span>
+                                    <span className="guage-box-text-score">Excellent</span>
                                   </div>
                                 </div>
                               </div>
 
-                            </div>
-                            <div className="gauge-chart">
-                              <div class="c-circle c-circle--background">
-                                {[1, 2, 3, 4, 5, 6, 7, 8].map((index, i) => (
-                                  <div
-                                    class={`c-circle__segment c-circle__segment--${index}`}
-                                    style={{ color: "green" }}
-                                  ></div>
-                                ))}
+                              <div className="gauge-box-lifesatisfaction">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faFaceSmile} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Life Satisfaction</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
                               </div>
-                              <GaugeChart
-                                className="gauge-chart2"
-                                nrOfLevels={20}
-                                percent={gaugeValue / 100}
-                                colors={["#000000", "#FFC371"]}
-                                arcWidth={0.3}
-                                style={{ width: "80%" }}
-                                hideText={true}
-                              />
-                              <span className="value">{gaugeValue}</span>
+
+                              <div className="gauge-box-community">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faHandshake} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Community Belonging</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-loneliness">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faUsers} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">loneliness</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-isolation">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faPerson} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">isolation</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+
                             </div>
-                            {/* ///// */}
-                            {/* <ReportDashboard
+                            <div className="wheel-graphic">
+                              <div className="gauge-chart">
+                                <div class="c-circle c-circle--background">
+                                  {[1, 2, 3, 4, 5, 6, 7, 8].map((index, i) => (
+                                    <div
+                                      class={`c-circle__segment c-circle__segment--${index}`}
+                                      style={{ color: "green" }}
+                                    ></div>
+                                  ))}
+                                </div>
+                                <GaugeChart
+                                  className="gauge-chart2"
+                                  nrOfLevels={20}
+                                  percent={gaugeValue / 100}
+                                  colors={["red", "green"]}
+                                  arcWidth={0.3}
+                                  style={{ width: "80%" }}
+                                  hideText={true}
+                                />
+                                <span className="value">{gaugeValue}</span>
+                              </div>
+                              {/* ///// */}
+                              {/* <ReportDashboard
                               reports={reportsData}
                               collection={currentReportIndex}
                             ></ReportDashboard> */}
+                            </div>
+
                           </Grid>
 
                           <Grid item xs={12} id="summary">
@@ -583,7 +636,7 @@ const ClientReports = (props) => {
           </Typography>
         )}
       </Grid>
-    </div>
+    </div >
   ) : (
     <Typography variant="h6" color="inherit" align="center" gutterBottom>
       Not Authorized. Please refresh and try again.

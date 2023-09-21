@@ -1,18 +1,22 @@
+.wheel-graphic{
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: flex;
+}
+
 .gauge-chart {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-left: 90px;
-
-  /* border: 65px dashed #000000;
-  border-radius: 50%; */
+  margin-right: 50px;
+  /* margin-top: -20px; */
   width: 500px;
   height: 500px;
   overflow: hidden;
   z-index: 1;
 }
-
 
 .gauge-chart .value {
   font-size: 116px;
@@ -21,22 +25,11 @@
 
 .c-circle {
   position: absolute;
-  /* top: 10px;
-  left: 50%; */
   width: 500px;
   height: 500px;
-  /* border-radius: 50%;
-  background: transparent;
-  overflow: hidden;
-  line-height: 1;
-  transform: translate(-50%, 0); */
+
 }
 
-.c-circle--background {
-  /* top: 5px;
-  width: 510px;
-  height: 510px; */
-}
 
 .c-circle__segment {
   position: absolute;
@@ -68,86 +61,35 @@
   transform: rotateZ(45deg) rotateX(0deg) skewX(56deg);
 }
 
-/* .c-circle--background .c-circle__segment--1 {
-  transform: rotateZ(52deg) rotateX(0deg) skewX(56deg);
-} */
-
 .c-circle__segment--2 {
   transform: rotateZ(90deg) rotateX(0deg) skewX(56deg);
 }
 
-/* .c-circle--background .c-circle__segment--2 {
-  transform: rotateZ(104deg) rotateX(0deg) skewX(56deg);
-} */
 
 .c-circle__segment--3 {
   transform: rotateZ(135deg) rotateX(0deg) skewX(56deg);
 }
 
-/* .c-circle--background .c-circle__segment--3 {
-  transform: rotateZ(158deg) rotateX(0deg) skewX(56deg);
-} */
 
 .c-circle__segment--4 {
   transform: rotateZ(180deg) rotateX(0deg) skewX(56deg);
 }
 
-/* .c-circle--background .c-circle__segment--4 {
-  transform: rotateZ(210deg) rotateX(0deg) skewX(56deg);
-} */
-
 .c-circle__segment--5 {
   transform: rotateZ(225deg) rotateX(0deg) skewX(56deg);
 }
-
-/* .c-circle--background .c-circle__segment--5 {
-  transform: rotateZ(262deg) rotateX(0deg) skewX(56deg);
-} */
 
 .c-circle__segment--6 {
   transform: rotateZ(270deg) rotateX(0deg) skewX(56deg);
 }
 
-/* .c-circle--background .c-circle__segment--6 {
-  transform: rotateZ(314deg) rotateX(0deg) skewX(56deg);
-} */
-
 .c-circle__segment--7 {
   transform: rotateZ(315deg) rotateX(0deg) skewX(56deg);
 }
 
-/* .c-circle--background .c-circle__segment--7 {
-  transform: rotateZ(360deg) rotateX(0deg) skewX(56deg);
-} */
 .c-circle__segment--8 {
   transform: rotateZ(360deg) rotateX(0deg) skewX(56deg);
 }
-
-/* .c-circle--background .c-circle__segment--8 {
-  transform: rotateZ(360deg) rotateX(0deg) skewX(56deg);
-} */
-
-/* .c-circle__segment:hover:before {
-  border-color: #faa614;
-} */
-
-/* .c-circle__inner {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  left: 50%;
-  top: 50%;
-  margin-top: -100px;
-  margin-left: -100px;
-  background-color: #1729519e;
-  color: #faa614;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-size: 1.5rem;
-} */
 
 .gauge-chart2 {
   margin-top: 32px;
@@ -159,19 +101,19 @@
   background-color: white;
   border: 2px solid green;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
-  width: 128px;
+  width: 200px;
   height: 56px;
   position: absolute;
   top: 300px;
-  left: 400px;
+  left: 710px;
 }
 
 .gauge-box-inner{
   display: flex;
-  /* gap: 5px; */
+  gap: 10px;
   height: 100%;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
 }
 
 .gauge-box-icon{
@@ -184,6 +126,15 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
+}
+
+.guage-box-text-title{
+  font-weight: 700;
+}
+
+.guage-box-text-score{
+  font-weight: 500;
 }
 
 .gauge-box-function{
@@ -191,11 +142,11 @@
   background-color: white;
   border: 2px solid green;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
-  width: 128px;
+  width: 200px;
   height: 56px;
   position: absolute;
   top: 300px;
-  left: 700px;
+  left: 1100px;
 }
 
 .gauge-box-mentalhealth{
@@ -203,10 +154,76 @@
   background-color: white;
   border: 2px solid green;
   box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
-  width: 150px;
-  height: 60px;
+  width: 200px;
+  height: 56px;
   position: absolute;
-  top: 400px;
-  left: 800px;
+  top: 410px;
+  left: 1200px;
+}
+
+.gauge-box-wellbeing{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 570px;
+  left: 1200px;
+}
+
+.gauge-box-lifesatisfaction{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 700px;
+  left: 1100px;
+}
+
+.gauge-box-community{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 710px;
+  left: 750px;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-box-loneliness{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 600px;
+  left: 620px;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-box-isolation{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 430px;
+  left: 620px;
+  align-items: center;
+  justify-content: center;
 }
 
