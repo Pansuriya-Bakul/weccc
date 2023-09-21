@@ -47,7 +47,7 @@ import "../../css/gauge-chart.css";
 
 // ==================== FontAwesome Icons ====================
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers, faPersonCane } from '@fortawesome/free-solid-svg-icons'
 
 // ==================== MUI Styles ===================
 
@@ -401,18 +401,53 @@ const ClientReports = (props) => {
                             {/* chart */}
                             <div className="gauge-boxes">
                               <div className="gauge-box-health">
-                                <div className="gauge-box-health-inner">
-                                <div className="gauge-box-health-icon">
-                                  <FontAwesomeIcon icon={faHeartPulse} />
-                                </div>
-                                <div className="gauge-box-health-text">
-                                <span>Health</span>
-                                </div>
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faHeartPulse} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span style={{ fontWeight: 500 }}>Health</span>
+                                    <span>Excellent</span>
+                                  </div>
                                 </div>
                               </div>
+
                               <div className="gauge-box-function">
-                                <span>Function</span>
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faPersonCane} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span style={{ fontWeight: 500 }}>Function</span>
+                                    <span>Excellent</span>
+                                  </div>
+                                </div>
                               </div>
+
+                              <div className="gauge-box-mentalhealth">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faBrain} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span style={{ fontWeight: 500 }}>Mental Health</span>
+                                    <span>Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-wellbeing">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faFaceSmile} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span style={{ fontWeight: 500 }}>Mental Health</span>
+                                    <span>Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
                             </div>
                             <div className="gauge-chart">
                               <div class="c-circle c-circle--background">
@@ -429,7 +464,7 @@ const ClientReports = (props) => {
                                 percent={gaugeValue / 100}
                                 colors={["#000000", "#FFC371"]}
                                 arcWidth={0.3}
-                                style={{ width: "80%"}}
+                                style={{ width: "80%" }}
                                 hideText={true}
                               />
                               <span className="value">{gaugeValue}</span>
