@@ -378,8 +378,8 @@ const ClientReports = (props) => {
                       spacing={1}
                     >
                       {reportsData &&
-                      Object.keys(reportsData).length != 0 &&
-                      Object.getPrototypeOf(reportsData) ===
+                        Object.keys(reportsData).length != 0 &&
+                        Object.getPrototypeOf(reportsData) ===
                         Object.prototype ? (
                         <>
                           <Grid item xs={12}>
@@ -556,8 +556,8 @@ ClientReports.propTypes = {
 
 ClientReports.defaultProps = {
   appState: {},
-  ToggleDrawerClose: () => {},
-  CheckAuthenticationValidity: () => {},
+  ToggleDrawerClose: () => { },
+  CheckAuthenticationValidity: () => { },
 };
 
 export default ClientReports; // You can even shorthand this line by adding this at the function [Component] declaration stage
