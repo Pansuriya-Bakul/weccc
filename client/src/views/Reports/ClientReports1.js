@@ -348,7 +348,8 @@ const ClientReports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      My Reports
+                      {appState.name}'s Reports 
+
                     </Typography>
                   </Grid>
                 </Grid>
