@@ -1,5 +1,4 @@
 export const getOtherLanguages = (languages) =>{
- console.log(languages)
   const formatedArrayOfLanguages = (languages.split(',')).map((str) =>
      str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
   );

@@ -369,8 +369,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             setLanguage2Error(false);
         }
         setLanguage2(event.target.value);
-
-    }, [wordsRegex, setLanguage2, setLanguage2Error, language2]);
+    }, [wordsRegex, setLanguage2, setLanguage2Error, userEdit,language2]);
 
     function extractDigits(phoneNumber) {
         // Remove all non-digit characters from the phone number
@@ -699,14 +698,13 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                 };
             }
         }
-
         if (isLanguage2) {
             if (language2 !== userEdit.info.language) {
                 updateData = {
                     ...updateData,
                     info: {
                         ...updateData.info,
-                        language: language2
+                        language:language2
                     }
                 };
             }
@@ -813,7 +811,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         updateData = {
             info: {
                 ...updateData.info,
-                language: getOtherLanguages(userEdit.info.language),
+                language: getOtherLanguages(updateData.info.language),
             }
         };
         if (userID != null) {
