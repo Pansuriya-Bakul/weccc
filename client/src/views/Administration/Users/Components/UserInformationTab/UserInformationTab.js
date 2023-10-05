@@ -50,6 +50,8 @@ import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import SaveIcon from '@material-ui/icons/Save';
 import get from "../../../../../helpers/common/get";
+import { validateOtherLanguages } from '../../../../../helpers/utils/validation';
+import { getAddress, getOtherLanguages } from '../../../../../helpers/common/helperFunctions';
 
 // ==================== MUI Styles ===================
 
@@ -61,6 +63,9 @@ const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
     },
     rootGrid: {
         height: '100%'
+    },
+    languageOption:{
+        color:'red'
     }
 }));
 
@@ -146,13 +151,11 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
     const editablePropertiesHandler = useCallback((event) => {
 
+        setUserEdit({...userOriginal})
         setEditable(!editable);
 
         if (userOriginal) {
-            setUserEdit(
-                {
-                    ...userOriginal,
-                }
+            setUserEdit({...userOriginal}
             );
 
             setName(userOriginal.info.name);
@@ -358,16 +361,16 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
     }, [setLanguage]);
 
     const language2Handler = useCallback((event) => {
-        if (wordsRegex.test(String(event.target.value))) {
+
+        let error = validateOtherLanguages(event.target.value)
+        if (error !== "") {
+            setLanguage2Error(true);
+        } else {
             setLanguage2Error(false);
         }
-        else {
-            setLanguage2Error(true);
-        }
-
         setLanguage2(event.target.value);
 
-    }, [wordsRegex, setLanguage2, setLanguage2Error]);
+    }, [wordsRegex, setLanguage2, setLanguage2Error, language2]);
 
     function extractDigits(phoneNumber) {
         // Remove all non-digit characters from the phone number
@@ -397,17 +400,17 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
         }
 
-        // setUserEdit({
-        //     ...userEdit,
-        //     info: {
-        //         ...userEdit.info,
-        //         phone: event.target.value
-        //     }
-        // });
+        setUserEdit({
+            ...userEdit,
+            info: {
+                ...userEdit.info,
+                phone: event.target.value
+            }
+        });
 
         setPhone(digits);
 
-    }, [setPhone, setPhoneError, phoneRegex]);
+    }, [setPhone, setPhoneError, phoneRegex, userEdit]);
 
     const streetHandler = useCallback((event) => {
         if (streetRegex.test(String(event.target.value))) {
@@ -423,52 +426,52 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
         }
 
-        // setUserEdit({
-        //     ...userEdit,
-        //     info: {
-        //         ...userEdit.info,
-        //         currentAddress: {
-        //             ...userEdit.info.currentAddress,
-        //             street: event.target.value
-        //         }
-        //     }
-        // });
+        setUserEdit({
+            ...userEdit,
+            info: {
+                ...userEdit.info,
+                currentAddress: {
+                    street: event.target.value
+                }
+            }
+        });
 
         setStreet(event.target.value);
 
-    }, [setStreet, setStreetError, streetRegex]);
+    }, [setStreet,userEdit, setStreetError, streetRegex]);
 
     const cityHandler = useCallback((event) => {
-        // setUserEdit({
-        //     ...userEdit,
-        //     info: {
-        //         ...userEdit.info,
-        //         currentAddress: {
-        //             ...userEdit.info.currentAddress,
-        //             city: event.target.value
-        //         }
-        //     }
-        // });
+        
+        setUserEdit({
+            ...userEdit,
+            info: {
+                ...userEdit.info,
+                currentAddress: {
+                    ...userEdit.info.currentAddress,
+                    city: event.target.value
+                }
+            }
+        });
 
         setCity(event.target.value);
 
-    }, [setCity]);
+    }, [setCity,userEdit]);
 
     const provinceHandler = useCallback((event) => {
-        // setUserEdit({
-        //     ...userEdit,
-        //     info: {
-        //         ...userEdit.info,
-        //         currentAddress: {
-        //             ...userEdit.info.currentAddress,
-        //             state: event.target.value
-        //         }
-        //     }
-        // });
+        setUserEdit({
+            ...userEdit,
+            info: {
+                ...userEdit.info,
+                currentAddress: {
+                    ...userEdit.info.currentAddress,
+                    state: event.target.value
+                }
+            }
+        });
 
         setProvince(event.target.value);
 
-    }, [setProvince]);
+    }, [setProvince,userEdit]);
 
     const postalCodeHandler = useCallback((event) => {
         if (postalCodeRegex.test(String(event.target.value))) {
@@ -482,37 +485,36 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                 setPostalCodeError(true);
             }
         }
-
-        // setUserEdit({
-        //     ...userEdit,
-        //     info: {
-        //         ...userEdit.info,
-        //         currentAddress: {
-        //             ...userEdit.info.currentAddress,
-        //             code: event.target.value
-        //         }
-        //     }
-        // });
+        setUserEdit({
+            ...userEdit,
+            info: {
+                ...userEdit.info,
+                currentAddress: {
+                    ...userEdit.info.currentAddress,
+                    code: event.target.value
+                }
+            }
+        });
 
         setPostalCode(event.target.value);
 
-    }, [setPostalCode, setPostalCodeError, postalCodeRegex]);
+    }, [setPostalCode, setPostalCodeError, userEdit,postalCodeRegex]);
 
     const countryHandler = useCallback((event) => {
-        // setUserEdit({
-        //     ...userEdit,
-        //     info: {
-        //         ...userEdit.info,
-        //         currentAddress: {
-        //             ...userEdit.info.currentAddress,
-        //             country: event.target.value
-        //         }
-        //     }
-        // });
+        setUserEdit({
+            ...userEdit,
+            info: {
+                ...userEdit.info,
+                currentAddress: {
+                    ...userEdit.info.currentAddress,
+                    country: event.target.value
+                }
+            }
+        });
 
         setCountry(event.target.value);
 
-    }, [setCountry]);
+    }, [setCountry,userEdit]);
 
     const referralHandler = useCallback((event) => {
 
@@ -647,7 +649,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             setReferralError(false);
         }
 
-    }, [userOriginal, setUserEdit, setName, setNameError, setDateOfBirth, setDateOfBirthError, setGender, setGenderError, setIsGender2, setGender2, setGender2Error,
+    }, [userOriginal,userEdit, setUserEdit, setName, setNameError, setDateOfBirth, setDateOfBirthError, setGender, setGenderError, setIsGender2, setGender2, setGender2Error,
         setLanguage, setLanguageError, setIsLanguage2, setLanguage2, setLanguage2Error, setPhone, setPhoneError, setStreet, setStreetError, setPostalCode, setPostalCodeError, setCity, setCityError,
         setProvince, setProvinceError, setCountry, setCountryError, setReferral, setReferralError]);
 
@@ -657,18 +659,17 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             setParentAlert(new AlertType('One or more fields have errors. Please correct them and try again.', "error"));
             return;
         }
-
         let updateData = {
             info: {
                 name: userEdit.info.name,
                 dateOfBirth: userEdit.info.dateOfBirth,
                 currentAddress: {
-                    _id: userEdit.info.currentAddress._id,
-                    // street: userEdit.info.currentAddress.street || "",
-                    // city: userEdit.info.currentAddress.city || "",
-                    // code: userEdit.info.currentAddress.code || "",
-                    // state: userEdit.info.currentAddress.state || "",
-                    country: userEdit.info.currentAddress.country,
+                    _id: getAddress(userEdit,'_id'),
+                    street: getAddress(userEdit,'street'),
+                    city:   getAddress(userEdit,'city'),
+                    code:   getAddress(userEdit,'code'),
+                    state:  getAddress(userEdit,'state'),
+                    country: getAddress(userEdit,'country')
                 },
                 gender: userEdit.info.gender,
                 language: userEdit.info.language,
@@ -676,7 +677,6 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                 referral: userEdit.info.referral
             }
         };
-
         if (isGender2) {
             if (gender2 !== userEdit.info.gender) {
                 updateData = {
@@ -757,8 +757,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             //console.log('update',updateData);
         }
 
-
-        if (street !== userEdit.info.currentAddress.street) {
+        if (street !== getAddress(userEdit,'street')) {
             updateData = {
                 ...updateData,
                 info: {
@@ -771,7 +770,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             };
         }
 
-        if (city !== userEdit.info.currentAddress.city) {
+        if (city !== getAddress(userEdit,'city')) {
             updateData = {
                 ...updateData,
                 info: {
@@ -784,7 +783,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             };
         }
 
-        if (postalCode !== userEdit.info.currentAddress.code) {
+        if (postalCode !== getAddress(userEdit,'code')) {
             updateData = {
                 ...updateData,
                 info: {
@@ -797,7 +796,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             };
         }
 
-        if (province !== userEdit.info.currentAddress.state) {
+        if (province !== getAddress(userEdit,'state')) {
             updateData = {
                 ...updateData,
                 info: {
@@ -810,6 +809,13 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             };
         }
 
+        // convert language variable to array
+        updateData = {
+            info: {
+                ...updateData.info,
+                language: getOtherLanguages(userEdit.info.language),
+            }
+        };
         if (userID != null) {
             patch("users/" + userID, appState.token, updateData, (error, response) => {
                 if (error) {
@@ -1378,14 +1384,19 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 <MenuItem key={'Other'} value={'Other'}>Other</MenuItem>
                                             </TextField>
                                         </Grid>
-                                        <Grid item xs={2}>
-                                            <TextField id="Language2" fullWidth label="Specify Language" onChange={(event) => { language2Handler(event); }} value={language2} error={language2Error}
+                                        <Grid item xs={3}>
+                                            <TextField id="Language2" fullWidth 
+                                            label="Specify Language" 
+                                            onChange={(event) => { language2Handler(event); }}
+                                             value={language2} error={language2Error}
                                                 size="small"
                                                 variant="outlined"
                                                 required={isLanguage2}
                                                 readOnly={!editable || !isLanguage2}
                                                 disabled={!editable || !isLanguage2}
+
                                             />
+                                            <Typography variant="caption" className={classes.languageOption}>{(isLanguage2 && language2Error) && 'Please enter languages separated with comma'}</Typography>
                                         </Grid>
                                         <Grid item xs={10}></Grid>
                                         {/* <Grid item xs={2}>
@@ -1498,6 +1509,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 value={country} error={countryError}
                                                 required
                                                 readOnly
+                                                onChange={(e)=>countryHandler(e)}
                                                 disabled={editable ? false : true}
                                             />
                                         </Grid>
