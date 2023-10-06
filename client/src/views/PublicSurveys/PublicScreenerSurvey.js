@@ -9,6 +9,7 @@ import axios from 'axios';
 import ScreenerQuestions from './ScreenerQuestions';
 import hwfclogo from './hwfc-logo.png';
 import mongoose from 'mongoose';
+import TermsAndConditionsDialog from './TermsAndConditionsDialog';
 
 import {
     MandatoryFieldCheck,
@@ -18,6 +19,7 @@ import {
 } from "../../helpers/utils/validation";
 
 import PublicScreenerReport from './PublicScreenerReport';
+import { set } from 'joi/lib/types/lazy';
 
 
 // ================= Static Variables ================
@@ -92,6 +94,7 @@ const PublicScreenerSurvey = () => {
     const [confidentiality, setConfidentiality] = useState('');
     // const [termsChecked, setTermsChecked] = useState(false);
 
+    const [termsDialogOpen, setTermsDialogOpen] = useState(false);
 
     const handleOptionChange = (option) => {
         page === 2 && setHousehold_size(option);
@@ -286,6 +289,14 @@ const PublicScreenerSurvey = () => {
         seterrorMessages({ ...errorMessages, lastName: error });
         setLastName(event.target.value);
     };
+
+    const openDialog = () => {
+        setTermsDialogOpen(true);
+    }
+
+    const closeDialog = () => {
+        setTermsDialogOpen(false);
+    }
 
 
     return (
@@ -487,7 +498,11 @@ const PublicScreenerSurvey = () => {
                                         </TextField>
                                     </Grid>
                                 </Grid>
-
+                                <Box my={4} /> {/* Spacer */}
+                                <Typography variant="subtitle1" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
+                                    By clicking the "Next" button, I agree to be contacted in the future to receive helpful information about this topic. I also confirm I agree to HWFC Lab <span onClick={() => openDialog()} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>terms and conditions</span> regarding my personal information.
+                                </Typography>
+                                <TermsAndConditionsDialog open={termsDialogOpen} onClose={closeDialog} />
                             </Box>
                         </div>
                     )}
