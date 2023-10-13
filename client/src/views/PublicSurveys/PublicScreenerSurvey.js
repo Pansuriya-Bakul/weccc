@@ -5,6 +5,10 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import purple from '@material-ui/core/colors/purple';
 import { pink } from '@material-ui/core/colors';
 import axios from 'axios';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
+
 
 import ScreenerQuestions from './ScreenerQuestions';
 import hwfclogo from './hwfc-logo.png';
@@ -67,7 +71,7 @@ const PublicScreenerSurvey = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [reportsData, setReportsData] = useState({
 
-        //Testing data
+        // Testing data
 
         // "household2_size": "0",
         // "community_activity_participate": "1",
@@ -298,6 +302,68 @@ const PublicScreenerSurvey = () => {
         setTermsDialogOpen(false);
     }
 
+    // const generatePDF = () => {
+    //     // Create a new jsPDF instance
+    //     const pdf = new jsPDF();
+
+    //     // Define the content you want to include in the PDF
+    //     const content = document.getElementById('pdf-content'); // Add an id to the element you want to include
+
+    //     // Generate the PDF from the content
+    //     pdf.fromHTML(content, 15, 15);
+
+    //     // Save the PDF as a file
+    //     pdf.save('public_screener_survey.pdf');
+    // };
+
+    // const generatePDF = () => {
+    //     // Get the element to be converted to a PDF
+    //     const surveyHolder = document.getElementById('pdf-content'); // Make sure to use the correct ID
+
+    //     // Create a new jsPDF instance
+    //     const doc = new jsPDF('p', 'pt', 'letter');
+
+    //     // Convert the content to an image using html2canvas
+    //     html2canvas(surveyHolder).then(function (canvas) {
+    //       const imgData = canvas.toDataURL('image/png');
+    //       doc.addImage(imgData, 'JPEG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
+
+
+    //       // Save the PDF as a file
+    //       doc.save('public_screener_survey.pdf');
+    //     });
+    // };
+
+
+    const generatePDF = () => {
+
+        const surveyHolder = document.getElementById("pdf"); // Replace 'pdf' with the actual ID of the container you want to convert to PDF
+
+ 
+
+        const aspectRatio = surveyHolder.offsetWidth / surveyHolder.offsetHeight;
+
+ 
+
+        html2canvas(surveyHolder).then(function (canvas) {
+
+            const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]); // Use canvas dimensions for PDF
+
+            const imgData = canvas.toDataURL('image/png');
+
+            const width = doc.internal.pageSize.getWidth();
+
+            const height = doc.internal.pageSize.getHeight();
+
+            doc.addImage(imgData, 'JPEG', 0, 0, width, height);
+
+            doc.save('your-survey.pdf'); // Provide a desired filename for the PDF
+
+        });
+
+    };
+
+
 
     return (
         <div
@@ -361,9 +427,14 @@ const PublicScreenerSurvey = () => {
                 // width="100%"
                 // height='100%'
                 >
-                    <PublicScreenerReport reportsData={reportsData} />
+                    <div id="pdf">
+                        <PublicScreenerReport reportsData={reportsData} />
+                    </div>
                     <Button variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                         What Next?
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={generatePDF} style={{ width: '200px' }}>
+                        Save as PDF
                     </Button>
                 </Box>
             ) :
