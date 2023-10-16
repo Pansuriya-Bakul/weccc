@@ -45,7 +45,7 @@ const initialErrorMessages = {
 
 const PublicScreenerSurvey = () => {
 
-    const [page, setPage] = useState(11);
+    const [page, setPage] = useState(1);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
