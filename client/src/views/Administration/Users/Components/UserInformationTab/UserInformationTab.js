@@ -51,7 +51,7 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import SaveIcon from '@material-ui/icons/Save';
 import get from "../../../../../helpers/common/get";
 import { validateOtherLanguages } from '../../../../../helpers/utils/validation';
-import { getAddress, getOtherLanguages } from '../../../../../helpers/common/helperFunctions';
+import { deleteEmptyKeys, getAddress, getOtherLanguages } from '../../../../../helpers/common/helperFunctions';
 
 // ==================== MUI Styles ===================
 
@@ -814,6 +814,9 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                 language: getOtherLanguages(updateData.info.language),
             }
         };
+        //removing all emppty keys from obj
+        updateData.info = deleteEmptyKeys(updateData.info)
+        
         if (userID != null) {
             patch("users/" + userID, appState.token, updateData, (error, response) => {
                 if (error) {
