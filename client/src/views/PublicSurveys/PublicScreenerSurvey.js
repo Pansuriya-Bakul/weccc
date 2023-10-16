@@ -10,6 +10,9 @@ import ScreenerQuestions from './ScreenerQuestions';
 import hwfclogo from './hwfc-logo.png';
 import mongoose from 'mongoose';
 
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 import {
     MandatoryFieldCheck,
     ValidateEmail,
@@ -40,6 +43,7 @@ const PublicScreenerSurvey = () => {
     const [page, setPage] = useState(1);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
 
@@ -151,6 +155,7 @@ const PublicScreenerSurvey = () => {
 
         let sanatized_firstName = firstName.trim().charAt(0).toUpperCase() + firstName.trim().slice(1).toLowerCase();
         let sanatized_lastName = lastName.trim().charAt(0).toUpperCase() + lastName.trim().slice(1).toLowerCase();
+        let santized_fullName = sanatized_firstName + " " + sanatized_lastName;
         let sanatized_email = email ? email.trim().toLowerCase() : "";
         let responseJSON = {
             "household2_size": household_size,
@@ -166,7 +171,7 @@ const PublicScreenerSurvey = () => {
         var data = {
             surveyTemplate: surveyTemplate,
             memberInfo: {
-                name: sanatized_firstName + " " + sanatized_lastName,
+                name: santized_fullName,
                 email: sanatized_email,
                 phone: phone,
                 postalCode: postalCode,
@@ -174,6 +179,8 @@ const PublicScreenerSurvey = () => {
             source: howDidYouHear,
             responseJSON: responseJSON
         };
+
+        setFullName(santized_fullName)
 
         // Test data
         // var data = {
@@ -223,7 +230,8 @@ const PublicScreenerSurvey = () => {
             "lack_companionship": lack_companionship,
             "feel_leftout": felt_left_out,
             "feel_isolated": isolation,
-            "con_que": confidentiality
+            "con_que": confidentiality,
+            "fullName": fullName
         });
 
         setPage(page + 1);
@@ -287,6 +295,21 @@ const PublicScreenerSurvey = () => {
         setLastName(event.target.value);
     };
 
+    const exportToPDF = () => {
+        const surveyHolder = document.getElementById("pdf"); // Replace 'pdf' with the actual ID of the container you want to convert to PDF
+
+        const aspectRatio = surveyHolder.offsetWidth / surveyHolder.offsetHeight;
+
+        html2canvas(surveyHolder).then(function (canvas) {
+            const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]); // Use canvas dimensions for PDF
+            const imgData = canvas.toDataURL('image/png');
+            const width = doc.internal.pageSize.getWidth();
+            const height = doc.internal.pageSize.getHeight();
+            doc.addImage(imgData, 'JPEG', 0, 0, width, height);
+            doc.save('your-survey.pdf'); // Provide a desired filename for the PDF
+        });
+    };
+
 
     return (
         <div
@@ -334,9 +357,9 @@ const PublicScreenerSurvey = () => {
                 </div>
                 <Typography variant="h2">How Good is Your Social Health?</Typography>
             </Box>
-            <Box my={page == 11 ? 4 : 4} /> {/* Spacer */}
+            <Box my={page == 10 ? 4 : 4} /> {/* Spacer */}
 
-            {page == 11 ? (
+            {page == 10 ? (
                 <Box
                     display="flex"
                     flexDirection="column"
@@ -350,10 +373,16 @@ const PublicScreenerSurvey = () => {
                 // width="100%"
                 // height='100%'
                 >
-                    <PublicScreenerReport reportsData={reportsData} />
+                    <div id='pdf'><PublicScreenerReport reportsData={reportsData} /></div>
+
                     <Button variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                         What Next?
                     </Button>
+
+                    <Button variant="contained" color="primary" onClick={exportToPDF} style={{ width: '200px' }}>
+                        Export to PDF
+                    </Button>
+
                 </Box>
             ) :
                 < Box
@@ -368,7 +397,7 @@ const PublicScreenerSurvey = () => {
                     maxWidth="60rem"
                     width="90%"
                 >
-                    {isLoading && page == 10 ? (
+                    {isLoading && page == 9 ? (
                         // Show loading indicator and "Submitting" Typography
                         <Box width="80%">
                             <CircularProgress />
@@ -376,7 +405,7 @@ const PublicScreenerSurvey = () => {
                                 Submitting your survey...
                             </Typography>
                         </Box>
-                    ) : isSubmitted && page == 10 ? (
+                    ) : isSubmitted && page == 9 ? (
                         // Show the content inside the box when isSubmitted is true and page is 10
                         <Box width="80%">
                             <Typography align="center" variant="h5" gutterBottom style={{ paddingBottom: "16px" }}>
@@ -394,7 +423,7 @@ const PublicScreenerSurvey = () => {
                         </Box>
                     ) : (
                         // Show the error message when isSubmitted is false or page is not 10
-                        page == 10 && <Box width="80%">
+                        page == 9 && <Box width="80%">
                             <Typography align="center" variant="h5" gutterBottom style={{ paddingBottom: "16px" }}>
                                 Error submitting your survey. Please try again.
                             </Typography>
@@ -493,15 +522,22 @@ const PublicScreenerSurvey = () => {
                     )}
                     <ScreenerQuestions page={page} onOptionChange={handleOptionChange} />
 
-                    {page < 9 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+                    {page < 8 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
                         <Box my={2} /> {/* Spacer */}
                         <Button disabled={!answered} variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                             Next
                         </Button>
                     </Box>}
 
-                    {page == 9 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
+                    {page == 8 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
                         <Box my={2} /> {/* Spacer */}
+                        <Button disabled={!answered} variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
+                            Submit Survey
+                        </Button>
+                    </Box>}
+
+                    {/* {page == 9 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
+                        <Box my={2} /> 
                         <Typography
                             variant="h6"
                             align="center"
@@ -512,13 +548,12 @@ const PublicScreenerSurvey = () => {
                         <Button variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
                             Submit Survey
                         </Button>
-                    </Box>}
-                    {page == 12 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
+                    </Box>} */}{/* Spacer */}
+                    {page == 11 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
                         <Typography
                             variant="h5"
                             align="center"
                             gutterBottom
-
                         >
                             Next Steps
                         </Typography>
