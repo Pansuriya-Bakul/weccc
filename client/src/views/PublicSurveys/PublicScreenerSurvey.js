@@ -45,7 +45,7 @@ const initialErrorMessages = {
 
 const PublicScreenerSurvey = () => {
 
-    const [page, setPage] = useState(-1);
+    const [page, setPage] = useState(11);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -75,14 +75,14 @@ const PublicScreenerSurvey = () => {
 
         // Testing data
 
-        // "household2_size": "0",
-        // "community_activity_participate": "1",
-        // "life_satisfaction2": "6",
-        // "local_community_belonging": "1",
-        // "lack_companionship": "1",
-        // "feel_leftout": "2",
-        // "feel_isolated": "1",
-        // "con_que": "1"
+        "household2_size": "0",
+        "community_activity_participate": "1",
+        "life_satisfaction2": "6",
+        "local_community_belonging": "1",
+        "lack_companionship": "1",
+        "feel_leftout": "2",
+        "feel_isolated": "1",
+        "con_que": "1"
 
 
     });
@@ -212,7 +212,7 @@ const PublicScreenerSurvey = () => {
             console.log('Data sent successfully!', response.data);
             setIsLoading(false);
             setIsSubmitted(true);
-            // ... Add any other logic or actions here ...
+
         } catch (error) {
             console.error('Error sending data:', error);
             setIsLoading(false);
@@ -339,11 +339,11 @@ const PublicScreenerSurvey = () => {
 
     const generatePDF = () => {
 
-        const surveyHolder = document.getElementById("pdf"); // Replace 'pdf' with the actual ID of the container you want to convert to PDF
+        const surveyHolder = document.getElementById("pdf");
 
 
 
-        const aspectRatio = surveyHolder.offsetWidth / surveyHolder.offsetHeight;
+        // const aspectRatio = surveyHolder.offsetWidth / surveyHolder.offsetHeight;
 
 
 
@@ -351,13 +351,23 @@ const PublicScreenerSurvey = () => {
 
             const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]); // Use canvas dimensions for PDF
 
-            const imgData = canvas.toDataURL('image/png');
+            const imgData = canvas.toDataURL('image/jpeg');
 
             const width = doc.internal.pageSize.getWidth();
 
             const height = doc.internal.pageSize.getHeight();
 
-            doc.addImage(imgData, 'JPEG', 0, 0, width, height);
+            // Get the current date and format it
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleDateString();
+            console.log("firstName:", firstName);
+            console.log("lastName:", lastName);
+
+            doc.setFontSize(24);
+            doc.text(`Name: ${firstName} ${lastName}`, 20, 30);
+            doc.text(`Date: ${formattedDate}`, 20, 50);
+
+            doc.addImage(imgData, 'JPEG', 0, 60, width, height);
 
             doc.save('your-survey.pdf'); // Provide a desired filename for the PDF
 
@@ -427,14 +437,16 @@ const PublicScreenerSurvey = () => {
                 // width="100%"
                 // height='100%'
                 >
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                        <Button variant="contained" color="primary" onClick={generatePDF} style={{ width: '200px', marginTop: '10px' }}>
+                            Save as PDF
+                        </Button>
+                    </div>
                     <div id="pdf">
                         <PublicScreenerReport reportsData={reportsData} />
                     </div>
                     <Button variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                         What Next?
-                    </Button>
-                    <Button variant="contained" color="primary" onClick={generatePDF} style={{ width: '200px' }}>
-                        Save as PDF
                     </Button>
                 </Box>
             ) :
@@ -593,7 +605,7 @@ const PublicScreenerSurvey = () => {
                     )}
                     <ScreenerQuestions page={page} onOptionChange={handleOptionChange} />
 
-                    {page < 9 && page>0 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+                    {page < 9 && page > 0 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
                         <Box my={2} /> {/* Spacer */}
                         <Button disabled={!answered} variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                             Next
