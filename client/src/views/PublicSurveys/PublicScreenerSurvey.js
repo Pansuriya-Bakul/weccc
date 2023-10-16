@@ -7,8 +7,10 @@ import { pink } from '@material-ui/core/colors';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import SocialHealthInfoPage from './SocialHealthInfoPage';
 
-
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import ScreenerQuestions from './ScreenerQuestions';
 import hwfclogo from './hwfc-logo.png';
@@ -43,7 +45,7 @@ const initialErrorMessages = {
 
 const PublicScreenerSurvey = () => {
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(-1);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -339,11 +341,11 @@ const PublicScreenerSurvey = () => {
 
         const surveyHolder = document.getElementById("pdf"); // Replace 'pdf' with the actual ID of the container you want to convert to PDF
 
- 
+
 
         const aspectRatio = surveyHolder.offsetWidth / surveyHolder.offsetHeight;
 
- 
+
 
         html2canvas(surveyHolder).then(function (canvas) {
 
@@ -362,8 +364,6 @@ const PublicScreenerSurvey = () => {
         });
 
     };
-
-
 
     return (
         <div
@@ -483,6 +483,15 @@ const PublicScreenerSurvey = () => {
                         </Box>
                     )}
 
+                    {page == -1 && (
+                        <div style={{ padding: '32px' }}>
+                            <IconButton onClick={() => setPage(1)} style={{ marginBottom: '16px' }}>
+                                <ArrowBackIcon />
+                            </IconButton>
+                            <SocialHealthInfoPage />
+                        </div>
+                    )}
+
 
                     {page === 1 && (
                         <div style={{ padding: '32px' }}>
@@ -573,13 +582,18 @@ const PublicScreenerSurvey = () => {
                                 <Typography variant="subtitle1" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
                                     By clicking the "Next" button, I agree to be contacted in the future to receive helpful information about this topic. I also confirm I agree to HWFC Lab <span onClick={() => openDialog()} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>terms and conditions</span> regarding my personal information.
                                 </Typography>
+                                <Typography variant="subtitle1" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
+                                    <br></br>
+                                    Not interested in a personalized report, but interested in learning more?
+                                    <span onClick={() => setPage(-1)} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}> Click here</span> to learn why social health is important, common risks, and what you can do to protect yourself.
+                                </Typography>
                                 <TermsAndConditionsDialog open={termsDialogOpen} onClose={closeDialog} />
                             </Box>
                         </div>
                     )}
                     <ScreenerQuestions page={page} onOptionChange={handleOptionChange} />
 
-                    {page < 9 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+                    {page < 9 && page>0 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
                         <Box my={2} /> {/* Spacer */}
                         <Button disabled={!answered} variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                             Next
