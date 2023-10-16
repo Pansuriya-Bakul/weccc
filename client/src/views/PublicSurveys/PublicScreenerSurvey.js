@@ -304,48 +304,9 @@ const PublicScreenerSurvey = () => {
         setTermsDialogOpen(false);
     }
 
-    // const generatePDF = () => {
-    //     // Create a new jsPDF instance
-    //     const pdf = new jsPDF();
-
-    //     // Define the content you want to include in the PDF
-    //     const content = document.getElementById('pdf-content'); // Add an id to the element you want to include
-
-    //     // Generate the PDF from the content
-    //     pdf.fromHTML(content, 15, 15);
-
-    //     // Save the PDF as a file
-    //     pdf.save('public_screener_survey.pdf');
-    // };
-
-    // const generatePDF = () => {
-    //     // Get the element to be converted to a PDF
-    //     const surveyHolder = document.getElementById('pdf-content'); // Make sure to use the correct ID
-
-    //     // Create a new jsPDF instance
-    //     const doc = new jsPDF('p', 'pt', 'letter');
-
-    //     // Convert the content to an image using html2canvas
-    //     html2canvas(surveyHolder).then(function (canvas) {
-    //       const imgData = canvas.toDataURL('image/png');
-    //       doc.addImage(imgData, 'JPEG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
-
-
-    //       // Save the PDF as a file
-    //       doc.save('public_screener_survey.pdf');
-    //     });
-    // };
-
-
     const generatePDF = () => {
 
         const surveyHolder = document.getElementById("pdf");
-
-
-
-        // const aspectRatio = surveyHolder.offsetWidth / surveyHolder.offsetHeight;
-
-
 
         html2canvas(surveyHolder).then(function (canvas) {
 
@@ -356,16 +317,6 @@ const PublicScreenerSurvey = () => {
             const width = doc.internal.pageSize.getWidth();
 
             const height = doc.internal.pageSize.getHeight();
-
-            // Get the current date and format it
-            const currentDate = new Date();
-            const formattedDate = currentDate.toLocaleDateString();
-            console.log("firstName:", firstName);
-            console.log("lastName:", lastName);
-
-            doc.setFontSize(24);
-            doc.text(`Name: ${firstName} ${lastName}`, 20, 30);
-            doc.text(`Date: ${formattedDate}`, 20, 50);
 
             doc.addImage(imgData, 'JPEG', 0, 60, width, height);
 
