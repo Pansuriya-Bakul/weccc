@@ -18,6 +18,7 @@ import Box from "@material-ui/core/Box"; // Padding and margins
 import Divider from "@material-ui/core/Divider";
 import { CircularProgress } from '@material-ui/core';
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
+import { format } from 'date-fns';
 
 
 import risk1 from "../Reports/risk1.png";
@@ -63,7 +64,9 @@ const PublicScreenerReport = (props) => {
     // // This is John Cena's
     // const [personId, setPersonId] = useState("60e879aac417375c838307b9");
 
-    const reportsData = props.reportsData;;
+    const reportsData = props.reportsData;
+    const currentDate = format(new Date(), 'MMMM dd, yyyy');
+
     const [isLoading, setIsLoading] = useState(true);
     const [riskScore, setRiskScore] = useState(0);
 
@@ -155,76 +158,83 @@ const PublicScreenerReport = (props) => {
                 </Grid>
 
                 <Grid item xs={12}>
-                        <Box mx={1} my={1} boxShadow={0}>
-                            {isLoading ? (<CircularProgress />)
-                                : <Grid
-                                    container
-                                    direction="column"
-                                    justifyContent="flex-start"
-                                    alignItems="stretch"
-                                    spacing={1}
-                                    style={{ padding: '20px 30px 20px 30px' }}
-                                >
-                                    {reportsData &&
-                                        Object.keys(reportsData).length != 0 &&
-                                        Object.getPrototypeOf(reportsData) === Object.prototype ? (
-                                        <>
-                                            <Grid item xs={12}>
-                                                <Typography variant="h4" color="textPrimary">
-                                                    Social Risk Screener Report
-                                                </Typography>
-                                                <Divider light />
-                                            </Grid>
+                    <Box mx={1} my={1} boxShadow={0}>
+                        {isLoading ? (<CircularProgress />)
+                            : <Grid
+                                container
+                                direction="column"
+                                justifyContent="flex-start"
+                                alignItems="stretch"
+                                spacing={1}
+                                style={{ padding: '20px 30px 20px 30px' }}
+                            >
+                                {reportsData &&
+                                    Object.keys(reportsData).length != 0 &&
+                                    Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                                    <>
+                                        <Grid item xs={12}>
+                                            <Typography variant="h4" color="textPrimary">
+                                                Social Risk Screener Report
+                                            </Typography>
+                                            <Divider light />
+                                        </Grid>
+
+                                        <Grid item xs={12}>
+                                            <Typography variant="h5" color="textSecondary" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <span>Name: {reportsData.fullName}</span>
+                                                <span>Date: {currentDate}</span>
+                                            </Typography>
+                                        </Grid>
 
 
-                                            <Grid item xs={12} id="overall-risk" style={{ marginTop: '24px' }}>
-                                                <Typography
-                                                    variant="h5"
-                                                    color="textSecondary"
-                                                    align="left"
-                                                    gutterBottom
-                                                >
-                                                    Your Social Isolation Risk
-                                                </Typography>
-                                                <Grid container spacing={2} style={{alignItems:'center'}}>
-                                                    <Grid item xs={12} sm={6} md={4} lg={3}>
-                                                        <img
-                                                            src={riskScore == 0 ? risk1 : riskScore == 1 ? risk2 : riskScore == 2 ? risk3 : riskScore == 3 ? risk4 : risk5}
-                                                            alt="risk meter"
-                                                            width="360px"
-                                                            height="238px"
-                                                            style={{ maxWidth: '100%', height: 'auto' }}
-                                                        />
-                                                    </Grid>
-                                                    <Grid item xs={12} sm={6} md={8} lg={9} style={{ paddingTop: '40px', paddingLeft: '40px' }}>
-                                                        <Typography variant="h5" color="textSecondary" gutterBottom style={{ fontWeight: "500", color: riskScore == 0 ? "#42b74a" : riskScore == 1 ? "#cfdf28" : riskScore == 2 ? "#ffbb10" : riskScore == 3 ? "#f76420" : "#cf2020" }}>
-                                                            {riskScore == 0 ? "Lowest Risk" : riskScore == 1 ? "Some Risk" : riskScore == 2 ? "Some Risk" : riskScore == 3 ? "Moderate Risk" : "High Risk"}
-                                                        </Typography>
-                                                        <Typography variant="body1" style={{ whiteSpace: 'pre-wrap' }}>
-                                                            {getRiskText()}
-                                                        </Typography>
-                                                    </Grid>
+                                        <Grid item xs={12} id="overall-risk" style={{ marginTop: '24px' }}>
+                                            <Typography
+                                                variant="h5"
+                                                color="textSecondary"
+                                                align="left"
+                                                gutterBottom
+                                            >
+                                                Your Social Isolation Risk
+                                            </Typography>
+                                            <Grid container spacing={2} style={{ alignItems: 'center' }}>
+                                                <Grid item xs={12} sm={6} md={4} lg={3}>
+                                                    <img
+                                                        src={riskScore == 0 ? risk1 : riskScore == 1 ? risk2 : riskScore == 2 ? risk3 : riskScore == 3 ? risk4 : risk5}
+                                                        alt="risk meter"
+                                                        width="360px"
+                                                        height="238px"
+                                                        style={{ maxWidth: '100%', height: 'auto' }}
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={6} md={8} lg={9} style={{ paddingTop: '40px', paddingLeft: '40px' }}>
+                                                    <Typography variant="h5" color="textSecondary" gutterBottom style={{ fontWeight: "500", color: riskScore == 0 ? "#42b74a" : riskScore == 1 ? "#cfdf28" : riskScore == 2 ? "#ffbb10" : riskScore == 3 ? "#f76420" : "#cf2020" }}>
+                                                        {riskScore == 0 ? "Lowest Risk" : riskScore == 1 ? "Some Risk" : riskScore == 2 ? "Some Risk" : riskScore == 3 ? "Moderate Risk" : "High Risk"}
+                                                    </Typography>
+                                                    <Typography variant="body1" style={{ whiteSpace: 'pre-wrap' }}>
+                                                        {getRiskText()}
+                                                    </Typography>
                                                 </Grid>
                                             </Grid>
+                                        </Grid>
 
-                                            <Grid item xs={12} id="summary1">
-                                                <Typography
-                                                    variant="h5"
-                                                    color="textSecondary"
-                                                    align="left"
-                                                    gutterBottom
-                                                    style={{ paddingBottom: '12px', paddingTop: '12px' }}
-                                                >
-                                                    Results
-                                                </Typography>
+                                        <Grid item xs={12} id="summary1">
+                                            <Typography
+                                                variant="h5"
+                                                color="textSecondary"
+                                                align="left"
+                                                gutterBottom
+                                                style={{ paddingBottom: '12px', paddingTop: '12px' }}
+                                            >
+                                                Results
+                                            </Typography>
 
-                                                <PublicScreenerResults
-                                                    reports={reportsData}
-                                                // collection={currentReportIndex}
-                                                />
-                                            </Grid>
+                                            <PublicScreenerResults
+                                                reports={reportsData}
+                                            // collection={currentReportIndex}
+                                            />
+                                        </Grid>
 
-{/* 
+                                        {/* 
                                             <Grid item xs={12} id="suggestions1" style={{ paddingTop: '30px' }}>
                                                 <Typography
                                                     variant="h5"
@@ -246,23 +256,23 @@ const PublicScreenerReport = (props) => {
                                                 </Typography>
                                             </Grid> */}
 
-                                        </>
-                                    ) : (
+                                    </>
+                                ) : (
 
-                                        <>
-                                            <Typography
-                                                variant="subtitle2"
-                                                color="textSecondary"
-                                                align="left"
-                                                gutterBottom
-                                            >
-                                                No available reports.
+                                    <>
+                                        <Typography
+                                            variant="subtitle2"
+                                            color="textSecondary"
+                                            align="left"
+                                            gutterBottom
+                                        >
+                                            No available reports.
 
-                                            </Typography>
-                                        </>
-                                    )}
-                                </Grid>}
-                        </Box>
+                                        </Typography>
+                                    </>
+                                )}
+                            </Grid>}
+                    </Box>
                 </Grid>
 
 

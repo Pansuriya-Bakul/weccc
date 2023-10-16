@@ -5,10 +5,17 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import purple from '@material-ui/core/colors/purple';
 import { pink } from '@material-ui/core/colors';
 import axios from 'axios';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import SocialHealthInfoPage from './SocialHealthInfoPage';
+
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import ScreenerQuestions from './ScreenerQuestions';
 import hwfclogo from './hwfc-logo.png';
 import mongoose from 'mongoose';
+import TermsAndConditionsDialog from './TermsAndConditionsDialog';
 
 import {
     MandatoryFieldCheck,
@@ -18,6 +25,7 @@ import {
 } from "../../helpers/utils/validation";
 
 import PublicScreenerReport from './PublicScreenerReport';
+import { set } from 'joi/lib/types/lazy';
 
 
 // ================= Static Variables ================
@@ -40,6 +48,7 @@ const PublicScreenerSurvey = () => {
     const [page, setPage] = useState(1);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
 
@@ -65,7 +74,7 @@ const PublicScreenerSurvey = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [reportsData, setReportsData] = useState({
 
-        //Testing data
+        // Testing data
 
         // "household2_size": "0",
         // "community_activity_participate": "1",
@@ -92,6 +101,7 @@ const PublicScreenerSurvey = () => {
     const [confidentiality, setConfidentiality] = useState('');
     // const [termsChecked, setTermsChecked] = useState(false);
 
+    const [termsDialogOpen, setTermsDialogOpen] = useState(false);
 
     const handleOptionChange = (option) => {
         page === 2 && setHousehold_size(option);
@@ -151,6 +161,7 @@ const PublicScreenerSurvey = () => {
 
         let sanatized_firstName = firstName.trim().charAt(0).toUpperCase() + firstName.trim().slice(1).toLowerCase();
         let sanatized_lastName = lastName.trim().charAt(0).toUpperCase() + lastName.trim().slice(1).toLowerCase();
+        let santized_fullName = sanatized_firstName + " " + sanatized_lastName;
         let sanatized_email = email ? email.trim().toLowerCase() : "";
         let responseJSON = {
             "household2_size": household_size,
@@ -166,7 +177,7 @@ const PublicScreenerSurvey = () => {
         var data = {
             surveyTemplate: surveyTemplate,
             memberInfo: {
-                name: sanatized_firstName + " " + sanatized_lastName,
+                name: santized_fullName,
                 email: sanatized_email,
                 phone: phone,
                 postalCode: postalCode,
@@ -174,6 +185,8 @@ const PublicScreenerSurvey = () => {
             source: howDidYouHear,
             responseJSON: responseJSON
         };
+
+        setFullName(santized_fullName)
 
         // Test data
         // var data = {
@@ -203,7 +216,7 @@ const PublicScreenerSurvey = () => {
             console.log('Data sent successfully!', response.data);
             setIsLoading(false);
             setIsSubmitted(true);
-            // ... Add any other logic or actions here ...
+
         } catch (error) {
             console.error('Error sending data:', error);
             setIsLoading(false);
@@ -223,7 +236,8 @@ const PublicScreenerSurvey = () => {
             "lack_companionship": lack_companionship,
             "feel_leftout": felt_left_out,
             "feel_isolated": isolation,
-            "con_que": confidentiality
+            "con_que": confidentiality,
+            "fullName": fullName
         });
 
         setPage(page + 1);
@@ -288,6 +302,90 @@ const PublicScreenerSurvey = () => {
     };
 
 
+    const openDialog = () => {
+        setTermsDialogOpen(true);
+    }
+
+    const closeDialog = () => {
+        setTermsDialogOpen(false);
+    }
+
+    // const generatePDF = () => {
+
+    //     const surveyHolder = document.getElementById("pdf");
+
+    //     html2canvas(surveyHolder).then(function (canvas) {
+
+    //         const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]); // Use canvas dimensions for PDF
+
+    //         const imgData = canvas.toDataURL('image/jpeg');
+
+    //         const width = doc.internal.pageSize.getWidth();
+
+    //         const height = doc.internal.pageSize.getHeight();
+
+    //         doc.addImage(imgData, 'JPEG', 0, 60, width-120, height-120);
+
+    //         // doc.addPage();
+    //         const imgHeight = height - 80;
+
+    //         doc.setFontSize(24);
+    //         doc.text("What Now?", 40, imgHeight + 40);
+    //         doc.setFontSize(18);
+    //         doc.text("Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps? CONTACT US at hwfc.lab@gmail.com to talk to a trained Community Connector – we can help you set goals and find activities and resources to promote your health and address social risks.", 40, imgHeight + 60, { maxWidth: 500 });
+
+    //         doc.save('your-survey.pdf'); // Provide a desired filename for the PDF
+
+    //     });
+
+    // };
+
+    const generatePDF = () => {
+        const surveyHolder = document.getElementById("pdf");
+      
+        // Calculate the total height of the content
+        const totalHeight = surveyHolder.offsetHeight;
+      
+        // Calculate the height for the first part (e.g., half of the content)
+        const firstPartHeight = totalHeight / 2;
+      
+        html2canvas(surveyHolder, {
+          height: firstPartHeight // Capture only the first part
+        }).then(function (canvas) {
+          const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]);
+          const imgData = canvas.toDataURL('image/jpeg');
+          const width = doc.internal.pageSize.getWidth();
+          const height = doc.internal.pageSize.getHeight();
+      
+          // Add the image to the first page
+          doc.addImage(imgData, 'JPEG', 0, 0, width, height);
+      
+          doc.addPage(); // Create a new page
+      
+          // Capture the second part of the content (remaining height)
+          html2canvas(surveyHolder, {
+            height: totalHeight - firstPartHeight,
+            y: firstPartHeight // Start capturing from the second part
+          }).then(function (canvas2) {
+            const imgData2 = canvas2.toDataURL('image/jpeg');
+      
+            // Add the image to the second page
+            doc.addImage(imgData2, 'JPEG', 0, 0, width, height-120);
+
+            const imgHeight = height - 120;
+      
+            // Continue adding content to the second page
+            doc.setFontSize(32);
+            doc.text("What Now?", 40, imgHeight);
+            doc.setFontSize(24);
+            doc.text("Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps? CONTACT US at hwfc.lab@gmail.com to talk to a trained Community Connector – we can help you set goals and find activities and resources to promote your health and address social risks.", 40, imgHeight + 40, { maxWidth: width-80 });
+      
+            doc.save('your-survey.pdf');
+          });
+        });
+      };
+      
+
     return (
         <div
             style={{
@@ -334,9 +432,9 @@ const PublicScreenerSurvey = () => {
                 </div>
                 <Typography variant="h2">How Good is Your Social Health?</Typography>
             </Box>
-            <Box my={page == 11 ? 4 : 4} /> {/* Spacer */}
+            <Box my={page == 10 ? 4 : 4} /> {/* Spacer */}
 
-            {page == 11 ? (
+            {page == 10 ? (
                 <Box
                     display="flex"
                     flexDirection="column"
@@ -350,7 +448,16 @@ const PublicScreenerSurvey = () => {
                 // width="100%"
                 // height='100%'
                 >
-                    <PublicScreenerReport reportsData={reportsData} />
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                        <Button variant="contained" color="primary" onClick={generatePDF} style={{ width: '200px', marginTop: '10px' }}>
+                            Save as PDF
+                        </Button>
+                    </div>
+                    <div id="pdf">
+                        <PublicScreenerReport reportsData={reportsData} />
+                    </div>
+
                     <Button variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                         What Next?
                     </Button>
@@ -368,7 +475,7 @@ const PublicScreenerSurvey = () => {
                     maxWidth="60rem"
                     width="90%"
                 >
-                    {isLoading && page == 10 ? (
+                    {isLoading && page == 9 ? (
                         // Show loading indicator and "Submitting" Typography
                         <Box width="80%">
                             <CircularProgress />
@@ -376,7 +483,7 @@ const PublicScreenerSurvey = () => {
                                 Submitting your survey...
                             </Typography>
                         </Box>
-                    ) : isSubmitted && page == 10 ? (
+                    ) : isSubmitted && page == 9 ? (
                         // Show the content inside the box when isSubmitted is true and page is 10
                         <Box width="80%">
                             <Typography align="center" variant="h5" gutterBottom style={{ paddingBottom: "16px" }}>
@@ -394,11 +501,20 @@ const PublicScreenerSurvey = () => {
                         </Box>
                     ) : (
                         // Show the error message when isSubmitted is false or page is not 10
-                        page == 10 && <Box width="80%">
+                        page == 9 && <Box width="80%">
                             <Typography align="center" variant="h5" gutterBottom style={{ paddingBottom: "16px" }}>
                                 Error submitting your survey. Please try again.
                             </Typography>
                         </Box>
+                    )}
+
+                    {page == -1 && (
+                        <div style={{ padding: '32px' }}>
+                            <IconButton onClick={() => setPage(1)} style={{ marginBottom: '16px' }}>
+                                <ArrowBackIcon />
+                            </IconButton>
+                            <SocialHealthInfoPage />
+                        </div>
                     )}
 
 
@@ -487,21 +603,38 @@ const PublicScreenerSurvey = () => {
                                         </TextField>
                                     </Grid>
                                 </Grid>
-
+                                <Box my={4} /> {/* Spacer */}
+                                <Typography variant="subtitle1" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
+                                    By clicking the "Next" button, I agree to be contacted in the future to receive helpful information about this topic. I also confirm I agree to HWFC Lab <span onClick={() => openDialog()} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>terms and conditions</span> regarding my personal information.
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
+                                    <br></br>
+                                    Not interested in a personalized report, but interested in learning more?
+                                    <span onClick={() => setPage(-1)} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}> Click here</span> to learn why social health is important, common risks, and what you can do to protect yourself.
+                                </Typography>
+                                <TermsAndConditionsDialog open={termsDialogOpen} onClose={closeDialog} />
                             </Box>
                         </div>
                     )}
                     <ScreenerQuestions page={page} onOptionChange={handleOptionChange} />
 
-                    {page < 9 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+
+                    {page < 8 && page > 0 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
                         <Box my={2} /> {/* Spacer */}
                         <Button disabled={!answered} variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                             Next
                         </Button>
                     </Box>}
 
-                    {page == 9 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
+                    {page == 8 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
                         <Box my={2} /> {/* Spacer */}
+                        <Button disabled={!answered} variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
+                            Submit Survey
+                        </Button>
+                    </Box>}
+
+                    {/* {page == 9 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
+                        <Box my={2} /> 
                         <Typography
                             variant="h6"
                             align="center"
@@ -512,13 +645,12 @@ const PublicScreenerSurvey = () => {
                         <Button variant="contained" color="primary" onClick={handleSubmit} style={{ width: '200px' }}>
                             Submit Survey
                         </Button>
-                    </Box>}
-                    {page == 12 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
+                    </Box>} */}{/* Spacer */}
+                    {page == 11 && <Box textAlign="center" style={{ padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '18px' }}>
                         <Typography
                             variant="h5"
                             align="center"
                             gutterBottom
-
                         >
                             Next Steps
                         </Typography>
