@@ -5,10 +5,17 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import purple from '@material-ui/core/colors/purple';
 import { pink } from '@material-ui/core/colors';
 import axios from 'axios';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import SocialHealthInfoPage from './SocialHealthInfoPage';
+
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import ScreenerQuestions from './ScreenerQuestions';
 import hwfclogo from './hwfc-logo.png';
 import mongoose from 'mongoose';
+import TermsAndConditionsDialog from './TermsAndConditionsDialog';
 
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -21,6 +28,7 @@ import {
 } from "../../helpers/utils/validation";
 
 import PublicScreenerReport from './PublicScreenerReport';
+import { set } from 'joi/lib/types/lazy';
 
 
 // ================= Static Variables ================
@@ -69,16 +77,16 @@ const PublicScreenerSurvey = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [reportsData, setReportsData] = useState({
 
-        //Testing data
+        // Testing data
 
-        // "household2_size": "0",
-        // "community_activity_participate": "1",
-        // "life_satisfaction2": "6",
-        // "local_community_belonging": "1",
-        // "lack_companionship": "1",
-        // "feel_leftout": "2",
-        // "feel_isolated": "1",
-        // "con_que": "1"
+        "household2_size": "0",
+        "community_activity_participate": "1",
+        "life_satisfaction2": "6",
+        "local_community_belonging": "1",
+        "lack_companionship": "1",
+        "feel_leftout": "2",
+        "feel_isolated": "1",
+        "con_que": "1"
 
 
     });
@@ -96,6 +104,7 @@ const PublicScreenerSurvey = () => {
     const [confidentiality, setConfidentiality] = useState('');
     // const [termsChecked, setTermsChecked] = useState(false);
 
+    const [termsDialogOpen, setTermsDialogOpen] = useState(false);
 
     const handleOptionChange = (option) => {
         page === 2 && setHousehold_size(option);
@@ -210,7 +219,7 @@ const PublicScreenerSurvey = () => {
             console.log('Data sent successfully!', response.data);
             setIsLoading(false);
             setIsSubmitted(true);
-            // ... Add any other logic or actions here ...
+
         } catch (error) {
             console.error('Error sending data:', error);
             setIsLoading(false);
@@ -295,21 +304,36 @@ const PublicScreenerSurvey = () => {
         setLastName(event.target.value);
     };
 
-    const exportToPDF = () => {
-        const surveyHolder = document.getElementById("pdf"); // Replace 'pdf' with the actual ID of the container you want to convert to PDF
 
-        const aspectRatio = surveyHolder.offsetWidth / surveyHolder.offsetHeight;
+    const openDialog = () => {
+        setTermsDialogOpen(true);
+    }
+
+    const closeDialog = () => {
+        setTermsDialogOpen(false);
+    }
+
+    const generatePDF = () => {
+
+        const surveyHolder = document.getElementById("pdf");
 
         html2canvas(surveyHolder).then(function (canvas) {
-            const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]); // Use canvas dimensions for PDF
-            const imgData = canvas.toDataURL('image/png');
-            const width = doc.internal.pageSize.getWidth();
-            const height = doc.internal.pageSize.getHeight();
-            doc.addImage(imgData, 'JPEG', 0, 0, width, height);
-            doc.save('your-survey.pdf'); // Provide a desired filename for the PDF
-        });
-    };
 
+            const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]); // Use canvas dimensions for PDF
+
+            const imgData = canvas.toDataURL('image/jpeg');
+
+            const width = doc.internal.pageSize.getWidth();
+
+            const height = doc.internal.pageSize.getHeight();
+
+            doc.addImage(imgData, 'JPEG', 0, 60, width, height);
+
+            doc.save('your-survey.pdf'); // Provide a desired filename for the PDF
+
+        });
+
+    };
 
     return (
         <div
@@ -373,7 +397,15 @@ const PublicScreenerSurvey = () => {
                 // width="100%"
                 // height='100%'
                 >
-                    <div id='pdf'><PublicScreenerReport reportsData={reportsData} /></div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                        <Button variant="contained" color="primary" onClick={generatePDF} style={{ width: '200px', marginTop: '10px' }}>
+                            Save as PDF
+                        </Button>
+                    </div>
+                    <div id="pdf">
+                        <PublicScreenerReport reportsData={reportsData} />
+                    </div>
 
                     <Button variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                         What Next?
@@ -428,6 +460,15 @@ const PublicScreenerSurvey = () => {
                                 Error submitting your survey. Please try again.
                             </Typography>
                         </Box>
+                    )}
+
+                    {page == -1 && (
+                        <div style={{ padding: '32px' }}>
+                            <IconButton onClick={() => setPage(1)} style={{ marginBottom: '16px' }}>
+                                <ArrowBackIcon />
+                            </IconButton>
+                            <SocialHealthInfoPage />
+                        </div>
                     )}
 
 
@@ -516,13 +557,23 @@ const PublicScreenerSurvey = () => {
                                         </TextField>
                                     </Grid>
                                 </Grid>
-
+                                <Box my={4} /> {/* Spacer */}
+                                <Typography variant="subtitle1" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
+                                    By clicking the "Next" button, I agree to be contacted in the future to receive helpful information about this topic. I also confirm I agree to HWFC Lab <span onClick={() => openDialog()} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>terms and conditions</span> regarding my personal information.
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
+                                    <br></br>
+                                    Not interested in a personalized report, but interested in learning more?
+                                    <span onClick={() => setPage(-1)} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}> Click here</span> to learn why social health is important, common risks, and what you can do to protect yourself.
+                                </Typography>
+                                <TermsAndConditionsDialog open={termsDialogOpen} onClose={closeDialog} />
                             </Box>
                         </div>
                     )}
                     <ScreenerQuestions page={page} onOptionChange={handleOptionChange} />
 
-                    {page < 8 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+
+                    {page < 8 && page > 0 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
                         <Box my={2} /> {/* Spacer */}
                         <Button disabled={!answered} variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                             Next
