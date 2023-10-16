@@ -28,11 +28,6 @@ const TermsAndConditionsDialog = ({ open, onClose }) => {
                     We treat your information with the privacy you deserve. The platform is protected, safe, secure and confidential. Our website has no advertisements and no third-party access. We will never sell or trade your personal data. Standards, procedures, and personnel are in place to keep the digital information in this application secure and protect your privacy from unauthorized disclosure. Information will never be used or disclosed without your consent in full compliance with personal information and protection of privacy laws in Canada. We protect your data using industry-standard security measures and state-of-the-art data centers.
                     <br></br>
                     <br></br>
-                    <b>Cookies</b>
-                    <br></br>
-                    We use cookies and web beacons to improve user experience and track usage patterns.
-                    <br></br>
-                    <br></br>
                     <b> Storage Period and Location</b>
                     <br></br>
                     We retain data for your benefit until you terminate use. Data is stored and processed in Canada only.
