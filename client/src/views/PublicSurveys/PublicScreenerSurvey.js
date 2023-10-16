@@ -17,9 +17,6 @@ import hwfclogo from './hwfc-logo.png';
 import mongoose from 'mongoose';
 import TermsAndConditionsDialog from './TermsAndConditionsDialog';
 
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-
 import {
     MandatoryFieldCheck,
     ValidateEmail,
@@ -79,14 +76,14 @@ const PublicScreenerSurvey = () => {
 
         // Testing data
 
-        "household2_size": "0",
-        "community_activity_participate": "1",
-        "life_satisfaction2": "6",
-        "local_community_belonging": "1",
-        "lack_companionship": "1",
-        "feel_leftout": "2",
-        "feel_isolated": "1",
-        "con_que": "1"
+        // "household2_size": "0",
+        // "community_activity_participate": "1",
+        // "life_satisfaction2": "6",
+        // "local_community_belonging": "1",
+        // "lack_companionship": "1",
+        // "feel_leftout": "2",
+        // "feel_isolated": "1",
+        // "con_que": "1"
 
 
     });
@@ -313,27 +310,81 @@ const PublicScreenerSurvey = () => {
         setTermsDialogOpen(false);
     }
 
+    // const generatePDF = () => {
+
+    //     const surveyHolder = document.getElementById("pdf");
+
+    //     html2canvas(surveyHolder).then(function (canvas) {
+
+    //         const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]); // Use canvas dimensions for PDF
+
+    //         const imgData = canvas.toDataURL('image/jpeg');
+
+    //         const width = doc.internal.pageSize.getWidth();
+
+    //         const height = doc.internal.pageSize.getHeight();
+
+    //         doc.addImage(imgData, 'JPEG', 0, 60, width-120, height-120);
+
+    //         // doc.addPage();
+    //         const imgHeight = height - 80;
+
+    //         doc.setFontSize(24);
+    //         doc.text("What Now?", 40, imgHeight + 40);
+    //         doc.setFontSize(18);
+    //         doc.text("Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps? CONTACT US at hwfc.lab@gmail.com to talk to a trained Community Connector – we can help you set goals and find activities and resources to promote your health and address social risks.", 40, imgHeight + 60, { maxWidth: 500 });
+
+    //         doc.save('your-survey.pdf'); // Provide a desired filename for the PDF
+
+    //     });
+
+    // };
+
     const generatePDF = () => {
-
         const surveyHolder = document.getElementById("pdf");
+      
+        // Calculate the total height of the content
+        const totalHeight = surveyHolder.offsetHeight;
+      
+        // Calculate the height for the first part (e.g., half of the content)
+        const firstPartHeight = totalHeight / 2;
+      
+        html2canvas(surveyHolder, {
+          height: firstPartHeight // Capture only the first part
+        }).then(function (canvas) {
+          const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]);
+          const imgData = canvas.toDataURL('image/jpeg');
+          const width = doc.internal.pageSize.getWidth();
+          const height = doc.internal.pageSize.getHeight();
+      
+          // Add the image to the first page
+          doc.addImage(imgData, 'JPEG', 0, 0, width, height);
+      
+          doc.addPage(); // Create a new page
+      
+          // Capture the second part of the content (remaining height)
+          html2canvas(surveyHolder, {
+            height: totalHeight - firstPartHeight,
+            y: firstPartHeight // Start capturing from the second part
+          }).then(function (canvas2) {
+            const imgData2 = canvas2.toDataURL('image/jpeg');
+      
+            // Add the image to the second page
+            doc.addImage(imgData2, 'JPEG', 0, 0, width, height-120);
 
-        html2canvas(surveyHolder).then(function (canvas) {
-
-            const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]); // Use canvas dimensions for PDF
-
-            const imgData = canvas.toDataURL('image/jpeg');
-
-            const width = doc.internal.pageSize.getWidth();
-
-            const height = doc.internal.pageSize.getHeight();
-
-            doc.addImage(imgData, 'JPEG', 0, 60, width, height);
-
-            doc.save('your-survey.pdf'); // Provide a desired filename for the PDF
-
+            const imgHeight = height - 120;
+      
+            // Continue adding content to the second page
+            doc.setFontSize(32);
+            doc.text("What Now?", 40, imgHeight);
+            doc.setFontSize(24);
+            doc.text("Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps? CONTACT US at hwfc.lab@gmail.com to talk to a trained Community Connector – we can help you set goals and find activities and resources to promote your health and address social risks.", 40, imgHeight + 40, { maxWidth: width-80 });
+      
+            doc.save('your-survey.pdf');
+          });
         });
-
-    };
+      };
+      
 
     return (
         <div
@@ -410,11 +461,6 @@ const PublicScreenerSurvey = () => {
                     <Button variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                         What Next?
                     </Button>
-
-                    <Button variant="contained" color="primary" onClick={exportToPDF} style={{ width: '200px' }}>
-                        Export to PDF
-                    </Button>
-
                 </Box>
             ) :
                 < Box
