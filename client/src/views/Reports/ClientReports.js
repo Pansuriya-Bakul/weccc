@@ -39,10 +39,18 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
+
 import { CircularProgress } from '@material-ui/core';
 import CardContent from "@material-ui/core/CardContent";
+import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
 
-// ==================== MUI Icons ====================
+
+import GaugeChart from "react-gauge-chart";
+import "../../css/gauge-chart.css";
+
+// ==================== FontAwesome Icons ====================
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers, faPersonCane, faHandshake, faPerson } from '@fortawesome/free-solid-svg-icons'
 
 // ==================== MUI Styles ===================
 
@@ -94,6 +102,8 @@ const ClientReports = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
 
+  const [gaugeValue, setgaugeValue] = useState(56);
+
   // Functions ===
 
   const getPatients = useCallback(() => {
@@ -144,8 +154,6 @@ const ClientReports = (props) => {
       });
     }
   }, [appState]);
-
-
 
   const getNeighbours = useCallback(
     (userId) => {
@@ -392,11 +400,12 @@ const ClientReports = (props) => {
             {/* </Card>
             </Grid> */}
             <Grid item xs={12}>
-              <Card raised={true} style={{ padding: '10px' }}>
+              <Card raised={true} style={{ padding: "10px" }}>
                 <Box mx={1} my={1} boxShadow={0}>
-
-                  {isLoading ? (<CircularProgress />)
-                    : <Grid
+                  {isLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    <Grid
                       container
                       direction="column"
                       justifyContent="flex-start"
@@ -405,7 +414,8 @@ const ClientReports = (props) => {
                     >
                       {reportsData &&
                         Object.keys(reportsData).length != 0 &&
-                        Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                        Object.getPrototypeOf(reportsData) ===
+                        Object.prototype ? (
                         <>
                           <Grid item xs={12}>
                             <Typography variant="h4" color="textPrimary">
@@ -423,10 +433,135 @@ const ClientReports = (props) => {
                             >
                               Highlights
                             </Typography>
-                            <ReportDashboard
+                            {/* chart */}
+
+                            <div className="gauge-boxes">
+                              <div className="gauge-box-health">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faHeartPulse} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Health</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-function">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faPersonCane} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Function</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-mentalhealth">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faBrain} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Mental Health</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-wellbeing">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faSpa} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Well-being</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-lifesatisfaction">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faFaceSmile} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Life Satisfaction</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-community">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faHandshake} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Community Belonging</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-loneliness">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faUsers} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">loneliness</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-isolation">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faPerson} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">isolation</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+
+                            </div>
+                            <div className="wheel-graphic">
+                              <div className="gauge-chart">
+                                <div class="c-circle c-circle--background">
+                                  {[1, 2, 3, 4, 5, 6, 7, 8].map((index, i) => (
+                                    <div
+                                      class={`c-circle__segment c-circle__segment--${index}`}
+                                      style={{ color: "green" }}
+                                    ></div>
+                                  ))}
+                                </div>
+                                <GaugeChart
+                                  className="gauge-chart2"
+                                  nrOfLevels={20}
+                                  percent={gaugeValue / 100}
+                                  colors={["red", "green"]}
+                                  arcWidth={0.3}
+                                  style={{ width: "80%" }}
+                                  hideText={true}
+                                />
+                                <span className="value">{gaugeValue}</span>
+                              </div>
+                              {/* ///// */}
+                              {/* <ReportDashboard
                               reports={reportsData}
                               collection={currentReportIndex}
-                            ></ReportDashboard>
+                            ></ReportDashboard> */}
+                            </div>
+
                           </Grid>
 
                           <Grid item xs={12} id="summary">
@@ -439,6 +574,20 @@ const ClientReports = (props) => {
                               Summary
                             </Typography>
                             <Summary
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+                          <Grid item xs={12} id="summary">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Social and Community Connections
+                            </Typography>
+                            <SocialAndCommunityConnections
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
@@ -459,38 +608,41 @@ const ClientReports = (props) => {
                             />
                           </Grid> */}
 
-                          {anyFlags && <Grid item xs={12} id="possible concerns">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Possible Concerns
-                            </Typography>
-                            <PossibleConcerns
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid>}
+                          {anyFlags && (
+                            <Grid item xs={12} id="possible concerns">
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                              >
+                                Possible Concerns
+                              </Typography>
+                              <PossibleConcerns
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
+                          )}
 
-                          {anyFlags && <Grid item xs={12} id="suggestions">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Suggestions
-                            </Typography>
-                            <Suggestions
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid>}
+                          {anyFlags && (
+                            <Grid item xs={12} id="suggestions">
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                              >
+                                Suggestions
+                              </Typography>
+                              <Suggestions
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
+                          )}
                         </>
                       ) : (
-
                         <>
                           <Typography
                             variant="subtitle2"
@@ -499,12 +651,11 @@ const ClientReports = (props) => {
                             gutterBottom
                           >
                             No available reports.
-
                           </Typography>
                         </>
                       )}
                     </Grid>
-                  }
+                  )}
                 </Box>
               </Card>
             </Grid>
@@ -520,7 +671,7 @@ const ClientReports = (props) => {
           </Typography>
         )}
       </Grid>
-    </div>
+    </div >
   ) : (
     <Typography variant="h6" color="inherit" align="center" gutterBottom>
       Not Authorized. Please refresh and try again.
