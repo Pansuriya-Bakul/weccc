@@ -39,8 +39,11 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
-import { CircularProgress } from "@material-ui/core";
+
+import { CircularProgress } from '@material-ui/core';
+import CardContent from "@material-ui/core/CardContent";
 import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
+
 
 import GaugeChart from "react-gauge-chart";
 import "../../css/gauge-chart.css";
@@ -292,12 +295,44 @@ const ClientReports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      My Reports
+                      My Reports 
                     </Typography>
                   </Grid>
                 </Grid>
               </Box>
             </Grid>
+
+            <Grid item xs={12}>
+            <Card raised={true}>
+              <CardContent>
+                <Box mx={1} my={1} boxShadow={0}>
+                  <Grid
+                    container
+                    direction="column"
+                    justifyContent="flex-start"
+                    alignItems="stretch"
+                  >
+                    <Grid item xs={12}>
+                    <Typography
+                        style={{
+                          fontSize: "16px",
+                          color: "grey",
+                          marginLeft: "2px",
+                          marginTop: "3px",
+                        }}
+                      >
+                        Member's name:
+                      </Typography>
+                      <Typography variant="h5" component="h1">
+                        {appState.name}
+                      </Typography>
+
+                    </Grid>
+                  </Grid>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
             <Grid item xs={4}>
               <Box mx={1} my={1}>
                 <AlertMessage alert={alert} setParentAlert={setAlert} />

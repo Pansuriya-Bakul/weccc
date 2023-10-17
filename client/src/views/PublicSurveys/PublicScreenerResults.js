@@ -3,6 +3,7 @@ import Box from '@material-ui/core/Box';
 import { Grid, Typography, Divider } from "@material-ui/core";
 import purple from '@material-ui/core/colors/purple'
 import redflag from '../Reports/redflag.png';
+import smiley from '../Reports/smiley.png'
 import { useState } from 'react';
 import { get } from 'jquery';
 
@@ -49,7 +50,18 @@ const RedFlagIcon = () => {
     return (
         <img
             src={redflag}
-            alt="risk meter"
+            alt="red flag"
+            width="64px"
+            height="64px"
+        />
+    );
+};
+
+const GreenSmileyIcon = () => {
+    return (
+        <img
+            src={smiley}
+            alt="green smiley"
             width="64px"
             height="64px"
         />
@@ -106,7 +118,7 @@ return (
                         <Typography variant="subtitle1" style={{ fontWeight: '500', paddingBottom: "24px", color:"purple" }}>
                             {getAnswerText('household2_size')}
                         </Typography>
-                        {reports.household2_size === '0' && <RedFlagIcon />}
+                        {reports.household2_size === '0' ? <RedFlagIcon /> : <GreenSmileyIcon/>}
                     </Grid>
                     <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px",backgroundColor:"#faf7ff"  }}>
                         <Typography variant="body1" style={{ paddingBottom: "24px" }}>
@@ -139,7 +151,7 @@ return (
                         <Typography variant="body1" style={{ fontWeight: '500', paddingBottom: "24px", color:"purple"}}>
                             {getAnswerText('community_activity_participate')}
                         </Typography>
-                        {reports.community_activity_participate === "0" && <RedFlagIcon />}
+                        {reports.community_activity_participate === "0" ? <RedFlagIcon /> : <GreenSmileyIcon/>}
                     </Grid>
                     <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px" }}>
                         <Typography variant="body1" style={{ paddingBottom: "24px" }}>
@@ -170,7 +182,7 @@ return (
                         <Typography variant="body1" style={{ fontWeight: '500', paddingBottom: "24px", color:"purple" }}>
                             {reports.life_satisfaction2}
                         </Typography>
-                        {reports.life_satisfaction2 <= 6 && <RedFlagIcon />}
+                        {reports.life_satisfaction2 <= 6 ? <RedFlagIcon /> : <GreenSmileyIcon/>}
                     </Grid>
                     <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px" , backgroundColor:"#faf7ff"}}>
                         <Typography variant="body1" style={{ paddingBottom: "24px" }}>
@@ -203,7 +215,7 @@ return (
                         <Typography variant="body1" style={{ fontWeight: '500', paddingBottom: "24px", color:"purple" }}>
                             {getAnswerText('local_community_belonging')}
                         </Typography>
-                        {(reports.local_community_belonging === "1" || reports.local_community_belonging === "0") && <RedFlagIcon />}
+                        {(reports.local_community_belonging === "1" || reports.local_community_belonging === "0") ? <RedFlagIcon /> : <GreenSmileyIcon/>}
                     </Grid>
                     <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px" }}>
                         <Typography variant="body1" style={{ paddingBottom: "24px" }}>
@@ -266,7 +278,7 @@ return (
                 {((reports.lack_companionship == '2' || reports.feel_isolated == '2' || reports.feel_leftout == '2') ||
                     (reports.lack_companionship == '1' && reports.feel_isolated == '1') ||
                     (reports.feel_leftout == '1' && reports.feel_isolated == '1') ||
-                    (reports.lack_companionship == '1' && reports.feel_leftout == '1')) && <RedFlagIcon />}
+                    (reports.lack_companionship == '1' && reports.feel_leftout == '1')) ? <RedFlagIcon /> : <GreenSmileyIcon/>}
             </Grid>
             <Grid item xs={12} sm={6} md={4} lg={4} style={{ paddingLeft: '40px', paddingTop: "24px", backgroundColor:"#faf7ff" }}>
                 <Typography variant="body1" style={{ paddingBottom: "24px" }}>
