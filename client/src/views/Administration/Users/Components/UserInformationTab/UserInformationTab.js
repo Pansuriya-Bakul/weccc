@@ -417,10 +417,10 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         }
         else {
             if (event.target.value.length === 0) {
-                setStreetError(false);
+                setStreetError(true);
             }
             else {
-                setStreetError(true);
+                setStreetError(false);
             }
 
         }
@@ -430,6 +430,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             info: {
                 ...userEdit.info,
                 currentAddress: {
+                    ...userEdit.info.currentAddress,
                     street: event.target.value
                 }
             }
@@ -661,7 +662,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         let updateData = {
             info: {
                 name: userEdit.info.name,
-                dateOfBirth: userEdit.info.dateOfBirth,
+                dateOfBirth: userEdit.info.dateOfBirth || '',
                 currentAddress: {
                     _id: getAddress(userEdit,'_id'),
                     street: getAddress(userEdit,'street'),
@@ -793,6 +794,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                 }
             };
         }
+        
 
         if (province !== getAddress(userEdit,'state')) {
             updateData = {
@@ -811,7 +813,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         updateData = {
             info: {
                 ...updateData.info,
-                language: getOtherLanguages(updateData.info.language),
+                language:  Array.isArray(updateData.info.language)? updateData.info.language:getOtherLanguages(updateData.info.language),
             }
         };
         //removing all emppty keys from obj
@@ -1003,7 +1005,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
     useEffect(() => {
         if (userEdit) {
-            if (new Date(userEdit.info.dateOfBirth).toISOString().split('T')[0] > new Date().toISOString().split('T')[0]) {
+            if (getDateOfBirth() > new Date().toISOString().split('T')[0]) {
                 setDateOfBirthError(true);
             }
             else {
@@ -1152,6 +1154,10 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
     }, [referral, userOriginal, setChangedInformationProperties]);
 
     // Render Section ===
+
+    const getDateOfBirth = ()=>{
+        return userEdit.info.dateOfBirth?new Date(userEdit.info.dateOfBirth).toISOString().split('T')[0]:''
+    }
 
     return (
         userOriginal != null ? (
@@ -1342,7 +1348,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 fullWidth
                                                 label="Date of Birth"
                                                 type="date"
-                                                value={new Date(userEdit.info.dateOfBirth).toISOString().split('T')[0]}
+                                                value={getDateOfBirth()}
                                                 error={dateOfBirthError}
                                                 onChange={(event) => { dateOfBirthHandler(event); }}
                                                 InputLabelProps={{

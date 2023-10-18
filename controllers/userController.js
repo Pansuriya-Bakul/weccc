@@ -1099,14 +1099,13 @@ exports.query = (req, res, next) => {
 // ====================================================
 // Update
 // ====================================================
-exports.update = (req, res, next) => {
+exports.update =  async (req, res, next) => {
 	const id = req.params.userID;
 	const query = req.body;
-
 	log.info('Incoming update query');
 	log.info(query);
 
-	User.findById(id, (error, user) => {
+	User.findById(id, async (error, user) => {
 		if (error) {
 			log.error(error.message);
 
@@ -1196,56 +1195,64 @@ exports.update = (req, res, next) => {
 						workers: queryWorkers
 					}
 				}
+				try{
 
 				user.set(updatedQuery);
-				user.save((saveError, updatedUser) => {
-					if (saveError) {
-						log.error(saveError.message);
-
-						return res.status(500).json({
-							message: saveError.message
-						});
-					}
-
-					log.info('User with id ' + id + ' updated');
-
-					try {
-						if (Object.keys(query.info.currentAddress).length > 1) {
-							Address.findById(query.info.currentAddress._id, (error, address) => {
-								if (error) {
-									log.error(error.message);
-
-									return res.status(404).json({
-										message: error.message
-									});
-								} else {
-									let addressQuery = query.info.currentAddress;
-									address.set(addressQuery);
-									address.save();
-
-								}
+				
+				if (Object.keys(query.info.currentAddress).length > 0) {
+						let address = await Address.findById(query.info.currentAddress._id)
+						// if address found update the address
+						
+						if(address){
+							let addressQuery = query.info.currentAddress;
+								address.set(addressQuery);
+								await address.save();
+						}else{
+						
+							// create new address
+							let newAddress = new Address({
+								_id: new mongoose.Types.ObjectId() || '',
+								street:query.info.currentAddress.street || '',
+								city:query.info.currentAddress.city || '',
+								code:query.info.currentAddress.code || '',
+								country:query.info.currentAddress.country || '',
+								state:query.info.currentAddress.state || '',
 							})
-						}
-					} catch (error) {
-						log.error(error.message);
-					}
+						    await newAddress.save().then(res=>{
+								// add address _id to user
+								user.info.currentAddress = res._id
+							}).catch(err=>console.log(err))
 
-					return res.status(200).json({
-						user: updatedUser,
-						request: {
-							type: 'GET',
-							url:
-								config.server.protocol +
-								'://' +
-								config.server.hostname +
-								':' +
-								config.server.port +
-								config.server.extension +
-								'/users/' +
-								updatedUser._id
+							await user.save()
 						}
-					});
+				}
+			}catch(err){
+				console.log(err)
+			}
+				user.save()
+				.then(savedUser => {
+				return res.status(200).json({
+					user: savedUser,
+					request: {
+						type: 'GET',
+						url:
+							config.server.protocol +
+							'://' +
+							config.server.hostname +
+							':' +
+							config.server.port +
+							config.server.extension +
+							'/users/' +
+							savedUser._id
+					}
+				})
+				})
+				.catch(error => {
+				  console.error('Error saving user:', error);
+				  // Handle the error and return an error response
+				  res.status(500).json({ error: 'An error occurred while saving the user.' });
 				});
+				
 			}
 		}
 	});

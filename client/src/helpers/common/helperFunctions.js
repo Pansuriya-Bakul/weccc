@@ -7,26 +7,23 @@ export const getOtherLanguages = (languages) =>{
 
 
 export const getAddress = (userEdit,value) =>{
-  return userEdit.info?
-                userEdit.info.currentAddress ?
-                  `userEdit.info.currentAddress.${value}`?
-                    `userEdit.info.currentAddress.${value}`
-  :'' :'':''
+ 
+  const {info:{currentAddress}}=userEdit
+  return currentAddress&&currentAddress[value]&&currentAddress[value]
+
 }
 
 export const deleteEmptyKeys =(obj) =>{
     
-    const result = Object.keys(obj).reduce((acc, key) => {
-      // Check if the value associated with the key is an empty object
-      if (Object.keys(obj[key]).length === 0) {
-        // Key is an empty object, so skip it (don't include it in the result)
-        return acc;
-      } else {
-        // Key is not an empty object, include it in the result
+    return Object.keys(obj).reduce((acc, key) => {
+      if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+        const nestedObject = deleteEmptyKeys(obj[key]);
+        if (Object.keys(nestedObject).length !== 0) {
+          acc[key] = nestedObject;
+        }
+      } else if (obj[key] !== null && obj[key] !== '' && obj[key] !== undefined) {
         acc[key] = obj[key];
-        return acc;
       }
+      return acc;
     }, {});
-
-  return result
 }
