@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Chart from 'chart.js/auto';
+import GaugeChart from "react-gauge-chart";
+import "./gauge-chart.css";
 
 import { Grid, Typography, Box } from '@material-ui/core';
 import LocalHospitalOutlinedIcon from '@material-ui/icons/LocalHospitalOutlined';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers, faPersonCane, faHandshake, faPerson } from '@fortawesome/free-solid-svg-icons'
+import { lightBlue } from '@material-ui/core/colors';
 
 
 const HighlightBox = (props) =>{
@@ -84,66 +87,122 @@ const HighlightBox = (props) =>{
 
     return (
         <Grid container spacing={3} style={{display:'flex', flexDirection:'column', gap:'16px', marginTop:'12px'}}>
-            <div style={{display:'flex', gap:'16px'}}>
-            <Box item xs={12} sm={6} md={4} lg={3} bgcolor={health_colour} style={{display:'flex', color:'white', padding:'16px', borderRadius:'8px', alignItems:'center' ,justifyContent:'center', gap:'10px', minWidth:'220px'}}>
-                <FontAwesomeIcon icon={faHeartPulse} style={{fontSize:'52px'}}/>
-                <div style={{display:'flex', flexDirection:'column'}}>
-                <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
-                    Health
-                </Typography>
-                <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                    {getPercentageLabel(props.data[0])}
-                </Typography>
-                </div>
-            </Box>
-            <Box item xs={12} sm={6} md={4} lg={3} bgcolor={mentalHealth_colour} style={{display:'flex', color:'white', padding:'16px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'10px', minWidth:'220px'}}>
-                <FontAwesomeIcon icon={faBrain} style={{fontSize:'52px'}}/>
-                <div style={{display:'flex', flexDirection:'column'}}>
-                <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
-                    Mental Health
-                </Typography>
-                <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                    {getPercentageLabel(props.data[1])}
-                </Typography>
-                </div>
-            </Box>
-            <Box item xs={12} sm={6} md={4} lg={3} bgcolor={wellBeing_colour} style={{display:'flex', color:'white', padding:'16px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'10px', minWidth:'220px'}}>
-            <FontAwesomeIcon icon={faSpa} style={{fontSize:'52px'}}/>
-                <div style={{display:'flex', flexDirection:'column'}}>
-                <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
-                    Well Being
-                </Typography>
-                <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                    {getPercentageLabel(props.data[2])}
-                </Typography>
-                </div>
-            </Box>
+            <div className="gauge-chart">
+            <Box item xs={12} sm={6} md={4} lg={3}
+            style={{        
+                padding: '16px',
+                borderRadius: '8px',
+                border: '1px solid lightgray',
+                backgroundColor: 'lightBlue'
+            }}
+            >
+                <span className="value" style={{color:'white'}}>Your Wellness Rate</span>
+                <GaugeChart
+                        className="gauge-chart2"
+                        nrOfLevels={20}
+                        percent={0.56}
+                        colors={["red", "green"]}
+                        arcWidth={0.3}
+                        style={{ width: "80%" }}
+                        hideText={true}
+                    />
+                <span className="value" style={{color:'white'}}>{56}</span>
+                </Box>
             </div>
-            <div style={{display:'flex',gap:'16px'}}>
-            <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
-            <FontAwesomeIcon icon={faFaceSmile} style={{fontSize:'52px'}}/>
-                <div style={{display:'flex', flexDirection:'column'}}>
-                <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
-                    Life satisfaction
-                </Typography>
-                <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                    {getPercentageLabel(props.data[3])}
-                </Typography>
+            <div className="boxes"> 
+                <div style={{display:'flex', gap:'16px'}}>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={health_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                    <FontAwesomeIcon icon={faHeartPulse} style={{fontSize:'52px'}}/>
+                    <div style={{display:'flex', flexDirection:'column'}}>
+                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                        Health
+                    </Typography>
+                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                        {getPercentageLabel(props.data[0])}
+                    </Typography>
+                    </div>
+                </Box>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={mentalHealth_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                    <FontAwesomeIcon icon={faBrain} style={{fontSize:'52px'}}/>
+                    <div style={{display:'flex', flexDirection:'column'}}>
+                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                        Mental Health
+                    </Typography>
+                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                        {getPercentageLabel(props.data[1])}
+                    </Typography>
+                    </div>
+                </Box>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={wellBeing_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                <FontAwesomeIcon icon={faSpa} style={{fontSize:'52px'}}/>
+                    <div style={{display:'flex', flexDirection:'column'}}>
+                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                        Well Being
+                    </Typography>
+                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                        {getPercentageLabel(props.data[2])}
+                    </Typography>
+                    </div>
+                </Box>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={wellBeing_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                <FontAwesomeIcon icon={faPersonCane} style={{fontSize:'52px'}}/>
+                    <div style={{display:'flex', flexDirection:'column'}}>
+                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                        Function
+                    </Typography>
+                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                        {getPercentageLabel(props.data[2])}
+                    </Typography>
+                    </div>
+                </Box>
                 </div>
-            </Box>
-            <Box item xs={12} sm={6} md={4} lg={3} bgcolor={loneliness_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
-            <FontAwesomeIcon icon={faUsers} style={{fontSize:'52px'}}/>
-                <div style={{display:'flex', flexDirection:'column'}}>
-                <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
-                    Loneliness
-                </Typography>
-                <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                    {getPercentageLabel(props.data[4])}
-                </Typography>
+                <div style={{display:'flex',gap:'16px'}}>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                <FontAwesomeIcon icon={faHandshake} style={{fontSize:'52px'}}/>
+                    <div style={{display:'flex', flexDirection:'column'}}>
+                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                        Community Belonging
+                    </Typography>
+                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                        {getPercentageLabel(props.data[3])}
+                    </Typography>
+                    </div>
+                </Box>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                <FontAwesomeIcon icon={faPerson} style={{fontSize:'52px'}}/>
+                    <div style={{display:'flex', flexDirection:'column'}}>
+                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                        Isolation
+                    </Typography>
+                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                        {getPercentageLabel(props.data[3])}
+                    </Typography>
+                    </div>
+                </Box>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                <FontAwesomeIcon icon={faFaceSmile} style={{fontSize:'52px'}}/>
+                    <div style={{display:'flex', flexDirection:'column'}}>
+                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                        Life satisfaction
+                    </Typography>
+                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                        {getPercentageLabel(props.data[3])}
+                    </Typography>
+                    </div>
+                </Box>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={loneliness_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                <FontAwesomeIcon icon={faUsers} style={{fontSize:'52px'}}/>
+                    <div style={{display:'flex', flexDirection:'column'}}>
+                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                        Loneliness
+                    </Typography>
+                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                        {getPercentageLabel(props.data[4])}
+                    </Typography>
+                    </div>
+                </Box>
                 </div>
-            </Box>
             </div>
-
         </Grid>
     );
 
