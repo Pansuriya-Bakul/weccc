@@ -86,78 +86,90 @@ const HighlightBox = (props) =>{
     }, []);
 
     return (
-        <Grid container spacing={3} style={{display:'flex', flexDirection:'column', gap:'16px', marginTop:'12px'}}>
-            <div className="gauge-chart">
-            <Box item xs={12} sm={6} md={4} lg={3}
-            style={{        
-                padding: '16px',
-                borderRadius: '8px',
-                border: '1px solid lightgray',
-                backgroundColor: 'lightBlue'
-            }}
-            >
-                <span className="value" style={{color:'white'}}>Your Wellness Rate</span>
-                <GaugeChart
-                        className="gauge-chart2"
-                        nrOfLevels={20}
-                        percent={0.56}
-                        colors={["red", "green"]}
-                        arcWidth={0.3}
-                        style={{ width: "80%" }}
-                        hideText={true}
-                    />
-                <span className="value" style={{color:'white'}}>{56}</span>
-                </Box>
-            </div>
-            <div className="boxes"> 
-                <div style={{display:'flex', gap:'16px'}}>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={health_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
-                    <FontAwesomeIcon icon={faHeartPulse} style={{fontSize:'52px'}}/>
-                    <div style={{display:'flex', flexDirection:'column'}}>
-                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
-                        Health
-                    </Typography>
-                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getPercentageLabel(props.data[0])}
-                    </Typography>
+        <Grid container spacing={3} style={{display:'flex', marginTop:'12px', gap:'16px', justifyContent:'space-around', alignItems:'center'}}>
+            {/* <div className="gauge-chart" style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center'}}> */}
+                <Box item xs={12} sm={6} md={4} lg={3}
+                style={{        
+                    padding: '32px',
+                    borderRadius: '16px',
+                    backgroundColor: '#0a2238',
+                    display:'flex', 
+                    flexDirection:'column', 
+                    alignItems:'center', 
+                    justifyContent:'center',
+                    height:'100%',
+                    width:'100%',
+                    // gap:'16px',
+                    maxWidth:'300px',
+                    maxHeight:'300px'
+                }}
+                >
+                    <Typography variant="h4" align="left" style={{fontWeight:'500', color:'white'}}>Your Wellness Score</Typography>
+                    <GaugeChart
+                            className="gauge-chart2"
+                            nrOfLevels={8}
+                            percent={0.56}
+                            // colors={["red", "green"]}
+                            arcWidth={0.5}
+                            style={{ width: "100%" }}
+                            hideText={true}
+                            colors={["#CC3333", "#4EDB5A"]}
+                        />
+                    <div style={{backgroundColor:'#A0CC27', width:'70%', display:'flex', alignItems:'center', justifyContent:'center', borderRadius:'50px'}}>
+                        <Typography variant="h3" color="white" align="left" style={{fontWeight:'500', color:'white'}}>{56}</Typography>
                     </div>
                 </Box>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={mentalHealth_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
-                    <FontAwesomeIcon icon={faBrain} style={{fontSize:'52px'}}/>
-                    <div style={{display:'flex', flexDirection:'column'}}>
-                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
-                        Mental Health
-                    </Typography>
-                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getPercentageLabel(props.data[1])}
-                    </Typography>
-                    </div>
-                </Box>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={wellBeing_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
-                <FontAwesomeIcon icon={faSpa} style={{fontSize:'52px'}}/>
-                    <div style={{display:'flex', flexDirection:'column'}}>
-                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
-                        Well Being
-                    </Typography>
-                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getPercentageLabel(props.data[2])}
-                    </Typography>
-                    </div>
-                </Box>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={wellBeing_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
-                <FontAwesomeIcon icon={faPersonCane} style={{fontSize:'52px'}}/>
-                    <div style={{display:'flex', flexDirection:'column'}}>
-                    <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
-                        Function
-                    </Typography>
-                    <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getPercentageLabel(props.data[2])}
-                    </Typography>
-                    </div>
-                </Box>
+            {/* </div> */}
+            <div className="boxes" style={{display:'flex', flexDirection:'column', gap:'16px'}}> 
+                <div style={{display:'flex', gap:'8px'}}>
+                    <Box item xs={12} sm={6} md={4} lg={3} bgcolor={health_colour} style={{display:'flex', color:'white', padding:'14px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'200px'}}>
+                        <FontAwesomeIcon icon={faHeartPulse} style={{fontSize:'52px'}}/>
+                        <div style={{display:'flex', flexDirection:'column'}}>
+                        <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                            Health
+                        </Typography>
+                        <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                            {getPercentageLabel(props.data[0])}
+                        </Typography>
+                        </div>
+                    </Box>
+                    <Box item xs={12} sm={6} md={4} lg={3} bgcolor={mentalHealth_colour} style={{display:'flex', color:'white', padding:'14px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
+                        <FontAwesomeIcon icon={faBrain} style={{fontSize:'52px'}}/>
+                        <div style={{display:'flex', flexDirection:'column'}}>
+                        <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                            Mental Health
+                        </Typography>
+                        <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                            {getPercentageLabel(props.data[1])}
+                        </Typography>
+                        </div>
+                    </Box>
+                    <Box item xs={12} sm={6} md={4} lg={3} bgcolor={wellBeing_colour} style={{display:'flex', color:'white', padding:'14px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
+                    <FontAwesomeIcon icon={faSpa} style={{fontSize:'52px'}}/>
+                        <div style={{display:'flex', flexDirection:'column'}}>
+                        <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                            Well Being
+                        </Typography>
+                        <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                            {getPercentageLabel(props.data[2])}
+                        </Typography>
+                        </div>
+                    </Box>
+                    <Box item xs={12} sm={6} md={4} lg={3} bgcolor={wellBeing_colour} style={{display:'flex', color:'white', padding:'14px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
+                    <FontAwesomeIcon icon={faPersonCane} style={{fontSize:'52px'}}/>
+                        <div style={{display:'flex', flexDirection:'column'}}>
+                        <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
+                            Function
+                        </Typography>
+                        <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
+                            {getPercentageLabel(props.data[2])}
+                        </Typography>
+                        </div>
+                    </Box>
                 </div>
-                <div style={{display:'flex',gap:'16px'}}>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+
+                <div style={{display:'flex',gap:'8px'}}>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'10px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
                 <FontAwesomeIcon icon={faHandshake} style={{fontSize:'52px'}}/>
                     <div style={{display:'flex', flexDirection:'column'}}>
                     <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
@@ -168,7 +180,7 @@ const HighlightBox = (props) =>{
                     </Typography>
                     </div>
                 </Box>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'10px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
                 <FontAwesomeIcon icon={faPerson} style={{fontSize:'52px'}}/>
                     <div style={{display:'flex', flexDirection:'column'}}>
                     <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
@@ -179,7 +191,7 @@ const HighlightBox = (props) =>{
                     </Typography>
                     </div>
                 </Box>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'10px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
                 <FontAwesomeIcon icon={faFaceSmile} style={{fontSize:'52px'}}/>
                     <div style={{display:'flex', flexDirection:'column'}}>
                     <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
@@ -190,7 +202,7 @@ const HighlightBox = (props) =>{
                     </Typography>
                     </div>
                 </Box>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={loneliness_colour} style={{display:'flex', color:'white', padding:'6px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%'}}>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={loneliness_colour} style={{display:'flex', color:'white', padding:'10px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
                 <FontAwesomeIcon icon={faUsers} style={{fontSize:'52px'}}/>
                     <div style={{display:'flex', flexDirection:'column'}}>
                     <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
