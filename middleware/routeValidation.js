@@ -55,7 +55,7 @@ module.exports = {
                     gender: Joi.string().allow(''),
                     dateOfBirth: Joi.date().allow('').allow(null),
                     phone: Joi.string().allow(''),
-                    language: Joi.string().allow(''),
+                    language: Joi.array().allow([]),
                     address: Joi.object().keys({
                         street: Joi.string().allow(''),
                         city: Joi.string().allow(''),

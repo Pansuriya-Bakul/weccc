@@ -80,7 +80,7 @@ const userSchema = mongoose.Schema({
             type: String,
         },
         language: {
-            type: String,
+            type: [],
             // required: true
         },
         currentAddress: {
