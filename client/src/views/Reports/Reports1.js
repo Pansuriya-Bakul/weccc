@@ -67,7 +67,7 @@ const useStyles = makeStyles(
 
 // ======================== React Modern | Functional Component ========================
 
-const Reports = (props) => {
+const   Reports = (props) => {
   // Notice the arrow function... regular function()  works too
 
   // Variables ===
@@ -193,6 +193,7 @@ const Reports = (props) => {
               "error"
             )
           );
+          setIsLoading(false);
         } else {
           if (res.status === 200) {
             const { memberName, ...otherData } = res.data;
@@ -638,7 +639,7 @@ const Reports = (props) => {
         )}
       </Grid>
     </div>
-  ) : (
+  ) : alert.message!=''? alert.message:(
     <Typography variant="h6" color="inherit" align="center" gutterBottom>
       Not Authorized. Please refresh and try again.
     </Typography>

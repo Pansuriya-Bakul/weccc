@@ -38,6 +38,7 @@ import { colors } from "@material-ui/core";
 function MainReports() {
     // const screenerLink = '/ClientReports1';
     // const neighboursLink = '/ClientReports';
+    const _id = localStorage.getItem('_id')
 
     return (
         // BrowserRouter to wrap all
@@ -86,13 +87,13 @@ function MainReports() {
 
                     <table cellSpacing="2" bgcolor="#000000" align="center">
                         <tr bgcolor="#ffffff">
-                            <th><Link to={"/ClientReports1"}>
+                            <th><Link to={`/ClientReports1/${_id}`}>
                                 <Typography style={{ padding: '5px' }}>
                                     Social Health Screener Report
                                 </Typography>
                                 <img height="200" width="200" src={SocialHealth} />
                             </Link></th>
-                            <th><Link to={"/ClientReports"}>
+                            <th><Link to={`/ClientReports/${_id}`}>
                                 <Typography style={{ padding: '5px' }}>
                                     Community Connections Report
                                 </Typography>

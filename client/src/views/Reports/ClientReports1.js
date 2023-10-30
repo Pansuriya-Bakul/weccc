@@ -40,11 +40,10 @@ import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 // import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 
-import risk1 from "./risk1.png";
-import risk2 from "./risk2.png";
-import risk3 from "./risk3.png";
-import risk4 from "./risk4.png";
-import risk5 from "./risk5.png";
+
+import highrisk from "./riskhigh.png";
+import moderaterisk from "./riskmoderate.png";
+import lowrisk from "./risklow.png";
 import ScreenerResults from "./ScreenerResults";
 import { set } from "joi/lib/types/lazy";
 
@@ -484,7 +483,7 @@ const ClientReports = (props) => {
                             <Grid container spacing={2}>
                               <Grid item xs={12} sm={6} md={4} lg={3}>
                                 <img
-                                  src={riskScore == 0 ? risk1 : riskScore == 1 ? risk2 : riskScore == 2 ? risk3 : riskScore == 3 ? risk4 : risk5 }
+                                  src={riskScore > 0 && riskScore < 3 ? moderaterisk : riskScore >= 3 ? highrisk : lowrisk}
                                   alt="risk meter"
                                   width="360px"
                                   height="238px"
