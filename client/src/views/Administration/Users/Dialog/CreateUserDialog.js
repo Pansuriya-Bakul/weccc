@@ -220,7 +220,7 @@ const CreateUserDialog = (props) => {
         dateOfBirth: new Date(dateOfBirth),
         phone: phone,
         language:
-          language == "Other" && isLanguage2 ? sanatized_language2 : language,
+          language == "Other" && isLanguage2 ? sanatized_language2 : getOtherLanguages(language),
         address: {
           street: street,
           city: sanatized_city,
@@ -978,6 +978,9 @@ const CreateUserDialog = (props) => {
                             >
                               <MenuItem key={"English"} value={"English"}>
                                 English
+                              </MenuItem>
+                              <MenuItem key={"French"} value={"French"}>
+                                French
                               </MenuItem>
                               <MenuItem key={"Other"} value={"Other"}>
                                 Other

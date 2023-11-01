@@ -190,7 +190,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
             setGenderError(false);
 
-            if (userOriginal.info.language != "English") {
+            if (userOriginal.info.language != "English"&&userOriginal.info.language != "French") {
                 setLanguage("Other");
 
                 setLanguage2(userOriginal.info.language);
@@ -868,7 +868,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
             setGenderError(false);
 
-            if (userOriginal.info.language != "English") {
+            if (userOriginal.info.language != "English"&&userOriginal.info.language != "French") {
                 setLanguage("Other");
             }
             else {
@@ -1388,6 +1388,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 disabled={editable ? false : true}
                                             >
                                                 <MenuItem key={'English'} value={'English'}>English</MenuItem>
+                                                <MenuItem key={'French'} value={'French'}>French</MenuItem>
                                                 <MenuItem key={'Other'} value={'Other'}>Other</MenuItem>
                                             </TextField>
                                         </Grid>
