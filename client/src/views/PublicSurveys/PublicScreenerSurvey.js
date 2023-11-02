@@ -310,81 +310,53 @@ const PublicScreenerSurvey = () => {
         setTermsDialogOpen(false);
     }
 
-    // const generatePDF = () => {
 
-    //     const surveyHolder = document.getElementById("pdf");
-
-    //     html2canvas(surveyHolder).then(function (canvas) {
-
-    //         const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]); // Use canvas dimensions for PDF
-
-    //         const imgData = canvas.toDataURL('image/jpeg');
-
-    //         const width = doc.internal.pageSize.getWidth();
-
-    //         const height = doc.internal.pageSize.getHeight();
-
-    //         doc.addImage(imgData, 'JPEG', 0, 60, width-120, height-120);
-
-    //         // doc.addPage();
-    //         const imgHeight = height - 80;
-
-    //         doc.setFontSize(24);
-    //         doc.text("What Now?", 40, imgHeight + 40);
-    //         doc.setFontSize(18);
-    //         doc.text("Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps? CONTACT US at hwfc.lab@gmail.com to talk to a trained Community Connector – we can help you set goals and find activities and resources to promote your health and address social risks.", 40, imgHeight + 60, { maxWidth: 500 });
-
-    //         doc.save('your-survey.pdf'); // Provide a desired filename for the PDF
-
-    //     });
-
-    // };
 
     const generatePDF = () => {
         const surveyHolder = document.getElementById("pdf");
-      
+
         // Calculate the total height of the content
         const totalHeight = surveyHolder.offsetHeight;
-      
+
         // Calculate the height for the first part (e.g., half of the content)
         const firstPartHeight = totalHeight / 2;
-      
-        html2canvas(surveyHolder, {
-          height: firstPartHeight // Capture only the first part
-        }).then(function (canvas) {
-          const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]);
-          const imgData = canvas.toDataURL('image/jpeg');
-          const width = doc.internal.pageSize.getWidth();
-          const height = doc.internal.pageSize.getHeight();
-      
-          // Add the image to the first page
-          doc.addImage(imgData, 'JPEG', 0, 0, width, height);
-      
-          doc.addPage(); // Create a new page
-      
-          // Capture the second part of the content (remaining height)
-          html2canvas(surveyHolder, {
-            height: totalHeight - firstPartHeight,
-            y: firstPartHeight // Start capturing from the second part
-          }).then(function (canvas2) {
-            const imgData2 = canvas2.toDataURL('image/jpeg');
-      
-            // Add the image to the second page
-            doc.addImage(imgData2, 'JPEG', 0, 0, width, height-120);
 
-            const imgHeight = height - 120;
-      
-            // Continue adding content to the second page
-            doc.setFontSize(32);
-            doc.text("What Now?", 40, imgHeight);
-            doc.setFontSize(24);
-            doc.text("Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps? CONTACT US at hwfc.lab@gmail.com to talk to a trained Community Connector – we can help you set goals and find activities and resources to promote your health and address social risks.", 40, imgHeight + 40, { maxWidth: width-80 });
-      
-            doc.save('your-survey.pdf');
-          });
+        html2canvas(surveyHolder, {
+            height: firstPartHeight // Capture only the first part
+        }).then(function (canvas) {
+            const doc = new jsPDF('p', 'px', [canvas.width, canvas.height]);
+            const imgData = canvas.toDataURL('image/jpeg');
+            const width = doc.internal.pageSize.getWidth();
+            const height = doc.internal.pageSize.getHeight();
+
+            // Add the image to the first page
+            doc.addImage(imgData, 'JPEG', 0, 0, width, height);
+
+            doc.addPage(); // Create a new page
+
+            // Capture the second part of the content (remaining height)
+            html2canvas(surveyHolder, {
+                height: totalHeight - firstPartHeight,
+                y: firstPartHeight // Start capturing from the second part
+            }).then(function (canvas2) {
+                const imgData2 = canvas2.toDataURL('image/jpeg');
+
+                // Add the image to the second page
+                doc.addImage(imgData2, 'JPEG', 0, 0, width, height - 120);
+
+                const imgHeight = height - 120;
+
+                // Continue adding content to the second page
+                doc.setFontSize(32);
+                doc.text("What Now?", 40, imgHeight);
+                doc.setFontSize(24);
+                doc.text("Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps? CONTACT US at hwfc.lab@gmail.com to talk to a trained Community Connector – we can help you set goals and find activities and resources to promote your health and address social risks.", 40, imgHeight + 40, { maxWidth: width - 80 });
+
+                doc.save('your-survey.pdf');
+            });
         });
-      };
-      
+    };
+
 
     return (
         <div
@@ -524,7 +496,7 @@ const PublicScreenerSurvey = () => {
                                 <Typography variant="h6" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
                                     Social connection is the foundation of good health and is as fundamental a human need as food and water. Did you know that people with poor social health are sicker, less happy, and may even die earlier compared to others?
                                     <br /><br />
-                                    Take our two-minute survey to help you understand risk factors and receive helpful information based on your personalized results.
+                                    Take our two-minute survey to rate your social health, learn about risk factors and receive personalized feedback.
                                 </Typography>
                                 <Box my={1} /> {/* Spacer */}
                                 <Grid container spacing={4}>
@@ -605,8 +577,16 @@ const PublicScreenerSurvey = () => {
                                 </Grid>
                                 <Box my={4} /> {/* Spacer */}
                                 <Typography variant="subtitle1" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
-                                    By clicking the "Next" button, I agree to be contacted in the future to receive helpful information about this topic. I also confirm I agree to HWFC Lab <span onClick={() => openDialog()} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>terms and conditions</span> regarding my personal information.
+                                    By clicking the "Next" button, I agree to HWFC Lab <span onClick={() => openDialog()} style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>terms and conditions</span> for personal information.
                                 </Typography>
+                                
+                                <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+                                    <Box my={2} /> {/* Spacer */}
+                                    <Button disabled={!answered} variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
+                                        Next
+                                    </Button>
+                                </Box>
+
                                 <Typography variant="subtitle1" gutterBottom style={{ textAlign: 'center', fontWeight: '400', whiteSpace: 'pre-line' }}>
                                     <br></br>
                                     Not interested in a personalized report, but interested in learning more?
@@ -619,7 +599,7 @@ const PublicScreenerSurvey = () => {
                     <ScreenerQuestions page={page} onOptionChange={handleOptionChange} />
 
 
-                    {page < 8 && page > 0 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
+                    {page < 8 && page > 1 && <Box textAlign="center" style={{ paddingBottom: '16px' }}> {/* Center the next button */}
                         <Box my={2} /> {/* Spacer */}
                         <Button disabled={!answered} variant="contained" color="primary" onClick={handleNext} style={{ width: '200px' }}>
                             Next
