@@ -50,6 +50,7 @@ module.exports = {
   pwi_overall_score,
   activities,
   meaningful_activities,
+  like_to_join,
   challenging_activities,
   FCP_STRINGS_COMB,
   ISA_DM_STRINGS,
@@ -96,6 +97,7 @@ module.exports = {
   household2_size,
   con_que,
 };
+
 
 function collectionIds(list) {
   let newList = new Array();
@@ -1265,6 +1267,32 @@ function activities(question_activities, question_activities_others) {
 }
 
 function meaningful_activities(question) {
+  if (!question) return 999;
+
+  let answer_array = new Array();
+
+  // Dynamic Matrix containing Array of Objects
+
+  if (question && Array.isArray(question)) {
+    question.forEach((item) => {
+      if (item.hasOwnProperty("column1")) {
+        // answer_array.push(String(item.column1).toLowerCase().trim());
+        answer_array.push(
+          item.column1.charAt(0).toUpperCase() +
+          item.column1.slice(1).toLowerCase().trim()
+        );
+      }
+    });
+  }
+
+  if (answer_array.length == 0) {
+    return 999;
+  } else {
+    return answer_array;
+  }
+}
+
+function like_to_join(question) {
   if (!question) return 999;
 
   let answer_array = new Array();

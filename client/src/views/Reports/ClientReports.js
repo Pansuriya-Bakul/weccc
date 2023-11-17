@@ -21,6 +21,7 @@ import Summary1 from "./Summary1";
 import PossibleConcerns from "./PossibleConcerns";
 import Suggestions from "./Suggestions";
 import ContactInfo from "./ContactInfo";
+import CommunityCircle from "./CommunityCircle/CommunityCircle";
 
 // ==================== Helpers =====================
 import AlertType from "../../helpers/models/AlertType";
@@ -188,37 +189,6 @@ const ClientReports = (props) => {
     [appState]
   );
 
-  // const getScreen = useCallback(
-  //   (userId) => {
-  //     get("reports/Screen/user/" + userId, appState.token, (err, res) => {
-  //       if (err) {
-  //         //Bad callback
-  //         setAlert(
-  //           new AlertType(
-  //             "Unable to retrieve Screen Chapter Reports. Please refresh and try again."
-  //           )
-  //         );
-  //       } else {
-  //         if (res.status === 200) {
-  //           if (Object.keys(res.data).length === 0) {
-  //             setReports1Data(null);
-  //           } else {
-  //             setReports1Data(res.data);
-  //           }
-  //         } else {
-  //           //Bad HTTP Response
-  //           setAlert(
-  //             new AlertType(
-  //               "Unable to retrieve Screen Chapter Reports. Please refresh and try again.",
-  //               "error"
-  //             )
-  //           );
-  //         }
-  //       }
-  //     });
-  //   },
-  //   [appState]
-  // );
 
   const patientSelectHandler = useCallback((event) => {
     setCurrentPatient(event.target.value);
@@ -256,11 +226,6 @@ const ClientReports = (props) => {
     }
   }, [reportsData, currentReportIndex]);
 
-  // useEffect( () =>
-  // {
-  //     console.log(currentReportIndex);
-
-  // }, [ currentReportIndex ]);
 
   // Render Section ===
 
@@ -295,7 +260,7 @@ const ClientReports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      My Reports 
+                      My Reports
                     </Typography>
                   </Grid>
                 </Grid>
@@ -303,102 +268,41 @@ const ClientReports = (props) => {
             </Grid>
 
             <Grid item xs={12}>
-            <Card raised={true}>
-              <CardContent>
-                <Box mx={1} my={1} boxShadow={0}>
-                  <Grid
-                    container
-                    direction="column"
-                    justifyContent="flex-start"
-                    alignItems="stretch"
-                  >
-                    <Grid item xs={12}>
-                    <Typography
-                        style={{
-                          fontSize: "16px",
-                          color: "grey",
-                          marginLeft: "2px",
-                          marginTop: "3px",
-                        }}
-                      >
-                        Member's name:
-                      </Typography>
-                      <Typography variant="h5" component="h1">
-                        {appState.name}
-                      </Typography>
+              <Card raised={true}>
+                <CardContent>
+                  <Box mx={1} my={1} boxShadow={0}>
+                    <Grid
+                      container
+                      direction="column"
+                      justifyContent="flex-start"
+                      alignItems="stretch"
+                    >
+                      <Grid item xs={12}>
+                        <Typography
+                          style={{
+                            fontSize: "16px",
+                            color: "grey",
+                            marginLeft: "2px",
+                            marginTop: "3px",
+                          }}
+                        >
+                          Member's name:
+                        </Typography>
+                        <Typography variant="h5" component="h1">
+                          {appState.name}
+                        </Typography>
 
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
             <Grid item xs={4}>
               <Box mx={1} my={1}>
                 <AlertMessage alert={alert} setParentAlert={setAlert} />
-                {/* <Button
-                                            onClick = { () => {console.log((collectionIndex + 1)%reportsData.SRVNum_PRF_SD.length);}} >
-                                            Viewing data from collection {collectionIndex + 1} out of {reportsData.SRVNum_PRF_SD.length}
-                                        </Button> */}
               </Box>
             </Grid>
-            {/* <Grid item xs={12}>
-              <Card raised={true}> */}
-            {/* <Box mx={1} my={1} boxShadow={0}>
-                  {/* <Grid
-                    container
-                    direction="column"
-                    justifyContent="flex-start"
-                    alignItems="stretch"
-                    spacing={1}
-                  >
-                    {/* <Grid item xs={12}>
-                      <FormControl
-                        fullWidth
-                        variant="filled"
-                        size="small"
-                        className={classes.formControl}
-                      >
-                        <InputLabel id="select-label-Member">Member</InputLabel>
-                        <Select
-                          className={classes.selectEmpty}
-                          labelId="select-label-Member"
-                          id="select-Member"
-                          defaultValue=""
-                          disabled={patientData ? false : true}
-                          onChange={(event) => {
-                            patientSelectHandler(event);
-                          }}
-                        >
-                          {patientData.map((item, index) => {
-                            return (
-                              <MenuItem key={item._id} value={item._id}>
-                                <em>{item.info.name}</em>
-                              </MenuItem>
-                            );
-                          })}
-                        </Select>
-                      </FormControl>
-                    </Grid> */}
-            {/* <Grid item xs={12}>
-                      {reportsData ? (
-                        <Pagination
-                          count={reportsData.SRVNum_PRF_SD.length}
-                          showFirstButton
-                          showLastButton
-                          disabled={!reportsData}
-                          onChange={(event, page) => {
-                            reportsPaginationHandler(event, page);
-                          }}
-                        />
-                      ) : (
-                        <> </>
-                      )}
-                    </Grid> 
-                  </Grid> *
-                </Box> */}
-            {/* </Card>
-            </Grid> */}
             <Grid item xs={12}>
               <Card raised={true} style={{ padding: "10px" }}>
                 <Box mx={1} my={1} boxShadow={0}>
@@ -577,6 +481,16 @@ const ClientReports = (props) => {
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
+                          </Grid>
+                          <Grid item xs={12} id="summary">
+                            <CommunityCircle 
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                            {/* <Summary
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            /> */}
                           </Grid>
                           <Grid item xs={12} id="summary">
                             <Typography

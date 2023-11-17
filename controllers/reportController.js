@@ -302,6 +302,9 @@ exports.Neighbour = async (req, res) => {
               // CHALLENGING ACTIVITIES
               let challenging_activities = new Array();
 
+              //LIKE TO JOIN
+              let like_to_join = new Array();
+
               // FREQUENCY OF COMMUNITY CARE PARTICIPATION [ STRINGS ]
               let FCP_STRINGS_COMB = new Array();
 
@@ -311,8 +314,14 @@ exports.Neighbour = async (req, res) => {
               // HOUSEHOLD SIZE
               let household_size = new Array();
 
+              // MARITAL STATUS
+              let marital_status = new Array();
+
               // TOTAL CHILDREN
               let total_children = new Array();
+
+              // MEANINGFUL PEOPLE
+              let meaningful_people = new Array();
 
               // TOTAL RELATIVES
               let total_relatives = new Array();
@@ -541,13 +550,19 @@ exports.Neighbour = async (req, res) => {
 
                   if (chapter3Values) {
                     // Who's in my circle
-                    //  NOT USED SURVEY QUESTION: meaningful_people_animals
+                    //  NOT USED SURVEY QUESTION: animals
+              
 
                     PN_QofL1_COMB.push(
                       neighbourFunctions.size_of_personal_network(
                         chapter3Values.PN_QofL1_COMB
                       )
                     );
+
+                    meaningful_people.push(
+                        chapter3Values.meaningful_people
+                    );
+
                     total_children.push(
                       neighbourFunctions.total_children(
                         chapter3Values.total_children
@@ -569,7 +584,10 @@ exports.Neighbour = async (req, res) => {
                       )
                     );
 
-                    // NOT USED SURVEY QUESTION: marital_status
+                    marital_status.push(
+                        chapter3Values.marital_status
+                    );
+
                     // NOT USED SURVEY QUESTION: current_living_situation
 
                     household_size.push(
@@ -663,6 +681,11 @@ exports.Neighbour = async (req, res) => {
                         chapter4Values.challenging_activities
                       )
                     );
+                    like_to_join.push(
+                      neighbourFunctions.like_to_join(
+                        chapter4Values.like_to_join
+                      )
+                    );
                     FCP_INT_COMB.push(
                       neighbourFunctions.frequency_of_community_participation(
                         chapter4Values.FCP_INT_COMB_A
@@ -675,7 +698,7 @@ exports.Neighbour = async (req, res) => {
                       )
                     );
 
-                    //  NOT USED SURVEY QUESTION: activities_interests_join
+                    //  NOT USED SURVEY QUESTION: activities_interests
                   }
 
                   // if(chapter3Values)  // ===  Results Checked  ===
@@ -1073,11 +1096,14 @@ exports.Neighbour = async (req, res) => {
                 PWI_QofL3_COMB: PWI_QofL3_COMB,
                 activities: activities,
                 meaningful_activities: meaningful_activities,
+                like_to_join: like_to_join,
                 challenging_activities: challenging_activities,
                 FCP_STRINGS_COMB: FCP_STRINGS_COMB,
                 // ISA_DM_STRINGS: ISA_DM_STRINGS,
                 household_size: household_size,
+                marital_status: marital_status,
                 total_children: total_children,
+                meaningful_people: meaningful_people,
                 total_relatives: total_relatives,
                 total_close_friends: total_close_friends,
                 total_well_known_neighbours: total_well_known_neighbours,
