@@ -56,11 +56,13 @@
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import HealthToday from './HealthToday';
+import HealthBar from './HealthBar';
 
 export default class HealthStatus extends Component {
 
   render() {
-    const scoreToWord = {4:'Excellent', 3: 'Very Good', 2:'Good', 1: 'Fair', 0:'Poor'};
+    const scoreToWord = { 4: 'Excellent 😍', 3: 'Very Good 😃', 2: 'Good 🙂', 1: 'Fair 🙂', 0: 'Poor 😭' };
 
     return (
       <>
@@ -70,43 +72,71 @@ export default class HealthStatus extends Component {
         <Box m={1} mb={2}>
           {this.props.reports.PH_QofL2_SD[this.props.collection] !== 999 && (
             <Typography display="block" variant="subtitle1" align="left" gutterBottom>
-              Physical Health Score: {scoreToWord[this.props.reports.PH_QofL2_SD[this.props.collection]]}
+              Physical Health: {scoreToWord[this.props.reports.PH_QofL2_SD[this.props.collection]]}
             </Typography>
           )}
 
           {this.props.reports.MH_QofL2_SD[this.props.collection] !== 999 && (
             <Typography display="block" variant="subtitle1" align="left" gutterBottom>
-              Mental Health Score: {scoreToWord[this.props.reports.MH_QofL2_SD[this.props.collection]]}
+              Mental Health: {scoreToWord[this.props.reports.MH_QofL2_SD[this.props.collection]]}
             </Typography>
           )}
 
-          {this.props.reports.HT_QofL2_SD[this.props.collection] !== 999 && (
+          {/* {this.props.reports.HT_QofL2_SD[this.props.collection] !== 999 && (
             <Typography display="block" variant="subtitle1" align="left" gutterBottom>
               Health Today Score: {this.props.reports.HT_QofL2_SD[this.props.collection]}%
             </Typography>
+          )} */}
+
+          {this.props.reports.HT_QofL2_SD[this.props.collection] !== 999 && (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div>
+                <Typography display="block" component="div" align="center" gutterBottom>
+                  Health Today
+                </Typography>
+                <div style={{ width: '600px', height: '100px', margin: '0 auto' }}>
+                  <HealthToday data={this.props.reports.HT_QofL2_SD[this.props.collection]} />
+                </div>
+                <Typography display="block" component="div" align="center">
+                  Overall Score: {this.props.reports.HT_QofL2_SD[this.props.collection]}
+                </Typography>
+              </div>
+            </div>
           )}
+
+
 
           {this.props.reports.problem_walking[this.props.collection] !== 999 &&
             this.props.reports.problem_washing_dressing[this.props.collection] !== 999 &&
             this.props.reports.problem_usual_activities[this.props.collection] !== 999 &&
             this.props.reports.problem_pain_discomfort[this.props.collection] !== 999 &&
             this.props.reports.problem_anxious_depressed[this.props.collection] !== 999 ? (
-              <Typography display="block" variant="subtitle1" align="left" gutterBottom>
-                Problem Scores:
+            <Typography display="block" variant="subtitle1" align="left" gutterBottom>
+              {/* 
+
                 <ul>
-                  <li>Walking: {this.props.reports.problem_walking[this.props.collection]}</li>
-                  <li>Washing and Dressing: {this.props.reports.problem_washing_dressing[this.props.collection]}</li>
-                  <li>Usual Activities: {this.props.reports.problem_usual_activities[this.props.collection]}</li>
-                  <li>Pain and Discomfort: {this.props.reports.problem_pain_discomfort[this.props.collection]}</li>
-                  <li>Anxious and Depressed: {this.props.reports.problem_anxious_depressed[this.props.collection]}</li>
-                </ul>
-              </Typography>
-            ) : (
-              <Typography display="block" variant="subtitle2" color="textSecondary" align="left" gutterBottom>
-                Data not available.
-              </Typography>
-            )}
-        </Box>
+                <li>Walking: {this.props.reports.problem_walking[this.props.collection]}</li>
+                <li>Washing and Dressing: {this.props.reports.problem_washing_dressing[this.props.collection]}</li>
+                <li>Usual Activities: {this.props.reports.problem_usual_activities[this.props.collection]}</li>
+                <li>Pain and Discomfort: {this.props.reports.problem_pain_discomfort[this.props.collection]}</li>
+                <li>Anxious and Depressed: {this.props.reports.problem_anxious_depressed[this.props.collection]}</li>
+              </ul> */}
+
+              <HealthBar
+                walking={this.props.reports.problem_walking[this.props.collection]}
+                washingDressing={this.props.reports.problem_washing_dressing[this.props.collection]}
+                usualActivities={this.props.reports.problem_usual_activities[this.props.collection]}
+                painDiscomfort={this.props.reports.problem_pain_discomfort[this.props.collection]}
+                anxiousDepressed={this.props.reports.problem_anxious_depressed[this.props.collection]}
+              />
+            </Typography >
+          ) : (
+            <Typography display="block" variant="subtitle2" color="textSecondary" align="left" gutterBottom>
+              Data not available.
+            </Typography>
+          )
+          }
+        </Box >
       </>
     );
   }
