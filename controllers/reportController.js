@@ -332,6 +332,9 @@ exports.Neighbour = async (req, res) => {
               // TOTAL WELL KNOWN NEIGHBOURS
               let total_well_known_neighbours = new Array();
 
+              // TRUSTED PEOPLE
+              let trusted_people = new Array();
+
               // FREQUENCY OF CONTACT FAMILY
               let frequency_of_contact_family = new Array();
 
@@ -568,19 +571,28 @@ exports.Neighbour = async (req, res) => {
                         chapter3Values.total_children
                       )
                     );
+
                     total_relatives.push(
                       neighbourFunctions.total_relatives(
                         chapter3Values.total_relatives
                       )
                     );
+
                     total_close_friends.push(
                       neighbourFunctions.total_close_friends(
                         chapter3Values.total_close_friends
                       )
                     );
+
                     total_well_known_neighbours.push(
                       neighbourFunctions.total_well_known_neighbours(
                         chapter3Values.well_known_neighbours
+                      )
+                    );
+
+                    trusted_people.push(
+                      neighbourFunctions.trusted_people(
+                        chapter3Values.trusted_people
                       )
                     );
 
@@ -1107,6 +1119,7 @@ exports.Neighbour = async (req, res) => {
                 total_relatives: total_relatives,
                 total_close_friends: total_close_friends,
                 total_well_known_neighbours: total_well_known_neighbours,
+                trusted_people: trusted_people,
                 frequency_of_contact_family: frequency_of_contact_family,
                 frequency_of_contact_friends: frequency_of_contact_friends,
                 frequency_of_contact_neighbours:

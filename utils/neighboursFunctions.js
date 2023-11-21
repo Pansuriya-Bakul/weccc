@@ -96,6 +96,7 @@ module.exports = {
   community_activity_participate,
   household2_size,
   con_que,
+  trusted_people,
 };
 
 
@@ -445,6 +446,61 @@ function size_of_personal_network(question) {
   let sum = sum_array.reduce((a, b) => a + b, 0);
 
   return sum;
+}
+
+function trusted_people(question) {
+  if (!question) return 999;
+
+  let contacts = [];
+
+  const getRelation = (item) => {
+    switch (item) {
+      case '1':
+        return "Friend";
+      case '2':
+        return "Spouse";
+      case '3':
+        return "Co-Worker";
+      case '4':
+        return "Therapist";
+      case '5':
+        return "Advisor";
+      case '6':
+        return "Other";
+      default:
+        return "";
+    }
+  };
+
+  const getFrequency = (item) => {
+    switch (item) {
+      case '300':
+        return "Daily";
+      case '50':
+        return "Weekly";
+      case '12':
+        return "Monthly";
+      case '4':
+        return "3-4 Times a Year";
+      case '1':
+        return "Yearly";
+      default:
+        return "";
+    }
+  };
+
+  question.forEach((item) => {
+    const contact = {
+      name: item['Column 1'] ? item['Column 1'] : "",
+      living_with: item['Column 2'] ? item['Column 2'] : "",
+      relation: item['Column 3'] ? getRelation(item['Column 3']) : "",
+      frequency: item['Column 4'] ? getFrequency(item['Column 4']) : "",
+    }
+
+    contacts.push(contact);
+  });
+
+  return contacts;
 }
 
 function frequency_of_social_contacts(

@@ -156,6 +156,23 @@ const ClientReports = (props) => {
     }
   }, [appState]);
 
+  // create a facility until we have a facility creation page
+  
+//   const postF = async () => {
+//     let data = {
+//         name: "North York",
+//         prefix: "NOY"
+//     };
+
+//     post("facilities", appState.token, data, (err, res) => {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             console.log(res);
+//         }
+//     });
+// }
+
   const getNeighbours = useCallback(
     (userId) => {
       get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
@@ -339,7 +356,7 @@ const ClientReports = (props) => {
                             </Typography>
                             {/* chart */}
 
-                            <div className="gauge-boxes">
+                            {/* <div className="gauge-boxes">
                               <div className="gauge-box-health">
                                 <div className="gauge-box-inner">
                                   <div className="gauge-box-icon">
@@ -437,8 +454,8 @@ const ClientReports = (props) => {
                               </div>
 
 
-                            </div>
-                            <div className="wheel-graphic">
+                            </div> */}
+                            {/* <div className="wheel-graphic">
                               <div className="gauge-chart">
                                 <div class="c-circle c-circle--background">
                                   {[1, 2, 3, 4, 5, 6, 7, 8].map((index, i) => (
@@ -458,13 +475,13 @@ const ClientReports = (props) => {
                                   hideText={true}
                                 />
                                 <span className="value">{gaugeValue}</span>
-                              </div>
+                              </div> */}
                               {/* ///// */}
-                              {/* <ReportDashboard
+                              <ReportDashboard
                               reports={reportsData}
                               collection={currentReportIndex}
-                            ></ReportDashboard> */}
-                            </div>
+                            ></ReportDashboard>
+                            {/* </div> */}
 
                           </Grid>
 
@@ -482,16 +499,16 @@ const ClientReports = (props) => {
                               collection={currentReportIndex}
                             />
                           </Grid>
-                          <Grid item xs={12} id="summary">
+                          {/* <Grid item xs={12} id="summary">
                             <CommunityCircle 
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
-                            {/* <Summary
+                            <Summary
                               reports={reportsData}
                               collection={currentReportIndex}
-                            /> */}
-                          </Grid>
+                            />
+                          </Grid> */}
                           <Grid item xs={12} id="summary">
                             <Typography
                               variant="h5"

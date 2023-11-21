@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+
+import axios from 'axios';
 
 import Box from '@material-ui/core/Box';
 import Typography from "@material-ui/core/Typography";
@@ -143,7 +145,7 @@ const CommunityCircle = (props) => {
 
                 {/* Community Visual */}
                 <Box>
-                    <CommunityVisual />
+                    <CommunityVisual reports={reports} collection={collection} />
                 </Box>
 
             </Box>
