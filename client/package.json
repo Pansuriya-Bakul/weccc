@@ -28,7 +28,7 @@
     "http-proxy-middleware": "^2.0.1",
     "jquery": "^3.6.0",
     "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.7.0",
+    "jspdf-autotable": "^3.7.1",
     "knockout": "^3.5.1",
     "nouislider": "^9.2.0",
     "react": "^17.0.2",

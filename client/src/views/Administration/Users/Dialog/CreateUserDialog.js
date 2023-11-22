@@ -220,7 +220,7 @@ const CreateUserDialog = (props) => {
         dateOfBirth: new Date(dateOfBirth),
         phone: phone,
         language:
-          language == "Other" && isLanguage2 ? sanatized_language2 : language,
+          language == "Other" && isLanguage2 ? sanatized_language2 : [language],
         address: {
           street: street,
           city: sanatized_city,
@@ -1001,7 +1001,7 @@ const CreateUserDialog = (props) => {
                               }
                               disabled={!isLanguage2}
                             />
-                           { isLanguage2&&<Typography variant="caption" className={classes.languageOption}>{errorMessages.language2Error}</Typography>}
+                           { isLanguage2 && <Typography variant="caption" className={classes.languageOption}>{errorMessages.language2Error}</Typography>}
                           </Box>
                         </Grid>
                       </Grid>
