@@ -18,12 +18,19 @@ const HighlightBox = (props) =>{
     const [wellBeing_colour, setWellBeing_colour] = useState('');
     const [lifeSatisfaction_colour, setLifeSatisfaction_colour] = useState('');
     const [loneliness_colour, setLoneliness_colour] = useState('');
+    const [funtionHealth_color,setFunctionHealthColor]=useState('')
+    const [communityHealth_color,setCommunityHealthColor]=useState('')
+    const [isolationHealth_color,setIsolationHealthColor]=useState('')
 
     const [health_zero, setHealth_zero] = useState('');
     const [mentalHealth, setMentalHealth] = useState('');
     const [wellBeing, setWellBeing] = useState('');
     const [lifeSatisfaction, setLifeSatisfaction] = useState('');
     const [loneliness, setLoneliness] = useState('');
+    
+    const [funtionHealth,setFunctionHealth]=useState('')
+    const [communityHealth,setCommunityHealth]=useState('')
+    const [isolationHealth,setIsolationHealth]=useState('') 
 
 
 	// maps score to appropriate colors
@@ -77,12 +84,18 @@ const HighlightBox = (props) =>{
         setWellBeing_colour(findColour(props.data[2]));
         setLifeSatisfaction_colour(findColour(props.data[3]));
         setLoneliness_colour(findColour(props.data[4]));
+        setFunctionHealthColor(findColour(props.data[5]))
+        setCommunityHealthColor(findColour(props.data[6]))
+        setIsolationHealthColor(findColour(props.data[7]))
         
         setHealth_zero(isComplete(props.data[0]) ? props.data[0] : "Incomplete");
         setMentalHealth(isComplete((props.data[1])) ? props.data[1] : "Incomplete");
         setWellBeing(isComplete(props.data[2]) ? props.data[2] : "Incomplete");
         setLifeSatisfaction(isComplete(props.data[3]) ? props.data[3] : "Incomplete");
         setLoneliness(props.data[4]);
+        setFunctionHealth(isComplete(props.data[5]) ? props.data[5] : "Incomplete");
+        setCommunityHealth(isComplete(props.data[6]) ? props.data[6] : "Incomplete");
+        setIsolationHealth(isComplete(props.data[7]) ? props.data[7] : "Incomplete");
     }, []);
 
     return (
@@ -155,7 +168,7 @@ const HighlightBox = (props) =>{
                         </Typography>
                         </div>
                     </Box>
-                    <Box item xs={12} sm={6} md={4} lg={3} bgcolor={wellBeing_colour} style={{display:'flex', color:'white', padding:'14px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
+                    <Box item xs={12} sm={6} md={4} lg={3} bgcolor={funtionHealth_color} style={{display:'flex', color:'white', padding:'14px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
                     <FontAwesomeIcon icon={faPersonCane} style={{fontSize:'52px'}}/>
                         <div style={{display:'flex', flexDirection:'column'}}>
                         <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
@@ -169,7 +182,7 @@ const HighlightBox = (props) =>{
                 </div>
 
                 <div style={{display:'flex',gap:'8px'}}>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'10px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={communityHealth_color} style={{display:'flex', color:'white', padding:'10px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
                 <FontAwesomeIcon icon={faHandshake} style={{fontSize:'52px'}}/>
                     <div style={{display:'flex', flexDirection:'column'}}>
                     <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
@@ -180,7 +193,7 @@ const HighlightBox = (props) =>{
                     </Typography>
                     </div>
                 </Box>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={lifeSatisfaction_colour} style={{display:'flex', color:'white', padding:'10px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
+                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={isolationHealth_color} style={{display:'flex', color:'white', padding:'10px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'180px'}}>
                 <FontAwesomeIcon icon={faPerson} style={{fontSize:'52px'}}/>
                     <div style={{display:'flex', flexDirection:'column'}}>
                     <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
