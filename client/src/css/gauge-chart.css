@@ -1,0 +1,229 @@
+.wheel-graphic{
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: flex;
+}
+
+.gauge-chart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: 50px;
+  /* margin-top: -20px; */
+  width: 500px;
+  height: 500px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.gauge-chart .value {
+  font-size: 116px;
+  margin-top: -30px;
+}
+
+.c-circle {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+
+}
+
+
+.c-circle__segment {
+  position: absolute;
+  width: 44%;
+  height: 44%;
+  right: 50%;
+  bottom: 50%;
+  overflow: hidden;
+  transform-origin: 100% 100%;
+}
+.c-circle__segment:before {
+  content: "";
+  display: block;
+  width: 200%;
+  height: 200%;
+  /* border: solid 140px #172951; */
+  border-radius: 50%;
+  box-sizing: border-box;
+  transform: skewX(-60deg);
+}
+.c-circle--background .c-circle__segment:before {
+  border-style: solid;
+  border-width: 50px;
+  /* border-color: #f00; */
+  transform: skewX(-56deg);
+}
+
+.c-circle__segment--1 {
+  transform: rotateZ(45deg) rotateX(0deg) skewX(56deg);
+}
+
+.c-circle__segment--2 {
+  transform: rotateZ(90deg) rotateX(0deg) skewX(56deg);
+}
+
+
+.c-circle__segment--3 {
+  transform: rotateZ(135deg) rotateX(0deg) skewX(56deg);
+}
+
+
+.c-circle__segment--4 {
+  transform: rotateZ(180deg) rotateX(0deg) skewX(56deg);
+}
+
+.c-circle__segment--5 {
+  transform: rotateZ(225deg) rotateX(0deg) skewX(56deg);
+}
+
+.c-circle__segment--6 {
+  transform: rotateZ(270deg) rotateX(0deg) skewX(56deg);
+}
+
+.c-circle__segment--7 {
+  transform: rotateZ(315deg) rotateX(0deg) skewX(56deg);
+}
+
+.c-circle__segment--8 {
+  transform: rotateZ(360deg) rotateX(0deg) skewX(56deg);
+}
+
+.gauge-chart2 {
+  margin-top: 32px;
+
+}
+
+.gauge-box-health{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 300px;
+  left: 710px;
+}
+
+.gauge-box-inner{
+  display: flex;
+  gap: 10px;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-box-icon{
+  font-size: 32px;
+  color: #e91e63;
+}
+
+.gauge-box-text{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.guage-box-text-title{
+  font-weight: 700;
+}
+
+.guage-box-text-score{
+  font-weight: 500;
+}
+
+.gauge-box-function{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 300px;
+  left: 1100px;
+}
+
+.gauge-box-mentalhealth{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 410px;
+  left: 1200px;
+}
+
+.gauge-box-wellbeing{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 570px;
+  left: 1200px;
+}
+
+.gauge-box-lifesatisfaction{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 700px;
+  left: 1100px;
+}
+
+.gauge-box-community{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 710px;
+  left: 750px;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-box-loneliness{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 600px;
+  left: 620px;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-box-isolation{
+  z-index: 2;
+  background-color: white;
+  border: 2px solid green;
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 56px;
+  position: absolute;
+  top: 430px;
+  left: 620px;
+  align-items: center;
+  justify-content: center;
+}
+
