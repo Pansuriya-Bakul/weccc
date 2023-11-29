@@ -2204,21 +2204,21 @@ function support_wellness_program(question) {
 
   if (isNaN(DF)) return 999;
 
-  // if (DF == 5) {
-  //   DF = "Daily";
-  // } else if (DF == 4) {
-  //   DF = "Weekly";
-  // } else if (DF == 3) {
-  //   DF = "Monthly";
-  // } else if (DF == 2) {
-  //   DF = "3-4 Times a year";
-  // } else if (DF == 1) {
-  //   DF = "Yearly";
-  // } else if (DF == 0) {
-  //   DF = "Never";
-  // } else {
-  //   DF = 999;
-  // }
+  if (DF == 5) {
+    DF = "Daily";
+  } else if (DF == 4) {
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a year";
+  } else if (DF == 1) {
+    DF = "Yearly";
+  } else if (DF == 0) {
+    DF = "Never";
+  } else {
+    DF = 999;
+  }
 
   return DF;
 }
@@ -2239,21 +2239,21 @@ function support_healthcare(question) {
 
   if (isNaN(DF)) return 999;
 
-  // if (DF == 5) {
-  //   DF = "Daily";
-  // } else if (DF == 4) {
-  //   DF = "Weekly";
-  // } else if (DF == 3) {
-  //   DF = "Monthly";
-  // } else if (DF == 2) {
-  //   DF = "3-4 Times a year";
-  // } else if (DF == 1) {
-  //   DF = "Yearly";
-  // } else if (DF == 0) {
-  //   DF = "Never";
-  // } else {
-  //   DF = 999;
-  // }
+  if (DF == 5) {
+    DF = "Daily";
+  } else if (DF == 4) {
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a year";
+  } else if (DF == 1) {
+    DF = "Yearly";
+  } else if (DF == 0) {
+    DF = "Never";
+  } else {
+    DF = 999;
+  }
 
   return DF;
 }
@@ -2274,21 +2274,21 @@ function support_home_healthcare(question) {
 
   if (isNaN(DF)) return 999;
 
-  // if (DF == 5) {
-  //   DF = "Daily";
-  // } else if (DF == 4) {
-  //   DF = "Weekly";
-  // } else if (DF == 3) {
-  //   DF = "Monthly";
-  // } else if (DF == 2) {
-  //   DF = "3-4 Times a year";
-  // } else if (DF == 1) {
-  //   DF = "Yearly";
-  // } else if (DF == 0) {
-  //   DF = "Never";
-  // } else {
-  //   DF = 999;
-  // }
+  if (DF == 5) {
+    DF = "Daily";
+  } else if (DF == 4) {
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a year";
+  } else if (DF == 1) {
+    DF = "Yearly";
+  } else if (DF == 0) {
+    DF = "Never";
+  } else {
+    DF = 999;
+  }
 
   return DF;
 }
@@ -2309,21 +2309,21 @@ function support_private_healthcare(question) {
 
   if (isNaN(DF)) return 999;
 
-  // if (DF == 5) {
-  //   DF = "Daily";
-  // } else if (DF == 4) {
-  //   DF = "Weekly";
-  // } else if (DF == 3) {
-  //   DF = "Monthly";
-  // } else if (DF == 2) {
-  //   DF = "3-4 Times a year";
-  // } else if (DF == 1) {
-  //   DF = "Yearly";
-  // } else if (DF == 0) {
-  //   DF = "Never";
-  // } else {
-  //   DF = 999;
-  // }
+  if (DF == 5) {
+    DF = "Daily";
+  } else if (DF == 4) {
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a year";
+  } else if (DF == 1) {
+    DF = "Yearly";
+  } else if (DF == 0) {
+    DF = "Never";
+  } else {
+    DF = 999;
+  }
 
   return DF;
 }
@@ -2344,21 +2344,21 @@ function support_informal(question) {
 
   if (isNaN(DF)) return 999;
 
-  // if (DF == 5) {
-  //   DF = "Daily";
-  // } else if (DF == 4) {
-  //   DF = "Weekly";
-  // } else if (DF == 3) {
-  //   DF = "Monthly";
-  // } else if (DF == 2) {
-  //   DF = "3-4 Times a year";
-  // } else if (DF == 1) {
-  //   DF = "Yearly";
-  // } else if (DF == 0) {
-  //   DF = "Never";
-  // } else {
-  //   DF = 999;
-  // }
+  if (DF == 5) {
+    DF = "Daily";
+  } else if (DF == 4) {
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a year";
+  } else if (DF == 1) {
+    DF = "Yearly";
+  } else if (DF == 0) {
+    DF = "Never";
+  } else {
+    DF = 999;
+  }
 
   return DF;
 }

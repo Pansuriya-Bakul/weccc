@@ -4,12 +4,14 @@ import './communityVisual.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFaceSmile } from '@fortawesome/free-solid-svg-icons'
+import { set } from 'joi/lib/types/lazy';
 
 const CommunityVisual = (props) => {
 
   const { reports, collection } = props;
   const [personalnetwork, setPersonalNetwork] = useState([]);
   const [informalCare, setInformalCare] = useState([]);
+  const [formalCare, setFormalCare] = useState([]);
 
   const initPersonalNetwork = () => {
     let newPersonalNetwork = personalnetwork;
@@ -59,7 +61,6 @@ const CommunityVisual = (props) => {
     if (reports.trusted_people[collection] && reports.trusted_people[collection] !== 999) {
 
       const trusted = reports.trusted_people[collection];
-      let contacts
 
       trusted.forEach((person) => {
         if (person.name != "" && person.name != " ") {
@@ -77,16 +78,49 @@ const CommunityVisual = (props) => {
   const initInformalCare = () => {
     let newInformalCare = informalCare;
 
+    if (reports.support_informal[collection] && reports.support_informal[collection] !== 999) {
+      newInformalCare.push({ name: 'Informal care', frequency: reports.support_informal[collection] });
+    }
+
+    setInformalCare(newInformalCare);
+
+
+  }
+
+  const initFormalCare = () => {
+    let newFormalCare = formalCare;
+
+    if (reports.support_healthcare[collection] && reports.support_healthcare[collection] !== 999) {
+      newFormalCare.push({ name: 'Healthcare Provider', frequency: reports.support_healthcare[collection] });
+    }
+
     
+    if (reports.support_home_healthcare[collection] && reports.support_home_healthcare[collection] !== 999) {
+      newFormalCare.push({ name: 'Homecare', frequency: reports.support_home_healthcare[collection] });
+    }
+
+    if (reports.support_private_healthcare[collection] && reports.support_private_healthcare[collection] !== 999) {
+      newFormalCare.push({ name: 'Private home help', frequency: reports.support_private_healthcare[collection] });
+    }
+
+    if (reports.support_wellness_program[collection] && reports.support_wellness_program[collection] !== 999) {
+      newFormalCare.push({ name: 'Wellness program', frequency: reports.support_wellness_program[collection] });
+    }
+
+    setFormalCare(newFormalCare);
+
+
   }
 
   const generatePersonalNetwork = (svg, scale, width, height) => {
     // Calculate the positions of the contact circles
-    const totalAngle = Math.PI * 3 / 4 - Math.PI / 6;
+    const startAngle =  180 * (Math.PI / 180);
+    const endAngle = 270 * (Math.PI / 180);
+    const totalAngle = Math.abs(endAngle - startAngle);
     const angleIncrement = totalAngle / (personalnetwork.length - 1);
 
     personalnetwork.forEach((contact, index) => {
-      const angle = -Math.PI * 3 / 4 + index * angleIncrement;
+      const angle = startAngle + index * angleIncrement;
       const { radius, distance } = scale(contact.frequency);
       const x = width / 2 + distance * Math.cos(angle);
       const y = height / 2 + distance * Math.sin(angle);
@@ -140,15 +174,13 @@ const CommunityVisual = (props) => {
 
   const generateInformalCare = (svg, scale, width, height) => {
     // Convert angles to radians
-    const startAngle = 45 * (Math.PI / 180);
-    const endAngle = 135 * (Math.PI / 180);
-
-    // Calculate the positions of the contact circles
-    const totalAngle = endAngle - startAngle;
-    const angleIncrement = totalAngle / (informalCare.length - 1);
+    const startAngle =  300 * (Math.PI / 180);
+    const endAngle = 360 * (Math.PI / 180);
+    const totalAngle = Math.abs(endAngle - startAngle);
+    const angleIncrement = (totalAngle / (personalnetwork.length - 1));
 
     informalCare.forEach((contact, index) => {
-      const angle = -Math.PI * 3 / 4 + index * angleIncrement;
+      const angle = startAngle + index * angleIncrement;
       const { radius, distance } = scale(contact.frequency);
       const x = width / 2 + distance * Math.cos(angle);
       const y = height / 2 + distance * Math.sin(angle);
@@ -158,7 +190,7 @@ const CommunityVisual = (props) => {
         .attr('cx', x)
         .attr('cy', y)
         .attr('r', radius)
-        .style('fill', '#008e9e');
+        .style('fill', '#37765d');
 
       // Add the emoji
       svg.append('text')
@@ -167,7 +199,67 @@ const CommunityVisual = (props) => {
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'middle')
         .style('font-size', '20px') // Increase the font size to make the emoji visible
-        .text('👪');
+        .text('🤝');
+
+      // Add the contact's name
+      svg.append('foreignObject')
+        .attr('x', x - radius)
+        .attr('y', y + 12 - radius)
+        .attr('width', radius * 2)
+        .attr('height', radius * 2)
+        .append('xhtml:div')
+        .style('padding', '5px')
+        .style('font-size', '10px')
+        .style('color', 'white')
+        .style('width', `${radius * 2}px`)
+        .style('height', `${radius * 2}px`)
+        .style('display', 'flex')
+        .style('align-items', 'center')
+        .style('justify-content', 'center')
+        .style('text-align', 'center')
+        .style('overflow-wrap', 'break-word')
+        .style('font-weight', '500')
+        .text(contact.name);
+
+      // Connect the user to the contact with a line
+      svg.append('line')
+        .attr('x1', width / 2)
+        .attr('y1', height / 2)
+        .attr('x2', x)
+        .attr('y2', y)
+        .style('stroke', 'black')
+        .lower();
+    });
+  }
+
+  const generateFormalCare = (svg, scale, width, height) => {
+    // Convert angles to radians
+    const startAngle =  20 * (Math.PI / 180);
+    const endAngle = 90 * (Math.PI / 180);
+    const totalAngle = Math.abs(endAngle - startAngle);
+    const angleIncrement = (totalAngle / (personalnetwork.length - 1));
+
+    formalCare.forEach((contact, index) => {
+      const angle = startAngle + index * angleIncrement;
+      const { radius, distance } = scale(contact.frequency);
+      const x = width / 2 + distance * Math.cos(angle);
+      const y = height / 2 + distance * Math.sin(angle);
+
+      // Create a circle for each contact
+      svg.append('circle')
+        .attr('cx', x)
+        .attr('cy', y)
+        .attr('r', radius)
+        .style('fill', '#f6546a');
+
+      // Add the emoji
+      svg.append('text')
+        .attr('x', x)
+        .attr('y', y - 12) // center the emoji in the circle
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'middle')
+        .style('font-size', '20px') // Increase the font size to make the emoji visible
+        .text('👩‍⚕️');
 
       // Add the contact's name
       svg.append('foreignObject')
@@ -209,6 +301,8 @@ const CommunityVisual = (props) => {
 
   useEffect(() => {
     initPersonalNetwork();
+    initInformalCare();
+    initFormalCare();
   }, [reports]);
 
   const svgRef = useRef();
@@ -216,7 +310,7 @@ const CommunityVisual = (props) => {
   useEffect(() => {
     const width = 600;
     const height = 600;
-    const userRadius = 40;
+    const userRadius = 45;
 
     const svg = d3.select(svgRef.current)
       .attr('width', width)
@@ -237,16 +331,18 @@ const CommunityVisual = (props) => {
       .attr('y', height / 2)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-      .style('font-size', '50px')
+      .style('font-size', '30px')
       .style('fill', 'white')
       .text('☺️');
 
     // Define a scale for mapping frequency to both radius and distance
     const scale = d3.scaleOrdinal()
       .domain(['Daily', 'Weekly', 'Monthly', '3-4 Times a year', 'Yearly'])
-      .range([{ radius: 35, distance: 100 }, { radius: 35, distance: 140 }, { radius: 35, distance: 180 }, { radius: 35, distance: 200 }, { radius: 35, distance: 250 }]);
+      .range([{ radius: 35, distance: 100 }, { radius: 35, distance: 160 }, { radius: 35, distance: 200 }, { radius: 35, distance: 210 }, { radius: 35, distance: 250 }]);
 
     generatePersonalNetwork(svg, scale, width, height);
+    generateInformalCare(svg, scale, width, height);
+    generateFormalCare(svg, scale, width, height);
 
   }, [personalnetwork]);
 

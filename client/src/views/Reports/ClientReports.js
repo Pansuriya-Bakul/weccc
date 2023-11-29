@@ -499,16 +499,16 @@ const ClientReports = (props) => {
                               collection={currentReportIndex}
                             />
                           </Grid>
-                          {/* <Grid item xs={12} id="summary">
+                          <Grid item xs={12} id="summary">
                             <CommunityCircle 
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
-                            <Summary
+                            {/* <Summary
                               reports={reportsData}
                               collection={currentReportIndex}
-                            />
-                          </Grid> */}
+                            /> */}
+                          </Grid>
                           <Grid item xs={12} id="summary">
                             <Typography
                               variant="h5"
