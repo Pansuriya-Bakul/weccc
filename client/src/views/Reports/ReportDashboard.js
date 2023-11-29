@@ -39,10 +39,23 @@ export default class ReportDashboard extends Component {
             loneliness = 100;
         }
 
-        return [health, mentalHealth, wellBeing, lifeSatisfaction, loneliness];
+        //function
+        var functionHealth= ((reports.MH_QofL2_SD[collection]*25)+(reports.PC_QofL2_SD[collection]*25)+(reports.UA_QofL2_SD[collection]*25))/3;
+
+        functionHealth = functionHealth > 100 ? 0: functionHealth
+
+        //community belonging
+        var communityHealth = reports.FPC_QofL3_SD[collection] * 10
+        communityHealth = communityHealth > 100 ? 0 : communityHealth;
+
+        //isolation
+        var isolationHealth =0
+
+        return [health, mentalHealth, wellBeing, lifeSatisfaction, loneliness,functionHealth,communityHealth,isolationHealth];
     }
 
     render() {
+        console.log(this.props)
         return (
             <>
                 {/* <Typography variant="h4" color="inherit" align="left" gutterBottom>
