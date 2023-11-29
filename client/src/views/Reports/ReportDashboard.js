@@ -49,7 +49,44 @@ export default class ReportDashboard extends Component {
         communityHealth = communityHealth > 100 ? 0 : communityHealth;
 
         //isolation
-        var isolationHealth =0
+        var isolationHealth = 0;
+
+        if (reports.household_size[collection] == 0) {
+            isolationHealth += 1;
+        }
+        if (reports.frequency_of_contact_family[collection] == '3-4 Times a year' || reports.frequency_of_contact_family[collection] == 'Yearly' || reports.frequency_of_contact_family[collection] == 'Never') {
+            if (reports.total_children[collection] == 0) {
+                isolationHealth += 1;
+            } else {
+            isolationHealth += 2;
+            }
+        }
+
+        if (reports.frequency_of_contact_friends[collection] == '3-4 Times a year' || reports.frequency_of_contact_friends[collection] == 'Yearly' || reports.frequency_of_contact_friends[collection] == 'Never') {
+
+            isolationHealth += 1;
+        }
+
+        let freq_participation_trigger = reports.FCP_INT_COMB[collection].every(item => item === null || item === 0 || item === 1 || item === 2);
+        if (freq_participation_trigger) {
+            isolationHealth += 1;
+        }
+
+        //convert isolation (0-5) to percent according to calculation doc:
+        if (isolationHealth >= 4) {
+            isolationHealth = 0;
+        }
+        else if (isolationHealth == 3) {
+            isolationHealth = 20;
+        }
+        else if (isolationHealth == 2) {
+            isolationHealth = 40;
+        }
+        else if (isolationHealth <= 1) {
+            isolationHealth = 95;
+        }
+        
+
 
         return [health, mentalHealth, wellBeing, lifeSatisfaction, loneliness,functionHealth,communityHealth,isolationHealth];
     }

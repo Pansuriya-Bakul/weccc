@@ -238,18 +238,8 @@ function frequency_of_community_participation(question) {
   let DF10 = parseInt(question.DF10);
 
   DF_array = [DF1, DF2, DF3, DF4, DF5, DF6, DF7, DF8, DF9, DF10];
-  sum_array = new Array();
 
-  DF_array.forEach((item) => {
-    if (!isNaN(item) && item >= 0) {
-      sum_array.push(item);
-    }
-  });
-
-  let sum = sum_array.reduce((a, b) => a + b, 0);
-
-  // Max range of total = 0 - 2400
-  return [...DF_array, sum / 10];
+  return DF_array;
 
   // let DF8 = parseInt(question.DF8);
 
