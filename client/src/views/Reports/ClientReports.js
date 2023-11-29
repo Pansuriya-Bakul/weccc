@@ -21,6 +21,7 @@ import Summary1 from "./Summary1";
 import PossibleConcerns from "./PossibleConcerns";
 import Suggestions from "./Suggestions";
 import ContactInfo from "./ContactInfo";
+import CommunityCircle from "./CommunityCircle/CommunityCircle";
 
 // ==================== Helpers =====================
 import AlertType from "../../helpers/models/AlertType";
@@ -39,9 +40,18 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
-import { CircularProgress } from '@material-ui/core';
 
-// ==================== MUI Icons ====================
+import { CircularProgress } from '@material-ui/core';
+import CardContent from "@material-ui/core/CardContent";
+import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
+
+
+import GaugeChart from "react-gauge-chart";
+import "../../css/gauge-chart.css";
+
+// ==================== FontAwesome Icons ====================
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers, faPersonCane, faHandshake, faPerson } from '@fortawesome/free-solid-svg-icons'
 
 // ==================== MUI Styles ===================
 
@@ -92,6 +102,8 @@ const ClientReports = (props) => {
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
+
+  const [gaugeValue, setgaugeValue] = useState(56);
 
   // Functions ===
 
@@ -144,7 +156,22 @@ const ClientReports = (props) => {
     }
   }, [appState]);
 
+  // create a facility until we have a facility creation page
+  
+//   const postF = async () => {
+//     let data = {
+//         name: "North York",
+//         prefix: "NOY"
+//     };
 
+//     post("facilities", appState.token, data, (err, res) => {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             console.log(res);
+//         }
+//     });
+// }
 
   const getNeighbours = useCallback(
     (userId) => {
@@ -179,37 +206,6 @@ const ClientReports = (props) => {
     [appState]
   );
 
-  // const getScreen = useCallback(
-  //   (userId) => {
-  //     get("reports/Screen/user/" + userId, appState.token, (err, res) => {
-  //       if (err) {
-  //         //Bad callback
-  //         setAlert(
-  //           new AlertType(
-  //             "Unable to retrieve Screen Chapter Reports. Please refresh and try again."
-  //           )
-  //         );
-  //       } else {
-  //         if (res.status === 200) {
-  //           if (Object.keys(res.data).length === 0) {
-  //             setReports1Data(null);
-  //           } else {
-  //             setReports1Data(res.data);
-  //           }
-  //         } else {
-  //           //Bad HTTP Response
-  //           setAlert(
-  //             new AlertType(
-  //               "Unable to retrieve Screen Chapter Reports. Please refresh and try again.",
-  //               "error"
-  //             )
-  //           );
-  //         }
-  //       }
-  //     });
-  //   },
-  //   [appState]
-  // );
 
   const patientSelectHandler = useCallback((event) => {
     setCurrentPatient(event.target.value);
@@ -247,11 +243,6 @@ const ClientReports = (props) => {
     }
   }, [reportsData, currentReportIndex]);
 
-  // useEffect( () =>
-  // {
-  //     console.log(currentReportIndex);
-
-  // }, [ currentReportIndex ]);
 
   // Render Section ===
 
@@ -292,78 +283,50 @@ const ClientReports = (props) => {
                 </Grid>
               </Box>
             </Grid>
+
+            <Grid item xs={12}>
+              <Card raised={true}>
+                <CardContent>
+                  <Box mx={1} my={1} boxShadow={0}>
+                    <Grid
+                      container
+                      direction="column"
+                      justifyContent="flex-start"
+                      alignItems="stretch"
+                    >
+                      <Grid item xs={12}>
+                        <Typography
+                          style={{
+                            fontSize: "16px",
+                            color: "grey",
+                            marginLeft: "2px",
+                            marginTop: "3px",
+                          }}
+                        >
+                          Member's name:
+                        </Typography>
+                        <Typography variant="h5" component="h1">
+                          {appState.name}
+                        </Typography>
+
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
             <Grid item xs={4}>
               <Box mx={1} my={1}>
                 <AlertMessage alert={alert} setParentAlert={setAlert} />
-                {/* <Button
-                                            onClick = { () => {console.log((collectionIndex + 1)%reportsData.SRVNum_PRF_SD.length);}} >
-                                            Viewing data from collection {collectionIndex + 1} out of {reportsData.SRVNum_PRF_SD.length}
-                                        </Button> */}
               </Box>
             </Grid>
-            {/* <Grid item xs={12}>
-              <Card raised={true}> */}
-            {/* <Box mx={1} my={1} boxShadow={0}>
-                  {/* <Grid
-                    container
-                    direction="column"
-                    justifyContent="flex-start"
-                    alignItems="stretch"
-                    spacing={1}
-                  >
-                    {/* <Grid item xs={12}>
-                      <FormControl
-                        fullWidth
-                        variant="filled"
-                        size="small"
-                        className={classes.formControl}
-                      >
-                        <InputLabel id="select-label-Member">Member</InputLabel>
-                        <Select
-                          className={classes.selectEmpty}
-                          labelId="select-label-Member"
-                          id="select-Member"
-                          defaultValue=""
-                          disabled={patientData ? false : true}
-                          onChange={(event) => {
-                            patientSelectHandler(event);
-                          }}
-                        >
-                          {patientData.map((item, index) => {
-                            return (
-                              <MenuItem key={item._id} value={item._id}>
-                                <em>{item.info.name}</em>
-                              </MenuItem>
-                            );
-                          })}
-                        </Select>
-                      </FormControl>
-                    </Grid> */}
-            {/* <Grid item xs={12}>
-                      {reportsData ? (
-                        <Pagination
-                          count={reportsData.SRVNum_PRF_SD.length}
-                          showFirstButton
-                          showLastButton
-                          disabled={!reportsData}
-                          onChange={(event, page) => {
-                            reportsPaginationHandler(event, page);
-                          }}
-                        />
-                      ) : (
-                        <> </>
-                      )}
-                    </Grid> 
-                  </Grid> *
-                </Box> */}
-            {/* </Card>
-            </Grid> */}
             <Grid item xs={12}>
-              <Card raised={true} style={{ padding: '10px' }}>
+              <Card raised={true} style={{ padding: "10px" }}>
                 <Box mx={1} my={1} boxShadow={0}>
-
-                  {isLoading ? (<CircularProgress />)
-                    : <Grid
+                  {isLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    <Grid
                       container
                       direction="column"
                       justifyContent="flex-start"
@@ -372,7 +335,8 @@ const ClientReports = (props) => {
                     >
                       {reportsData &&
                         Object.keys(reportsData).length != 0 &&
-                        Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                        Object.getPrototypeOf(reportsData) ===
+                        Object.prototype ? (
                         <>
                           <Grid item xs={12}>
                             <Typography variant="h4" color="textPrimary">
@@ -390,10 +354,135 @@ const ClientReports = (props) => {
                             >
                               Highlights
                             </Typography>
-                            <ReportDashboard
+                            {/* chart */}
+
+                            {/* <div className="gauge-boxes">
+                              <div className="gauge-box-health">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faHeartPulse} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Health</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-function">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faPersonCane} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Function</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-mentalhealth">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faBrain} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Mental Health</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-wellbeing">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faSpa} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Well-being</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-lifesatisfaction">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faFaceSmile} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Life Satisfaction</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-community">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faHandshake} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">Community Belonging</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-loneliness">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faUsers} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">loneliness</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="gauge-box-isolation">
+                                <div className="gauge-box-inner">
+                                  <div className="gauge-box-icon">
+                                    <FontAwesomeIcon icon={faPerson} />
+                                  </div>
+                                  <div className="gauge-box-text">
+                                    <span className="guage-box-text-title">isolation</span>
+                                    <span className="guage-box-text-score">Excellent</span>
+                                  </div>
+                                </div>
+                              </div>
+
+
+                            </div> */}
+                            {/* <div className="wheel-graphic">
+                              <div className="gauge-chart">
+                                <div class="c-circle c-circle--background">
+                                  {[1, 2, 3, 4, 5, 6, 7, 8].map((index, i) => (
+                                    <div
+                                      class={`c-circle__segment c-circle__segment--${index}`}
+                                      style={{ color: "green" }}
+                                    ></div>
+                                  ))}
+                                </div>
+                                <GaugeChart
+                                  className="gauge-chart2"
+                                  nrOfLevels={20}
+                                  percent={gaugeValue / 100}
+                                  colors={["red", "green"]}
+                                  arcWidth={0.3}
+                                  style={{ width: "80%" }}
+                                  hideText={true}
+                                />
+                                <span className="value">{gaugeValue}</span>
+                              </div> */}
+                              {/* ///// */}
+                              <ReportDashboard
                               reports={reportsData}
                               collection={currentReportIndex}
                             ></ReportDashboard>
+                            {/* </div> */}
+
                           </Grid>
 
                           <Grid item xs={12} id="summary" style={{marginTop:'18px'}}>
@@ -406,6 +495,30 @@ const ClientReports = (props) => {
                               Summary
                             </Typography>
                             <Summary
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                          </Grid>
+                          <Grid item xs={12} id="summary">
+                            <CommunityCircle 
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            />
+                            {/* <Summary
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            /> */}
+                          </Grid>
+                          <Grid item xs={12} id="summary">
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+                            >
+                              Social and Community Connections
+                            </Typography>
+                            <SocialAndCommunityConnections
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
@@ -426,38 +539,41 @@ const ClientReports = (props) => {
                             />
                           </Grid> */}
 
-                          {anyFlags && <Grid item xs={12} id="possible concerns">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Possible Concerns
-                            </Typography>
-                            <PossibleConcerns
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid>}
+                          {anyFlags && (
+                            <Grid item xs={12} id="possible concerns">
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                              >
+                                Possible Concerns
+                              </Typography>
+                              <PossibleConcerns
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
+                          )}
 
-                          {anyFlags && <Grid item xs={12} id="suggestions">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Suggestions
-                            </Typography>
-                            <Suggestions
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid>}
+                          {anyFlags && (
+                            <Grid item xs={12} id="suggestions">
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                              >
+                                Suggestions
+                              </Typography>
+                              <Suggestions
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
+                          )}
                         </>
                       ) : (
-
                         <>
                           <Typography
                             variant="subtitle2"
@@ -466,12 +582,11 @@ const ClientReports = (props) => {
                             gutterBottom
                           >
                             No available reports.
-
                           </Typography>
                         </>
                       )}
                     </Grid>
-                  }
+                  )}
                 </Box>
               </Card>
             </Grid>
@@ -487,7 +602,7 @@ const ClientReports = (props) => {
           </Typography>
         )}
       </Grid>
-    </div>
+    </div >
   ) : (
     <Typography variant="h6" color="inherit" align="center" gutterBottom>
       Not Authorized. Please refresh and try again.
