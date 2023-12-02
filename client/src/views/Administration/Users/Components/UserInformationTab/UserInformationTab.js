@@ -1296,6 +1296,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                         <MenuItem key={'Canadian Red Cross'} value={'Canadian Red Cross'}>Canadian Red Cross</MenuItem>
                                                         <MenuItem key={'Neighbours - Toronto'} value={'Neighbours - Toronto'}>Neighbours - Toronto</MenuItem>
                                                         <MenuItem key={'Public'} value={'Public'}>Public</MenuItem>
+                                                        <MenuItem key={'North York'} value={'North York'}>North York</MenuItem>
                                                         <MenuItem key={'Others'} value={'Others'}>Others</MenuItem>
                                                     </TextField>
                                                 </Grid>)}

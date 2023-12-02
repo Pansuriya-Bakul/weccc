@@ -1004,7 +1004,7 @@ const CreateUserDialog = (props) => {
                               }
                               disabled={!isLanguage2}
                             />
-                           { isLanguage2&&<Typography variant="caption" className={classes.languageOption}>{errorMessages.language2Error}</Typography>}
+                           { isLanguage2 && <Typography variant="caption" className={classes.languageOption}>{errorMessages.language2Error}</Typography>}
                           </Box>
                         </Grid>
                       </Grid>
