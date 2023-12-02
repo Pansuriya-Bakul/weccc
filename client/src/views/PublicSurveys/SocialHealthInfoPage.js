@@ -1,6 +1,6 @@
 import React from 'react';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+// import 'jspdf-autotable';
 import SocialHealthInfoImage from './socialHealthInfo.png';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button } from '@material-ui/core';
 
