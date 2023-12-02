@@ -120,6 +120,19 @@ function ValidatePassword(input) {
   }
   return error;
 }
+
+// only allow a-z, A-Z , comma and comma cannot be first last character 
+const validateOtherLanguages =(language)=>{
+  const regex = /^[A-Za-z]+(?:,[A-Za-z]+)*$/;
+  if(!language){
+    return 'Please enter languages separated with commas (,)'
+  }
+  else if (regex.test(language)) {
+    return ''
+  } else {
+    return 'Please enter languages separated with commas (,)'
+  }
+}
 export {
   ValidateUserName,
   ValidateName,
@@ -129,5 +142,6 @@ export {
   ValidatePassword,
   MandatoryFieldCheck,
   ValidatePostalCode,
-  ValidateCity
+  ValidateCity,
+  validateOtherLanguages
 };

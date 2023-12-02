@@ -5,7 +5,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
 import { jsPDF } from "jspdf";
 
-
 // ==================== Modules =====================
 import Pagination from "@material-ui/lab/Pagination";
 
@@ -37,7 +36,7 @@ import Box from "@material-ui/core/Box"; // Padding and margins
 import Card from "@material-ui/core/Card"; //Like the paper module, a visual sheet to place things
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
@@ -75,7 +74,8 @@ const Reports = (props) => {
   const classes = useStyles();
 
   // Declaration of Stateful Variables ===
-  const { userID, appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+  const { userID, appState, ToggleDrawerClose, CheckAuthenticationValidity } =
+    props;
 
   // Alert variable
   const [alert, setAlert] = useState(new AlertType());
@@ -88,7 +88,7 @@ const Reports = (props) => {
   const [patientData, setPatientData] = useState([]);
   const [currentPatient, setCurrentPatient] = useState(userID);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
-  const [memberName, setMemberName] = useState('');
+  const [memberName, setMemberName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
 
@@ -132,7 +132,6 @@ const Reports = (props) => {
     [appState]
   );
 
-
   const patientSelectHandler = useCallback((event) => {
     setCurrentPatient(event.target.value);
   }, []);
@@ -159,9 +158,7 @@ const Reports = (props) => {
       getNeighbours(currentPatient);
       // getScreen(currentPatient);
     }
-
   }, [currentPatient]);
-
 
   useEffect(() => {
     if (reportsData !== null) {
@@ -227,7 +224,7 @@ const Reports = (props) => {
             </Grid>
 
             <Grid item xs={12}>
-              <Card raised={true} style={{ padding: '10px' }}>
+              <Card raised={true} style={{ padding: "10px" }}>
                 <Box mx={1} my={1} boxShadow={0}>
                   <Grid
                     container
@@ -283,7 +280,6 @@ const Reports = (props) => {
                         {memberName}
                       </Typography>
                       {/* </Box> */}
-
                     </Grid>
                     {/* <Grid item xs={12}>
                       {reportsData ? (
@@ -306,10 +302,12 @@ const Reports = (props) => {
             </Grid>
 
             <Grid item xs={12}>
-              <Card raised={true} style={{ padding: '10px' }}>
+              <Card raised={true} style={{ padding: "10px" }}>
                 <Box mx={1} my={1} boxShadow={0}>
-                  {isLoading ? (<CircularProgress />)
-                    : <Grid
+                  {isLoading ? (
+                    <CircularProgress />
+                  ) : (
+                    <Grid
                       container
                       direction="column"
                       justifyContent="flex-start"
@@ -317,8 +315,9 @@ const Reports = (props) => {
                       spacing={1}
                     >
                       {reportsData &&
-                        Object.keys(reportsData).length != 0 &&
-                        Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                      Object.keys(reportsData).length != 0 &&
+                      Object.getPrototypeOf(reportsData) ===
+                        Object.prototype ? (
                         <>
                           <Grid item xs={12}>
                             <Typography variant="h4" color="textPrimary">
@@ -358,35 +357,39 @@ const Reports = (props) => {
                             />
                           </Grid>
 
-                          {anyFlags && <Grid item xs={12} id="possible concerns">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Possible Concerns
-                            </Typography>
-                            <PossibleConcerns
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid>}
+                          {anyFlags && (
+                            <Grid item xs={12} id="possible concerns">
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                              >
+                                Possible Concerns
+                              </Typography>
+                              <PossibleConcerns
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
+                          )}
 
-                          {anyFlags && <Grid item xs={12} id="suggestions">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Suggestions
-                            </Typography>
-                            <Suggestions
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid>}
+                          {anyFlags && (
+                            <Grid item xs={12} id="suggestions">
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                              >
+                                Suggestions
+                              </Typography>
+                              <Suggestions
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
+                          )}
                         </>
                       ) : (
                         <>
@@ -401,8 +404,8 @@ const Reports = (props) => {
                         </>
                       )}
                     </Grid>
-                    
-                  }
+                  )}
+
                 </Box>
               
               <Grid item xs={12} id="suggestions1" style={{ paddingTop: '30px' }}>
@@ -460,8 +463,8 @@ Reports.propTypes = {
 
 Reports.defaultProps = {
   appState: {},
-  ToggleDrawerClose: () => { },
-  CheckAuthenticationValidity: () => { },
+  ToggleDrawerClose: () => {},
+  CheckAuthenticationValidity: () => {},
 };
 
 export default Reports; // You can even shorthand this line by adding this at the function [Component] declaration stage

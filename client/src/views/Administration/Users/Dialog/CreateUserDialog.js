@@ -51,9 +51,11 @@ import {
   ValidateEmail,
   ValidateName,
   ValidatePassword,
-  ValidatePhoneNo
+  ValidatePhoneNo,
+  validateOtherLanguages
 } from "../../../../helpers/utils/validation";
 
+import {getOtherLanguages} from '../../../../helpers/common/helperFunctions'
 // ==================== MUI Styles ===================
 
 const useStyles = makeStyles(
@@ -67,6 +69,10 @@ const useStyles = makeStyles(
     rootGrid: {
       height: "100%",
     },
+
+    languageOption:{
+      color:'red'
+    }
   })
 );
 
@@ -193,9 +199,8 @@ const CreateUserDialog = (props) => {
       lastName.trim().charAt(0).toUpperCase() +
       lastName.trim().slice(1).toLowerCase();
 
-    let sanatized_language2 =
-      language2.trim().charAt(0).toUpperCase() +
-      language2.trim().slice(1).toLowerCase();
+    let sanatized_language2 = getOtherLanguages(language2)
+      
     let sanatized_gender2 =
       gender2.trim().charAt(0).toUpperCase() +
       gender2.trim().slice(1).toLowerCase();
@@ -215,7 +220,7 @@ const CreateUserDialog = (props) => {
         dateOfBirth: new Date(dateOfBirth),
         phone: phone,
         language:
-          language == "Other" && isLanguage2 ? sanatized_language2 : language,
+          language == "Other" && isLanguage2 ? sanatized_language2 : getOtherLanguages(language),
         address: {
           street: street,
           city: sanatized_city,
@@ -226,7 +231,6 @@ const CreateUserDialog = (props) => {
       },
       status: status,
     };
-
     post("users/register", appState.token, data, (error, response) => {
       if (error) {
         setParentAlert(
@@ -466,7 +470,7 @@ const CreateUserDialog = (props) => {
             //   ? MandatoryFieldCheck(gender)
             //   : "",
           language2:
-            language === "Other" ? ""
+            language === "Other" ? validateOtherLanguages(language2)
               // ? MandatoryFieldCheck(language2) !== ""
               //   ? MandatoryFieldCheck(language2)
               //   : ""
@@ -975,6 +979,9 @@ const CreateUserDialog = (props) => {
                               <MenuItem key={"English"} value={"English"}>
                                 English
                               </MenuItem>
+                              <MenuItem key={"French"} value={"French"}>
+                                French
+                              </MenuItem>
                               <MenuItem key={"Other"} value={"Other"}>
                                 Other
                               </MenuItem>
@@ -997,6 +1004,7 @@ const CreateUserDialog = (props) => {
                               }
                               disabled={!isLanguage2}
                             />
+                           { isLanguage2 && <Typography variant="caption" className={classes.languageOption}>{errorMessages.language2Error}</Typography>}
                           </Box>
                         </Grid>
                       </Grid>
