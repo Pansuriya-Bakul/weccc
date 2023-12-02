@@ -98,7 +98,7 @@ exports.Screen = async (req, res) => {
                     .populate({ path: 'memberSurveyList', populate: { path: 'surveyTemplate', model: "Survey" } })
                     .exec()
                     .then(memberCollectionList => {
-                        if (memberCollectionList) {
+                        if (memberCollectionList.length>0) {
 
                             // START - Account info step ==================================================
 
@@ -114,7 +114,7 @@ exports.Screen = async (req, res) => {
 
                             let account_dob = neighbourFunctions.formatDate(memberCollectionList[0].member.info.dateOfBirth || "");
 
-                            let account_postalCode = neighbourFunctions.formatPostalCode(memberCollectionList[0].member.info.currentAddress.code || "");
+                            let account_postalCode = neighbourFunctions.formatPostalCode(memberCollectionList[0]?.member?.info?.currentAddress?.code|| "");
 
                             let account_language = neighbourFunctions.formatLanguage(memberCollectionList[0].member.info.language || "");
 

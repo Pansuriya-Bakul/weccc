@@ -988,7 +988,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             if (userOriginal && userOriginal.info) {
                 setLanguage2(userOriginal.info.language);
 
-                if (userOriginal.info.language.length === 0) {
+                if (userOriginal.info.language&&userOriginal.info.language.length === 0) {
                     setLanguage2Error(true);
                 }
                 else {

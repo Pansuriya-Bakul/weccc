@@ -137,6 +137,11 @@ exports.Neighbour = async (req, res) => {
                 memberCollectionList[0].member.role || ""
               );
 
+
+                        let account_dob = neighbourFunctions.formatDate(memberCollectionList[0].member.info.dateOfBirth || "");
+                            
+                        let account_postalCode = neighbourFunctions.formatPostalCode(memberCollectionList[0].member?.info?.currentAddress?.code || '');
+
               let account_name = memberCollectionList[0].member.info.name || "";
               account_name =
                 account_name.length >= 60
@@ -146,6 +151,7 @@ exports.Neighbour = async (req, res) => {
               let account_gender = neighbourFunctions.formatGender(
                 memberCollectionList[0].member.info.gender || ""
               );
+
 
               let account_dob = neighbourFunctions.formatDate(
                 memberCollectionList[0].member.info.dateOfBirth || ""
