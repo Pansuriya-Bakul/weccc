@@ -249,6 +249,10 @@ exports.signup = (req, res, next) => {
 	const name = key_public.encrypt(req.body.info.name, 'base64');
 	const phone = req.body.info.phone;
 	const status = req.body.status;
+	const originOfContact = req.body.originOfContact;
+	const referralDetails = req.body.referralDetails;
+	const facility2 = req.body.facility;
+
 
 	const gender = key_public.encrypt(req.body.info.gender, 'base64');
 	const dateOfBirth = req.body.info.dateOfBirth;
@@ -432,6 +436,9 @@ exports.signup = (req, res, next) => {
 									enabled: enabled,
 									role: role,
 									facilityId: facility,
+									originOfContact: originOfContact,
+									referralDetails:referralDetails,
+									facility:facility2,
 									patients: new Array(),
 									workers: new Array(),
 									projectList: new Array(),

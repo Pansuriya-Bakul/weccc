@@ -119,7 +119,7 @@ const HighlightBox = (props) =>{
                 >
                     <Typography variant="h4" align="left" style={{fontWeight:'500', color:'white'}}>Your Wellness Score</Typography>
                     <GaugeChart
-                            className="gauge-chart2"
+                            className=""
                             nrOfLevels={8}
                             percent={0.56}
                             // colors={["red", "green"]}
@@ -133,9 +133,9 @@ const HighlightBox = (props) =>{
                     </div>
                 </Box>
             {/* </div> */}
-            <div className="boxes" style={{display:'flex', flexDirection:'column', gap:'16px'}}> 
+            <div className="boxes" style={{display:'flex', flexDirection:'column', gap:'16px',"max-width":'74%'}}> 
                 <div style={{display:'flex', gap:'8px'}}>
-                    <Box item xs={12} sm={6} md={4} lg={3} bgcolor={health_colour} style={{display:'flex', color:'white', padding:'14px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'200px'}}>
+                    <Box item xs={12} sm={6} md={12} lg={12} bgcolor={health_colour} style={{display:'flex', color:'white', padding:'14px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', width:'50%', maxHeight:'200px'}}>
                         <FontAwesomeIcon icon={faHeartPulse} style={{fontSize:'52px'}}/>
                         <div style={{display:'flex', flexDirection:'column'}}>
                         <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
