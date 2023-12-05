@@ -92,7 +92,7 @@ exports.standardAccountId = async (req, res) => {
 exports.Neighbour = async (req, res) => {
   log.info(
     "Incoming request for Neighbour's Report on the Collections of user with id: " +
-      req.params.userId
+    req.params.userId
   );
 
   // member: req.params.userId
@@ -137,6 +137,11 @@ exports.Neighbour = async (req, res) => {
                 memberCollectionList[0].member.role || ""
               );
 
+
+              let account_dob = neighbourFunctions.formatDate(memberCollectionList[0].member.info.dateOfBirth || "");
+
+              let account_postalCode = neighbourFunctions.formatPostalCode(memberCollectionList[0].member?.info?.currentAddress?.code || '');
+
               let account_name = memberCollectionList[0].member.info.name || "";
               account_name =
                 account_name.length >= 60
@@ -147,13 +152,14 @@ exports.Neighbour = async (req, res) => {
                 memberCollectionList[0].member.info.gender || ""
               );
 
-              let account_dob = neighbourFunctions.formatDate(
-                memberCollectionList[0].member.info.dateOfBirth || ""
-              );
 
-              let account_postalCode = neighbourFunctions.formatPostalCode(
-                memberCollectionList[0].member.info.currentAddress.code || ""
-              );
+              // let account_dob = neighbourFunctions.formatDate(
+              //   memberCollectionList[0].member.info.dateOfBirth || ""
+              // );
+
+              // let account_postalCode = neighbourFunctions.formatPostalCode(
+              //   memberCollectionList[0].member.info.currentAddress.code || ""
+              // );
 
               let account_language = neighbourFunctions.formatLanguage(
                 memberCollectionList[0].member.info.language || ""
@@ -554,7 +560,7 @@ exports.Neighbour = async (req, res) => {
                   if (chapter3Values) {
                     // Who's in my circle
                     //  NOT USED SURVEY QUESTION: animals
-              
+
 
                     PN_QofL1_COMB.push(
                       neighbourFunctions.size_of_personal_network(
@@ -563,7 +569,7 @@ exports.Neighbour = async (req, res) => {
                     );
 
                     meaningful_people.push(
-                        chapter3Values.meaningful_people
+                      chapter3Values.meaningful_people
                     );
 
                     total_children.push(
@@ -597,7 +603,7 @@ exports.Neighbour = async (req, res) => {
                     );
 
                     marital_status.push(
-                        chapter3Values.marital_status
+                      chapter3Values.marital_status
                     );
 
                     // NOT USED SURVEY QUESTION: current_living_situation

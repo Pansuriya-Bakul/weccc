@@ -1166,6 +1166,7 @@ exports.update =  async (req, res, next) => {
 						}
 					})
 					updatedQuery = {
+						...updatedQuery,
 						patients: queryPatients
 					}
 				}
@@ -1178,6 +1179,7 @@ exports.update =  async (req, res, next) => {
 						}
 					})
 					updatedQuery = {
+						...updatedQuery,
 						workers: queryWorkers
 					}
 				}
@@ -1185,6 +1187,7 @@ exports.update =  async (req, res, next) => {
 				if ('p' in updatedQuery) {
 					let queryPatients = Object.values(updatedQuery)[0];
 					updatedQuery = {
+						...updatedQuery,
 						patients: queryPatients
 					}
 				}
@@ -1192,10 +1195,13 @@ exports.update =  async (req, res, next) => {
 				if ('w' in updatedQuery) {
 					let queryWorkers = Object.values(updatedQuery)[0];
 					updatedQuery = {
+						...updatedQuery,
 						workers: queryWorkers
 					}
 				}
+				
 				try{
+
 
 				user.set(updatedQuery);
 				

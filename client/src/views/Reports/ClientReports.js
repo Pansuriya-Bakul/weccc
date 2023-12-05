@@ -572,6 +572,27 @@ const ClientReports = (props) => {
                               />
                             </Grid>
                           )}
+                          
+                          <Grid item xs={12} id="suggestions1" style={{ paddingTop: '30px' }}>
+                            <Typography
+                              variant="h5"
+                              color="textSecondary"
+                              align="left"
+                              gutterBottom
+
+                            >
+                              What Now?
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              align="left"
+                              gutterBottom
+                            >
+                              Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
+
+                            </Typography>
+                          </Grid>
+
                         </>
                       ) : (
                         <>
