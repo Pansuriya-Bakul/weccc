@@ -53,6 +53,9 @@ import get from "../../../../../helpers/common/get";
 import { validateOtherLanguages } from '../../../../../helpers/utils/validation';
 import { deleteEmptyKeys, getAddress, getOtherLanguages } from '../../../../../helpers/common/helperFunctions';
 
+
+
+
 // ==================== MUI Styles ===================
 
 const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
@@ -64,8 +67,8 @@ const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
     rootGrid: {
         height: '100%'
     },
-    languageOption:{
-        color:'red'
+    languageOption: {
+        color: 'red'
     }
 }));
 
@@ -91,7 +94,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
     const classes = useStyles();
 
     // Declaration of Stateful Variables ===
-    const { appState, userID, setParentAlert, getParentInfo, panelId, panelIndex, userOriginal } = props;
+    const { appState, userID, setParentAlert, getParentInfo, panelId, panelIndex, userOriginal, allFacilities } = props;
 
     const [userEdit, setUserEdit] = useState(null);
 
@@ -124,6 +127,8 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
     const [isLanguage2, setIsLanguage2] = useState(false);
     const [language2Error, setLanguage2Error] = useState(false);
 
+    // const [allFacilities, setAllFacilities] = useState([]);
+
     // Non-Required Parameters ========================================
 
     const [phone, setPhone] = useState("");
@@ -151,11 +156,11 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
     const editablePropertiesHandler = useCallback((event) => {
 
-        setUserEdit({...userOriginal})
+        setUserEdit({ ...userOriginal })
         setEditable(!editable);
 
         if (userOriginal) {
-            setUserEdit({...userOriginal}
+            setUserEdit({ ...userOriginal }
             );
 
             setName(userOriginal.info.name);
@@ -190,7 +195,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
             setGenderError(false);
 
-            if (userOriginal.info.language != "English"&&userOriginal.info.language != "French") {
+            if (userOriginal.info.language != "English" && userOriginal.info.language != "French") {
                 setLanguage("Other");
 
                 setLanguage2(userOriginal.info.language);
@@ -302,34 +307,20 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
     }, [setGender]);
 
     const facilityHandler = useCallback((event) => {
-        if (userEdit) // Edited by P., changing the Facility
-            get("facilities/", appState.token, (err, res) => {
-                if (err) {
-                    //Bad callback call
-                    //setAlert(new AlertType(err.message, "error"));
-                    //setAlert(new AlertType('Unable to retrieve facilities.', "error"));
-                    console.log('error facility');
-                }
-                else {
-                    if (res.status === 200) {
-                        res.data.response.facilities.forEach(k => {
-                            if (k.name == event.target.value) {
-                                setUserEdit({
-                                    ...userEdit,
-                                    facilityId: {
-                                        ...userEdit.facilityId,
-                                        name: event.target.value,
-                                        _id: k._id,
-                                        prefix: k.prefix //Edited by P, added facility information like as FacilityId
-                                    }
-                                });
 
-                            }
-                        })
+        const selectedFacilityName = event.target.value;
+        const selectedFacility = allFacilities.find(facility => facility.name === selectedFacilityName);
 
-                    }
+        if (selectedFacility) {
+            setUserEdit(prevState => ({
+                ...prevState,
+                facilityId: {
+                    name: selectedFacility.name,
+                    _id: selectedFacility._id,
+                    prefix: selectedFacility.prefix
                 }
-            });
+            }));
+        }
 
     }, [userEdit, setUserEdit]);
 
@@ -369,7 +360,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             setLanguage2Error(false);
         }
         setLanguage2(event.target.value);
-    }, [wordsRegex, setLanguage2, setLanguage2Error, userEdit,language2]);
+    }, [wordsRegex, setLanguage2, setLanguage2Error, userEdit, language2]);
 
     function extractDigits(phoneNumber) {
         // Remove all non-digit characters from the phone number
@@ -438,10 +429,10 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
         setStreet(event.target.value);
 
-    }, [setStreet,userEdit, setStreetError, streetRegex]);
+    }, [setStreet, userEdit, setStreetError, streetRegex]);
 
     const cityHandler = useCallback((event) => {
-        
+
         setUserEdit({
             ...userEdit,
             info: {
@@ -455,7 +446,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
         setCity(event.target.value);
 
-    }, [setCity,userEdit]);
+    }, [setCity, userEdit]);
 
     const provinceHandler = useCallback((event) => {
         setUserEdit({
@@ -471,7 +462,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
         setProvince(event.target.value);
 
-    }, [setProvince,userEdit]);
+    }, [setProvince, userEdit]);
 
     const postalCodeHandler = useCallback((event) => {
         if (postalCodeRegex.test(String(event.target.value))) {
@@ -498,7 +489,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
         setPostalCode(event.target.value);
 
-    }, [setPostalCode, setPostalCodeError, userEdit,postalCodeRegex]);
+    }, [setPostalCode, setPostalCodeError, userEdit, postalCodeRegex]);
 
     const countryHandler = useCallback((event) => {
         setUserEdit({
@@ -514,7 +505,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
         setCountry(event.target.value);
 
-    }, [setCountry,userEdit]);
+    }, [setCountry, userEdit]);
 
     const referralHandler = useCallback((event) => {
 
@@ -649,7 +640,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             setReferralError(false);
         }
 
-    }, [userOriginal,userEdit, setUserEdit, setName, setNameError, setDateOfBirth, setDateOfBirthError, setGender, setGenderError, setIsGender2, setGender2, setGender2Error,
+    }, [userOriginal, userEdit, setUserEdit, setName, setNameError, setDateOfBirth, setDateOfBirthError, setGender, setGenderError, setIsGender2, setGender2, setGender2Error,
         setLanguage, setLanguageError, setIsLanguage2, setLanguage2, setLanguage2Error, setPhone, setPhoneError, setStreet, setStreetError, setPostalCode, setPostalCodeError, setCity, setCityError,
         setProvince, setProvinceError, setCountry, setCountryError, setReferral, setReferralError]);
 
@@ -659,23 +650,25 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             setParentAlert(new AlertType('One or more fields have errors. Please correct them and try again.', "error"));
             return;
         }
+
         let updateData = {
             info: {
                 name: userEdit.info.name,
                 dateOfBirth: userEdit.info.dateOfBirth || '',
                 currentAddress: {
-                    _id: getAddress(userEdit,'_id'),
-                    street: getAddress(userEdit,'street'),
-                    city:   getAddress(userEdit,'city'),
-                    code:   getAddress(userEdit,'code'),
-                    state:  getAddress(userEdit,'state'),
-                    country: getAddress(userEdit,'country')
+                    _id: getAddress(userEdit, '_id'),
+                    street: getAddress(userEdit, 'street'),
+                    city: getAddress(userEdit, 'city'),
+                    code: getAddress(userEdit, 'code'),
+                    state: getAddress(userEdit, 'state'),
+                    country: getAddress(userEdit, 'country')
                 },
                 gender: userEdit.info.gender,
                 language: userEdit.info.language,
                 phone: userEdit.info.phone,
                 referral: userEdit.info.referral
-            }
+            },
+            facilityId: userEdit.facilityId
         };
         if (isGender2) {
             if (gender2 !== userEdit.info.gender) {
@@ -705,7 +698,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                     ...updateData,
                     info: {
                         ...updateData.info,
-                        language:language2
+                        language: language2
                     }
                 };
             }
@@ -743,20 +736,14 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         }
 
         if (userEdit.facilityId.name !== userOriginal.facilityId.name) {
-            //console.log(facility);
             updateData = {
                 ...updateData,
-                facilityId: {
-                    ...updateData.facilityID,
-                    name: userEdit.facilityId.name,
-                    _id: userEdit.facilityId._id,
-                    prefix: userEdit.facilityId.prefix
-                }
+                facilityId: userEdit.facilityId
             }
             //console.log('update',updateData);
         }
 
-        if (street !== getAddress(userEdit,'street')) {
+        if (street !== getAddress(userEdit, 'street')) {
             updateData = {
                 ...updateData,
                 info: {
@@ -769,7 +756,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             };
         }
 
-        if (city !== getAddress(userEdit,'city')) {
+        if (city !== getAddress(userEdit, 'city')) {
             updateData = {
                 ...updateData,
                 info: {
@@ -782,7 +769,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             };
         }
 
-        if (postalCode !== getAddress(userEdit,'code')) {
+        if (postalCode !== getAddress(userEdit, 'code')) {
             updateData = {
                 ...updateData,
                 info: {
@@ -794,9 +781,9 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                 }
             };
         }
-        
 
-        if (province !== getAddress(userEdit,'state')) {
+
+        if (province !== getAddress(userEdit, 'state')) {
             updateData = {
                 ...updateData,
                 info: {
@@ -811,14 +798,16 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
         // convert language variable to array
         updateData = {
+            ...updateData,
             info: {
                 ...updateData.info,
-                language:  Array.isArray(updateData.info.language)? updateData.info.language:getOtherLanguages(updateData.info.language),
+                language: Array.isArray(updateData.info.language) ? updateData.info.language : getOtherLanguages(updateData.info.language),
             }
         };
         //removing all emppty keys from obj
         updateData.info = deleteEmptyKeys(updateData.info)
-        
+        console.log(updateData);
+
         if (userID != null) {
             patch("users/" + userID, appState.token, updateData, (error, response) => {
                 if (error) {
@@ -849,8 +838,6 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
     useEffect(() => {
         setUserEdit(userOriginal);
-        console.log("userEdit")
-        console.log(userEdit)
 
         if (userOriginal) {
             if (userOriginal.facilityId.name) {
@@ -868,7 +855,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
             setGenderError(false);
 
-            if (userOriginal.info.language != "English"&&userOriginal.info.language != "French") {
+            if (userOriginal.info.language != "English" && userOriginal.info.language != "French") {
                 setLanguage("Other");
             }
             else {
@@ -942,12 +929,12 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
 
     }, [userOriginal]);
 
-    useEffect(() => {
-        if (panelIndex !== panelId) {
-            resetInformationProperties();
-        }
+    // useEffect(() => {
+    //     if (panelIndex !== panelId) {
+    //         resetInformationProperties();
+    //     }
 
-    }, [panelIndex, panelId, resetInformationProperties]);
+    // }, [panelIndex, panelId, resetInformationProperties]);
 
     useEffect(() => {
         if (JSON.stringify(userEdit) === JSON.stringify(userOriginal)) {
@@ -988,7 +975,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
             if (userOriginal && userOriginal.info) {
                 setLanguage2(userOriginal.info.language);
 
-                if (userOriginal.info.language&&userOriginal.info.language.length === 0) {
+                if (userOriginal.info.language && userOriginal.info.language.length === 0) {
                     setLanguage2Error(true);
                 }
                 else {
@@ -1153,10 +1140,30 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         }
     }, [referral, userOriginal, setChangedInformationProperties]);
 
+    // const fetchAllFacilities = () => {
+    //     if (userEdit) {
+    //         get("facilities/", appState.token, (err, res) => {
+    //             if (err) {
+    //                 console.log('error retrieving facilities');
+    //             }
+    //             else {
+    //                 if (res.status === 200) {
+    //                     setAllFacilities(res.data.response.facilities);
+    //                 }
+    //             }
+    //         });
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     fetchAllFacilities();
+
+    // }, []);
+
     // Render Section ===
 
-    const getDateOfBirth = ()=>{
-        return userEdit.info.dateOfBirth?new Date(userEdit.info.dateOfBirth).toISOString().split('T')[0]:''
+    const getDateOfBirth = () => {
+        return userEdit.info.dateOfBirth ? new Date(userEdit.info.dateOfBirth).toISOString().split('T')[0] : ''
     }
 
     return (
@@ -1288,16 +1295,13 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                         readOnly={editable ? false : true}
                                                         disabled={editable ? false : true}
                                                     >
-                                                        <MenuItem key={'Palliative IMS Facility'} value={'Palliative IMS Facility'}>Palliative IMS Facility</MenuItem>
-                                                        <MenuItem key={'WECCC'} value={'WECCC'}>WECCC</MenuItem>
-                                                        <MenuItem key={'XYZ'} value={'XYZ'}>XYZ</MenuItem>
-                                                        <MenuItem key={'CSC - Windsor Essex Compassion Care Community'} value={'CSC - Windsor Essex Compassion Care Community'}>CSC - Windsor Essex Compassion Care Community</MenuItem>
-                                                        <MenuItem key={'HWFC Lab'} value={'HWFC Lab'}>HWFC Lab</MenuItem>
-                                                        <MenuItem key={'Canadian Red Cross'} value={'Canadian Red Cross'}>Canadian Red Cross</MenuItem>
-                                                        <MenuItem key={'Neighbours - Toronto'} value={'Neighbours - Toronto'}>Neighbours - Toronto</MenuItem>
-                                                        <MenuItem key={'Public'} value={'Public'}>Public</MenuItem>
-                                                        <MenuItem key={'North York'} value={'North York'}>North York</MenuItem>
-                                                        <MenuItem key={'Others'} value={'Others'}>Others</MenuItem>
+                                                        {allFacilities.map((facility) => (
+                                                            <MenuItem key={facility._id} value={facility.name}>
+                                                                {facility.name}
+                                                            </MenuItem>
+                                                        ))}
+
+
                                                     </TextField>
                                                 </Grid>)}
                                         <Grid item xs={7}></Grid>
@@ -1394,10 +1398,10 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                             </TextField>
                                         </Grid>
                                         <Grid item xs={3}>
-                                            <TextField id="Language2" fullWidth 
-                                            label="Specify Language" 
-                                            onChange={(event) => { language2Handler(event); }}
-                                             value={language2} error={language2Error}
+                                            <TextField id="Language2" fullWidth
+                                                label="Specify Language"
+                                                onChange={(event) => { language2Handler(event); }}
+                                                value={language2} error={language2Error}
                                                 size="small"
                                                 variant="outlined"
                                                 required={isLanguage2}
@@ -1518,7 +1522,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
                                                 value={country} error={countryError}
                                                 required
                                                 readOnly
-                                                onChange={(e)=>countryHandler(e)}
+                                                onChange={(e) => countryHandler(e)}
                                                 disabled={editable ? false : true}
                                             />
                                         </Grid>

@@ -117,6 +117,8 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
 
     const [userEdit, setUserEdit] = useState(null);
 
+    const [allFacilities, setAllFacilities] = useState([]); 
+
     // Alert variable
     const [alert, setAlert] = useState(new AlertType());
 
@@ -173,6 +175,22 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
 
     }, [userEdit, userOriginal, setToBePanelIndex, setPanelIndex, setChangesUserDialog]);
 
+    const fetchAllFacilities = () => {
+
+            get("facilities/", appState.token, (err, res) => {
+                if (err) {
+                    console.log('error retrieving facilities');
+                }
+                else {
+                    if (res.status === 200) {
+                        setAllFacilities(res.data.response.facilities);
+                    }
+                }
+            });
+        
+    }
+
+
     // Hooks ===
 
     // First Render only because of the [ ] empty array tracking with the useEffect
@@ -192,6 +210,7 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
             });
         }, 200);    //
         // eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchAllFacilities();
     }, []);
 
     useEffect(() => {
@@ -206,6 +225,8 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
     useEffect(() => {
         setUserEdit(userOriginal);
     }, [userOriginal]);
+
+
 
     // Render Section ===
 
@@ -327,6 +348,7 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                                     panelId={0}
                                                     panelIndex={panelIndex}
                                                     userOriginal={userOriginal}
+                                                    allFacilities={allFacilities}
                                                 />
                                                 {userOriginal && userOriginal.role === "Volunteer" ? (
                                                     <VolStatusTab
