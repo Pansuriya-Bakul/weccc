@@ -206,6 +206,7 @@ exports.readall = (req, res, next) =>
         if(foundSurveys)
         {
             log.info("Successful readall request for Surveys");
+            log.info(foundSurveys.length);
 
             res.status(200).json({
                 count: foundSurveys.length,
