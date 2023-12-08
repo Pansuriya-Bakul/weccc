@@ -335,7 +335,7 @@ class Main extends Component {
 
   createMapping = async () => {
     let { appState } = this.props;
-    if (appState.role == "Patient") {
+    if (appState.role == "Patient" || appState.role == "Coordinator") {
       return;
     }
     const templist = await this.getPatients();
@@ -365,7 +365,7 @@ class Main extends Component {
     this.classes = styles();
     this.bull = <span className={this.classes.bullet}>•</span>;
 
-    if (appState.role === "Patient" || appState.role === "Volunteer") {
+    if (appState.role === "Patient" || appState.role === "Volunteer" || appState.role === "Coordinator") {
       await this.createMapping();
       this.checkClientSurveys(() => {
         this.checkComplete();
@@ -491,7 +491,7 @@ class Main extends Component {
               </CardContent>
             </Card>
           </Grid>
-          {(appState.role === "Patient" || appState.role === "Volunteer") && (
+          {(appState.role === "Patient" || appState.role === "Volunteer" || appState.role === "Coordinator") && (
             <Grid item xs={12}>
               <Card raised={true}>
                 <CardContent className="dashboard-card">
@@ -504,7 +504,7 @@ class Main extends Component {
                       spacing={1}
                     >
                       <Grid item xs={12}>
-                        {appState.role === "Patient" && (
+                        {appState.role === "Patient" || appState.role === "Coordinator" && (
                           <Typography variant="subtitle2" component="h2">
                             What would you like to do today?
                           </Typography>
@@ -526,7 +526,7 @@ class Main extends Component {
 														) : ('')} */}
                               {appState.role == "Volunteer" &&
                                 (JSON.stringify(this.state.pMapping) !== "{}"
-                                  ? (console.log(this.state.pMapping),
+                                  ? (
                                     Object.keys(this.state.pMapping).map(
                                       (pkey, pindex) =>
                                         this.state.pMapping[pkey][0] &&
