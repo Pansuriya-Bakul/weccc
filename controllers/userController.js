@@ -1579,7 +1579,7 @@ exports.findClientSurveys = async (req, res, next) => {
 		.populate('facilityId')
 		.exec()
 		.then(async user => {
-			if (user.role === 'Patient' || user.role === 'Volunteer') {
+			if (user.role === 'Patient' || user.role === 'Volunteer' || user.role === 'Coordinator') {
 				if (!user) throw new Error('Client does not exist');
 
 				const clientSurveys = user.memberSurveyList;
