@@ -130,10 +130,10 @@ const CreateUserDialog = (props) => {
   const [emailError, setEmailError] = useState(false);
   const [emailDup, setEmailDup] = useState(false);
 
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("Default@123");
   const [passwordError, setPasswordError] = useState(false);
 
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("Default@123");
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
   const [firstName, setFirstName] = useState("");
@@ -207,6 +207,8 @@ const CreateUserDialog = (props) => {
 
     let sanatized_city =
       city.trim().charAt(0).toUpperCase() + city.trim().slice(1).toLowerCase(); // Does not take into account capitalizing multiple word named cities or towns
+    
+    
 
     var data = {
       email: email,
@@ -423,7 +425,8 @@ const CreateUserDialog = (props) => {
     switch (page) {
       case 0: {
         let error = {
-          email: (ValidateEmail(email) == '') ? (emailDup ? 'Email already exists' : '') : ValidateEmail(email),
+          // email: (ValidateEmail(email) == '') ? (emailDup ? 'Email already exists' : '') : ValidateEmail(email),
+          email: '',
           password: ValidatePassword(password),
           confirmPassword:
             ValidatePassword(confirmPassword) === ""
@@ -455,6 +458,7 @@ const CreateUserDialog = (props) => {
           error.phone === "" &&
           confirmPassword === password
         ) {
+          
           setPage(page + 1);
         }
         break;
@@ -764,6 +768,13 @@ const CreateUserDialog = (props) => {
     }
   }, [language]);
 
+  useEffect(() => {
+    if (page == 0) {
+      if (firstName !== '' && lastName !== '') {
+        setEmail(firstName.toLowerCase() + '.' + lastName.toLowerCase() + '@abc.com');
+      }
+    }
+  }, [page, firstName, lastName]);
   // Render Section ===
 
   return (
