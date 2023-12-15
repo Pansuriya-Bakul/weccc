@@ -86,13 +86,11 @@ export default class ReportDashboard extends Component {
             isolationHealth = 95;
         }
         
-
-
         return [health, mentalHealth, wellBeing, lifeSatisfaction, loneliness,functionHealth,communityHealth,isolationHealth];
     }
 
     render() {
-        console.log(this.props)
+
         return (
             <>
                 {/* <Typography variant="h4" color="inherit" align="left" gutterBottom>

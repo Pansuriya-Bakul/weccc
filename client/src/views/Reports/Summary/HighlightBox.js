@@ -50,10 +50,10 @@ const HighlightBox = (props) =>{
 			return ("#FFC82C"); //yellow
 		}
 		else if (score <= 75) {
-			return ("#A0CC27"); //green-yellow
+			return ("#C8D344"); //green-yellow
 		}
 		else if (score <= 101) {
-			return ("#4EDB5A"); //green 
+			return ("#A0CC27"); //green 
 		}
 		else {
 			return ("#7D3C98"); //purple / incomplete / missing
@@ -97,6 +97,10 @@ const HighlightBox = (props) =>{
         setCommunityHealth(isComplete(props.data[6]) ? props.data[6] : "Incomplete");
         setIsolationHealth(isComplete(props.data[7]) ? props.data[7] : "Incomplete");
     }, []);
+
+    useEffect(() => {
+        console.log("isolationHealth",isolationHealth)
+    }, [isolationHealth]);
 
     return (
         <Grid container spacing={3} style={{display:'flex', marginTop:'12px', gap:'16px', justifyContent:'space-around', alignItems:'center'}}>
@@ -175,7 +179,7 @@ const HighlightBox = (props) =>{
                             Function
                         </Typography>
                         <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                            {getPercentageLabel(props.data[2])}
+                            {getPercentageLabel(props.data[5])}
                         </Typography>
                         </div>
                     </Box>
@@ -189,7 +193,7 @@ const HighlightBox = (props) =>{
                         Community Belonging
                     </Typography>
                     <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getPercentageLabel(props.data[3])}
+                        {getPercentageLabel(props.data[6])}
                     </Typography>
                     </div>
                 </Box>
@@ -200,7 +204,7 @@ const HighlightBox = (props) =>{
                         Isolation
                     </Typography>
                     <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getPercentageLabel(props.data[3])}
+                        {getPercentageLabel(props.data[7])}
                     </Typography>
                     </div>
                 </Box>

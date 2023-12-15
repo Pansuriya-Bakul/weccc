@@ -720,15 +720,11 @@ const CommunityVisual = (props) => {
       .attr('height', height);
 
     const dailyRadius = getRadius('Daily', 50);
-    console.log("Daily Radius: " + dailyRadius);
     const weeklyRadius = getRadius('Weekly', dailyRadius + 70);
-    console.log("Weekly Radius: " + weeklyRadius);
     const monthlyRadius = getRadius('Monthly', weeklyRadius + 70);
-    console.log("Monthly Radius: " + monthlyRadius);
     const threeFourRadius = getRadius('3-4 Times a Year', monthlyRadius + 70);
-    console.log("3-4 Times a Year Radius: " + threeFourRadius);
     const yearlyRadius = getRadius('Yearly', threeFourRadius + 70);
-    console.log("Yearly Radius: " + yearlyRadius);
+
 
 
     // Create Yearly Circle
