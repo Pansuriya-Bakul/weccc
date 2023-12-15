@@ -719,7 +719,7 @@ const CommunityVisual = (props) => {
       .attr('width', width)
       .attr('height', height);
 
-    const dailyRadius = getRadius('Daily', 50);
+    const dailyRadius = getRadius('Daily', 70);
     const weeklyRadius = getRadius('Weekly', dailyRadius + 70);
     const monthlyRadius = getRadius('Monthly', weeklyRadius + 70);
     const threeFourRadius = getRadius('3-4 Times a Year', monthlyRadius + 70);
