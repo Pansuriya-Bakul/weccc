@@ -231,7 +231,7 @@ const CreateUserDialog = (props) => {
       facilityId: appState.facilityId,
       originOfContact: ((originOfContact === 'Other')? originOfContact2 : originOfContact) ,
       referralDetails: referralDetails,
-      facility: facility,
+      // facility: facility,
       
       info: {
         name: sanatized_firstName + " " + sanatized_lastName,
@@ -300,7 +300,7 @@ const CreateUserDialog = (props) => {
     originOfContact,
     originOfContactOtherFlag,
     referralDetails,
-    facility
+    // facility
   ]);
 
   const resetCreateForm = useCallback(() => {
@@ -1369,7 +1369,7 @@ const togglePasswordVisibility2 = () => {
                           spacing={2}
                           display={page == 2 ? "block" : "none"}
                         >
-                          <Grid item>
+                          {/* <Grid item>
                             <Box mx={2} my={0} boxShadow={0}>
                               <TextField
                                   id="facility"
@@ -1383,7 +1383,7 @@ const togglePasswordVisibility2 = () => {
                                   // error={errorMessages.city === "" ? false : true}
                                 />
                               </Box>
-                            </Grid>
+                            </Grid> */}
 
                         </Grid>
 
