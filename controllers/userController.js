@@ -638,7 +638,6 @@ exports.selfRegister = async (req, res) => {
 // ====================================================
 exports.login = async (req, res, next) => {
 	// log.warn(req);
-
 	if (req.user == null) {
 		log.warn('User was not part of the request.  Unauthorized.');
 
@@ -660,7 +659,7 @@ exports.login = async (req, res, next) => {
 						facilityName = facility.name;
 						fPrefix = facility.prefix;
 					})
-
+				
 				let decryptedGender = '';
 				if (req.user.info.gender) {
 					decryptedGender = key_private.decrypt(req.user.info.gender, 'utf8');

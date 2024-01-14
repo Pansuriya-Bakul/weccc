@@ -5,6 +5,7 @@ import LineChart from './LineChart'
 import Interests from './Summary/Interests';
 import FamilyFriendsNeighbours from './Summary/FamilyFriendsNeighbours';
 import CommunityParticipation from './Summary/CommunityParticipation';
+import Goals from './Summary/Goals';
 
 // import SocialHealth from './Summary/SocialHealth';
 
@@ -13,8 +14,10 @@ export default class Summary extends Component {
         return (
             <>
                 <Box m={1}>
+                    <Goals reports={this.props.reports} collection={this.props.collection} />
                     <Interests reports={this.props.reports} collection={this.props.collection} />
                     <FamilyFriendsNeighbours reports={this.props.reports} collection={this.props.collection} />
+
                     {/* <CommunityParticipation reports = {this.props.reports} collection = {this.props.collection}/> 
                     {/* <SocialHealth reports = {this.props.reports} collection = {this.props.collection}/> */}
                 </Box>

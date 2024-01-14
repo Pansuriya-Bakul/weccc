@@ -238,7 +238,6 @@ const ClientReports = (props) => {
   useEffect(() => {
     if (reportsData !== null) {
       const flags = checkAlerts(reportsData, currentReportIndex);
-      console.log("Flags: ", flags);
       setAnyFlags(flags);
     }
   }, [reportsData, currentReportIndex]);

@@ -357,7 +357,6 @@ class Main extends Component {
     }
 
     this.setState({ pMapping: temp });
-    console.log(temp);
   };
 
   componentDidMount = async () => {
@@ -382,7 +381,6 @@ class Main extends Component {
 
   render() {
     let { appState, classes } = this.props;
-    console.log(this.state);
     if (this.render) {
       return (
         <Grid
@@ -526,7 +524,7 @@ class Main extends Component {
 														) : ('')} */}
                               {appState.role == "Volunteer" &&
                                 (JSON.stringify(this.state.pMapping) !== "{}"
-                                  ? (console.log(this.state.pMapping),
+                                  ? (
                                     Object.keys(this.state.pMapping).map(
                                       (pkey, pindex) =>
                                         this.state.pMapping[pkey][0] &&
@@ -582,7 +580,7 @@ class Main extends Component {
                                                                 {this.state
                                                                   .pMapping[
                                                                   pkey
-                                                                ][1] !== [] &&
+                                                                ][1] &&
                                                                 this.state
                                                                   .pMapping[
                                                                   pkey
@@ -690,7 +688,7 @@ class Main extends Component {
                               {!this.state.collectionCompleteness.every(
                                 (v) => v == true
                               ) &&
-                              this.state.collectionNames !== [] &&
+                              this.state.collectionNames &&
                               this.state.collectionNames !== undefined
                                 ? this.state.collectionNames.map(
                                     (key, index) => {
@@ -821,7 +819,7 @@ class Main extends Component {
                                       );
                                     }
                                   )
-                                : "No series assigned"}
+                                : (appState.role == "Patient" ? "No series assigned" : "")}
                             </Typography>
                           </Grid>
                         </Grid>

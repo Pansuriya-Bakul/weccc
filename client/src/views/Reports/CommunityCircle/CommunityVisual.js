@@ -4,7 +4,6 @@ import './communityVisual.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCommentsDollar, faFaceSmile, faLeaf } from '@fortawesome/free-solid-svg-icons'
-import { set } from 'joi/lib/types/lazy';
 
 const CommunityVisual = (props) => {
 
@@ -12,6 +11,7 @@ const CommunityVisual = (props) => {
   const [personalnetwork, setPersonalNetwork] = useState([]);
   const [informalCare, setInformalCare] = useState([]);
   const [formalCare, setFormalCare] = useState([]);
+  const [activitiesAndGroups, setActivitiesAndGroups] = useState([]);
 
 
   const initPersonalNetwork = () => {
@@ -119,207 +119,48 @@ const CommunityVisual = (props) => {
 
   }
 
-  const generatePersonalNetwork = (svg, scale, width, height) => {
-    // Calculate the positions of the contact circles
-    const startAngle = 180 * (Math.PI / 180);
-    const endAngle = 270 * (Math.PI / 180);
-    const totalAngle = Math.abs(endAngle - startAngle);
-    const angleIncrement = totalAngle / (personalnetwork.length == 1 ? personalnetwork.length : personalnetwork.length - 1);
+  const initActivitiesAndGroups = () => {
+    let newActivitiesAndGroups = activitiesAndGroups;
 
-    personalnetwork.forEach((contact, index) => {
-      const angle = startAngle + index * angleIncrement;
-      const { radius, distance } = scale(contact.frequency);
-      const x = width / 2 + distance * Math.cos(angle);
-      const y = height / 2 + distance * Math.sin(angle);
+    if (reports.frequency_of_participation_music[collection] && reports.frequency_of_participation_music[collection] !== 999) {
+      newActivitiesAndGroups.push({ name: 'Musical Instrument', frequency: reports.frequency_of_participation_music[collection] });
+    }
 
-      // Create a circle for each contact
-      svg.append('circle')
-        .attr('cx', x)
-        .attr('cy', y)
-        .attr('r', radius)
-        .style('fill', '#008e9e');
+    if (reports.frequency_of_participation_religion[collection] && reports.frequency_of_participation_religion[collection] !== 999) {
+      newActivitiesAndGroups.push({ name: 'Religious Activities', frequency: reports.frequency_of_participation_religion[collection] });
+    }
 
-      // Add the emoji
-      svg.append('text')
-        .attr('x', x)
-        .attr('y', y - 12) // center the emoji in the circle
-        .attr('text-anchor', 'middle')
-        .attr('dominant-baseline', 'middle')
-        .style('font-size', '20px') // Increase the font size to make the emoji visible
-        .text('👪');
+    if (reports.frequency_of_participation_sports[collection] && reports.frequency_of_participation_sports[collection] !== 999) {
+      newActivitiesAndGroups.push({ name: 'Sports', frequency: reports.frequency_of_participation_sports[collection] });
+    }
 
-      // Add the contact's name
-      svg.append('foreignObject')
-        .attr('x', x - radius)
-        .attr('y', y + 12 - radius)
-        .attr('width', radius * 2)
-        .attr('height', radius * 2)
-        .append('xhtml:div')
-        .style('padding', '5px')
-        .style('font-size', '10px')
-        .style('color', 'white')
-        .style('width', `${radius * 2}px`)
-        .style('height', `${radius * 2}px`)
-        .style('display', 'flex')
-        .style('align-items', 'center')
-        .style('justify-content', 'center')
-        .style('text-align', 'center')
-        .style('overflow-wrap', 'break-word')
-        .style('font-weight', '500')
-        .text(contact.name);
+    if (reports.frequency_of_participation_recreation[collection] && reports.frequency_of_participation_recreation[collection] !== 999) {
+      newActivitiesAndGroups.push({ name: 'Recreation', frequency: reports.frequency_of_participation_recreation[collection] });
+    }
 
-      // Connect the user to the contact with a line
-      svg.append('line')
-        .attr('x1', width / 2)
-        .attr('y1', height / 2)
-        .attr('x2', x)
-        .attr('y2', y)
-        .style('stroke', 'black')
-        .lower();
-    });
+    if (reports.frequency_of_participation_education[collection] && reports.frequency_of_participation_education[collection] !== 999) {
+      newActivitiesAndGroups.push({ name: 'Education or Cultural', frequency: reports.frequency_of_participation_education[collection] });
+    }
+
+    if (reports.frequency_of_participation_associations[collection] && reports.frequency_of_participation_associations[collection] !== 999) {
+      newActivitiesAndGroups.push({ name: 'Clubs or Associations', frequency: reports.frequency_of_participation_associations[collection] });
+    }
+
+    if (reports.frequency_of_participation_other_activities[collection] && reports.frequency_of_participation_other_activities[collection] !== 999) {
+      newActivitiesAndGroups.push({ name: 'Other Activities', frequency: reports.frequency_of_participation_other_activities[collection] });
+    }
+
+
+    setActivitiesAndGroups(newActivitiesAndGroups);
   }
 
-  const generateInformalCare = (svg, scale, width, height) => {
-    // Convert angles to radians
-    const startAngle = 300 * (Math.PI / 180);
-    const endAngle = 360 * (Math.PI / 180);
-    const totalAngle = Math.abs(endAngle - startAngle);
-    const angleIncrement = (totalAngle / (informalCare.length == 1 ? informalCare.length : informalCare.length - 1));
-
-    informalCare.forEach((contact, index) => {
-      const angle = startAngle + index * angleIncrement;
-      const { radius, distance } = scale(contact.frequency);
-      const x = width / 2 + distance * Math.cos(angle);
-      const y = height / 2 + distance * Math.sin(angle);
-
-      // Create a circle for each contact
-      svg.append('circle')
-        .attr('cx', x)
-        .attr('cy', y)
-        .attr('r', radius)
-        .style('fill', '#37765d');
-
-      // Add the emoji
-      svg.append('text')
-        .attr('x', x)
-        .attr('y', y - 12) // center the emoji in the circle
-        .attr('text-anchor', 'middle')
-        .attr('dominant-baseline', 'middle')
-        .style('font-size', '20px') // Increase the font size to make the emoji visible
-        .text('🤝');
-
-      // Add the contact's name
-      svg.append('foreignObject')
-        .attr('x', x - radius)
-        .attr('y', y + 12 - radius)
-        .attr('width', radius * 2)
-        .attr('height', radius * 2)
-        .append('xhtml:div')
-        .style('padding', '5px')
-        .style('font-size', '10px')
-        .style('color', 'white')
-        .style('width', `${radius * 2}px`)
-        .style('height', `${radius * 2}px`)
-        .style('display', 'flex')
-        .style('align-items', 'center')
-        .style('justify-content', 'center')
-        .style('text-align', 'center')
-        .style('overflow-wrap', 'break-word')
-        .style('font-weight', '500')
-        .text(contact.name);
-
-      // Connect the user to the contact with a line
-      svg.append('line')
-        .attr('x1', width / 2)
-        .attr('y1', height / 2)
-        .attr('x2', x)
-        .attr('y2', y)
-        .style('stroke', 'black')
-        .lower();
-    });
-  }
-
-  const generateFormalCare = (svg, scale, width, height) => {
-    // Convert angles to radians
-    const startAngle = 20 * (Math.PI / 180);
-    const endAngle = 90 * (Math.PI / 180);
-    const totalAngle = Math.abs(endAngle - startAngle);
-    const angleIncrement = (totalAngle / (formalCare.length == 1 ? formalCare.length : formalCare.length - 1));
-
-    formalCare.forEach((contact, index) => {
-      const angle = startAngle + index * angleIncrement;
-      const { radius, distance } = scale(contact.frequency);
-      const x = width / 2 + distance * Math.cos(angle);
-      const y = height / 2 + distance * Math.sin(angle);
-
-      // Create a circle for each contact
-      svg.append('circle')
-        .attr('cx', x)
-        .attr('cy', y)
-        .attr('r', radius)
-        .style('fill', '#f6546a');
-
-      // Add the emoji
-      svg.append('text')
-        .attr('x', x)
-        .attr('y', y - 12) // center the emoji in the circle
-        .attr('text-anchor', 'middle')
-        .attr('dominant-baseline', 'middle')
-        .style('font-size', '20px') // Increase the font size to make the emoji visible
-        .text('👩‍⚕️');
-
-      // Add the contact's name
-      svg.append('foreignObject')
-        .attr('x', x - radius)
-        .attr('y', y + 12 - radius)
-        .attr('width', radius * 2)
-        .attr('height', radius * 2)
-        .append('xhtml:div')
-        .style('padding', '5px')
-        .style('font-size', '10px')
-        .style('color', 'white')
-        .style('width', `${radius * 2}px`)
-        .style('height', `${radius * 2}px`)
-        .style('display', 'flex')
-        .style('align-items', 'center')
-        .style('justify-content', 'center')
-        .style('text-align', 'center')
-        .style('overflow-wrap', 'break-word')
-        .style('font-weight', '500')
-        .text(contact.name);
-
-      // Connect the user to the contact with a line
-      svg.append('line')
-        .attr('x1', width / 2)
-        .attr('y1', height / 2)
-        .attr('x2', x)
-        .attr('y2', y)
-        .style('stroke', 'black')
-        .lower();
-    });
-  }
-
-  // // Calculate circle radius based on number of contacts
-  // const getRadius = (numContacts, defR) => {
-  //   if (numContacts === 1) {
-  //     // Handle special case when there is only one contact
-  //     return [defR, defR - 40];
-  //   }
-
-  //   let radius = (35 / (Math.sin(Math.PI / numContacts)));
-  //   const distance = radius;
-
-  //   radius = radius + 40;
-
-
-  //   return [radius, distance];
-  // }
 
   // Calculate circle radius based on number of contacts
   const getRadius = (frequency, defR) => {
     let personal = [];
     let informal = [];
     let formal = [];
+    let activities = [];
 
     if (personalnetwork) {
       personal = personalnetwork.filter(item => item.frequency === frequency);
@@ -331,7 +172,11 @@ const CommunityVisual = (props) => {
       formal = formalCare.filter(item => item.frequency === frequency);
     }
 
-    const numContacts = personal.length + informal.length + formal.length;
+    if (activitiesAndGroups) {
+      activities = activitiesAndGroups.filter(item => item.frequency === frequency);
+    }
+
+    const numContacts = personal.length + informal.length + formal.length + activities.length;
 
     if (numContacts === 1 || numContacts === 0) {
       // Handle special case when there is only one contact
@@ -352,6 +197,7 @@ const CommunityVisual = (props) => {
     let personal = [];
     let informal = [];
     let formal = [];
+    let activities = [];
 
     if (personalnetwork) {
       personal = personalnetwork.filter(item => item.frequency === frequency);
@@ -362,12 +208,12 @@ const CommunityVisual = (props) => {
     if (formalCare) {
       formal = formalCare.filter(item => item.frequency === frequency);
     }
+    if (activitiesAndGroups) {
+      activities = activitiesAndGroups.filter(item => item.frequency === frequency);
+    }
 
 
-    const totalCircles = personal.length + informal.length + formal.length;
-
-
-    // const rad_and_distance = getRadius(totalCircles, maxR); //[radius, distance].
+    const totalCircles = personal.length + informal.length + formal.length + activities.length;
     const distance = safeRadius;
     const circleRadius = safeRadius + 35;
 
@@ -386,7 +232,7 @@ const CommunityVisual = (props) => {
     let x = width / 2 + distance * Math.cos(angle);
     let y = height / 2 + distance * Math.sin(angle);
 
-    // Daily Personal Network
+    // Personal Network
     personal.forEach((contact, index) => {
       x = width / 2 + distance * Math.cos(angle);
       y = height / 2 + distance * Math.sin(angle);
@@ -430,7 +276,7 @@ const CommunityVisual = (props) => {
       angle = angle + angleIncrement;
     });
 
-    // Daily Informal Care
+    // Informal Care
     informal.forEach((contact, index) => {
       const x = width / 2 + distance * Math.cos(angle);
       const y = height / 2 + distance * Math.sin(angle);
@@ -473,7 +319,7 @@ const CommunityVisual = (props) => {
       angle = angle + angleIncrement;
     });
 
-    // Daily Formal Care
+    // Formal Care
     formal.forEach((contact, index) => {
       x = width / 2 + distance * Math.cos(angle);
       y = height / 2 + distance * Math.sin(angle);
@@ -517,176 +363,51 @@ const CommunityVisual = (props) => {
       angle = angle + angleIncrement;
     });
 
+    // Activities and Groups
+    activities.forEach((contact, index) => {
+      x = width / 2 + distance * Math.cos(angle);
+      y = height / 2 + distance * Math.sin(angle);
+
+      // Create a circle for each contact
+      svg.append('circle')
+        .attr('cx', x)
+        .attr('cy', y)
+        .attr('r', radius)
+        .style('fill', '#F57C00');
+
+      // Add the emoji
+      svg.append('text')
+        .attr('x', x)
+        .attr('y', y - 12) // center the emoji in the circle
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'middle')
+        .style('font-size', '18px') // Increase the font size to make the emoji visible
+        .text('🧩');
+
+      // Add the contact's name
+      svg.append('foreignObject')
+        .attr('x', x - radius)
+        .attr('y', y + 12 - radius)
+        .attr('width', radius * 2)
+        .attr('height', radius * 2)
+        .append('xhtml:div')
+        .style('padding', '3px')
+        .style('font-size', '10px')
+        .style('color', 'white')
+        .style('width', `${radius * 2}px`)
+        .style('height', `${radius * 2}px`)
+        .style('display', 'flex')
+        .style('align-items', 'center')
+        .style('justify-content', 'center')
+        .style('text-align', 'center')
+        .style('overflow-wrap', 'break-word')
+        .style('font-weight', '500')
+        .text(contact.name);
+
+      angle = angle + angleIncrement;
+    });
+
   }
-
-  // // generates weekly circle
-  // const generateWeeklyCircle = (svg, scale, width, height) => {
-  //   let weeklyPersonal = [];
-  //   let weeklyInformal = [];
-  //   let weeklyFormal = [];
-
-  //   if (personalnetwork) {
-  //     weeklyPersonal = personalnetwork.filter(item => item.frequency === 'Weekly');
-  //   }
-  //   if (informalCare) {
-  //     weeklyInformal = informalCare.filter(item => item.frequency === 'Weekly');
-  //   }
-  //   if (formalCare) {
-  //     weeklyFormal = formalCare.filter(item => item.frequency === 'Weekly');
-  //   }
-
-  //   const totalCircles = dailyPersonal.length + dailyInformal.length + dailyFormal.length;
-  //   const dailyRadius = getRadius(totalCircles, 150);
-
-  //   // Create a Daily circle
-  //   const dailyCircle = svg.append('circle')
-  //     .attr('cx', width / 2)
-  //     .attr('cy', height / 2)
-  //     .attr('r', dailyRadius)
-  //     .style('fill', '#D5E8D4')
-  //     .style('stroke', '#D5E8D4') 
-  //     .style('stroke-width', 2);
-
-  //   const angleIncrement = (2 * Math.PI) / totalCircles;
-  //   let angle = 0;
-  //   let { radius, distance } = scale('Daily');
-  //   let x = width / 2 + distance * Math.cos(angle);
-  //   let y = height / 2 + distance * Math.sin(angle);
-
-  //   // Daily Personal Network
-  //   dailyPersonal.forEach((contact, index) => {
-  //     x = width / 2 + distance * Math.cos(angle);
-  //     y = height / 2 + distance * Math.sin(angle);
-
-  //     // Create a circle for each contact
-  //     svg.append('circle')
-  //       .attr('cx', x)
-  //       .attr('cy', y)
-  //       .attr('r', radius)
-  //       .style('fill', '#008e9e');
-
-  //     // Add the emoji
-  //     svg.append('text')
-  //       .attr('x', x)
-  //       .attr('y', y - 12) // center the emoji in the circle
-  //       .attr('text-anchor', 'middle')
-  //       .attr('dominant-baseline', 'middle')
-  //       .style('font-size', '20px') // Increase the font size to make the emoji visible
-  //       .text('👪');
-
-  //     // Add the contact's name
-  //     svg.append('foreignObject')
-  //       .attr('x', x - radius)
-  //       .attr('y', y + 12 - radius)
-  //       .attr('width', radius * 2)
-  //       .attr('height', radius * 2)
-  //       .append('xhtml:div')
-  //       .style('padding', '5px')
-  //       .style('font-size', '10px')
-  //       .style('color', 'white')
-  //       .style('width', `${radius * 2}px`)
-  //       .style('height', `${radius * 2}px`)
-  //       .style('display', 'flex')
-  //       .style('align-items', 'center')
-  //       .style('justify-content', 'center')
-  //       .style('text-align', 'center')
-  //       .style('overflow-wrap', 'break-word')
-  //       .style('font-weight', '500')
-  //       .text(contact.name);
-
-  //     angle = angle + angleIncrement;
-  //   });
-
-  //   // Daily Informal Care
-  //   dailyInformal.forEach((contact, index) => {
-  //     const x = width / 2 + distance * Math.cos(angle);
-  //     const y = height / 2 + distance * Math.sin(angle);
-
-  //     // Create a circle for each contact
-  //     svg.append('circle')
-  //       .attr('cx', x)
-  //       .attr('cy', y)
-  //       .attr('r', radius)
-  //       .style('fill', '#37765d');
-
-  //     // Add the emoji
-  //     svg.append('text')
-  //       .attr('x', x)
-  //       .attr('y', y - 12) // center the emoji in the circle
-  //       .attr('text-anchor', 'middle')
-  //       .attr('dominant-baseline', 'middle')
-  //       .style('font-size', '20px') // Increase the font size to make the emoji visible
-  //       .text('🤝');
-
-  //     // Add the contact's name
-  //     svg.append('foreignObject')
-  //       .attr('x', x - radius)
-  //       .attr('y', y + 12 - radius)
-  //       .attr('width', radius * 2)
-  //       .attr('height', radius * 2)
-  //       .append('xhtml:div')
-  //       .style('padding', '5px')
-  //       .style('font-size', '10px')
-  //       .style('color', 'white')
-  //       .style('width', `${radius * 2}px`)
-  //       .style('height', `${radius * 2}px`)
-  //       .style('display', 'flex')
-  //       .style('align-items', 'center')
-  //       .style('justify-content', 'center')
-  //       .style('text-align', 'center')
-  //       .style('overflow-wrap', 'break-word')
-  //       .style('font-weight', '500')
-  //       .text(contact.name);
-
-  //     angle = angle + angleIncrement;
-  //   });
-
-  //   // Daily Formal Care
-  //   dailyFormal.forEach((contact, index) => {
-  //     x = width / 2 + distance * Math.cos(angle);
-  //     y = height / 2 + distance * Math.sin(angle);
-
-  //     // Create a circle for each contact
-  //     svg.append('circle')
-  //       .attr('cx', x)
-  //       .attr('cy', y)
-  //       .attr('r', radius)
-  //       .style('fill', '#f6546a');
-
-  //     // Add the emoji
-  //     svg.append('text')
-  //       .attr('x', x)
-  //       .attr('y', y - 12) // center the emoji in the circle
-  //       .attr('text-anchor', 'middle')
-  //       .attr('dominant-baseline', 'middle')
-  //       .style('font-size', '20px') // Increase the font size to make the emoji visible
-  //       .text('👩‍⚕️');
-
-  //     // Add the contact's name
-  //     svg.append('foreignObject')
-  //       .attr('x', x - radius)
-  //       .attr('y', y + 12 - radius)
-  //       .attr('width', radius * 2)
-  //       .attr('height', radius * 2)
-  //       .append('xhtml:div')
-  //       .style('padding', '5px')
-  //       .style('font-size', '10px')
-  //       .style('color', 'white')
-  //       .style('width', `${radius * 2}px`)
-  //       .style('height', `${radius * 2}px`)
-  //       .style('display', 'flex')
-  //       .style('align-items', 'center')
-  //       .style('justify-content', 'center')
-  //       .style('text-align', 'center')
-  //       .style('overflow-wrap', 'break-word')
-  //       .style('font-weight', '500')
-  //       .text(contact.name);
-
-  //     angle = angle + angleIncrement;
-  //   });
-
-  // };
-
 
 
   // const contacts = [
@@ -699,6 +420,7 @@ const CommunityVisual = (props) => {
     initPersonalNetwork();
     initInformalCare();
     initFormalCare();
+    initActivitiesAndGroups();
   }, [reports]);
 
 
@@ -767,7 +489,7 @@ const CommunityVisual = (props) => {
     // generateFormalCare(svg, scale, width, height);
 
 
-  }, [personalnetwork, informalCare, formalCare]);
+  }, [personalnetwork, informalCare, formalCare, activitiesAndGroups]);
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -777,6 +499,7 @@ const CommunityVisual = (props) => {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {/* color legend for care type */}
         <table>
+          <caption style={{textAlign: 'left', fontWeight: '500', fontSize: '16px', paddingBottom: '10px'}}>Category</caption>
           <tr>
             <td>
               <div style={{ backgroundColor: '#008e9e', width: '30px', height: '30px', borderRadius: '100%' }}></div>
@@ -801,10 +524,19 @@ const CommunityVisual = (props) => {
               <span>Formal Care Network</span>
             </td>
           </tr>
+          <tr>
+            <td>
+              <div style={{ backgroundColor: '#F57C00', width: '30px', height: '30px', borderRadius: '100%' }}></div>
+            </td>
+            <td>
+              <span>Activities and Groups</span>
+            </td>
+          </tr>
         </table>
 
         {/* color legend for frequency */}
-        <table>
+        <table style={{marginTop: '5px'}}>
+        <caption style={{textAlign: 'left', fontWeight: '500', fontSize: '16px', paddingBottom: '10px'}}>Frequency</caption>
           <tr>
             <td>
               <div style={{ backgroundColor: '#D5E8D4', width: '30px', height: '10px' }}></div>

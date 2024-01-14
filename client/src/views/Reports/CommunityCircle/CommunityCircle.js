@@ -23,6 +23,12 @@ const CommunityCircle = (props) => {
             </Typography>
 
             <Box>
+
+                {/* Community Visual */}
+                <Box>
+                    <CommunityVisual reports={reports} collection={collection} />
+                </Box>
+                
                 <Box>
                     <Typography variant="h6" color="secondary" align="left" gutterBottom>
                         Primary Circle
@@ -73,7 +79,7 @@ const CommunityCircle = (props) => {
                     </ul>
                 </Box>
 
-                    {/* 
+                {/* 
                 <Box>
                 <Typography variant="h6" color="secondary" align="left" gutterBottom>
                     Caregiving Roles
@@ -141,11 +147,6 @@ const CommunityCircle = (props) => {
                         }
 
                     </ul>
-                </Box>
-
-                {/* Community Visual */}
-                <Box>
-                    <CommunityVisual reports={reports} collection={collection} />
                 </Box>
 
             </Box>

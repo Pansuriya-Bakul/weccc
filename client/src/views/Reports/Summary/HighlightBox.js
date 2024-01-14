@@ -69,6 +69,15 @@ const HighlightBox = (props) =>{
 		else if (value <= 100) return 'Excellent';
 		else return '';
 	};
+
+	const getLonelinessLabel = (value) => {
+		if (value <= 0) return 'Vey High';
+		else if (value <= 25) return 'High';
+		else if (value <= 50) return 'Moderate';
+		else if (value <= 75) return 'Low';
+		else if (value <= 100) return 'Very Low';
+		else return '';
+	};
 	
 
 
@@ -98,9 +107,6 @@ const HighlightBox = (props) =>{
         setIsolationHealth(isComplete(props.data[7]) ? props.data[7] : "Incomplete");
     }, []);
 
-    useEffect(() => {
-        console.log("isolationHealth",isolationHealth)
-    }, [isolationHealth]);
 
     return (
         <Grid container spacing={3} style={{display:'flex', marginTop:'12px', gap:'16px', justifyContent:'space-around', alignItems:'center'}}>
@@ -146,7 +152,7 @@ const HighlightBox = (props) =>{
                             Health
                         </Typography>
                         <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                            {getPercentageLabel(props.data[0])}
+                            {getPercentageLabel(props.data[0])} ({Math.round(props.data[0])}%)
                         </Typography>
                         </div>
                     </Box>
@@ -157,7 +163,7 @@ const HighlightBox = (props) =>{
                             Mental Health
                         </Typography>
                         <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                            {getPercentageLabel(props.data[1])}
+                            {getPercentageLabel(props.data[1])} ({Math.round(props.data[1])}%)
                         </Typography>
                         </div>
                     </Box>
@@ -168,7 +174,7 @@ const HighlightBox = (props) =>{
                             Well Being
                         </Typography>
                         <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                            {getPercentageLabel(props.data[2])}
+                            {getPercentageLabel(props.data[2])} ({Math.round(props.data[2])}%)
                         </Typography>
                         </div>
                     </Box>
@@ -179,7 +185,7 @@ const HighlightBox = (props) =>{
                             Function
                         </Typography>
                         <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                            {getPercentageLabel(props.data[5])}
+                            {getPercentageLabel(props.data[5])} ({Math.round(props.data[5])}%)
                         </Typography>
                         </div>
                     </Box>
@@ -193,7 +199,7 @@ const HighlightBox = (props) =>{
                         Community Belonging
                     </Typography>
                     <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getPercentageLabel(props.data[6])}
+                        {getPercentageLabel(props.data[6])} ({Math.round(props.data[6])}%)
                     </Typography>
                     </div>
                 </Box>
@@ -204,7 +210,7 @@ const HighlightBox = (props) =>{
                         Isolation
                     </Typography>
                     <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getPercentageLabel(props.data[7])}
+                        {getLonelinessLabel(props.data[7])} ({Math.round(props.data[7])}%)
                     </Typography>
                     </div>
                 </Box>
@@ -215,7 +221,7 @@ const HighlightBox = (props) =>{
                         Life satisfaction
                     </Typography>
                     <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getPercentageLabel(props.data[3])}
+                        {getPercentageLabel(props.data[3])} ({Math.round(props.data[3])}%)
                     </Typography>
                     </div>
                 </Box>
@@ -226,7 +232,7 @@ const HighlightBox = (props) =>{
                         Loneliness
                     </Typography>
                     <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getPercentageLabel(props.data[4])}
+                        {getLonelinessLabel(props.data[4])} ({Math.round(props.data[4])}%)
                     </Typography>
                     </div>
                 </Box>

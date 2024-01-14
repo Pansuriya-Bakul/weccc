@@ -63,12 +63,14 @@ module.exports = {
   frequency_of_contact_friends,
   frequency_of_contact_neighbours,
   frequency_of_participation_religion,
+  frequency_of_participation_sports,
   frequency_of_participation_recreation,
   frequency_of_participation_education,
   frequency_of_participation_associations,
   frequency_of_participation_volunteering,
   frequency_of_participation_informal_help,
   frequency_of_participation_music,
+  frequency_of_participation_other_activities,
   frequency_of_participation_computer,
   problem_walking,
   problem_washing_dressing,
@@ -264,7 +266,7 @@ function infrequent_participation_in_social_activities(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -503,7 +505,7 @@ function frequency_of_social_contacts(
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -604,7 +606,6 @@ function quality_of_social_contact(question) {
       sum_array.push(item);
     }
   });
-  console.log(DF1, DF2, DF3, sum_array);
   if (sum_array.length == 0) {
     return 0;
   }
@@ -1644,7 +1645,7 @@ function frequency_of_contact_family(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -1661,7 +1662,7 @@ function frequency_of_contact_family(question) {
   } else if (DF == 12) {
     DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -1679,7 +1680,7 @@ function frequency_of_contact_friends(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -1696,7 +1697,7 @@ function frequency_of_contact_friends(question) {
   } else if (DF == 12) {
     DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -1714,7 +1715,7 @@ function frequency_of_contact_neighbours(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -1731,7 +1732,7 @@ function frequency_of_contact_neighbours(question) {
   } else if (DF == 12) {
     DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -1749,7 +1750,7 @@ function frequency_of_participation_religion(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -1759,14 +1760,14 @@ function frequency_of_participation_religion(question) {
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 300) {
+  if (DF == 5) {
     DF = "Daily";
-  } else if (DF == 50) {
-    DF = "Weekly";
-  } else if (DF == 12) {
-    DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -1784,24 +1785,24 @@ function frequency_of_participation_recreation(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
   if (!question) return 999;
 
-  let DF = parseInt(question.DF3);
+  let DF = parseInt(question.DF2);
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 300) {
+  if (DF == 5) {
     DF = "Daily";
-  } else if (DF == 50) {
-    DF = "Weekly";
-  } else if (DF == 12) {
-    DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -1819,24 +1820,24 @@ function frequency_of_participation_education(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
   if (!question) return 999;
 
-  let DF = parseInt(question.DF4);
+  let DF = parseInt(question.DF3);
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 300) {
+  if (DF == 5) {
     DF = "Daily";
-  } else if (DF == 50) {
-    DF = "Weekly";
-  } else if (DF == 12) {
-    DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -1854,24 +1855,24 @@ function frequency_of_participation_associations(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
   if (!question) return 999;
 
-  let DF = parseInt(question.DF6);
+  let DF = parseInt(question.DF4);
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 300) {
+  if (DF == 5) {
     DF = "Daily";
-  } else if (DF == 50) {
-    DF = "Weekly";
-  } else if (DF == 12) {
-    DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -1889,7 +1890,7 @@ function frequency_of_participation_volunteering(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -1906,7 +1907,7 @@ function frequency_of_participation_volunteering(question) {
   } else if (DF == 12) {
     DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -1924,7 +1925,7 @@ function frequency_of_participation_informal_help(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -1941,7 +1942,7 @@ function frequency_of_participation_informal_help(question) {
   } else if (DF == 12) {
     DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -1959,24 +1960,95 @@ function frequency_of_participation_music(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
   if (!question) return 999;
 
-  let DF = parseInt(question.DF11);
+  let DF = parseInt(question.DF7);
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 300) {
+  if (DF == 5) {
     DF = "Daily";
-  } else if (DF == 50) {
-    DF = "Weekly";
-  } else if (DF == 12) {
-    DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a Year";
+  } else if (DF == 1) {
+    DF = "Yearly";
+  } else if (DF == 0) {
+    DF = "Never";
+  } else {
+    DF = 999;
+  }
+
+  return DF;
+}
+
+function frequency_of_participation_sports(question) {
+  // Value Chart per sub question of Question
+  // 999  Total invalid or blank answer
+  // 300  Daily
+  // 50   Weekly
+  // 12   Monthly
+  // 4    3-4 Times a Year
+  // 1    Yearly
+  // 0    Never
+
+  if (!question) return 999;
+
+  let DF = parseInt(question.DF8);
+
+  if (isNaN(DF)) return 999;
+
+  if (DF == 5) {
+    DF = "Daily";
+  } else if (DF == 4) {
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a Year";
+  } else if (DF == 1) {
+    DF = "Yearly";
+  } else if (DF == 0) {
+    DF = "Never";
+  } else {
+    DF = 999;
+  }
+
+  return DF;
+}
+
+// other activities
+function frequency_of_participation_other_activities(question) {
+  // Value Chart per sub question of Question
+  // 999  Total invalid or blank answer
+  // 300  Daily
+  // 50   Weekly
+  // 12   Monthly
+  // 4    3-4 Times a Year
+  // 1    Yearly
+  // 0    Never
+
+  if (!question) return 999;
+
+  let DF = parseInt(question.DF10);
+
+  if (isNaN(DF)) return 999;
+
+  if (DF == 5) {
+    DF = "Daily";
+  } else if (DF == 4) {
+    DF = "Weekly";
+  } else if (DF == 3) {
+    DF = "Monthly";
+  } else if (DF == 2) {
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -1994,7 +2066,7 @@ function frequency_of_participation_computer(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -2011,7 +2083,7 @@ function frequency_of_participation_computer(question) {
   } else if (DF == 12) {
     DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -2184,7 +2256,7 @@ function support_wellness_program(question) {
   // 5  Daily
   // 4   Weekly
   // 3   Monthly
-  // 2    3-4 Times a year
+  // 2    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -2201,7 +2273,7 @@ function support_wellness_program(question) {
   } else if (DF == 3) {
     DF = "Monthly";
   } else if (DF == 2) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -2219,7 +2291,7 @@ function support_healthcare(question) {
   // 5  Daily
   // 4   Weekly
   // 3   Monthly
-  // 2    3-4 Times a year
+  // 2    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -2236,7 +2308,7 @@ function support_healthcare(question) {
   } else if (DF == 3) {
     DF = "Monthly";
   } else if (DF == 2) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -2254,7 +2326,7 @@ function support_home_healthcare(question) {
   // 5  Daily
   // 4   Weekly
   // 3   Monthly
-  // 2    3-4 Times a year
+  // 2    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -2271,7 +2343,7 @@ function support_home_healthcare(question) {
   } else if (DF == 3) {
     DF = "Monthly";
   } else if (DF == 2) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -2289,7 +2361,7 @@ function support_private_healthcare(question) {
   // 5  Daily
   // 4   Weekly
   // 3   Monthly
-  // 2    3-4 Times a year
+  // 2    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -2306,7 +2378,7 @@ function support_private_healthcare(question) {
   } else if (DF == 3) {
     DF = "Monthly";
   } else if (DF == 2) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -2324,7 +2396,7 @@ function support_informal(question) {
   // 5  Daily
   // 4   Weekly
   // 3   Monthly
-  // 2    3-4 Times a year
+  // 2    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -2341,7 +2413,7 @@ function support_informal(question) {
   } else if (DF == 3) {
     DF = "Monthly";
   } else if (DF == 2) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -2396,7 +2468,7 @@ function frequency_get_together_family(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -2413,7 +2485,7 @@ function frequency_get_together_family(question) {
   } else if (DF == 12) {
     DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -2431,7 +2503,7 @@ function frequency_get_together_friends(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -2448,7 +2520,7 @@ function frequency_get_together_friends(question) {
   } else if (DF == 12) {
     DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
@@ -2466,7 +2538,7 @@ function frequency_get_together_neighbours(question) {
   // 300  Daily
   // 50   Weekly
   // 12   Monthly
-  // 4    3-4 Times a year
+  // 4    3-4 Times a Year
   // 1    Yearly
   // 0    Never
 
@@ -2483,7 +2555,7 @@ function frequency_get_together_neighbours(question) {
   } else if (DF == 12) {
     DF = "Monthly";
   } else if (DF == 4) {
-    DF = "3-4 Times a year";
+    DF = "3-4 Times a Year";
   } else if (DF == 1) {
     DF = "Yearly";
   } else if (DF == 0) {
