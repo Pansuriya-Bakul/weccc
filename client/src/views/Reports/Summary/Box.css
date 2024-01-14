@@ -1,0 +1,13 @@
+/* Box.css */
+.box {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: #3498db;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: center center;
+  }
+  

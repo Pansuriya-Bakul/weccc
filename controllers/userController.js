@@ -249,6 +249,10 @@ exports.signup = (req, res, next) => {
 	const name = key_public.encrypt(req.body.info.name, 'base64');
 	const phone = req.body.info.phone;
 	const status = req.body.status;
+	const originOfContact = req.body.originOfContact;
+	const referralDetails = req.body.referralDetails;
+	const facility2 = req.body.facility;
+
 
 	const gender = key_public.encrypt(req.body.info.gender, 'base64');
 	const dateOfBirth = req.body.info.dateOfBirth;
@@ -432,6 +436,9 @@ exports.signup = (req, res, next) => {
 									enabled: enabled,
 									role: role,
 									facilityId: facility,
+									originOfContact: originOfContact,
+									referralDetails:referralDetails,
+									facility:facility2,
 									patients: new Array(),
 									workers: new Array(),
 									projectList: new Array(),
@@ -631,7 +638,6 @@ exports.selfRegister = async (req, res) => {
 // ====================================================
 exports.login = async (req, res, next) => {
 	// log.warn(req);
-
 	if (req.user == null) {
 		log.warn('User was not part of the request.  Unauthorized.');
 
@@ -653,7 +659,7 @@ exports.login = async (req, res, next) => {
 						facilityName = facility.name;
 						fPrefix = facility.prefix;
 					})
-
+				
 				let decryptedGender = '';
 				if (req.user.info.gender) {
 					decryptedGender = key_private.decrypt(req.user.info.gender, 'utf8');

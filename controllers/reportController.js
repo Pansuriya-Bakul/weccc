@@ -371,6 +371,12 @@ exports.Neighbour = async (req, res) => {
               // FREQUENCY OF PARTICIPATION MUSIC
               let frequency_of_participation_music = new Array();
 
+              // FREQUENCY OF PARTICIPATION SPORTS
+              let frequency_of_participation_sports = new Array();
+
+              // FREQUENCY OF PARTICIPATION OTHER ACTIVITIES
+              let frequency_of_participation_other_activities = new Array();
+
               // FREQUENCY OF PARTICIPATION COMPUTER
               let frequency_of_participation_computer = new Array();
 
@@ -716,115 +722,52 @@ exports.Neighbour = async (req, res) => {
                       )
                     );
 
+                    frequency_of_participation_music.push(
+                      neighbourFunctions.frequency_of_participation_music(
+                        chapter4Values.FCP_INT_COMB_A
+                      )
+                    );
+
+                    frequency_of_participation_religion.push(
+                      neighbourFunctions.frequency_of_participation_religion(
+                        chapter4Values.FCP_INT_COMB_A
+                      )
+                    );
+
+                    frequency_of_participation_sports.push(
+                      neighbourFunctions.frequency_of_participation_sports(
+                        chapter4Values.FCP_INT_COMB_A
+                      )
+                    );
+
+                    frequency_of_participation_recreation.push(
+                      neighbourFunctions.frequency_of_participation_recreation(
+                        chapter4Values.FCP_INT_COMB_A
+                      )
+                    );
+
+                    frequency_of_participation_education.push(
+                      neighbourFunctions.frequency_of_participation_education(
+                        chapter4Values.FCP_INT_COMB_A
+                      )
+                    );
+
+                    frequency_of_participation_associations.push(
+                      neighbourFunctions.frequency_of_participation_associations(
+                        chapter4Values.FCP_INT_COMB_A
+                      )
+                    );
+
+                    frequency_of_participation_other_activities.push(
+                      neighbourFunctions.frequency_of_participation_other_activities(
+                        chapter4Values.FCP_INT_COMB_A
+                      )
+                    );
+
+
+
                     //  NOT USED SURVEY QUESTION: activities_interests
                   }
-
-                  // if(chapter3Values)  // ===  Results Checked  ===
-                  // {
-
-                  //     ISA_INT.push(neighbourFunctions.infrequent_participation_in_social_activities(chapter3Values.ISA_INT_A));
-                  //     frequency_of_participation_religion.push(neighbourFunctions.frequency_of_participation_religion(chapter3Values.ISA_INT_A));
-                  //     frequency_of_participation_recreation.push(neighbourFunctions.frequency_of_participation_recreation(chapter3Values.ISA_INT_A));
-                  //     frequency_of_participation_education.push(neighbourFunctions.frequency_of_participation_education(chapter3Values.ISA_INT_A));
-                  //     frequency_of_participation_associations.push(neighbourFunctions.frequency_of_participation_associations(chapter3Values.ISA_INT_A));
-                  //     frequency_of_participation_volunteering.push(neighbourFunctions.frequency_of_participation_volunteering(chapter3Values.ISA_INT_A));
-                  //     frequency_of_participation_computer.push(neighbourFunctions.frequency_of_participation_computer(chapter3Values.ISA_INT_A));
-                  //     frequency_of_participation_informal_help.push(neighbourFunctions.frequency_of_participation_informal_help(chapter3Values.ISA_INT_A));
-                  //     frequency_of_participation_music.push(neighbourFunctions.frequency_of_participation_music(chapter3Values.ISA_INT_A));
-
-                  //     ISA_DM_STRINGS.push(neighbourFunctions.ISA_DM_STRINGS(chapter3Values.ISA_INT_B));
-
-                  //     SII_QofL1.push(neighbourFunctions.social_isolation_index(chapter3Values.SII_QofL1));
-
-                  //     FSC_QofL1_COMB.push(neighbourFunctions.frequency_of_social_contacts(chapter3Values.FSC_QofL1_COMB_A, chapter3Values.FSC_QofL1_COMB_B, chapter3Values.FSC_QofL1_COMB_C));
-
-                  //     frequency_get_together_family.push(neighbourFunctions.frequency_get_together_family(chapter3Values.FSC_QofL1_COMB_A));
-                  //     frequency_get_together_friends.push(neighbourFunctions.frequency_get_together_friends(chapter3Values.FSC_QofL1_COMB_A));
-                  //     frequency_get_together_neighbours.push(neighbourFunctions.frequency_get_together_neighbours(chapter3Values.FSC_QofL1_COMB_A));
-
-                  //     frequency_of_contact_family.push(neighbourFunctions.frequency_of_contact_family(chapter3Values.FSC_QofL1_COMB_A));          //  Copy of answers above ?
-                  //     frequency_of_contact_friends.push(neighbourFunctions.frequency_of_contact_friends(chapter3Values.FSC_QofL1_COMB_A));        //  Copy of answers above ?
-                  //     frequency_of_contact_neighbours.push(neighbourFunctions.frequency_of_contact_neighbours(chapter3Values.FSC_QofL1_COMB_A));  //  Copy of answers above ?
-
-                  //     frequency_of_social_contacts_month_phone_computer.push(neighbourFunctions.frequency_of_social_contacts_month_phone_computer(chapter3Values.FSC_QofL1_COMB_C));
-
-                  //     // NOT USED SURVEY QUESTION: FSC_QofL1_COMB_D
-
-                  //     SSC_QofL1_COMB.push(neighbourFunctions.satisfaction_with_social_contact(chapter3Values.SSC_QofL1_COMB));
-
-                  // }
-
-                  // if(chapter4Values)  // ===  Results Checked  ===
-                  // {
-                  //     PH_QofL2_SD.push(neighbourFunctions.physical_health(chapter4Values.PH_QofL2_SD));
-                  //     PH_QofL2_SD_STRING.push(neighbourFunctions.physical_health_string(chapter4Values.PH_QofL2_SD));
-                  //     MH_QofL2_SD.push(neighbourFunctions.mental_health(chapter4Values.MH_QofL2_SD));
-                  //     MH_QofL2_SD_STRING.push(neighbourFunctions.mental_health_string(chapter4Values.MH_QofL2_SD));
-                  //     HT_QofL2_SD.push(neighbourFunctions.health_today(chapter4Values.HT_QofL2_SD));
-
-                  //     M_QofL2_SD.push(neighbourFunctions.mobility(chapter4Values.mobility_today));
-                  //     PC_QofL2_SD.push(neighbourFunctions.personal_care(chapter4Values.self_care_today));
-                  //     UA_QofL2_SD.push(neighbourFunctions.usual_activities(chapter4Values.usual_activities_today));
-                  //     PD_QofL2_SD.push(neighbourFunctions.pain_discomfort(chapter4Values.pain_discomfort_today));
-                  //     AD_QofL2_SD.push(neighbourFunctions.anxiety_depression(chapter4Values.anxiety_depression_today));
-
-                  //     problem_walking.push(neighbourFunctions.problem_walking(chapter4Values.mobility_today));
-                  //     problem_washing_dressing.push(neighbourFunctions.problem_washing_dressing(chapter4Values.self_care_today));
-                  //     problem_usual_activities.push(neighbourFunctions.problem_usual_activities(chapter4Values.usual_activities_today));
-                  //     problem_pain_discomfort.push(neighbourFunctions.problem_pain_discomfort(chapter4Values.pain_discomfort_today));
-                  //     problem_anxious_depressed.push(neighbourFunctions.problem_anxious_depressed(chapter4Values.anxiety_depression_today));
-
-                  //     support_wellness_program.push(neighbourFunctions.support_wellness_program(chapter4Values.FC_3C_COMB));
-                  //     support_healthcare.push(neighbourFunctions.support_healthcare(chapter4Values.FC_3C_COMB));
-                  //     support_home_healthcare.push(neighbourFunctions.support_home_healthcare(chapter4Values.FC_3C_COMB));
-                  //     support_private_healthcare.push(neighbourFunctions.support_private_healthcare(chapter4Values.FC_3C_COMB));
-                  //     support_informal.push(neighbourFunctions.support_informal(chapter4Values.FC_3C_COMB));
-                  //     HU_ED_QofL2_SD.push(neighbourFunctions.ed_visit(chapter4Values.HU_ED_QofL2_SD));
-                  //     HU_HNum_QofL2_SD.push(neighbourFunctions.hospitalization(chapter4Values.HU_HNum_QofL2_SD));
-                  //     HU_HD_QofL2_SD.push(neighbourFunctions.days_in_hospital(chapter4Values.HU_HD_QofL2_SD));
-                  //     HU_EMS_QofL2_SD.push(neighbourFunctions.ems(chapter4Values.HU_EMS_QofL2_SD));
-                  //     HU_UC_QofL2_SD.push(neighbourFunctions.urgent_care(chapter4Values.HU_UC_QofL2_SD));
-                  //     HU_ST_QofL2_SD.push(neighbourFunctions.sought_treatment(chapter4Values.HU_ST_QofL2_SD));
-                  //     HU_A_QofL2_SD.push(neighbourFunctions.accident(chapter4Values.HU_A_QofL2_SD));
-                  //     access_to_family_doctor.push(neighbourFunctions.access_to_family_doctor(chapter4Values.access_to_family_doctor));
-
-                  //     // NOT USED SURVEY QUESTION: care_plan
-                  //     // NOT USED SURVEY QUESTION: care_plan_name
-                  //     // NOT USED SURVEY QUESTION: care_plan_location
-                  //     // NOT USED SURVEY QUESTION: prescription_medication_num
-                  //     // NOT USED SURVEY QUESTION: prescription_medication_location
-                  //     // NOT USED SURVEY QUESTION: health_awareness_knowledge
-                  //     // NOT USED SURVEY QUESTION: consumption
-                  //     // NOT USED SURVEY QUESTION: intense_physical_activity_minutes
-                  //     // NOT USED SURVEY QUESTION: moderate_physical_activity_minutes
-                  //     // NOT USED SURVEY QUESTION: light_physical_activity_minutes
-                  // }
-
-                  // if(chapter5Values)  // ===  Results Checked  ===
-                  // {
-                  //     LS_QofL3_SD.push(neighbourFunctions.life_satisfaction(chapter5Values.LS_QofL3_SD));
-                  //     SL_QofL3_SD.push(neighbourFunctions.your_standard_of_living(chapter5Values.SL_QofL3_SD));
-                  //     YH_QofL3_SD.push(neighbourFunctions.your_health(chapter5Values.YH_QofL3_SD));
-                  //     FPC_QofL3_SD.push(neighbourFunctions.feeling_part_of_the_community(chapter5Values.FPC_QofL3_SD));
-                  //     AL_QofL3_SD.push(neighbourFunctions.what_you_are_achieving_in_life(chapter5Values.AL_QofL3_SD));
-                  //     PR_QofL3_SD.push(neighbourFunctions.personal_relationships(chapter5Values.PR_QofL3_SD));
-                  //     HSF_QofL3_SD.push(neighbourFunctions.how_safe_you_feel(chapter5Values.HSF_QofL3_SD));
-                  //     FS_QofL3_SD.push(neighbourFunctions.future_security(chapter5Values.FS_QofL3_SD));
-                  //     SR_QofL3_SD.push(neighbourFunctions.your_spirituality_or_religion(chapter5Values.SR_QofL3_SD));
-
-                  //     PWI_QofL3_COMB.push(neighbourFunctions.pwi_overall_score(
-                  //         chapter5Values.LS_QofL3_SD,
-                  //         chapter5Values.SL_QofL3_SD,
-                  //         chapter5Values.YH_QofL3_SD,
-                  //         chapter5Values.FPC_QofL3_SD,
-                  //         chapter5Values.AL_QofL3_SD,
-                  //         chapter5Values.PR_QofL3_SD,
-                  //         chapter5Values.HSF_QofL3_SD,
-                  //         chapter5Values.FS_QofL3_SD,
-                  //         chapter5Values.SR_QofL3_SD)
-                  //     );
-
-                  // }
 
                   if (chapter5Values) {
                     //Goals
@@ -1130,13 +1073,15 @@ exports.Neighbour = async (req, res) => {
                 frequency_of_contact_friends: frequency_of_contact_friends,
                 frequency_of_contact_neighbours:
                   frequency_of_contact_neighbours,
-                // frequency_of_participation_religion: frequency_of_participation_religion,
-                // frequency_of_participation_recreation: frequency_of_participation_recreation,
-                // frequency_of_participation_education: frequency_of_participation_education,
-                // frequency_of_participation_associations: frequency_of_participation_associations,
+                frequency_of_participation_religion: frequency_of_participation_religion,
+                frequency_of_participation_recreation: frequency_of_participation_recreation,
+                frequency_of_participation_education: frequency_of_participation_education,
+                frequency_of_participation_associations: frequency_of_participation_associations,
+                frequency_of_participation_other_activities: frequency_of_participation_other_activities,
                 // frequency_of_participation_volunteering: frequency_of_participation_volunteering,
                 // frequency_of_participation_informal_help: frequency_of_participation_informal_help,
-                // frequency_of_participation_music: frequency_of_participation_music,
+                frequency_of_participation_music: frequency_of_participation_music,
+                frequency_of_participation_sports: frequency_of_participation_sports,
                 // frequency_of_participation_computer: frequency_of_participation_computer,
                 problem_walking: problem_walking,
                 problem_washing_dressing: problem_washing_dressing,

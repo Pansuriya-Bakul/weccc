@@ -41,6 +41,8 @@ export default function HealthBar({ walking, washingDressing, usualActivities, p
                             findBackgroundColor(anxiousDepressed),
                         ],
                         borderColor: 'rgba(0, 0, 0, 0)',
+                        barPercentage: 0.5,
+                        categoryPercentage: 0.7,
                     },
                 ],
             },
@@ -118,7 +120,7 @@ export default function HealthBar({ walking, washingDressing, usualActivities, p
     }, []);
 
     return (
-        <div style={{ width: '100%', height: '400px' }}>
+        <div style={{ width: '100%', height: '250px' }}>
             <canvas id="myChart" ref={chartRef} style={{ width: '100%', height: '100%' }} />
         </div>
     );

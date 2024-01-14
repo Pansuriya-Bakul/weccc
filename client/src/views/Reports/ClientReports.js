@@ -238,7 +238,6 @@ const ClientReports = (props) => {
   useEffect(() => {
     if (reportsData !== null) {
       const flags = checkAlerts(reportsData, currentReportIndex);
-      console.log("Flags: ", flags);
       setAnyFlags(flags);
     }
   }, [reportsData, currentReportIndex]);
@@ -485,7 +484,7 @@ const ClientReports = (props) => {
 
                           </Grid>
 
-                          <Grid item xs={12} id="summary">
+                          <Grid item xs={12} id="summary" style={{marginTop:'18px'}}>
                             <Typography
                               variant="h5"
                               color="textSecondary"
@@ -499,16 +498,16 @@ const ClientReports = (props) => {
                               collection={currentReportIndex}
                             />
                           </Grid>
-                          {/* <Grid item xs={12} id="summary">
+                          <Grid item xs={12} id="summary">
                             <CommunityCircle 
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
-                            <Summary
+                            {/* <Summary
                               reports={reportsData}
                               collection={currentReportIndex}
-                            />
-                          </Grid> */}
+                            /> */}
+                          </Grid>
                           <Grid item xs={12} id="summary">
                             <Typography
                               variant="h5"

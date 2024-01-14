@@ -147,7 +147,21 @@ const userSchema = mongoose.Schema({
     status : {
         type: String,
         required: true
+    },
+
+    originOfContact:{
+        type: String,
+    },
+
+    referralDetails:{
+        type: String
+    }, 
+
+    facility: {
+        type: String
     }
+
+
 },
     {
         timestamps: true
