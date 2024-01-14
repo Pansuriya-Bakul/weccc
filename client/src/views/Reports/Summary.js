@@ -16,7 +16,7 @@ export default class Summary extends Component {
                 <Box m={1}>
                     <Goals reports={this.props.reports} collection={this.props.collection} />
                     <Interests reports={this.props.reports} collection={this.props.collection} />
-                    <FamilyFriendsNeighbours reports={this.props.reports} collection={this.props.collection} />
+                    {/* <FamilyFriendsNeighbours reports={this.props.reports} collection={this.props.collection} /> */}
 
                     {/* <CommunityParticipation reports = {this.props.reports} collection = {this.props.collection}/> 
                     {/* <SocialHealth reports = {this.props.reports} collection = {this.props.collection}/> */}

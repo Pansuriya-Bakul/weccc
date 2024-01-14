@@ -82,7 +82,9 @@ const PersonalWellBeingBar = ({
                             getColorFromScore(future_security),
                             getColorFromScore(your_spirituality_or_religion)
                         ],
-                        borderColor: 'rgba(0, 0, 0, 0)'
+                        borderColor: 'rgba(0, 0, 0, 0)',
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.7,
                     }
                 ]
             },
@@ -153,7 +155,7 @@ const PersonalWellBeingBar = ({
     }, []);
 
     return (
-        <div style={{ width: '100%', height: '400px' }}>
+        <div style={{ width: '100%', height: '300px' }}>
             <canvas ref={chartRef} style={{ width: '100%', height: '100%' }} />
         </div>
     );
