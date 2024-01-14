@@ -5,7 +5,7 @@ import FrequencyByType from "./FrequencyByType";
 import HealthStatus from './Summary/HealthStatus';
 import HealthSupportServices from './Summary/HealthSupportServices';
 import PersonalWellBeing from './Summary/PersonalWellBeing';
-import Goals from './Summary/Goals';
+
 
 export default function ({ reports, collection }) {
   return (
@@ -45,7 +45,6 @@ export default function ({ reports, collection }) {
       <HealthStatus reports={reports} collection={collection} />
       <HealthSupportServices reports={reports} collection={collection} />
       <PersonalWellBeing reports={reports} collection={collection} />
-      <Goals reports={reports} collection={collection} />
     </>
   );
 }

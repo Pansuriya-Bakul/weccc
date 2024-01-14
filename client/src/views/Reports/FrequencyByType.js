@@ -38,7 +38,7 @@ export default function FrequencyByType({ source }) {
   const createChart = () => {
     const ctx = chartRef.current.getContext("2d");
     new Chart(ctx, {
-      type: "line",
+      type: "bar",
       options: {
         indexAxis: "x",
         plugins: {
@@ -61,6 +61,9 @@ export default function FrequencyByType({ source }) {
         },
         scales: {
           x: {
+            grid: {
+              display: false,
+            },
             ticks: {
               font: {
                 weight: "bold", // Set the font weight to bold
@@ -72,7 +75,6 @@ export default function FrequencyByType({ source }) {
             min: 0,
             max: 5,
             ticks: {
-              //   stepSize: 0, // Set the step size for y-axis labels
               callback: (value) => getFrequency(value), // Format y-axis labels as percentages
               font: {
                 weight: "bold",
@@ -89,6 +91,8 @@ export default function FrequencyByType({ source }) {
             borderColor: "#3e95cd",
             backgroundColor: "#e91e62",
             fill: false,
+            barPercentage: 0.7,
+            categoryPercentage: 0.7,
           },
         ],
       },

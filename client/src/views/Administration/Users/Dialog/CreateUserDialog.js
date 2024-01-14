@@ -30,6 +30,9 @@ import Collapse from "@material-ui/core/Collapse";
 
 import TextField from "@material-ui/core/TextField";
 
+import Input from '@material-ui/core/Input';
+import { IconButton, InputAdornment } from '@material-ui/core';
+
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import {
@@ -46,6 +49,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import LockIcon from '@material-ui/icons/LockOutlined';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import {
   MandatoryFieldCheck,
   ValidateEmail,
@@ -75,6 +80,8 @@ const useStyles = makeStyles(
     }
   })
 );
+
+
 
 // ================= Static Variables ================
 const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -165,6 +172,14 @@ const CreateUserDialog = (props) => {
   const [enabled, setEnabled] = useState(true);
   const [status, setStatus] = useState('active');
 
+  const [originOfContact, setOriginOfContact] = useState("");
+  const [originOfContact2, setOriginOfContact2] = useState("");
+  const [originOfContactOtherFlag, setOriginOfContactOtherFlag] = useState(false);
+
+  const [facility, SetFacility] = useState("");
+
+
+
 
   // Non-Required Parameters ========================================
 
@@ -174,7 +189,7 @@ const CreateUserDialog = (props) => {
 
   const [street, setStreet] = useState("");
   const [streetError, setStreetError] = useState(false);
-
+ 
   const [postalCode, setPostalCode] = useState("");
   const [postalCodeError, setPostalCodeError] = useState(false);
 
@@ -188,6 +203,11 @@ const CreateUserDialog = (props) => {
   const [countryError, setCountryError] = useState(false);
 
   const [page, setPage] = useState(0);
+
+  const [referralDetails, setReferralDetails] = useState("");
+
+  const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [passwordVisibility2, setPasswordVisibility2] = useState(false);
 
   // Functions ===
 
@@ -216,6 +236,10 @@ const CreateUserDialog = (props) => {
       password: password,
       enabled: enabled,
       facilityId: appState.facilityId,
+      originOfContact: ((originOfContact === 'Other')? originOfContact2 : originOfContact) ,
+      referralDetails: referralDetails,
+      // facility: facility,
+      
       info: {
         name: sanatized_firstName + " " + sanatized_lastName,
         gender: gender == "NonBinary" && isGender2 ? sanatized_gender2 : gender,
@@ -279,6 +303,10 @@ const CreateUserDialog = (props) => {
     postalCode,
     province,
     country,
+    originOfContact,
+    originOfContactOtherFlag,
+    referralDetails,
+    // facility
   ]);
 
   const resetCreateForm = useCallback(() => {
@@ -741,6 +769,38 @@ const CreateUserDialog = (props) => {
     setCountry(event.target.value);
   };
 
+
+  const originOfContactHandler = (event) =>{
+    setOriginOfContact(event.target.value);
+
+  }
+
+  const originOfContactHandler2 = (event) =>{
+    setOriginOfContact2(event.target.value);
+
+  }
+
+  const referralDetailsHandler = (event) =>{
+    
+    setReferralDetails(event.target.value);
+
+  }
+
+  const facilityHandler = (event) =>{
+    
+    SetFacility(event.target.value);
+
+  }
+
+
+ const togglePasswordVisibility = () => {
+    setPasswordVisibility(!passwordVisibility);
+};
+
+const togglePasswordVisibility2 = () => {
+  setPasswordVisibility2(!passwordVisibility2);
+};
+
   // Hooks ===
 
   // Fetch User List | First Render Only
@@ -757,6 +817,17 @@ const CreateUserDialog = (props) => {
       setGender2Error(false);
     }
   }, [gender]);
+
+  useEffect(() => {
+    if (originOfContact == "Other") {
+      setOriginOfContactOtherFlag(true);
+    } else {
+      setOriginOfContactOtherFlag(false);
+      setOriginOfContact2("");
+    }
+  }, [originOfContact]);
+
+
 
   useEffect(() => {
     if (language == "Other") {
@@ -846,7 +917,7 @@ const CreateUserDialog = (props) => {
                             <TextField
                               id="Password"
                               fullWidth
-                              type="password"
+                              type={passwordVisibility? 'text' : 'password'}
                               label="Password"
                               required
                               onChange={(event) => {
@@ -857,6 +928,15 @@ const CreateUserDialog = (props) => {
                               error={
                                 errorMessages.password === "" ? false : true
                               }
+
+                              InputProps={{
+                                endAdornment:
+                                <InputAdornment position="end">
+                                        <IconButton onClick={togglePasswordVisibility}>
+                                            {passwordVisibility ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }}
                             />
                           </Box>
                         </Grid>
@@ -865,7 +945,7 @@ const CreateUserDialog = (props) => {
                             <TextField
                               id="ConfirmPassword"
                               fullWidth
-                              type="password"
+                              type={passwordVisibility2? 'text' : 'password'}
                               label="Confirm Password"
                               required
                               disabled={
@@ -881,6 +961,16 @@ const CreateUserDialog = (props) => {
                                   ? false
                                   : true
                               }
+                              
+                              InputProps={{
+                                endAdornment:
+                                <InputAdornment position="end">
+                                        <IconButton onClick={togglePasswordVisibility2}>
+                                            {passwordVisibility2 ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }}
+
                             />
                           </Box>
                         </Grid>
@@ -1164,6 +1254,161 @@ const CreateUserDialog = (props) => {
                           </Box>
                         </Grid>
                       </Grid>
+                    </Grid>
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="stretch"
+                      spacing={1}
+                      display={page == 0 ? "block" : "none"}
+                    >
+
+                      <Grid
+                        item
+                        xs
+                        container
+                        direction="column"
+                        justifyContent="flex-start"
+                        alignItems="stretch"
+                        spacing={2}
+                        display={page == 2 ? "block" : "none"}
+                      >
+                        <Grid item>
+                          <Box mx={2} my={0} boxShadow={0}>
+                            <TextField
+                              id="originOfContact"
+                              select
+                              required
+                              fullWidth
+                              label="OriginOfContact"
+                              value={originOfContact}
+                              onChange={(event) => {
+                                originOfContactHandler(event);
+                              }}
+                              error={errorMessages.role === "" ? false : true}
+                              helperText={errorMessages.role}
+                              variant="outlined"
+                            >
+                              <MenuItem key={"New Referral"} value={"New Referral"}>
+                                New Referral
+                              </MenuItem>
+                              <MenuItem key={"Service Transition"} value={"Service Transition"}>
+                                Service Transition
+                              </MenuItem>
+                              <MenuItem key={"Former Student or Volunteer"} value={"Former Student or Volunteer"}>
+                                Former Student or Volunteer
+                              </MenuItem>
+                              <MenuItem key={"Education Event"} value={"Education Event"}>
+                                Education Event
+                              </MenuItem>
+                              <MenuItem key={"Other"} value={"Other"}>
+                                Other
+                              </MenuItem>
+                            </TextField>
+                          </Box>
+                        </Grid>
+                      </Grid>
+                      
+
+                      <Grid
+                        item
+                        xs
+                        container
+                        direction="column"
+                        justifyContent="flex-start"
+                        alignItems="stretch"
+                        spacing={2}
+                        display={page == 2 ? "block" : "none"}
+                      >
+                        <Grid item>
+                          <Box mx={2} my={0} boxShadow={0}>
+                          <TextField
+                              id="referralDetails"
+                              fullWidth
+                              label="Referral Details"
+                              onChange={(event) => {
+                                referralDetailsHandler(event);
+                              }}
+                              // helperText={errorMessages.city}
+                              // value={referralDetails}
+                              // error={errorMessages.city === "" ? false : true}
+                            />
+                          </Box>
+                        </Grid>
+                      </Grid>
+
+
+                    </Grid>
+
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="center"
+                      alignItems="stretch"
+                      spacing={1}
+                      display={page == 0 ? "block" : "none"}
+                    >
+
+                      <Grid
+                          item
+                          xs
+                          container
+                          direction="column"
+                          justifyContent="flex-start"
+                          alignItems="stretch"
+                          spacing={2}
+                          display={page == 2 ? "block" : "none"}
+                        >
+                          <Grid item>
+
+                            <Box mx={2} my={0} boxShadow={0}>
+                              <TextField
+                                  id="OriginOfContactOthers"
+                                  fullWidth
+                                  label="Specify Origin Of Contact"
+                                  onChange={(event) => {
+                                    originOfContactHandler2(event);
+                                  }}
+                                  helperText={errorMessages.city}
+                                  error={errorMessages.city === "" ? false : true}
+                                  disabled ={!originOfContactOtherFlag}
+                                />
+                            </Box>
+                          </Grid>
+                        </Grid>
+
+                        <Grid
+                          item
+                          xs
+                          container
+                          direction="column"
+                          justifyContent="flex-start"
+                          alignItems="stretch"
+                          spacing={2}
+                          display={page == 2 ? "block" : "none"}
+                        >
+                          {/* <Grid item>
+                            <Box mx={2} my={0} boxShadow={0}>
+                              <TextField
+                                  id="facility"
+                                  fullWidth
+                                  label="Facility"
+                                  onChange={(event) => {
+                                    facilityHandler(event);
+                                  }}
+                                  // helperText={errorMessages.city}
+                                  // value={facility}
+                                  // error={errorMessages.city === "" ? false : true}
+                                />
+                              </Box>
+                            </Grid> */}
+
+                        </Grid>
+
+
+                      
+
                     </Grid>
                   </Collapse>
                   <Collapse in={page == 3 ? true : false}>

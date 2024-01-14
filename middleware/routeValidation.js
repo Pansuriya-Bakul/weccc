@@ -49,7 +49,10 @@ module.exports = {
                 password: Joi.string().required(),
                 enabled: Joi.bool().required(),
                 role: Joi.string().required(),
-                facilityId: Joi.string().required(),
+                facilityId: Joi.string().allow(),
+                originOfContact: Joi.string().allow(''),
+                referralDetails: Joi.string().allow(''),
+                facility: Joi.string().allow(''),
                 info: Joi.object().keys({
                     name: Joi.string().required(),
                     gender: Joi.string().allow(''),
