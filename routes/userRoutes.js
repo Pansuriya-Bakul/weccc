@@ -24,6 +24,7 @@ router.post(
 	'/login',
 	validateBody(schemas.auth.login),
 	passport.authenticate('Local', { session: false }),
+	// () => {console.log("CANT GET HERE")},
 	UsersController.login
 );
 router.post('/wecc', UsersController.WECClogin);
