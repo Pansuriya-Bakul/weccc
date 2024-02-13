@@ -654,7 +654,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         let updateData = {
             info: {
                 name: userEdit.info.name,
-                dateOfBirth: userEdit.info.dateOfBirth || '',
+                dateOfBirth: userEdit.info.dateOfBirth.toISOString() || '',
                 currentAddress: {
                     _id: getAddress(userEdit, '_id'),
                     street: getAddress(userEdit, 'street'),

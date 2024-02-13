@@ -637,7 +637,7 @@ exports.selfRegister = async (req, res) => {
 // just generate a JWT!
 // ====================================================
 exports.login = async (req, res, next) => {
-	// log.warn(req);
+	// log.warn("IT CAME HERE!");
 	if (req.user == null) {
 		log.warn('User was not part of the request.  Unauthorized.');
 

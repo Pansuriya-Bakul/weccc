@@ -61,6 +61,7 @@ import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import SaveIcon from '@material-ui/icons/Save';
+import { set } from 'joi/lib/types/lazy';
 
 // ==================== MUI Styles ===================
 
@@ -146,36 +147,49 @@ const UserNotesTab = (props) => { // Notice the arrow function... regular functi
             get("users/getAllUsers/" + userID, appState.token, (err, res) => {
 
                 var arr = [];
-                for (var i = 0; i < res.data.user.patients.length; i++) {
-                    var obj = {
-                        "name": res.data.user.patients[i].info.name,
-                        "id": res.data.user.patients[i]._id
+                try {
+                if (res.data) {
+                    if (res.data.user.patients) {
+                        for (var i = 0; i < res.data.user.patients.length; i++) {
+                            var obj = {
+                                "name": res.data.user.patients[i].info.name,
+                                "id": res.data.user.patients[i]._id
+                            }
+                            arr.push(obj);
+                        }
                     }
-                    arr.push(obj);
-                }
 
-                for (var i = 0; i < res.data.user.admins.length; i++) {
-                    var obj = {
-                        "name": res.data.user.admins[i].info.name,
-                        "id": res.data.user.admins[i]._id
+                    if (res.data.user.admins) {
+                        for (var i = 0; i < res.data.user.admins.length; i++) {
+                            var obj = {
+                                "name": res.data.user.admins[i].info.name,
+                                "id": res.data.user.admins[i]._id
+                            }
+                            arr.push(obj);
+                        }
                     }
-                    arr.push(obj);
-                }
 
-                for (var i = 0; i < res.data.user.coordinators.length; i++) {
-                    var obj = {
-                        "name": res.data.user.coordinators[i].info.name,
-                        "id": res.data.user.coordinators[i]._id
+                    if (res.data.user.coordinators) {
+                        for (var i = 0; i < res.data.user.coordinators.length; i++) {
+                            var obj = {
+                                "name": res.data.user.coordinators[i].info.name,
+                                "id": res.data.user.coordinators[i]._id
+                            }
+                            arr.push(obj);
+                        }
                     }
-                    arr.push(obj);
-                }
 
-                for (var i = 0; i < res.data.user.volunteers.length; i++) {
-                    var obj = {
-                        "name": res.data.user.volunteers[i].info.name,
-                        "id": res.data.user.volunteers[i]._id
+                    if (res.data.user.volunteers) {
+                        for (var i = 0; i < res.data.user.volunteers.length; i++) {
+                            var obj = {
+                                "name": res.data.user.volunteers[i].info.name,
+                                "id": res.data.user.volunteers[i]._id
+                            }
+                            arr.push(obj);
+                        }
                     }
-                    arr.push(obj);
+                }} catch (error) {
+                    setParentAlert(new AlertType('Unable to fetch users. Please refresh and try again.', "error"));
                 }
 
                 setUserData(arr);
