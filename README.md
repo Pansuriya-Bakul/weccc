@@ -1,5 +1,7 @@
 # Hospice WECCC React App
 
+NODE VERSION REQUIRED: 16.16.0
+
 ## Installation and Running Documentation
 1. Download files from GitHub repository, whether it be Git clone or direct download.
 2. In a terminal at the WECCC_IMS root directory, run the following: “npm install” and wait, following any instructions the terminal outputs if there are dependencies that need to be fixed.
