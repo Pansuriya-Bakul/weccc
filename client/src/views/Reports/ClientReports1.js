@@ -373,12 +373,14 @@ const ClientReports = (props) => {
                           color: "grey",
                         }}
                       >
-                        Member's name:
+                        Member's namesss:
                       </Typography>
                       <Typography variant="h5" component="h1" style={{ marginLeft: "2px",
                           marginTop: "3px",}}>
                         {appState.name}
+                        
                       </Typography>
+                      Last Modified: {appState.last_modified}
                     </Grid>
                   </Grid>
                 </Box>

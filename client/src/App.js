@@ -137,6 +137,10 @@ class App extends Component {
 	}
 
 	Login = (token, user) => {
+		console.log(user);
+		const timestamp = user.updatedAt;
+		const date = new Date(timestamp);
+		localStorage.setItem("last_modified", date.toLocaleString());
 		localStorage.setItem("_id", user._id);
 		localStorage.setItem("name", user.info.name);
 		localStorage.setItem("role", user.role);
@@ -155,7 +159,8 @@ class App extends Component {
 			facilityId: user.facilityId._id,
 			facilityName: user.facilityId.name,
 			token: token,
-			authenticated: true
+			authenticated: true,
+			last_modified: date.toLocaleString()
 		});
 	}
 
@@ -168,6 +173,7 @@ class App extends Component {
 		localStorage.removeItem("facilityId");
 		localStorage.removeItem("facilityName");
 		localStorage.removeItem("token");
+		localStorage.removeItem("last_modified");
 
 		this.setState({
 			_id: null,
@@ -177,7 +183,9 @@ class App extends Component {
 			patients: null,
 			workers: null,
 			authenticated: false,
-			render: true
+			render: true,
+			last_modified: null
+
 		});
 
 		if (window.location.pathname != '/') {
