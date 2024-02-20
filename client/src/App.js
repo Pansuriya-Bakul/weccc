@@ -140,7 +140,9 @@ class App extends Component {
 		console.log(user);
 		const timestamp = user.updatedAt;
 		const date = new Date(timestamp);
-		localStorage.setItem("last_modified", date.toLocaleString());
+		var datestring = date.toLocaleString().slice(0,-6) + date.toLocaleString().slice(-3);
+		console.log(datestring);
+		localStorage.setItem("last_modified", datestring);
 		localStorage.setItem("_id", user._id);
 		localStorage.setItem("name", user.info.name);
 		localStorage.setItem("role", user.role);
@@ -160,7 +162,7 @@ class App extends Component {
 			facilityName: user.facilityId.name,
 			token: token,
 			authenticated: true,
-			last_modified: date.toLocaleString()
+			last_modified: datestring
 		});
 	}
 
