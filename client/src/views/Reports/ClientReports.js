@@ -157,21 +157,21 @@ const ClientReports = (props) => {
   }, [appState]);
 
   // create a facility until we have a facility creation page
-  
-//   const postF = async () => {
-//     let data = {
-//         name: "North York",
-//         prefix: "NOY"
-//     };
 
-//     post("facilities", appState.token, data, (err, res) => {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             console.log(res);
-//         }
-//     });
-// }
+  //   const postF = async () => {
+  //     let data = {
+  //         name: "North York",
+  //         prefix: "NOY"
+  //     };
+
+  //     post("facilities", appState.token, data, (err, res) => {
+  //         if (err) {
+  //             console.log(err);
+  //         } else {
+  //             console.log(res);
+  //         }
+  //     });
+  // }
 
   const getNeighbours = useCallback(
     (userId) => {
@@ -307,7 +307,8 @@ const ClientReports = (props) => {
                         <Typography variant="h5" component="h1">
                           {appState.name}
                         </Typography>
-
+                        
+                        Last Modified: {appState.last_modified}
                       </Grid>
                     </Grid>
                   </Box>
@@ -475,8 +476,8 @@ const ClientReports = (props) => {
                                 />
                                 <span className="value">{gaugeValue}</span>
                               </div> */}
-                              {/* ///// */}
-                              <ReportDashboard
+                            {/* ///// */}
+                            <ReportDashboard
                               reports={reportsData}
                               collection={currentReportIndex}
                             ></ReportDashboard>
@@ -484,7 +485,7 @@ const ClientReports = (props) => {
 
                           </Grid>
 
-                          <Grid item xs={12} id="summary" style={{marginTop:'18px'}}>
+                          <Grid item xs={12} id="summary" style={{ marginTop: '18px' }}>
                             <Typography
                               variant="h5"
                               color="textSecondary"
@@ -499,7 +500,7 @@ const ClientReports = (props) => {
                             />
                           </Grid>
                           <Grid item xs={12} id="summary">
-                            <CommunityCircle 
+                            <CommunityCircle
                               reports={reportsData}
                               collection={currentReportIndex}
                             />
@@ -571,7 +572,7 @@ const ClientReports = (props) => {
                               />
                             </Grid>
                           )}
-                          
+
                           <Grid item xs={12} id="suggestions1" style={{ paddingTop: '30px' }}>
                             <Typography
                               variant="h5"
