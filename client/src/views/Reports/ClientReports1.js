@@ -379,6 +379,7 @@ const ClientReports = (props) => {
                           marginTop: "3px",}}>
                         {appState.name}
                       </Typography>
+                      Last Modified: {appState.last_modified}
                     </Grid>
                   </Grid>
                 </Box>
