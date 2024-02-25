@@ -302,12 +302,12 @@ const ClientReports = (props) => {
                             marginTop: "3px",
                           }}
                         >
-                          Member's name:
+                          member's name:
                         </Typography>
                         <Typography variant="h5" component="h1">
                           {appState.name}
                         </Typography>
-
+                        Last Modified: {appState.last_modified}
                       </Grid>
                     </Grid>
                   </Box>
