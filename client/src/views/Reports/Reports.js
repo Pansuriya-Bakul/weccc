@@ -268,7 +268,7 @@ const Reports = (props) => {
                         align="left"
                         gutterBottom
                       >
-                        member's name:
+                        Member's name:
                       </Typography>
                       {/* <Box mx={1} my={2} boxShadow={1}> */}
                       <Typography

@@ -397,7 +397,7 @@ const   Reports = (props) => {
                         align="left"
                         gutterBottom
                       >
-                        member's name:
+                        Member's name:
                       </Typography>
 
                       <Typography
