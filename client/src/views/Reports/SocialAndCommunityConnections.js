@@ -28,6 +28,7 @@ export default function ({ reports, collection }) {
         </Typography>
         <Box m={1} mb={1}>
           {reports.FCP_STRINGS_COMB &&
+            Array.isArray(reports.FCP_STRINGS_COMB[0]) &&
             reports.FCP_STRINGS_COMB[0].map((words, index) => (
               <Typography
                 display="initial"

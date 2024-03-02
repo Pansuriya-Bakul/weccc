@@ -15,16 +15,16 @@ export default class HealthAlert extends Component {
 		if (this.props.reports.HT_QofL2_SD[this.props.collection] <= 50 ||
 			this.props.reports.PH_QofL2_SD[this.props.collection] === 0 ||
 			this.props.reports.MH_QofL2_SD[this.props.collection] === 0 ||
-			this.props.reports.M_QofL2_SD[this.props.collection] === 3 ||
-			this.props.reports.M_QofL2_SD[this.props.collection] === 4 ||
-			this.props.reports.PC_QofL2_SD[this.props.collection] === 3 ||
-			this.props.reports.PC_QofL2_SD[this.props.collection] === 4 ||
-			this.props.reports.UA_QofL2_SD[this.props.collection] === 3 ||
-			this.props.reports.UA_QofL2_SD[this.props.collection] === 4 ||
-			this.props.reports.PD_QofL2_SD[this.props.collection] === 3 ||
-			this.props.reports.PD_QofL2_SD[this.props.collection] === 4 ||
-			this.props.reports.AD_QofL2_SD[this.props.collection] === 3 ||
-			this.props.reports.AD_QofL2_SD[this.props.collection] === 4) {
+			this.props.reports.M_QofL2_SD[this.props.collection] === 0 ||
+			this.props.reports.M_QofL2_SD[this.props.collection] === 1 ||
+			this.props.reports.PC_QofL2_SD[this.props.collection] === 0 ||
+			this.props.reports.PC_QofL2_SD[this.props.collection] === 1 ||
+			this.props.reports.UA_QofL2_SD[this.props.collection] === 0 ||
+			this.props.reports.UA_QofL2_SD[this.props.collection] === 1 ||
+			this.props.reports.PD_QofL2_SD[this.props.collection] === 0 ||
+			this.props.reports.PD_QofL2_SD[this.props.collection] === 1 ||
+			this.props.reports.AD_QofL2_SD[this.props.collection] === 0 ||
+			this.props.reports.AD_QofL2_SD[this.props.collection] === 1) {
 			this.setState({ redAlert: true });
 		}
 
@@ -81,7 +81,7 @@ export default class HealthAlert extends Component {
 						{this.props.reports.HT_QofL2_SD[this.props.collection] <= 50 &&
 							<ListItem>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									Your health today is a concern. On a scale of 0 to 100, you rate your health today as [# between 0 and 50]
+									Your health today is a concern. On a scale of 0 to 100, you rate your health today as less than 50
 								</Typography>
 							</ListItem>
 						}
@@ -89,7 +89,7 @@ export default class HealthAlert extends Component {
 						{this.props.reports.PH_QofL2_SD[this.props.collection] === 0 &&
 							<ListItem>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You rate your health as poor in general
+									You rate your health as poor
 								</Typography>
 							</ListItem>
 						}
@@ -101,39 +101,39 @@ export default class HealthAlert extends Component {
 								</Typography>
 							</ListItem>
 						}
-						{(this.props.reports.M_QofL2_SD[this.props.collection] === 3 || this.props.reports.M_QofL2_SD[this.props.collection] === 4) &&
+						{(this.props.reports.M_QofL2_SD[this.props.collection] === 0 || this.props.reports.M_QofL2_SD[this.props.collection] === 1) &&
 							<ListItem>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have severe problems walking around
 								</Typography>
 							</ListItem>
 						}
-						{/* Severe (3) or extreme (4) problems with personal care */}
-						{(this.props.reports.PC_QofL2_SD[this.props.collection] === 3 || this.props.reports.PC_QofL2_SD[this.props.collection] === 4) &&
+						{/* Severe (1) or extreme (0) problems with personal care */}
+						{(this.props.reports.PC_QofL2_SD[this.props.collection] === 0 || this.props.reports.PC_QofL2_SD[this.props.collection] === 1) &&
 							<ListItem>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have severe problems washing or dressing
 								</Typography>
 							</ListItem>
 						}
-						{/* Severe (3) or extreme (4) problems with usual activities */}
-						{(this.props.reports.UA_QofL2_SD[this.props.collection] === 3 || this.props.reports.UA_QofL2_SD[this.props.collection] === 4) &&
+						{/* Severe (1) or extreme (0) problems with usual activities */}
+						{(this.props.reports.UA_QofL2_SD[this.props.collection] === 0 || this.props.reports.UA_QofL2_SD[this.props.collection] === 1) &&
 							<ListItem>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have severe problems doing usual activities
 								</Typography>
 							</ListItem>
 						}
-						{/* Severe (3) or extreme (4) problems with pain / discomfort */}
-						{(this.props.reports.PD_QofL2_SD[this.props.collection] === 3 || this.props.reports.PD_QofL2_SD[this.props.collection] === 4) &&
+						{/* Severe (1) or extreme (0) problems with pain / discomfort */}
+						{(this.props.reports.PD_QofL2_SD[this.props.collection] === 0 || this.props.reports.PD_QofL2_SD[this.props.collection] === 1) &&
 							<ListItem>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have severe problems with pain/discomfort
 								</Typography>
 							</ListItem>
 						}
-						{/* Severe (3) or extreme (4) problems with anxiety / depression */}
-						{(this.props.reports.AD_QofL2_SD[this.props.collection] === 3 || this.props.reports.AD_QofL2_SD[this.props.collection] === 4) &&
+						{/* Severe (1) or extreme (0) problems with anxiety / depression */}
+						{(this.props.reports.AD_QofL2_SD[this.props.collection] === 0 || this.props.reports.AD_QofL2_SD[this.props.collection] === 1) &&
 							<ListItem>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have severe problems with anxiety/ depression
@@ -164,7 +164,7 @@ export default class HealthAlert extends Component {
 					{this.props.reports.PH_QofL2_SD[this.props.collection] === 1 &&
 						<ListItem>
 							<Typography variant="body1" color="inherit" align="left" gutterBottom>
-								NEED VAR You rate your health as fair in general
+								You rate your health as fair
 							</Typography>
 						</ListItem>
 					}

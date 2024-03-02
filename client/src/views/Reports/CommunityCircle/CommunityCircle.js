@@ -25,59 +25,63 @@ const CommunityCircle = (props) => {
             <Box>
 
                 {/* Community Visual */}
-                <Box>
-                    <CommunityVisual reports={reports} collection={collection} />
-                </Box>
-                
-                <Box>
-                    <Typography variant="h6" color="secondary" align="left" gutterBottom>
-                        Primary Circle
-                    </Typography>
 
-                    <ul>
 
-                        {reports.household_size[collection] && reports.household_size[collection] !== 999 &&
-                            <li>
-                                <Typography display="block" component="div" align="left" gutterBottom>
-                                    <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
-                                        {reports.household_size[collection] > 0 ? `I live with ${reports.household_size[collection]} others` : "I live alone."}
-                                    </Typography>
-                                </Typography>
-                            </li>
-                        }
+                        <Box>
+                            <CommunityVisual reports={reports} collection={collection} />
+                        </Box>
 
-                        {reports.marital_status[collection] && reports.marital_status[collection] !== 999 &&
+                        <Box>
+                            <Typography variant="h6" color="secondary" align="left" gutterBottom>
+                                Primary Circle
+                            </Typography>
 
-                            <li>
-                                <Typography display="block" component="div" align="left" gutterBottom>
-                                    <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
-                                        I am {reports.marital_status[collection]}
-                                    </Typography>
-                                </Typography>
-                            </li>
-                        }
-                        {reports.total_children[collection] > 0 && reports.total_children[collection] !== 999 &&
-                            <li>
-                                <Typography display="block" component="div" align="left" gutterBottom>
-                                    <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
-                                        {reports.total_children[collection] > 1 ? `I have ${reports.total_children[collection]} children` : "I have 1 child"}
-                                    </Typography>
-                                </Typography>
-                            </li>
-                        }
+                            <ul>
 
-                        {reports.meaningful_people[collection] && reports.meaningful_people[collection] !== 999 &&
-                            <li>
-                                <Typography display="block" component="div" align="left" gutterBottom>
-                                    <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
-                                        My most meaningful social relationships are with {reports.meaningful_people[collection]}
-                                    </Typography>
-                                </Typography>
-                            </li>
-                        }
+                                {reports.household_size[collection] && reports.household_size[collection] !== 999 &&
+                                    <li>
+                                        <Typography display="block" component="div" align="left" gutterBottom>
+                                            <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
+                                                {reports.household_size[collection] > 0 ? `I live with ${reports.household_size[collection]} others` : "I live alone."}
+                                            </Typography>
+                                        </Typography>
+                                    </li>
+                                }
 
-                    </ul>
-                </Box>
+                                {reports.marital_status[collection] && reports.marital_status[collection] !== 999 &&
+
+                                    <li>
+                                        <Typography display="block" component="div" align="left" gutterBottom>
+                                            <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
+                                                I am {reports.marital_status[collection]}
+                                            </Typography>
+                                        </Typography>
+                                    </li>
+                                }
+                                {reports.total_children[collection] > 0 && reports.total_children[collection] !== 999 &&
+                                    <li>
+                                        <Typography display="block" component="div" align="left" gutterBottom>
+                                            <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
+                                                {reports.total_children[collection] > 1 ? `I have ${reports.total_children[collection]} children` : "I have 1 child"}
+                                            </Typography>
+                                        </Typography>
+                                    </li>
+                                }
+
+                                {reports.meaningful_people[collection] && reports.meaningful_people[collection] !== 999 &&
+                                    <li>
+                                        <Typography display="block" component="div" align="left" gutterBottom>
+                                            <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
+                                                My most meaningful social relationships are with {reports.meaningful_people[collection]}
+                                            </Typography>
+                                        </Typography>
+                                    </li>
+                                }
+
+                            </ul>
+                        </Box>
+
+
 
                 {/* 
                 <Box>

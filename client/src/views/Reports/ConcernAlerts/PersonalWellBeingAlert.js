@@ -14,7 +14,7 @@ export default class PersonalWellBeingAlert extends Component {
 		const { reports, collection } = this.props;
 	
 		// Check all the conditions and set the state variable
-		if (reports.PWI_QofL3_COMB[collection] <= 60 ||
+		if (reports.LS_QofL3_SD[collection] <= 5 ||
 		  reports.SL_QofL3_SD[collection] <= 5 ||
 		  reports.YH_QofL3_SD[collection] <= 5 ||
 		  reports.AL_QofL3_SD[collection] <= 5 ||
@@ -27,7 +27,8 @@ export default class PersonalWellBeingAlert extends Component {
 			this.setState({redAlert: true});
 		}
 		
-		if(reports.SL_QofL3_SD[collection] === 6 ||
+		if(
+			reports.SL_QofL3_SD[collection] === 6 ||
 		  reports.YH_QofL3_SD[collection] === 6 ||
 		  reports.AL_QofL3_SD[collection] === 6 ||
 		  reports.PR_QofL3_SD[collection] === 6 ||
@@ -59,8 +60,8 @@ export default class PersonalWellBeingAlert extends Component {
 						</ListItem>
 					</Grid>
 				: <Grid item xs={5}>
-				{/* Not satisfied with life as a whole (PWI 60 or less) */}
-				{this.props.reports.PWI_QofL3_COMB[this.props.collection] <= 60 &&
+				{/* Not satisfied with life as a whole (5 or less) */}
+				{this.props.reports.LS_QofL3_SD[this.props.collection] <= 5 &&
 						<ListItem>
 							<Typography variant="body1" color="inherit" align="left" gutterBottom>
 							You are not satisfied with life as a whole 

@@ -8,6 +8,7 @@ import LocalHospitalOutlinedIcon from '@material-ui/icons/LocalHospitalOutlined'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers, faPersonCane, faHandshake, faPerson } from '@fortawesome/free-solid-svg-icons'
 import { lightBlue } from '@material-ui/core/colors';
+import { set } from 'joi/lib/types/lazy';
 
 
 const HighlightBox = (props) =>{
@@ -21,6 +22,7 @@ const HighlightBox = (props) =>{
     const [funtionHealth_color,setFunctionHealthColor]=useState('')
     const [communityHealth_color,setCommunityHealthColor]=useState('')
     const [isolationHealth_color,setIsolationHealthColor]=useState('')
+    const [overallScore, setOverallScore] = useState(0);
 
     const [health_zero, setHealth_zero] = useState('');
     const [mentalHealth, setMentalHealth] = useState('');
@@ -79,6 +81,11 @@ const HighlightBox = (props) =>{
 		else return '';
 	};
 	
+    const getOverallScore = () => {
+        const sum = props.data.reduce((a, b) => a + b, 0);
+        const avg = (sum / props.data.length).toFixed(1);
+        setOverallScore(avg);
+    }
 
 
 	
@@ -96,6 +103,7 @@ const HighlightBox = (props) =>{
         setFunctionHealthColor(findColour(props.data[5]))
         setCommunityHealthColor(findColour(props.data[6]))
         setIsolationHealthColor(findColour(props.data[7]))
+        getOverallScore();
         
         setHealth_zero(isComplete(props.data[0]) ? props.data[0] : "Incomplete");
         setMentalHealth(isComplete((props.data[1])) ? props.data[1] : "Incomplete");
@@ -131,15 +139,15 @@ const HighlightBox = (props) =>{
                     <GaugeChart
                             className=""
                             nrOfLevels={8}
-                            percent={0.56}
+                            percent={overallScore/100}
                             // colors={["red", "green"]}
                             arcWidth={0.5}
                             style={{ width: "100%" }}
                             hideText={true}
                             colors={["#CC3333", "#4EDB5A"]}
                         />
-                    <div style={{backgroundColor:'#A0CC27', width:'70%', display:'flex', alignItems:'center', justifyContent:'center', borderRadius:'50px'}}>
-                        <Typography variant="h3" color="white" align="left" style={{fontWeight:'500', color:'white'}}>{56}</Typography>
+                    <div style={{ width:'70%', display:'flex', alignItems:'center', justifyContent:'center', borderRadius:'50px'}}>
+                        <Typography variant="h3" color="white" align="left" style={{fontWeight:'500', color:'white'}}>{overallScore}</Typography>
                     </div>
                 </Box>
             {/* </div> */}
