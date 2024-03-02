@@ -3,7 +3,8 @@ import Chart from "chart.js/auto";
 
 export default function FrequencyByType({ source }) {
   const chartRef = useRef(null);
-  let data = source[0].map((value) => (value == null ? 0 : value));
+
+  let data = Array.isArray(source[0]) ? source[0].map((value) => (value == null ? 0 : value)) : [];
 
   const labels = [
     "Religion",

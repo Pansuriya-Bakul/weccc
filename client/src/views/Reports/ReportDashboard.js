@@ -40,9 +40,9 @@ export default class ReportDashboard extends Component {
         }
 
         //function
-        var functionHealth= ((reports.MH_QofL2_SD[collection]*25)+(reports.PC_QofL2_SD[collection]*25)+(reports.UA_QofL2_SD[collection]*25))/3;
+        var functionHealth = ((reports.MH_QofL2_SD[collection] * 25) + (reports.PC_QofL2_SD[collection] * 25) + (reports.UA_QofL2_SD[collection] * 25)) / 3;
 
-        functionHealth = functionHealth > 100 ? 0: functionHealth
+        functionHealth = functionHealth > 100 ? 0 : functionHealth
 
         //community belonging
         var communityHealth = reports.FPC_QofL3_SD[collection] * 10
@@ -58,7 +58,7 @@ export default class ReportDashboard extends Component {
             if (reports.total_children[collection] == 0) {
                 isolationHealth += 1;
             } else {
-            isolationHealth += 2;
+                isolationHealth += 2;
             }
         }
 
@@ -67,10 +67,14 @@ export default class ReportDashboard extends Component {
             isolationHealth += 1;
         }
 
-        let freq_participation_trigger = reports.FCP_INT_COMB[collection].every(item => item === null || item === 0 || item === 1 || item === 2);
-        if (freq_participation_trigger) {
-            isolationHealth += 1;
+        if (reports.FCP_INT_COMB[collection] && Array.isArray(reports.FCP_INT_COMB[collection])) {
+            let freq_participation_trigger = reports.FCP_INT_COMB[collection].every(item => item === null || item === 0 || item === 1 || item === 2);
+
+            if (freq_participation_trigger) {
+                isolationHealth += 1;
+            }
         }
+
 
         //convert isolation (0-5) to percent according to calculation doc:
         if (isolationHealth >= 4) {
@@ -85,8 +89,8 @@ export default class ReportDashboard extends Component {
         else if (isolationHealth <= 1) {
             isolationHealth = 95;
         }
-        
-        return [health, mentalHealth, wellBeing, lifeSatisfaction, loneliness,functionHealth,communityHealth,isolationHealth];
+
+        return [health, mentalHealth, wellBeing, lifeSatisfaction, loneliness, functionHealth, communityHealth, isolationHealth];
     }
 
     render() {

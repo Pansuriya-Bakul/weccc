@@ -14,6 +14,7 @@ export default class LonelinessAlert extends Component {
 
 	componentDidMount() {
 		const { reports, collection } = this.props;
+		console.log(reports.PL_QofL1_COMB_often_count[collection]);
 		// Check conditions for Red Flag
 		if (
 			reports.PL_QofL1_COMB_often_count[collection] > 0 &&
@@ -24,6 +25,7 @@ export default class LonelinessAlert extends Component {
 
 		// Check conditions for Yellow Flag
 		if (
+			reports.PL_QofL1_COMB_often_count[collection] <= 0 &&
 			reports.PL_QofL1_COMB_sometimes_count[collection] > 0 &&
 			reports.PL_QofL1_COMB_sometimes_count[collection] !== 999 &&
 			reports.PL_QofL1_COMB[collection] >= 1.6 &&
