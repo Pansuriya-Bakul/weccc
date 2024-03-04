@@ -32,6 +32,7 @@
     "express-promise-router": "^3.0.3",
     "fs": "^0.0.1-security",
     "hashids": "^1.2.2",
+    "html2pdf.js": "^0.10.1",
     "joi": "^14.3.0",
     "jsonwebtoken": "^8.4.0",
     "jspdf-invoice-template-nodejs": "^1.4.30",

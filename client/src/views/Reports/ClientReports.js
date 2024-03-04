@@ -3,6 +3,9 @@
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import html2pdf from 'html2pdf.js';
 
 // ==================== Modules =====================
 import Pagination from "@material-ui/lab/Pagination";
@@ -215,6 +218,24 @@ const ClientReports = (props) => {
     setCurrentReportIndex(page - 1);
   }, []);
 
+  // generate report pdf and iniate download
+  const handleDownloadPDF = () => {
+    const reportElement = document.getElementById('report');
+
+    html2canvas(reportElement).then((canvas) => {
+      const opt = {
+        margin: 5,
+        filename: 'download.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a2', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(reportElement).save();
+
+    });
+
+  };
+
   // Hooks ===
 
   // First Render only because of the [ ] empty array tracking with the useEffect
@@ -282,24 +303,22 @@ const ClientReports = (props) => {
                 </Grid>
               </Box>
             </Grid>
-
+          <Grid id="report">
             <Grid item xs={12}>
               <Card raised={true}>
                 <CardContent>
                   <Box mx={1} my={1} boxShadow={0}>
-                    <Grid
+                    <div
                       container
-                      direction="column"
-                      justifyContent="flex-start"
-                      alignItems="stretch"
+                      style={{ display: "flex", flexDirection: 'row', justifyContent: "space-between" }}
                     >
-                      <Grid item xs={12}>
+                      <Grid item xs={12} >
                         <Typography
                           style={{
                             fontSize: "16px",
                             color: "grey",
                             marginLeft: "2px",
-                          
+
                           }}
                         >
                           Member's name:
@@ -307,10 +326,20 @@ const ClientReports = (props) => {
                         <Typography variant="h5" component="h1">
                           {appState.name}
                         </Typography>
-                        
+
                         <p>Last Modified: {appState.last_modified}</p>
                       </Grid>
-                    </Grid>
+                      <div data-html2canvas-ignore="true">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={handleDownloadPDF}
+                          style={{ width: "150px", height: "40px" }}
+                        >
+                          Download PDF
+                        </Button>
+                      </div>
+                    </div>
                   </Box>
                 </CardContent>
               </Card>
@@ -356,11 +385,11 @@ const ClientReports = (props) => {
                             </Typography>
                             {/* chart */}
 
-              
-                              <ReportDashboard
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              ></ReportDashboard>
+
+                            <ReportDashboard
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            ></ReportDashboard>
 
 
 
@@ -405,21 +434,6 @@ const ClientReports = (props) => {
                               collection={currentReportIndex}
                             />
                           </Grid>
-
-                          {/* <Grid item xs={12} id="summary1">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            > */}
-                          {/* Summary 1
-                            </Typography>
-                            <Summary1
-                              reports={reports1Data}
-                              collection={currentReportIndex}
-                            />
-                          </Grid> */}
 
                           {anyFlags && (
                             <Grid item xs={12} id="possible concerns">
@@ -493,6 +507,7 @@ const ClientReports = (props) => {
                 </Box>
               </Card>
             </Grid>
+          </Grid>
           </>
         ) : (
           <Typography
