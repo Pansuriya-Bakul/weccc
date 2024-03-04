@@ -258,7 +258,7 @@ export default class HealthAlert extends Component {
 						</ListItem>
 					}
 					{/* Seldom participated in wellness activities */}
-					{this.props.reports.support_wellness_program[this.props.collection] &&
+					{/* {this.props.reports.support_wellness_program[this.props.collection] &&
 						(this.props.reports.problem_walking[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
 						(this.props.reports.problem_washing_dressing[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
 						(this.props.reports.problem_usual_activities[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
@@ -270,9 +270,9 @@ export default class HealthAlert extends Component {
 								Despite serious health limitations, you seldom participated in wellness activities
 							</Typography>
 						</ListItem>
-					}
+					} */}
 					{/* No access to informal care */}
-					{this.props.reports.support_informal[this.props.collection] &&
+					{/* {this.props.reports.support_informal[this.props.collection] &&
 						(this.props.reports.problem_walking[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
 						(this.props.reports.problem_washing_dressing[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
 						(this.props.reports.problem_usual_activities[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
@@ -284,7 +284,7 @@ export default class HealthAlert extends Component {
 								Despite serious health limitations, you did not have access to informal care
 							</Typography>
 						</ListItem>
-					}
+					} */}
 				</Grid>}
 			</Grid>
 		)
