@@ -50,22 +50,11 @@ const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
 // ==================== Static Variables ====================
 
 //=================================================== TemplateTable Component ===================================================
-export default function StatusHistoryTable(props) {
+export default function CompletedSurveysTable(props) {
 
     const { data } = props;
-    const reversedData = data.length > 0 ? [...data].reverse() : [];
 
     const classes = useStyles();
-
-    const getStatusColor = (status) => {
-        if (status === 'active') {
-          return 'green'; // Apply green color
-        } else if (status === 'waitlist') {
-          return 'orange'; // Apply orange color
-        } else {
-          return 'red'; // Apply red color
-        }
-    };
 
     const formatDate = (dateString) => {
         return dateString.substring(0, 10); // Extract the yyyy-mm-dd part
@@ -80,27 +69,23 @@ export default function StatusHistoryTable(props) {
                 <Table>
                     <TableHead>
                         <TableRow className={classes.tableRow}>
-                            <TableCell>Status</TableCell>
-                            <TableCell>Assigned Programs</TableCell>
-                            <TableCell>Start Date</TableCell>
-                            <TableCell>End Date</TableCell>
+                            <TableCell>Survey</TableCell>
+                            <TableCell>Completeness </TableCell>
+                            <TableCell>Date Uploaded</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {reversedData.length > 0 ? (
-                            reversedData.map((row, index) => (
+                        {data.length > 0 ? (
+                            data.map((row, index) => (
                                 <TableRow key={index}>
                                     <TableCell>
-                                    <Typography style={{ color: getStatusColor(row.status) }}>{row.status.charAt(0).toUpperCase() + row.status.slice(1)}</Typography>
+                                    <Typography s>{row.collectionTemplate.name.charAt(0).toUpperCase() + row.collectionTemplate.name.slice(1)}</Typography>
                                     </TableCell>
                                     <TableCell>
-                                        <Typography>{row.activeType}</Typography>
+                                        <Typography>{row.completeness}</Typography>
                                     </TableCell>
                                     <TableCell>
-                                        <Typography>{formatDate(row.startDate)}</Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography>{formatDate(row.endDate)}</Typography>
+                                        <Typography>{formatDate(row.updatedAt)}</Typography>
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -121,17 +106,16 @@ export default function StatusHistoryTable(props) {
 
 }
 
-StatusHistoryTable.propTypes = {
+CompletedSurveysTable.propTypes = {
     data: PropTypes.arrayOf(
         PropTypes.shape({
-            status: PropTypes.string.isRequired,
-            activeType: PropTypes.string,
-            startDate: PropTypes.string.isRequired,
-            endDate: PropTypes.string,
+            name: PropTypes.string.isRequired,
+            completeness: PropTypes.string,
+            uploadedAt: PropTypes.string.isRequired,
         })
     ),
 };
 
-StatusHistoryTable.defaultProps = {
+CompletedSurveysTable.defaultProps = {
     data: [],
 };
