@@ -33,6 +33,7 @@ import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Ballot from '@material-ui/icons/Ballot';
 import ImageSearchIcon from '@material-ui/icons/ChromeReaderMode';
+import PersonIcon from '@material-ui/icons/Person';
 // ==================== MUI Styles ===================
 
 const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
@@ -162,10 +163,10 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
 
             {(tool == 1) ? (
                 <>
-                    <Tooltip title="View">
+                    <Tooltip title="View Profile">
                         <IconButton aria-label="view" component={Link} to={viewUrl} >
                             {viewUrl.length > 0 ? (
-                                <VisibilityIcon />
+                                <PersonIcon />
                             ) : (
                                 <></>
                             )}
