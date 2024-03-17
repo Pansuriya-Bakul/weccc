@@ -45,6 +45,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
+import { set } from "joi/lib/types/lazy";
 
 // ==================== MUI Icons ====================
 
@@ -97,6 +98,7 @@ const Reports = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState("");
 
   // Functions ===
 
@@ -188,8 +190,8 @@ const Reports = (props) => {
   useEffect(() => {
     if (reportsData !== null) {
       const flags = checkAlerts(reportsData, currentReportIndex);
-      console.log("Flags: ", flags);
       setAnyFlags(flags);
+      setLastUpdated(reportsData.collection_last_updated);
     }
   }, [reportsData, currentReportIndex]);
 
@@ -263,6 +265,8 @@ const Reports = (props) => {
                           <Typography variant="h5" component="h1">
                             {memberName}
                           </Typography>
+
+                          <p>Last Modified: {lastUpdated}</p>
                         </Grid>
 
                         <div data-html2canvas-ignore="true">

@@ -104,6 +104,7 @@ const ClientReports = (props) => {
   const [riskScore, setRiskScore] = useState(0);
 
   const [isDownloading, setIsDownloading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState("");
 
   // Functions ===
 
@@ -291,6 +292,7 @@ const ClientReports = (props) => {
   useEffect(() => {
     if (reportsData) {
       checkRisk();
+      setLastUpdated(reportsData.collection_last_updated);
     }
   }, [reportsData]);
 
@@ -367,7 +369,7 @@ const ClientReports = (props) => {
                           }}>
                             {appState.name}
                           </Typography>
-                          Last Modified: {appState.last_modified}
+                          Last Modified: {lastUpdated}
                         </Grid>
                         <div data-html2canvas-ignore="true">
                           <Button

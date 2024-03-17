@@ -97,6 +97,7 @@ const Reports = (props) => {
   const [memberName, setMemberName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [riskScore, setRiskScore] = useState(0);
+  const [lastUpdated, setLastUpdated] = useState("");
 
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -239,6 +240,7 @@ const Reports = (props) => {
   useEffect(() => {
     if (reportsData) {
       checkRisk();
+      setLastUpdated(reportsData.collection_last_updated);
     }
   }, [reportsData]);
 
@@ -307,6 +309,8 @@ const Reports = (props) => {
                           }}>
                             {memberName}
                           </Typography>
+
+                          <p>Last Modified: {lastUpdated}</p>
 
                         </Grid>
 

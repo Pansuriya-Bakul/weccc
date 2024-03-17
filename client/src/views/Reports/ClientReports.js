@@ -105,6 +105,7 @@ const ClientReports = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState("");
 
   // Functions ===
 
@@ -259,6 +260,7 @@ const ClientReports = (props) => {
     if (reportsData !== null) {
       const flags = checkAlerts(reportsData, currentReportIndex);
       setAnyFlags(flags);
+      setLastUpdated(reportsData.collection_last_updated);
     }
   }, [reportsData, currentReportIndex]);
 
@@ -327,7 +329,7 @@ const ClientReports = (props) => {
                             {appState.name}
                           </Typography>
 
-                          <p>Last Modified: {appState.last_modified}</p>
+                          <p>Last Modified: {lastUpdated}</p>
                         </Grid>
                         <div data-html2canvas-ignore="true">
                           <Button

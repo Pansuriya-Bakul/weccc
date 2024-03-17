@@ -118,6 +118,8 @@ exports.Screen = async (req, res) => {
 
                             let account_language = neighbourFunctions.formatLanguage(memberCollectionList[0].member.info.language || "");
 
+                            let collection_last_updated = new Date(memberCollectionList[0].updatedAt).toISOString().split('T')[0];
+
                             // // END - Account info step ==================================================
 
                             // // START - Collection : Survey info step ==================================================
@@ -235,6 +237,7 @@ exports.Screen = async (req, res) => {
                             // log.info(neighboursChapter_ids);  
 
                             return res.status(200).json({
+                                collection_last_updated: collection_last_updated,
                                 ID_PRF_SD: account_id,
                                 SRVNum_PRF_SD: neighboursChapter_ids,
                                 SRVD_PRF_SD: neighboursChapter_dates,
