@@ -101,7 +101,7 @@ exports.Neighbour = async (req, res) => {
   // get user input collection (for example neighbours or screen)
   // if user input == neighbour => Neighbours
   // else social health
-  Collection.find({ name: "Community Connections" }) //Test_screen_neighbours Community_Connections_Test_2
+  Collection.find({ name: "Community Connections" })
     .then((verifiedCollection) => {
       if (verifiedCollection.length == 0) {
         flag1 = 0;
@@ -137,6 +137,7 @@ exports.Neighbour = async (req, res) => {
                 memberCollectionList[0].member.role || ""
               );
 
+              let collection_last_updated = new Date(memberCollectionList[0].updatedAt).toISOString().split('T')[0];
 
               let account_dob = neighbourFunctions.formatDate(memberCollectionList[0].member.info.dateOfBirth || "");
 
@@ -1017,6 +1018,7 @@ exports.Neighbour = async (req, res) => {
                 // DOB_PRF_SD: account_dob,
                 // PC_PRF_SD: account_postalCode,
                 // L_PRF_SD: account_language,
+                collection_last_updated: collection_last_updated,
                 FCP_INT_COMB: FCP_INT_COMB,
                 // ISA_INT: ISA_INT,
                 // SII_QofL1: SII_QofL1,
