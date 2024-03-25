@@ -1,6 +1,6 @@
 /*
 ==============================================
-MemberSurvey Controller
+COMMUNITY CONNECTIONS AND QUALITY OF LIFE - SHORT
 ----------------------------------------------
 Methods:
 - Personalized Neighbours
@@ -1150,192 +1150,138 @@ exports.Neighbour = async (req, res) => {
     });
 };
 
-//Screen
-// exports.Screen = async (req, res) =>
-// {
-//     log.info("Incoming request for Screen's Report on the Collections of user with id: " + req.params.userId);
+exports.QualityOfLife = async (req, res) => {
+  log.info(
+    "Incoming request for Quality of life - short Report on the Collections of user with id: " +
+    req.params.userId
+  );
 
-//     flag1 = 1;
-//     Collection.find({ name: "Test_Screen"}) //Test_screen_neighbours
-//         .then(verifiedCollection => {
-//             // log.info(verifiedCollection);
-//             if(verifiedCollection.length == 0){
+  Collection.find({ name: "Quality of Life - Short" })
+    .then((verifiedCollection) => {
+      if (verifiedCollection.length == 0) {
+        return res.status(404).json({
+          message: "Collection information for user not found.",
+        });
+      }
 
-//                 log.info("ERRROOOOOR");
-//                 flag1 = 0;
-//             }
-//             if( flag1 == 1){
+      MemberCollection.find({
+        collectionTemplate: verifiedCollection,
+        member: req.params.userId,
+      })
+        .sort({ createdAt: -1 })
+        .populate({
+          path: "member",
+          options: { limit: 1 },
+          select: "-password",
+          populate: {
+            path: "info.currentAddress",
+            model: "Address",
+          }
+        })
+        .populate({
+          path: "member",
+          options: { limit: 1 },
+          select: "-password",
+          populate: { path: "info.currentAddress", model: "Address" },
+        })
+        .populate({
+          path: "memberSurveyList",
+          populate: { path: "surveyTemplate", model: "Survey" },
+        })
+        .exec()
+        .then((memberCollectionList) => {
+          if (memberCollectionList) {
 
-//                 log.info("Hellooooo SCREEN");
-//                 // log.info(verifiedCollection.length, "\n");
-//                 // log.info(verifiedCollection);
+            let collection_last_updated = new Date(memberCollectionList[0].updatedAt).toISOString().split('T')[0];
 
-//                 MemberCollection.find( { collectionTemplate: verifiedCollection, member: req.params.userId }).sort( { createdAt: 1 })
-//                 .populate( { path: 'member', options: { limit: 1 }, select: '-password', populate: { path: 'info.currentAddress', model: "Address" } })
-//                 .populate( { path: 'memberSurveyList', populate: { path: 'surveyTemplate', model: "Survey" } } )
-//                 .exec()
-//                 .then(memberCollectionList => {
-//                     if(memberCollectionList)
-//                     {
-//                         log.info("NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWwwww HIIIIIIIIIIIIIIII");
-//                         //log.info(memberCollection).find().;
+            let account_name = memberCollectionList[0].member.info.name || "";
+            account_name =
+              account_name.length >= 60
+                ? key_private.decrypt(account_name, "utf8")
+                : account_name;
 
-//                         // START - Account info step ==================================================
+            // BASIC NEEDS
+            let basic_needs = new Array();
 
-//                             let account_id = userFunctions.getStandardAccountId(memberCollectionList[0].member.role || "",
-//                             memberCollectionList[0].member.facilityId || "", memberCollectionList[0].member.sequence_id || "");
+            // PHYSICAL HEALTH
+            let PH_QofL2_SD = new Array();
 
-//                             let account_involvement = neighbourFunctions.formatInvolvement(memberCollectionList[0].member.role || "");
+            // PHYSICAL HEALTH STRING
+            let PH_QofL2_SD_STRING = new Array();
 
-//                             let account_name = memberCollectionList[0].member.info.name || "";
+            // MENTAL HEALTH
+            let MH_QofL2_SD = new Array();
 
-//                             let account_gender = neighbourFunctions.formatGender(memberCollectionList[0].member.info.gender || "");
+            // MENTAL HEALTH STRING
+            let MH_QofL2_SD_STRING = new Array();
 
-//                             let account_dob = neighbourFunctions.formatDate(memberCollectionList[0].member.info.dateOfBirth || "");
+            // MOBILITY
+            let M_QofL2_SD = new Array();
 
-//                             let account_postalCode = neighbourFunctions.formatPostalCode(memberCollectionList[0].member.info.currentAddress.code || "");
+            // PERSONAL CARE
+            let PC_QofL2_SD = new Array();
 
-//                             let account_language = neighbourFunctions.formatLanguage(memberCollectionList[0].member.info.language || "");
+            // USUAL ACTIVITIES
+            let UA_QofL2_SD = new Array();
 
-//                         // // END - Account info step ==================================================
+            // PAIN/DISCOMFORT
+            let PD_QofL2_SD = new Array();
 
-//                         // // START - Collection : Survey info step ==================================================
+            // ANXIETY/DEPRESSION
+            let AD_QofL2_SD = new Array();
 
-//                             let collection_ids = neighbourFunctions.collectionIds(memberCollectionList);
+            // SUPPORT HEALTH ATTEND WELLNESS PROGRAM
+            let support_wellness_program = new Array();
 
-//                             let collection_dates = neighbourFunctions.collectionDates(memberCollectionList);
+            // SUPPORT HEALTHCARE
+            let support_healthcare = new Array();
 
-//                             let neighboursChapter_ids = neighbourFunctions.neighbourChapterIds(memberCollectionList);
+            // SUPPORT HOME HEALTHCARE
+            let support_home_healthcare = new Array();
 
-//                             let neighboursChapter_dates = neighbourFunctions.neighbourChapterDates(memberCollectionList);
+            // SUPPORT PRIVATE HEALTHCARE
+            let support_private_healthcare = new Array();
 
-//                         // END - Collection : Survey Info Step ==================================================
+            // SUPPORT INFORMAL
+            let support_informal = new Array();
 
-//                         // START - Neighbour Report info step ==================================================
+            // ED VISIT
+            let HU_ED_QofL2_SD = new Array();
 
-//                             // Number of people living with the person
-//                             let household2_size = new Array();
+            // HOSPITALIZATION
+            let HU_HNum_QofL2_SD = new Array();
 
-//                             // Participating in community activities
-//                             let community_activity_participate = new Array();
+            // DAYS IN HOSPITAL
+            let HU_HD_QofL2_SD = new Array();
 
-//                             // Satisfaction rate 1 to 10
-//                             let life_satisfaction2 = new Array();
+            // EMS
+            let HU_EMS_QofL2_SD = new Array();
 
-//                             // Community belonging rate
-//                             let local_community_belonging = new Array();
+            // URGENT CARE
+            let HU_UC_QofL2_SD = new Array();
 
-//                             // Feeling lack of companionship
-//                             let lack_companionship = new Array();
+            // SOUGHT TREATEMENT
+            let HU_ST_QofL2_SD = new Array();
 
-//                             // Feeling leftout
-//                             let feel_leftout = new Array();
+            // ACCIDENT
+            let HU_A_QofL2_SD = new Array();
 
-//                             // Feeling isolated
-//                             let feel_isolated = new Array();
+            // PERCEIVED SOCIAL SUPPORT
+            let PSS_QofL1_COMB = new Array();
 
-//                             // log.info(memberCollectionList);
+            // PERCEIVED LONELINESS
+            let PL_QofL1_COMB = new Array();
 
-//                             memberCollectionList.forEach(memberCollection => {
 
-//                                 // if( memberCollection.collectionTemplate == '62017ad39894374f8451348e'){
-//                                     // log.info('%' , "MEMBERRRRRRRR COLLECTIOOOOOOOOOON" ,memberCollectionList , "EEEEEEEEEEEEEEEEEND");
+            // PERCIEVED LONELINESS SOMETIMES COUNT
+            let PL_QofL1_COMB_sometimes_count = new Array();
 
-//                                 // if( collectio name == )
+            // PERCIEVED LONELINESS OFTEN COUNT
+            let PL_QofL1_COMB_often_count = new Array();
 
-//                                 if(memberCollection.memberSurveyList)
-//                                 {
+          }
+        })
 
-//                                     // log.info(memberCollection.memberSurveyList);
+    })
 
-//                                     const screenArray = Array.from(memberCollection.memberSurveyList);
-
-//                                     let chapter7Values = null;
-
-//                                     let chapter7Results = screenArray.find(survey =>
-//                                         survey.surveyTemplate.name == "Social Health"
-//                                     );
-
-//                                     // log.info(chapter7Results);
-
-//                                     if(chapter7Results !==undefined)
-
-//                                         chapter7Values = JSON.parse(chapter7Results.responseJSON);
-
-//                                     if(chapter7Values){
-
-//                                         household2_size.push(neighbourFunctions.household2_size(chapter7Values.household2_size));
-//                                         community_activity_participate.push(neighbourFunctions.community_activity_participate(chapter7Values.community_activity_participate));
-//                                         life_satisfaction2.push(neighbourFunctions.life_satisfaction2(chapter7Values.life_satisfaction2));
-//                                         local_community_belonging.push(neighbourFunctions.local_community_belonging(chapter7Values.local_community_belonging));
-//                                         lack_companionship.push(neighbourFunctions.lack_companionship(chapter7Values.lack_companionship));
-//                                         feel_leftout.push(neighbourFunctions.feel_isolated(chapter7Values.feel_isolated));
-//                                         feel_isolated.push(neighbourFunctions.feel_isolated(chapter7Values.feel_leftout));
-//                                         // log.info(neighbourFunctions.feel_isolated(chapter7Values.feel_leftout));
-
-//                                     }
-
-//                                     // log.info(life_satisfaction2);
-
-//                                 }
-
-//                             });
-
-//                     return res.status(200).json({
-//                         ID_PRF_SD: account_id,
-//                         SRVNum_PRF_SD: neighboursChapter_ids,
-//                         SRVD_PRF_SD: neighboursChapter_dates,
-//                         TINV_PRF_SD: account_involvement,
-//                         GEN_PRF_SD: account_gender,
-//                         DOB_PRF_SD: account_dob,
-//                         PC_PRF_SD: account_postalCode,
-//                         L_PRF_SD: account_language,
-//                         feel_isolated: feel_isolated,
-//                         feel_leftout: feel_leftout,
-//                         lack_companionship: lack_companionship,
-//                         local_community_belonging: local_community_belonging,
-//                         life_satisfaction2: life_satisfaction2,
-//                         community_activity_participate: community_activity_participate,
-//                         household2_size: household2_size,
-//                         request: {
-//                             type: 'GET',
-//                             url: config.server.protocol + '://' + config.server.hostname +':' + config.server.port + '/api/reports/Screen/user/' + req.params.userId
-//                         }
-//                     });
-//                 }
-
-//                 else
-//                 {
-//                     return res.status(404).json({
-//                         message: "Collection information for user not found."
-//                     });
-//                 }
-//                 })
-//                 .catch(error => {
-
-//                 log.error(error.message);
-
-//                 return res.status(500).json({
-//                     message: error.message
-//                 });
-
-//                 });
-//                 }
-//                 else
-//                 {
-//                 return res.status(404).json({
-//                 });
-//                 }
-
-//                 })
-//                 .catch(error => {
-
-//                 log.error(error.message);
-
-//                 return res.status(500).json({
-//                 message: error.message
-//                 });
-
-//     });
-
-// }
+};

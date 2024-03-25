@@ -1,9 +1,8 @@
 /*
 ==============================================
-MemberSurvey Controller
+SCREENER REPORT CONTROLLER
 ----------------------------------------------
-Methods:
-- Personalized Neighbours
+
 ==============================================
 */
 
@@ -190,10 +189,6 @@ exports.Screen = async (req, res) => {
 
                                     let chapter7Values = null;
 
-
-
-
-
                                     let chapter7Results = screenArray.find(survey =>
                                         survey.surveyTemplate.name == "Social Health"
                                     );
@@ -206,10 +201,6 @@ exports.Screen = async (req, res) => {
                                     if (chapter7Results !== undefined)
 
                                         chapter7Values = JSON.parse(chapter7Results.responseJSON);
-
-
-
-
 
 
                                     if (chapter7Values) {
