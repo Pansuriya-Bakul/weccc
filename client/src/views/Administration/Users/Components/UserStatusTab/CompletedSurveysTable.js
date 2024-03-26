@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
 export default function CompletedSurveysTable(props) {
 
     const { data } = props;
-
+    const reversedData = data.length > 0 ? [...data].reverse() : [];
     const classes = useStyles();
 
     const formatDate = (dateString) => {
@@ -75,8 +75,8 @@ export default function CompletedSurveysTable(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.length > 0 ? (
-                            data.map((row, index) => (
+                        {reversedData.length > 0 ? (
+                            reversedData.map((row, index) => (
                                 <TableRow key={index}>
                                     <TableCell>
                                     <Typography s>{row.collectionTemplate.name.charAt(0).toUpperCase() + row.collectionTemplate.name.slice(1)}</Typography>

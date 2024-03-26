@@ -357,7 +357,7 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                                         panelIndex={panelIndex}
                                                         userOriginal={userOriginal}
                                                     />
-                                                ) : userOriginal && userOriginal.role === "Patient" ? (                                                <MemberStatusTab
+                                                ) : userOriginal ? (                                                <MemberStatusTab
                                                     appState={appState}
                                                     userID={userID}
                                                     setParentAlert={setAlert}
