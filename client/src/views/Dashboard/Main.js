@@ -335,11 +335,11 @@ class Main extends Component {
 
   createMapping = async () => {
     let { appState } = this.props;
-    if (appState.role == "Patient" || appState.role == "Coordinator") {
+    if (appState.role === "Patient") {
       return;
     }
     const templist = await this.getPatients();
-    if (templist == undefined) {
+    if (templist === undefined) {
       return;
     }
     this.setState({ patientsList: templist });
@@ -522,20 +522,20 @@ class Main extends Component {
                               {/* {this.state.clientData.message ? (
 															<p>{this.state.clientData.message}</p>
 														) : ('')} */}
-                              {appState.role == "Volunteer" &&
+                              {(appState.role === "Volunteer" || appState.role === "Coordinator") &&
                                 (JSON.stringify(this.state.pMapping) !== "{}"
                                   ? (
                                     Object.keys(this.state.pMapping).map(
                                       (pkey, pindex) =>
                                         this.state.pMapping[pkey][0] &&
-                                        this.state.pMapping[pkey][1]
+                                          this.state.pMapping[pkey][1]
                                           ? this.state.pMapping[pkey][0].map(
-                                              (key, index) => {
-                                                return (
-                                                  <>
-                                                    {this.state.pMapping[
-                                                      pkey
-                                                    ][2][index] == false && (
+                                            (key, index) => {
+                                              return (
+                                                <>
+                                                  {this.state.pMapping[
+                                                    pkey
+                                                  ][2][index] === false && (
                                                       <Grid item xs={12}>
                                                         <div>
                                                           <Box
@@ -571,22 +571,22 @@ class Main extends Component {
                                                           {this.state.pToggle[
                                                             `${pkey}-${key}`
                                                           ] && (
-                                                            <Box
-                                                              m={0}
-                                                              p={1.5}
-                                                              className="bottom-container"
-                                                            >
-                                                              <div className="survey-div">
-                                                                {this.state
-                                                                  .pMapping[
-                                                                  pkey
-                                                                ][1] &&
-                                                                this.state
-                                                                  .pMapping[
-                                                                  pkey
-                                                                ][1] !==
-                                                                  undefined
-                                                                  ? this.state.pMapping[
+                                                              <Box
+                                                                m={0}
+                                                                p={1.5}
+                                                                className="bottom-container"
+                                                              >
+                                                                <div className="survey-div">
+                                                                  {this.state
+                                                                    .pMapping[
+                                                                    pkey
+                                                                  ][1] &&
+                                                                    this.state
+                                                                      .pMapping[
+                                                                    pkey
+                                                                    ][1] !==
+                                                                    undefined
+                                                                    ? this.state.pMapping[
                                                                       pkey
                                                                     ][1][
                                                                       index
@@ -606,15 +606,7 @@ class Main extends Component {
                                                                                 placement="bottom"
                                                                                 title="Edit Module"
                                                                               >
-                                                                                <Box
-                                                                                  m={
-                                                                                    1
-                                                                                  }
-                                                                                  pt={
-                                                                                    1
-                                                                                  }
-                                                                                  className="survey-box"
-                                                                                >
+                                                                                <Box m={1} pt={1} className="survey-box">
                                                                                   <Button
                                                                                     className="survey-name"
                                                                                     size="small"
@@ -632,19 +624,19 @@ class Main extends Component {
                                                                                       value[2]
                                                                                     }
                                                                                   </Button>
-                                                                                  {value[1] ==
+                                                                                  {value[1] ===
                                                                                     0 && (
-                                                                                    <div className="status-div not-started">
-                                                                                      <span>
-                                                                                        Not
-                                                                                        Started
-                                                                                      </span>
-                                                                                    </div>
-                                                                                  )}
+                                                                                      <div className="status-div not-started">
+                                                                                        <span>
+                                                                                          Not
+                                                                                          Started
+                                                                                        </span>
+                                                                                      </div>
+                                                                                    )}
                                                                                   {value[1] >
                                                                                     0 &&
                                                                                     value[1] <
-                                                                                      100 && (
+                                                                                    100 && (
                                                                                       <div className="status-div in-progress">
                                                                                         <span>
                                                                                           In
@@ -654,12 +646,12 @@ class Main extends Component {
                                                                                     )}
                                                                                   {value[1] ==
                                                                                     100 && (
-                                                                                    <div className="status-div completed">
-                                                                                      <span>
-                                                                                        Completed
-                                                                                      </span>
-                                                                                    </div>
-                                                                                  )}
+                                                                                      <div className="status-div completed">
+                                                                                        <span>
+                                                                                          Completed
+                                                                                        </span>
+                                                                                      </div>
+                                                                                    )}
                                                                                 </Box>
                                                                               </Tooltip>
                                                                             </Grid>
@@ -667,18 +659,18 @@ class Main extends Component {
                                                                         );
                                                                       }
                                                                     )
-                                                                  : "No series assigned"}
-                                                              </div>
-                                                            </Box>
-                                                          )}
+                                                                    : "No series assigned"}
+                                                                </div>
+                                                              </Box>
+                                                            )}
                                                         </div>
                                                       </Grid>
                                                     )}
-                                                  </>
-                                                );
-                                              }
-                                            )
-                                          : "No series assigned"
+                                                </>
+                                              );
+                                            }
+                                          )
+                                          : ""
                                     ))
                                   : "No series assigned")}
                             </Typography>
@@ -686,17 +678,17 @@ class Main extends Component {
                           <Grid item xs={12}>
                             <Typography variant="body2" component="h2">
                               {!this.state.collectionCompleteness.every(
-                                (v) => v == true
+                                (v) => v === true
                               ) &&
-                              this.state.collectionNames &&
-                              this.state.collectionNames !== undefined
+                                this.state.collectionNames &&
+                                this.state.collectionNames !== undefined
                                 ? this.state.collectionNames.map(
-                                    (key, index) => {
-                                      return (
-                                        <>
-                                          {this.state.collectionCompleteness[
-                                            index
-                                          ] == false && (
+                                  (key, index) => {
+                                    return (
+                                      <>
+                                        {this.state.collectionCompleteness[
+                                          index
+                                        ] === false && (
                                             <Grid item xs={12}>
                                               {/* <Tooltip
 																				placement="bottom"
@@ -719,8 +711,8 @@ class Main extends Component {
                                                     component={Link}
                                                     to={`/administration/booklets/user/view`}
                                                   >
-                                                    {appState.role ==
-                                                    "Volunteer" ? (
+                                                    {(appState.role ===
+                                                      "Volunteer") || (appState.role === "Coordinator") ? (
                                                       <h3>{key} - Self Care</h3>
                                                     ) : (
                                                       <h3>{key}</h3>
@@ -736,45 +728,45 @@ class Main extends Component {
                                                     <div className="survey-div">
                                                       {this.state
                                                         .collections !== "" &&
-                                                      this.state.collections !==
+                                                        this.state.collections !==
                                                         undefined
                                                         ? this.state.collections[
-                                                            index
-                                                          ].map((value) => {
-                                                            return (
-                                                              <>
-                                                                <Grid
-                                                                  item
-                                                                  xs={12}
+                                                          index
+                                                        ].map((value) => {
+                                                          return (
+                                                            <>
+                                                              <Grid
+                                                                item
+                                                                xs={12}
+                                                              >
+                                                                <Tooltip
+                                                                  placement="bottom"
+                                                                  title="Edit Module"
                                                                 >
-                                                                  <Tooltip
-                                                                    placement="bottom"
-                                                                    title="Edit Module"
+                                                                  <Box
+                                                                    m={1}
+                                                                    pt={1}
+                                                                    className="survey-box"
                                                                   >
-                                                                    <Box
-                                                                      m={1}
-                                                                      pt={1}
-                                                                      className="survey-box"
+                                                                    <Button
+                                                                      className="survey-name"
+                                                                      size="small"
+                                                                      variant="contained"
+                                                                      color="primary"
+                                                                      startIcon={
+                                                                        <EditIcon />
+                                                                      }
+                                                                      component={
+                                                                        Link
+                                                                      }
+                                                                      to={`/administration/booklets/user/view/${value[0]}`}
                                                                     >
-                                                                      <Button
-                                                                        className="survey-name"
-                                                                        size="small"
-                                                                        variant="contained"
-                                                                        color="primary"
-                                                                        startIcon={
-                                                                          <EditIcon />
-                                                                        }
-                                                                        component={
-                                                                          Link
-                                                                        }
-                                                                        to={`/administration/booklets/user/view/${value[0]}`}
-                                                                      >
-                                                                        {
-                                                                          value[2]
-                                                                        }
-                                                                      </Button>
-                                                                      {value[1] ==
-                                                                        0 && (
+                                                                      {
+                                                                        value[2]
+                                                                      }
+                                                                    </Button>
+                                                                    {value[1] ==
+                                                                      0 && (
                                                                         <div className="status-div not-started">
                                                                           <span>
                                                                             Not
@@ -782,31 +774,31 @@ class Main extends Component {
                                                                           </span>
                                                                         </div>
                                                                       )}
-                                                                      {value[1] >
-                                                                        0 &&
-                                                                        value[1] <
-                                                                          100 && (
-                                                                          <div className="status-div in-progress">
-                                                                            <span>
-                                                                              In
-                                                                              Progress
-                                                                            </span>
-                                                                          </div>
-                                                                        )}
-                                                                      {value[1] ==
-                                                                        100 && (
+                                                                    {value[1] >
+                                                                      0 &&
+                                                                      value[1] <
+                                                                      100 && (
+                                                                        <div className="status-div in-progress">
+                                                                          <span>
+                                                                            In
+                                                                            Progress
+                                                                          </span>
+                                                                        </div>
+                                                                      )}
+                                                                    {value[1] ==
+                                                                      100 && (
                                                                         <div className="status-div completed">
                                                                           <span>
                                                                             Completed
                                                                           </span>
                                                                         </div>
                                                                       )}
-                                                                    </Box>
-                                                                  </Tooltip>
-                                                                </Grid>
-                                                              </>
-                                                            );
-                                                          })
+                                                                  </Box>
+                                                                </Tooltip>
+                                                              </Grid>
+                                                            </>
+                                                          );
+                                                        })
                                                         : "No Series assigned"}
                                                     </div>
                                                   </Box>
@@ -815,11 +807,11 @@ class Main extends Component {
                                               {/* </Tooltip> */}
                                             </Grid>
                                           )}
-                                        </>
-                                      );
-                                    }
-                                  )
-                                : (appState.role == "Patient" ? "No series assigned" : "")}
+                                      </>
+                                    );
+                                  }
+                                )
+                                : (appState.role === "Patient" ? "No series assigned" : "")}
                             </Typography>
                           </Grid>
                         </Grid>
