@@ -7,7 +7,9 @@ import { iso } from "joi/lib/types/date";
 
 export default class ReportDashboard extends Component {
     findDashboardValues = (reports, collection) => {
+      
         let health = (reports.HT_QofL2_SD[collection] + (reports.PH_QofL2_SD[collection] * 25) + (reports.YH_QofL3_SD[collection] * 10)) / 3;
+
 
         // health = health > 100 ? 0 : health;
 
