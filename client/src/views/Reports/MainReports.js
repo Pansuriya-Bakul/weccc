@@ -14,6 +14,7 @@ import SocialHealth from "./Social_Health.jpeg"
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 
 
+
 import { makeStyles } from "@material-ui/core/styles"; // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
 
 import Grid from "@material-ui/core/Grid"; // Normal Markup with MUI is layout -> Container -> Grid -> Paper etc...
@@ -87,18 +88,30 @@ function MainReports() {
 
                     <table cellSpacing="2" bgcolor="#000000" align="center">
                         <tr bgcolor="#ffffff">
-                            <th><Link to={`/ClientReports1/${_id}`}>
-                                <Typography style={{ padding: '5px' }}>
-                                    Social Health Screener Report
-                                </Typography>
-                                <img height="200" width="200" src={SocialHealth} />
-                            </Link></th>
-                            <th><Link to={`/ClientReports/${_id}`}>
-                                <Typography style={{ padding: '5px' }}>
-                                    Community Connections Report
-                                </Typography>
-                                <img height="200" width="200" src={NeighboursImg} />
-                            </Link></th>
+                            <th>
+                                <Link to={`/ClientReports1/${_id}`}>
+                                    <Typography style={{ padding: '5px' }}>
+                                        Social Health Screener Report
+                                    </Typography>
+                                    <img height="200" width="200" src={SocialHealth} alt="Screener report" />
+                                </Link>
+                            </th>
+                            <th>
+                                <Link to={`/ClientReports/${_id}`}>
+                                    <Typography style={{ padding: '5px' }}>
+                                        Community Connections Report
+                                    </Typography>
+                                    <img height="200" width="200" src={NeighboursImg} alt="Community Connections Report" />
+                                </Link>
+                            </th>
+                            <th>
+                                <Link to={`/QofLReports/${_id}`}>
+                                    <Typography style={{ padding: '5px' }}>
+                                        Quality of Life - Short Report
+                                    </Typography>
+                                    <img height="200" width="200" src={NeighboursImg} alt="Quality of Life Short Report" />
+                                </Link>
+                            </th>
                         </tr>
                     </table>
 

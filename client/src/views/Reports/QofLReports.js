@@ -1,5 +1,5 @@
 // ================================================
-// CLIENT COMMUNITY CONNECTIONS REPORT
+// QUALITY OF LIFE - SHORT REPORT
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
@@ -77,7 +77,7 @@ const useStyles = makeStyles(
 
 // ======================== React Modern | Functional Component ========================
 
-const ClientReports = (props) => {
+const QofLReports = (props) => {
   // Notice the arrow function... regular function()  works too
 
   // Variables ===
@@ -110,7 +110,7 @@ const ClientReports = (props) => {
   // Functions ===
 
   const getPatients = useCallback(() => {
-    if (appState.role == "Patient") {
+    if (appState.role === "Patient") {
       // setAlert(
       //   new AlertType("You do not have Permission to recieve Patients", "error")
       // );
@@ -175,14 +175,14 @@ const ClientReports = (props) => {
   //     });
   // }
 
-  const getNeighbours = useCallback(
+  const getQofL = useCallback(
     (userId) => {
-      get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
+      get("reports/qoflShort/user/" + userId, appState.token, (err, res) => {
         if (err) {
           //Bad callback
           setAlert(
             new AlertType(
-              "Unable to retrieve Community Connection Series Report. Please refresh and try again."
+              "Unable to retrieve Quality of Life - Short Report. Please refresh and try again."
             )
           );
         } else {
@@ -197,7 +197,7 @@ const ClientReports = (props) => {
             //Bad HTTP Response
             setAlert(
               new AlertType(
-                "Unable to retrieve Community Connection Series Report. Please refresh and try again.",
+                "Unable to retrieve Quality of Life - Short Report. Please refresh and try again.",
                 "error"
               )
             );
@@ -251,15 +251,15 @@ const ClientReports = (props) => {
 
   useEffect(() => {
     if (currentPatient !== "") {
-      getNeighbours(currentPatient);
+      getQofL(currentPatient);
       // getScreen(currentPatient);
     }
   }, [currentPatient]);
 
   useEffect(() => {
     if (reportsData !== null) {
-      const flags = checkAlerts(reportsData, currentReportIndex);
-      setAnyFlags(flags);
+    //   const flags = checkAlerts(reportsData, currentReportIndex);
+    //   setAnyFlags(flags);
       setLastUpdated(reportsData.collection_last_updated);
     }
   }, [reportsData, currentReportIndex]);
@@ -373,7 +373,7 @@ const ClientReports = (props) => {
                           <>
                             <Grid item xs={12}>
                               <Typography variant="h4" color="textPrimary">
-                                Compassion Care Community Connections Report
+                                Quality of Life - Short Report
                               </Typography>
                               <Divider light />
                             </Grid>
@@ -395,7 +395,7 @@ const ClientReports = (props) => {
                               ></ReportDashboard>
                             </Grid>
 
-                            <Grid item xs={12} id="summary">
+                            {/* <Grid item xs={12} id="summary">
                               <Typography
                                 variant="h5"
                                 color="textSecondary"
@@ -483,7 +483,7 @@ const ClientReports = (props) => {
                                 Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
 
                               </Typography>
-                            </Grid>
+                            </Grid> */}
 
                           </>
                         ) : (
@@ -525,17 +525,17 @@ const ClientReports = (props) => {
 };
 
 // ======================== Component PropType Check ========================
-ClientReports.propTypes = {
+QofLReports.propTypes = {
   // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
   appState: PropTypes.object.isRequired,
   ToggleDrawerClose: PropTypes.func.isRequired,
   CheckAuthenticationValidity: PropTypes.func.isRequired,
 };
 
-ClientReports.defaultProps = {
+QofLReports.defaultProps = {
   appState: {},
   ToggleDrawerClose: () => { },
   CheckAuthenticationValidity: () => { },
 };
 
-export default ClientReports; // You can even shorthand this line by adding this at the function [Component] declaration stage
+export default QofLReports; // You can even shorthand this line by adding this at the function [Component] declaration stage
