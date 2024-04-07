@@ -7,22 +7,13 @@ import html2canvas from 'html2canvas';
 import html2pdf from 'html2pdf.js';
 
 // ==================== Modules =====================
-import Pagination from "@material-ui/lab/Pagination";
 
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-
-// ==================== Components ==================
+// ==================== Components ================== 
 import AlertMessage from "../../components/AlertMessage";
 
 import Summary from "./Summary";
-import Summary1 from "./Summary1";
 import PossibleConcerns from "./PossibleConcerns";
 import Suggestions from "./Suggestions";
-import ContactInfo from "./ContactInfo";
 import CommunityCircle from "./CommunityCircle/CommunityCircle";
 import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
 
@@ -46,14 +37,8 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 
 import { CircularProgress } from '@material-ui/core';
 import CardContent from "@material-ui/core/CardContent";
-
-import GaugeChart from "react-gauge-chart";
 import "../../css/gauge-chart.css";
 
-// ==================== FontAwesome Icons ====================
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers, faPersonCane, faHandshake, faPerson } from '@fortawesome/free-solid-svg-icons'
-import { set } from "joi/lib/types/lazy";
 
 // ==================== MUI Styles ===================
 
@@ -96,11 +81,12 @@ const ClientReports = (props) => {
   // const [personId, setPersonId] = useState("60e879aac417375c838307b9");
 
   const [reportsData, setReportsData] = useState(null);
-  const [reports1Data, setReports1Data] = useState(null);
   const [patientData, setPatientData] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [currentPatient, setCurrentPatient] = useState(
     localStorage.getItem("_id")
   );
+  // eslint-disable-next-line no-unused-vars
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
@@ -110,7 +96,7 @@ const ClientReports = (props) => {
   // Functions ===
 
   const getPatients = useCallback(() => {
-    if (appState.role == "Patient") {
+    if (appState.role === "Patient") {
       // setAlert(
       //   new AlertType("You do not have Permission to recieve Patients", "error")
       // );
@@ -209,19 +195,20 @@ const ClientReports = (props) => {
   );
 
 
-  const patientSelectHandler = useCallback((event) => {
-    setCurrentPatient(event.target.value);
-  }, []);
+  // const patientSelectHandler = useCallback((event) => {
+  //   setCurrentPatient(event.target.value);
+  // }, []);
 
-  const reportsPaginationHandler = useCallback((event, page) => {
-    setCurrentReportIndex(page - 1);
-  }, []);
+  // const reportsPaginationHandler = useCallback((event, page) => {
+  //   setCurrentReportIndex(page - 1);
+  // }, []);
 
   // generate report pdf and initiate download
   const handleDownloadPDF = async () => {
     setIsDownloading(true);
     const reportElement = document.getElementById('report');
 
+    // eslint-disable-next-line no-unused-vars
     const canvas = await html2canvas(reportElement);
     const opt = {
       margin: 5,
@@ -236,6 +223,7 @@ const ClientReports = (props) => {
 
   };
 
+  
   // Hooks ===
 
   // First Render only because of the [ ] empty array tracking with the useEffect
@@ -367,7 +355,7 @@ const ClientReports = (props) => {
                         spacing={1}
                       >
                         {reportsData &&
-                          Object.keys(reportsData).length != 0 &&
+                          Object.keys(reportsData).length !== 0 &&
                           Object.getPrototypeOf(reportsData) ===
                           Object.prototype ? (
                           <>
@@ -395,7 +383,7 @@ const ClientReports = (props) => {
                               ></ReportDashboard>
                             </Grid>
 
-                            <Grid item xs={12} id="summary">
+                            <Grid item xs={12} id="summary" style={{marginTop:'24px'}}>
                               <Typography
                                 variant="h5"
                                 color="textSecondary"

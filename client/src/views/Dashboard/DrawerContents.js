@@ -113,7 +113,7 @@ class DrawerContents extends Component {
 						<ListItemText primary="Screen Reports" />
 					</ListItem>
 					} */}
-					{(appState.role == "Patient" || appState.role == "Volunteer") &&
+					{(appState.role !== 'Admin') &&
 						<ListItem button component={Link} to="/MainReports">
 							<ListItemIcon><AssessmentIcon color="primary" /></ListItemIcon>
 							<ListItemText primary="My Reports" />

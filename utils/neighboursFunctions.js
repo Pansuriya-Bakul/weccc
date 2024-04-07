@@ -1570,6 +1570,7 @@ function ISA_DM_STRINGS(question) {
 }
 
 function household_size(question) {
+
   if (!question) return 999;
 
   let DF = parseInt(question);
