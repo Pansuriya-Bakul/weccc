@@ -1,29 +1,27 @@
 import React, { Component } from "react";
 import HighlightBox from "./Summary/HighlightBox";
-import { iso } from "joi/lib/types/date";
 // import CircleGraphic from "./Summary/CircleGraphic";
 
 
 
 export default class ReportDashboard extends Component {
     findDashboardValues = (reports, collection) => {
-      
-        let health = (reports.HT_QofL2_SD[collection] + (reports.PH_QofL2_SD[collection] * 25) + (reports.YH_QofL3_SD[collection] * 10)) / 3;
 
 
-        // health = health > 100 ? 0 : health;
+        let health;
+
+        // HT_QofL2_SD is not present for Quality of Life - Short
+        if (reports.HT_QofL2_SD && reports.HT_QofL2_SD[collection]) {
+            health = (reports.HT_QofL2_SD[collection] + (reports.PH_QofL2_SD[collection] * 25) + (reports.YH_QofL3_SD[collection] * 10)) / 3;
+        } else {
+            health = ((reports.PH_QofL2_SD[collection] * 25) + (reports.YH_QofL3_SD[collection] * 10)) / 2;
+        }
 
         let mentalHealth = ((reports.MH_QofL2_SD[collection] * 25) + (reports.AD_QofL2_SD[collection] * 25)) / 2;
 
-        // mentalHealth = mentalHealth > 100 ? 0 : mentalHealth;
-
         let wellBeing = reports.PWI_QofL3_COMB[collection];
 
-        // wellBeing = wellBeing > 100 ? 0 : wellBeing;
-
         let lifeSatisfaction = reports.LS_QofL3_SD[collection] * 10;
-
-        // lifeSatisfaction = lifeSatisfaction > 100 ? 0 : lifeSatisfaction;
 
         let loneliness = reports.PL_QofL1_COMB[collection]; // average score
 
@@ -43,16 +41,20 @@ export default class ReportDashboard extends Component {
         //function
         let functionHealth = ((reports.MH_QofL2_SD[collection] * 25) + (reports.PC_QofL2_SD[collection] * 25) + (reports.UA_QofL2_SD[collection] * 25)) / 3;
 
-        // functionHealth = functionHealth > 100 ? 0 : functionHealth
-
         //community belonging
         let communityHealth = reports.FPC_QofL3_SD[collection] * 10
-        // communityHealth = communityHealth > 100 ? 0 : communityHealth;
 
         //isolation
         let isolationHealth = 0;
 
-        if (reports.household_size[collection] === 999 || reports.frequency_of_contact_family[collection] === '999' || reports.frequency_of_contact_friends[collection] === '999' || reports.FCP_INT_COMB[collection] === '999') {
+        if ( // These values do no exist for Quality of Life - Short
+            !reports.household_size ||
+            !reports.frequency_of_contact_family ||
+            !reports.frequency_of_contact_friends[collection]
+        ) {
+            isolationHealth = null; // will supress isolation box if null
+
+        } else if (reports.household_size[collection] === 999 || reports.frequency_of_contact_family[collection] === '999' || reports.frequency_of_contact_friends[collection] === '999' || reports.FCP_INT_COMB[collection] === '999') {
             isolationHealth = 999;
         } else {
 
@@ -82,7 +84,7 @@ export default class ReportDashboard extends Component {
         }
 
         //convert isolation (0-5) to percent according to calculation doc:
-        if (isolationHealth !== 999) {
+        if (isolationHealth !== 999 && isolationHealth !== null) {
             if (isolationHealth >= 4) {
                 isolationHealth = 0;
             }

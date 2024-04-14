@@ -258,8 +258,8 @@ const QofLReports = (props) => {
 
   useEffect(() => {
     if (reportsData !== null) {
-    //   const flags = checkAlerts(reportsData, currentReportIndex);
-    //   setAnyFlags(flags);
+      const flags = checkAlerts(reportsData, currentReportIndex);
+      setAnyFlags(flags);
       setLastUpdated(reportsData.collection_last_updated);
     }
   }, [reportsData, currentReportIndex]);
@@ -395,27 +395,6 @@ const QofLReports = (props) => {
                               ></ReportDashboard>
                             </Grid>
 
-                            {/* <Grid item xs={12} id="summary">
-                              <Typography
-                                variant="h5"
-                                color="textSecondary"
-                                align="left"
-                                gutterBottom
-                              >
-                                Summary
-                              </Typography>
-                              <Summary
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                              <CommunityCircle
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
-                            </Grid>
                             <Grid item xs={12}>
                               <Typography
                                 variant="h5"
@@ -483,7 +462,7 @@ const QofLReports = (props) => {
                                 Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
 
                               </Typography>
-                            </Grid> */}
+                            </Grid> 
 
                           </>
                         ) : (

@@ -32,7 +32,7 @@ const HighlightBox = (props) =>{
 			score = 100 - score;
 		}
 
-		if (score == 0) {
+		if (score === 0) {
 			return ("#CC3333"); //red
 		}
 		else if (score <= 25) {
@@ -145,7 +145,7 @@ const HighlightBox = (props) =>{
                     </Typography>
                     </div>
                 </Box>
-                <Box item xs={12} sm={6} md={4} lg={3} bgcolor={isolationHealth_color} style={{display:'flex', color:'white', padding:'10px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', maxHeight:'200px', width: '250px'}}>
+                {props.data[7] !== null && (<Box item xs={12} sm={6} md={4} lg={3} bgcolor={isolationHealth_color} style={{display:'flex', color:'white', padding:'10px', borderRadius:'8px', alignItems:'center', justifyContent:'center', gap:'16px', maxHeight:'200px', width: '250px'}}>
                 <FontAwesomeIcon icon={faPerson} style={{fontSize:'52px'}}/>
                     <div style={{display:'flex', flexDirection:'column'}}>
                     <Typography variant="h5" color="inherit" align="left" style={{fontWeight:'500'}}>
@@ -155,7 +155,7 @@ const HighlightBox = (props) =>{
                         {getLonelinessLabel(props.data[7])} {isComplete(props.data[7]) ? Math.round(props.data[7]) + '%' : ""}
                     </Typography>
                     </div>
-                </Box>
+                </Box>)}
                 
                 </div>
             </div>
