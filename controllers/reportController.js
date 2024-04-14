@@ -1218,19 +1218,19 @@ exports.QualityofLife = async (req, res) => {
             let MH_QofL2_SD_STRING = new Array();
 
             // MOBILITY
-            let M_QofL2_SD = new Array();
+            let problem_walking = new Array();
 
             // PERSONAL CARE
-            let PC_QofL2_SD = new Array();
+            let problem_washing_dressing = new Array();
 
             // USUAL ACTIVITIES
-            let UA_QofL2_SD = new Array();
+            let problem_usual_activities = new Array();
 
             // PAIN/DISCOMFORT
-            let PD_QofL2_SD = new Array();
+            let problem_pain_discomfort  = new Array();
 
             // ANXIETY/DEPRESSION
-            let AD_QofL2_SD = new Array();
+            let problem_anxious_depressed = new Array();
 
             // SUPPORT HEALTH ATTEND WELLNESS PROGRAM
             let support_wellness_program = new Array();
@@ -1273,7 +1273,6 @@ exports.QualityofLife = async (req, res) => {
 
             // PERCEIVED LONELINESS
             let PL_QofL1_COMB = new Array();
-
 
             // PERCIEVED LONELINESS SOMETIMES COUNT
             let PL_QofL1_COMB_sometimes_count = new Array();
@@ -1365,33 +1364,33 @@ exports.QualityofLife = async (req, res) => {
                   );
 
                   // MOBILITY
-                  M_QofL2_SD.push(
+                  problem_walking.push(
                     neighbourFunctions.mobility(chapter1Values.mobility_today)
                   );
 
                   // PERSONAL CARE
-                  PC_QofL2_SD.push(
+                  problem_washing_dressing.push(
                     neighbourFunctions.personal_care(
                       chapter1Values.self_care_today
                     )
                   );
 
                   // USUAL ACTIVITIES
-                  UA_QofL2_SD.push(
+                  problem_usual_activities.push(
                     neighbourFunctions.usual_activities(
                       chapter1Values.usual_activities_today
                     )
                   );
 
                   // PAIN/DISCOMFORT
-                  PD_QofL2_SD.push(
+                  problem_pain_discomfort.push(
                     neighbourFunctions.pain_discomfort(
                       chapter1Values.pain_discomfort_today
                     )
                   );
 
                   // ANXIETY/DEPRESSION
-                  AD_QofL2_SD.push(
+                  problem_anxious_depressed.push(
                     neighbourFunctions.anxiety_depression(
                       chapter1Values.anxiety_depression_today
                     )
@@ -1591,11 +1590,16 @@ exports.QualityofLife = async (req, res) => {
               PH_QofL2_SD_STRING: PH_QofL2_SD_STRING,
               MH_QofL2_SD: MH_QofL2_SD,
               MH_QofL2_SD_STRING: MH_QofL2_SD_STRING,
-              M_QofL2_SD: M_QofL2_SD,
-              PC_QofL2_SD: PC_QofL2_SD,
-              UA_QofL2_SD: UA_QofL2_SD,
-              PD_QofL2_SD: PD_QofL2_SD,
-              AD_QofL2_SD: AD_QofL2_SD,
+              M_QofL2_SD: problem_walking,
+              PC_QofL2_SD: problem_washing_dressing,
+              UA_QofL2_SD: problem_usual_activities,
+              PD_QofL2_SD: problem_pain_discomfort,
+              AD_QofL2_SD: problem_anxious_depressed,
+              problem_walking: problem_walking,
+              problem_washing_dressing: problem_washing_dressing,
+              problem_usual_activities: problem_usual_activities,
+              problem_pain_discomfort: problem_pain_discomfort,
+              problem_anxious_depressed: problem_anxious_depressed,
               support_wellness_program: support_wellness_program,
               support_healthcare: support_healthcare,
               support_home_healthcare: support_home_healthcare,

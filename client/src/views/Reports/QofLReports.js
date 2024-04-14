@@ -395,27 +395,6 @@ const QofLReports = (props) => {
                               ></ReportDashboard>
                             </Grid>
 
-                            {/* <Grid item xs={12} id="summary">
-                              <Typography
-                                variant="h5"
-                                color="textSecondary"
-                                align="left"
-                                gutterBottom
-                              >
-                                Summary
-                              </Typography>
-                              <Summary
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                              <CommunityCircle
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
-                            </Grid>
                             <Grid item xs={12}>
                               <Typography
                                 variant="h5"
@@ -431,7 +410,7 @@ const QofLReports = (props) => {
                               />
                             </Grid>
 
-                            {anyFlags && (
+                            {/*{anyFlags && (
                               <Grid item xs={12} id="possible concerns">
                                 <Typography
                                   variant="h5"
