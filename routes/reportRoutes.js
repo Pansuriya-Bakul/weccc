@@ -16,6 +16,7 @@ const authenticate = passport.authenticate('JwtToken', { session: false });
 
 router.get('/neighbours/user/:userId', ReportController.Neighbour);
 router.get('/Screen/user/:userId', ReportController1.Screen);
+router.get('/qoflShort/user/:userId', ReportController.QualityofLife);
 
 router.get('/communityCare/StandardId/:userId', ReportController.standardAccountId);
 

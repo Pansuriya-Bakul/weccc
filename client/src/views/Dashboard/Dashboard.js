@@ -27,6 +27,7 @@ import Reports from '../Reports/Reports';
 import ClientReports from '../Reports/ClientReports';
 import ScreenReports from '../Reports/Reports1';
 import ClientReports1 from '../Reports/ClientReports1';
+import QofLReports from '../Reports/QofLReports';
 import MainReports from '../Reports/MainReports'
 import ViewUserDashboard from './ViewUserDashboard';
 //import MainReports from '../Reports/MainReports';
@@ -174,6 +175,7 @@ class Dashboard extends Component {
                             {/* <Route path="/search" render={(props) => <Search {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} UpdateUser={this.props.UpdateUser}/> } /> */}
                             <Route path="/reports/:userID" render={(props) => <Reports {...props} userID={props.match.params.userID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             <Route exact path={`/ClientReports/:userID`} render={(props) => <ClientReports {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
+                            <Route exact path={`/QofLReports/:userID`} render={(props) => <QofLReports {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             <Route path="/ClientReports1" render={(props) => <ClientReports1 {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             <Route path="/ScreenReports/:userID" render={(props) => <ScreenReports {...props} userID={props.match.params.userID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             {/* <Route path="/ScreenReports1" render={(props) => <ScreenReports1 {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} /> */}
