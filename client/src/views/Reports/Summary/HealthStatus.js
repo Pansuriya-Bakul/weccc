@@ -9,12 +9,6 @@ const HealthStatus = ({ reports, collection }) => {
 
   const scoreToWord = { 4: 'Excellent 😍', 3: 'Very Good 😃', 2: 'Good 🙂', 1: 'Fair 🙂', 0: 'Poor 😭' };
 
-  console.log('reports:', reports);
-  console.log('collection:', collection);
-  console.log('reports.PH_QofL2_SD[collection]:', reports.PH_QofL2_SD && reports.PH_QofL2_SD[collection]);
-  console.log('reports.MH_QofL2_SD[collection]:', reports.MH_QofL2_SD && reports.MH_QofL2_SD[collection]);
-
-
   return (
     <>
       <Typography variant="h6" color="secondary" align="left" gutterBottom>

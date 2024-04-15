@@ -5,19 +5,62 @@ import HighlightBox from "./Summary/HighlightBox";
 
 
 export default class ReportDashboard extends Component {
-    findDashboardValues = (reports, collection) => {
 
+    // Calculates the health score even if some values missing
+    calculateHealth = (reports, collection) => {
+        let HT = reports.HT_QofL2_SD && reports.HT_QofL2_SD[collection] !== 999 ? reports.HT_QofL2_SD[collection] : null;
+        let PH = reports.PH_QofL2_SD && reports.PH_QofL2_SD[collection] !== 999 ? (reports.PH_QofL2_SD[collection] * 25) : null;
+        let YH = reports.YH_QofL3_SD && reports.YH_QofL3_SD[collection] !== 999 ? (reports.YH_QofL3_SD[collection] * 10) : null;
 
-        let health;
+        let sum = 0;
+        let count = 0;
 
-        // HT_QofL2_SD is not present for Quality of Life - Short
-        if (reports.HT_QofL2_SD && reports.HT_QofL2_SD[collection]) {
-            health = (reports.HT_QofL2_SD[collection] + (reports.PH_QofL2_SD[collection] * 25) + (reports.YH_QofL3_SD[collection] * 10)) / 3;
-        } else {
-            health = ((reports.PH_QofL2_SD[collection] * 25) + (reports.YH_QofL3_SD[collection] * 10)) / 2;
+        if (HT !== null) {
+            sum += HT;
+            count++;
         }
 
-        let mentalHealth = ((reports.MH_QofL2_SD[collection] * 25) + (reports.AD_QofL2_SD[collection] * 25)) / 2;
+        if (PH !== null) {
+            sum += PH;
+            count++;
+        }
+
+        if (YH !== null) {
+            sum += YH;
+            count++;
+        }
+
+        let health = count > 0 ? Math.round(sum / count) : 999;
+        return health;
+    };
+
+    // Calculates the mental health score even if some values missing
+    calculateMentalHealth = (reports, collection) => {
+        let MH = reports.MH_QofL2_SD && reports.MH_QofL2_SD[collection] !== 999 ? (reports.MH_QofL2_SD[collection] * 25) : null;
+        let AD = reports.AD_QofL2_SD && reports.AD_QofL2_SD[collection] !== 999 ? (reports.AD_QofL2_SD[collection] * 25) : null;
+    
+        let sum = 0;
+        let count = 0;
+    
+        if (MH !== null) {
+            sum += MH;
+            count++;
+        }
+    
+        if (AD !== null) {
+            sum += AD;
+            count++;
+        }
+    
+        let mentalHealth = count > 0 ? Math.round(sum / count) : 999;
+        return mentalHealth;
+    };
+
+    findDashboardValues = (reports, collection) => {
+
+        let health = this.calculateHealth(reports, collection);
+
+        let mentalHealth = this.calculateMentalHealth(reports, collection);
 
         let wellBeing = reports.PWI_QofL3_COMB[collection];
 
