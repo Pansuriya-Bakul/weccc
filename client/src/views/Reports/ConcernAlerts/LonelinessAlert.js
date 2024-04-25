@@ -31,12 +31,9 @@ export default class LonelinessAlert extends Component {
 			reports.PL_QofL1_COMB_often_count[collection] !== undefined &&
 			reports.PL_QofL1_COMB_sometimes_count &&
 			reports.PL_QofL1_COMB_sometimes_count[collection] !== undefined &&
-			reports.PL_QofL1_COMB &&
 			reports.PL_QofL1_COMB[collection] !== undefined &&
-			reports.PL_QofL1_COMB_often_count[collection] <= 0 &&
-			reports.PL_QofL1_COMB_sometimes_count[collection] > 0 &&
+			reports.PL_QofL1_COMB_sometimes_count[collection] >= 2 &&
 			reports.PL_QofL1_COMB_sometimes_count[collection] !== 999 &&
-			reports.PL_QofL1_COMB[collection] >= 1.6 &&
 			reports.PL_QofL1_COMB[collection] !== 999
 		) {
 			this.setState({ yellowAlert: true });
