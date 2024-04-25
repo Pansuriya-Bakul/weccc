@@ -660,6 +660,7 @@ exports.Neighbour = async (req, res) => {
                         chapter3Values.FSC_QofL1_COMB_A
                       )
                     );
+                 
                     frequency_of_contact_friends.push(
                       neighbourFunctions.frequency_of_contact_friends(
                         chapter3Values.FSC_QofL1_COMB_A

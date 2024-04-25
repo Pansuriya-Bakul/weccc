@@ -63,13 +63,22 @@ const HighlightBox = (props) =>{
 	};
 
 	const getLonelinessLabel = (value) => {
-		if (value <= 0) return 'Vey High';
+		if (value <= 0) return 'Very High';
 		else if (value <= 25) return 'High';
 		else if (value <= 50) return 'Moderate';
 		else if (value <= 75) return 'Low';
 		else if (value <= 100) return 'Very Low';
 		else return 'Not Available';
 	};
+
+    const getIsolationLabel = (value) => {
+        if (value <= 20) return 'Very High';
+        else if (value <= 40) return 'High';
+        else if (value <= 60) return 'Moderate';
+        else if (value <= 80) return 'Low';
+        else if (value <= 100) return 'Very Low';
+        else return 'Not Available';
+    }
 	
     const getOverallScore = () => {
         if (props.data.some(value => value > 100)) {
@@ -152,7 +161,7 @@ const HighlightBox = (props) =>{
                         Isolation
                     </Typography>
                     <Typography variant="h6" color="inherit" align="left" style={{fontWeight:'400'}}>
-                        {getLonelinessLabel(props.data[7])} {isComplete(props.data[7]) ? Math.round(props.data[7]) + '%' : ""}
+                        {getIsolationLabel(props.data[7])} {isComplete(props.data[7]) ? Math.round(props.data[7]) + '%' : ""}
                     </Typography>
                     </div>
                 </Box>)}

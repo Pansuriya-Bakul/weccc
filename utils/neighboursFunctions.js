@@ -228,6 +228,7 @@ function frequency_of_community_participation(question) {
   //Unavailable Question
   if (!question) return 999;
 
+
   let DF1 = parseInt(question.DF1);
   let DF2 = parseInt(question.DF2);
   let DF3 = parseInt(question.DF3);
@@ -239,25 +240,10 @@ function frequency_of_community_participation(question) {
   let DF9 = parseInt(question.DF9);
   let DF10 = parseInt(question.DF10);
 
-  DF_array = [DF1, DF2, DF3, DF4, DF5, DF6, DF7, DF8, DF9, DF10];
+  let DF_array = [DF1, DF2, DF3, DF4, DF5, DF6, DF7, DF8, DF9, DF10].filter(value => !isNaN(value) && value !== '');
 
   return DF_array;
 
-  // let DF8 = parseInt(question.DF8);
-
-  // DF_array = [DF1, DF2, DF3, DF4, DF5, DF6, DF7, DF8];
-  // sum_array = new Array();
-
-  // DF_array.forEach(item => {
-  //     if (!isNaN(item) && item >= 0) {
-  //         sum_array.push(item);
-  //     }
-  // });
-
-  // let sum = sum_array.reduce((a, b) => a + b, 0);
-
-  // // Max range of total = 0 - 2400
-  // return sum;
 }
 
 function infrequent_participation_in_social_activities(question) {
