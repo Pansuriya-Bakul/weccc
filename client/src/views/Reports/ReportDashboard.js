@@ -51,18 +51,18 @@ export default class ReportDashboard extends Component {
         //isolation
         var isolationHealth = 0;
 
-        if (reports.household_size[collection] == 0) {
+        if (reports.household_size[collection] === 0) {
             isolationHealth += 1;
         }
-        if (reports.frequency_of_contact_family[collection] == '3-4 Times a year' || reports.frequency_of_contact_family[collection] == 'Yearly' || reports.frequency_of_contact_family[collection] == 'Never') {
-            if (reports.total_children[collection] == 0) {
+        if (reports.frequency_of_contact_family[collection] === '3-4 Times a year' || reports.frequency_of_contact_family[collection] === 'Yearly' || reports.frequency_of_contact_family[collection] === 'Never') {
+            if (reports.total_children[collection] === 0) {
                 isolationHealth += 1;
             } else {
             isolationHealth += 2;
             }
         }
 
-        if (reports.frequency_of_contact_friends[collection] == '3-4 Times a year' || reports.frequency_of_contact_friends[collection] == 'Yearly' || reports.frequency_of_contact_friends[collection] == 'Never') {
+        if (reports.frequency_of_contact_friends[collection] === '3-4 Times a year' || reports.frequency_of_contact_friends[collection] === 'Yearly' || reports.frequency_of_contact_friends[collection] === 'Never') {
 
             isolationHealth += 1;
         }

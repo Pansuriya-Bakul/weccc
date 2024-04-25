@@ -1,8 +1,5 @@
 // ================================================
-// Code associated with Templates Table Component.
-// Displays all existing Templates created and allows
-// user to delete, edit and preview the Templates
-// survey questions.
+// Code associated with History Section in user profile
 // ================================================
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
@@ -79,7 +76,7 @@ export default function StatusHistoryTable(props) {
             <TableContainer component={Paper} elevation={0} style={{border: "1px solid #e0e0e0",}}>
                 <Table>
                     <TableHead>
-                        <TableRow className={classes.tableRow}>
+                        <TableRow className={classes.tableRow} style={{cursor: 'default', backgroundColor:'#f0f0f0'}}>
                             <TableCell>Status</TableCell>
                             <TableCell>Assigned Programs</TableCell>
                             <TableCell>Start Date</TableCell>

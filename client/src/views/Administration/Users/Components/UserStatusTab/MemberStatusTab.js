@@ -134,40 +134,37 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
     }, [editable, setEditable, setMemberStatusInfo, userOriginal, setRole, setEnabled]);
 
 
-    const statusHandler = useCallback((event) => {
-
-        // setUserEdit({
-        //     ...userEdit,
-        //     role: event.target.value
-        // });
-        setUserEdit({
-            ...userEdit,
-            status: event.target.value
-        });
-
-        setSelectedStatus(event.target.value);
-        setStatusHistory({ ...statusHistory, status: event.target.value, startDate: new Date().toISOString() });
-
-    }, [setSelectedStatus]);
+    // const statusHandler = useCallback((event) => {
 
 
-    const activeTypeHandler = useCallback((event, key) => {
-        switch (key) {
-            case "activeType":
-                setMemberStatusInfo({ ...memberStatusInfo, activeType: event.target.value });
-                setStatusHistory({ ...statusHistory, status: selectedStatus, activeType: event.target.value, startDate: new Date().toISOString() });
-                break;
-            case "referralDate":
-                setMemberStatusInfo({ ...memberStatusInfo, referralDate: event.target.value });
-                break;
-            case "terminationReason":
-                setMemberStatusInfo({ ...memberStatusInfo, terminationReason: event.target.value });
-                break;
-            case "deceasedDate":
-                setMemberStatusInfo({ ...memberStatusInfo, deceasedDate: event.target.value });
-                break;
-        }
-    }, [userEdit, setUserEdit, memberStatusInfo, setMemberStatusInfo]);
+    //     setUserEdit({
+    //         ...userEdit,
+    //         status: event.target.value
+    //     });
+
+    //     setSelectedStatus(event.target.value);
+    //     setStatusHistory({ ...statusHistory, status: event.target.value, startDate: new Date().toISOString() });
+
+    // }, [setSelectedStatus]);
+
+
+    // const activeTypeHandler = useCallback((event, key) => {
+    //     switch (key) {
+    //         case "activeType":
+    //             setMemberStatusInfo({ ...memberStatusInfo, activeType: event.target.value });
+    //             setStatusHistory({ ...statusHistory, status: selectedStatus, activeType: event.target.value, startDate: new Date().toISOString() });
+    //             break;
+    //         case "referralDate":
+    //             setMemberStatusInfo({ ...memberStatusInfo, referralDate: event.target.value });
+    //             break;
+    //         case "terminationReason":
+    //             setMemberStatusInfo({ ...memberStatusInfo, terminationReason: event.target.value });
+    //             break;
+    //         case "deceasedDate":
+    //             setMemberStatusInfo({ ...memberStatusInfo, deceasedDate: event.target.value });
+    //             break;
+    //     }
+    // }, [userEdit, setUserEdit, memberStatusInfo, setMemberStatusInfo]);
 
 
     // set the intial status history if not already set
@@ -358,6 +355,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
 
         });
     }, [memberCollections, appState.token]);
+
     // Hooks ===
     useEffect(() => {
         setMemberStatusInfo({ activeType: "", statusHistory: [], referralDate: "", terminationReason: '', deceasedDate: "" });
@@ -382,7 +380,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
             if (userOriginal.memberStatusInfo) {
                 setMemberStatusInfo({
                     activeType: userOriginal.memberStatusInfo.activeType,
-                    statusHistory: userOriginal.memberStatusInfo.statusHistory,
+                    // statusHistory: userOriginal.memberStatusInfo.statusHistory,
                     referralDate: userOriginal.memberStatusInfo.referralDate,
                     terminationReason: userOriginal.memberStatusInfo.terminationReason,
                     deceasedDate: userOriginal.memberStatusInfo.deceasedDate,
@@ -543,7 +541,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                 hidden={panelIndex !== panelId}
                 id={`Panel-${panelId}`}
             >
-                <Collapse in={panelIndex == panelId ? true : false}>
+                <Collapse in={panelIndex === panelId ? true : false}>
                     {userEdit ? (
                         <Grid
                             container
@@ -562,7 +560,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                                 <Grid item xs>
                                     <Box mx={3} my={1} boxShadow={0}>
                                         <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                                            {appState.role != 'Volunteer' && appState.role != 'Patient' && <Grid item>
+                                            {appState.role !== 'Volunteer' && appState.role !== 'Patient' && <Grid item>
                                                 <Tooltip
                                                     placement="bottom"
                                                     title="Unlock editable fields"
@@ -816,7 +814,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
 
                     <Grid item xs={12} container direction="column" spacing={1} style={{ marginTop: '32px' }}>
                         <Typography variant="subtitle1" component="h6">
-                            Completed Surveys
+                            Completed Series
                         </Typography>
 
                         <Divider />
@@ -824,6 +822,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                         {memberCollections &&
                             <CompletedSurveysTable
                                 data={memberCollections ? memberCollections : []}
+                                role = {appState.role}
                             />
                         }
                     </Grid>

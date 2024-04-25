@@ -108,7 +108,7 @@ exports.create = (req, res, next) => {
                                                                                                         if (newMemberSurveyIdList.length == verifiedCollectionTemplate[0].surveyList.length && surveyFlag == 0) {
                                                                                                             log.info("Successful Member Collection Create Request.");
                                                                                                             surveyFlag = 1;
-                                        
+
                                                                                                             return res.status(201).json({
                                                                                                                 request: {
                                                                                                                     type: 'POST',
@@ -170,7 +170,7 @@ exports.create = (req, res, next) => {
 
                                                                 });
 
-                                                                if (surveyFlag != 0){return;}
+                                                                if (surveyFlag != 0) { return; }
 
                                                             }
                                                             else {
@@ -322,9 +322,26 @@ exports.readByClientId = (req, res, next) => {
 
     MemberCollection.find({ "member": id })
         .populate('collectionTemplate memberSurveyList member').exec()
-        .then(foundMemberCollections => {
+        .then(async foundMemberCollections => {
             if (foundMemberCollections) {
                 log.info("Successful read request for MemberCollections associated to Client with Id " + id);
+
+
+                // added to auto fix completeness scores in the history section under user profile
+                // For each member collection, calculate and update the completeness score
+                for (let memberCollection of foundMemberCollections) {
+                    let memberSurveys = await MemberSurvey.find({ memberCollection: memberCollection._id }).exec();
+                    console.log('MemberCollection ID:', memberCollection._id);
+                    console.log('MemberSurveys:', memberSurveys.map(survey => survey.memberCollection));
+                    let completedSurveys = memberSurveys.filter(survey => survey.completeness === 100).length;
+                    let totalSurveys = memberSurveys.length;
+                    let completenessScore = Math.round((completedSurveys / totalSurveys) * 100);
+
+                    // Only update if the calculated completeness score is different from the current one
+                    if (memberCollection.completeness !== completenessScore) {
+                        await MemberCollection.findByIdAndUpdate(memberCollection._id, { completeness: completenessScore }).exec();
+                    }
+                }
 
                 res.status(200).json({
                     memberCollections: foundMemberCollections,

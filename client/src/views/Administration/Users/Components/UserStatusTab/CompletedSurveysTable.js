@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
 //=================================================== TemplateTable Component ===================================================
 export default function CompletedSurveysTable(props) {
 
-    const { data } = props;
+    const { data, role } = props;
     const reversedData = data.length > 0 ? [...data].reverse() : [];
     const classes = useStyles();
 
@@ -68,8 +68,8 @@ export default function CompletedSurveysTable(props) {
             <TableContainer component={Paper} elevation={0} style={{border: "1px solid #e0e0e0",}}>
                 <Table>
                     <TableHead>
-                        <TableRow className={classes.tableRow}>
-                            <TableCell>Survey</TableCell>
+                        <TableRow className={classes.tableRow} style={{cursor: 'default', backgroundColor: '#f0f0f0'}}>
+                            <TableCell>Series</TableCell>
                             <TableCell>Completeness </TableCell>
                             <TableCell>Date Uploaded</TableCell>
                         </TableRow>
@@ -79,10 +79,10 @@ export default function CompletedSurveysTable(props) {
                             reversedData.map((row, index) => (
                                 <TableRow key={index}>
                                     <TableCell>
-                                    <Typography s>{row.collectionTemplate.name.charAt(0).toUpperCase() + row.collectionTemplate.name.slice(1)}</Typography>
+                                    <Typography s>{row.collectionTemplate.name.charAt(0).toUpperCase() + row.collectionTemplate.name.slice(1)} {role !== 'Patient' ? '- Self Care' : ''}</Typography>
                                     </TableCell>
                                     <TableCell>
-                                        <Typography>{row.completeness}</Typography>
+                                        <Typography>{row.completeness}%</Typography>
                                     </TableCell>
                                     <TableCell>
                                         <Typography>{formatDate(row.updatedAt)}</Typography>

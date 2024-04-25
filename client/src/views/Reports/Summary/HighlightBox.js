@@ -40,7 +40,7 @@ const HighlightBox = (props) =>{
 			score = 100 - score;
 		}
 
-		if (score == 0) {
+		if (score === 0) {
 			return ("#CC3333"); //red
 		}
 		else if (score <= 25) {
