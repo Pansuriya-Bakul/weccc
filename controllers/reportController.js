@@ -885,8 +885,9 @@ exports.Neighbour = async (req, res) => {
                       )
                     );
                     HU_ED_QofL2_SD.push(
-                      neighbourFunctions.ed_visit(chapter6Values.HU_ED_QofL2_SD)
+                      neighbourFunctions.ed_visit(chapter6Values['Row 1'])
                     );
+
                     HU_HNum_QofL2_SD.push(
                       neighbourFunctions.hospitalization(
                         chapter6Values.HU_HNum_QofL2_SD

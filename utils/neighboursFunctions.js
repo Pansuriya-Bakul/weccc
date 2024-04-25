@@ -944,9 +944,9 @@ function ed_visit(question) {
   // Value Chart of question
   // [0 -> )  || It is fairly resonable to assume max 999 in one year || already accounts for twice a day
 
-  if (question == null || question == undefined) return 999;
+  if (!question || question['Column 2'] === '') return 999;
 
-  let DF = parseInt(question);
+  let DF = parseInt(question['Column 2'].trim());
 
   if (isNaN(DF)) return 999;
 
