@@ -711,6 +711,7 @@ exports.Neighbour = async (req, res) => {
                         chapter4Values.activities_B
                       )
                     );
+                    console.log("Activities: ", activities);
                     meaningful_activities.push(
                       neighbourFunctions.meaningful_activities(
                         chapter4Values.meaningful_activities
