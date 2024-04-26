@@ -6,6 +6,8 @@ import PropTypes from "prop-types"; //Development Package to validate prop types
 import html2canvas from 'html2canvas';
 import html2pdf from 'html2pdf.js';
 
+import './reports.css'; // needed to specify page breaks for pdf download
+
 // ==================== Modules =====================
 
 // ==================== Components ================== 
@@ -220,7 +222,6 @@ const ClientReports = (props) => {
 
     await html2pdf().set(opt).from(reportElement).save();
     setIsDownloading(false);
-
   };
 
   
@@ -398,7 +399,7 @@ const ClientReports = (props) => {
                               />
                             </Grid>
 
-                            <Grid item xs={12}>
+                            <Grid item xs={12} className="avoid-break" >
                               <CommunityCircle
                                 reports={reportsData}
                                 collection={currentReportIndex}
@@ -420,7 +421,7 @@ const ClientReports = (props) => {
                             </Grid>
 
                             {anyFlags && (
-                              <Grid item xs={12} id="possible concerns">
+                              <Grid item xs={12} id="possible concerns" className="avoid-break">
                                 <Typography
                                   variant="h5"
                                   color="textSecondary"
@@ -443,6 +444,7 @@ const ClientReports = (props) => {
                                   color="textSecondary"
                                   align="left"
                                   gutterBottom
+                                  className="avoid-break"
                                 >
                                   Suggestions
                                 </Typography>
@@ -453,7 +455,7 @@ const ClientReports = (props) => {
                               </Grid>
                             )}
 
-                            <Grid item xs={12} style={{ paddingTop: '30px' }}>
+                            <Grid item xs={12} style={{ paddingTop: '30px' }} className="avoid-break">
                               <Typography
                                 variant="h5"
                                 color="textSecondary"

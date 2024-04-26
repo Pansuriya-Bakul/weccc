@@ -426,8 +426,12 @@ exports.Neighbour = async (req, res) => {
               // FREQUENCY GET TOGETHER NEIGHBOURS
               let frequency_get_together_neighbours = new Array();
 
-              // MONTH FREQUENCY OF REGULAR CONTACT THROUGH TELEPHONE OR COMPUTER
-              let frequency_of_social_contacts_month_phone_computer =
+              // FREQUENCY OF REGULAR CONTACT THROUGH TELEPHONE
+              let frequency_of_social_contacts_phone =
+                new Array();
+
+              // FREQUENCY OF REGULAR CONTACT THROUGH COMPUTER
+              let frequency_of_social_contacts_computer =
                 new Array();
 
               // PERCIEVED LONELINESS SOMETIMES COUNT
@@ -613,20 +617,18 @@ exports.Neighbour = async (req, res) => {
                       chapter3Values.marital_status
                     );
 
-                    // NOT USED SURVEY QUESTION: current_living_situation
-
                     household_size.push(
                       neighbourFunctions.household_size(
                         chapter3Values.household_size
                       )
                     );
-
-                    // NOT USED SURVEY QUESTION: regular_contact_family_relatives
+     
                     QSC_QofL1_COMB.push(
                       neighbourFunctions.quality_of_social_contact(
                         chapter3Values
                       )
                     );
+                    
 
                     // NOT USED SURVEY QUESTION: important_discussion_number_of_people_A
                     // NOT USED SURVEY QUESTION: important_discussion_number_of_people_B
@@ -660,6 +662,19 @@ exports.Neighbour = async (req, res) => {
                         chapter3Values.FSC_QofL1_COMB_A
                       )
                     );
+
+                    frequency_of_social_contacts_phone.push(
+                      neighbourFunctions.frequency_of_social_contacts_phone(
+                        chapter3Values.FSC_QofL1_COMB_A
+                      )
+                    );
+
+                    frequency_of_social_contacts_computer.push(
+                      neighbourFunctions.frequency_of_social_contacts_computer(
+                        chapter3Values.FSC_QofL1_COMB_A
+                      )
+                    );
+                 
                     frequency_of_contact_friends.push(
                       neighbourFunctions.frequency_of_contact_friends(
                         chapter3Values.FSC_QofL1_COMB_A
@@ -696,6 +711,7 @@ exports.Neighbour = async (req, res) => {
                         chapter4Values.activities_B
                       )
                     );
+                    console.log("Activities: ", activities);
                     meaningful_activities.push(
                       neighbourFunctions.meaningful_activities(
                         chapter4Values.meaningful_activities
@@ -884,11 +900,12 @@ exports.Neighbour = async (req, res) => {
                       )
                     );
                     HU_ED_QofL2_SD.push(
-                      neighbourFunctions.ed_visit(chapter6Values.HU_ED_QofL2_SD)
+                      neighbourFunctions.ed_visit(chapter6Values.question1['Row 1'])
                     );
+
                     HU_HNum_QofL2_SD.push(
                       neighbourFunctions.hospitalization(
-                        chapter6Values.HU_HNum_QofL2_SD
+                        chapter6Values.question1['Row 2']
                       )
                     );
                     HU_HD_QofL2_SD.push(
@@ -1101,7 +1118,8 @@ exports.Neighbour = async (req, res) => {
                 frequency_get_together_friends: frequency_get_together_friends,
                 frequency_get_together_neighbours:
                   frequency_get_together_neighbours,
-                // frequency_of_social_contacts_month_phone_computer: frequency_of_social_contacts_month_phone_computer,
+                frequency_of_social_contacts_phone: frequency_of_social_contacts_phone,
+                frequency_of_social_contacts_computer: frequency_of_social_contacts_computer,
                 PL_QofL1_COMB_sometimes_count: PL_QofL1_COMB_sometimes_count,
                 PL_QofL1_COMB_often_count: PL_QofL1_COMB_often_count,
                 // feel_isolated: feel_isolated,
