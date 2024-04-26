@@ -10,6 +10,9 @@ export default class PersonalWellBeingAlert extends Component {
 		yellowAlert: false
 	};
 
+	textBgRed = { backgroundColor: this.props.colors.red };
+	textBgYellow = { backgroundColor: this.props.colors.yellow };
+
 	componentDidMount() {
 		const { reports, collection } = this.props;
 
@@ -61,7 +64,7 @@ export default class PersonalWellBeingAlert extends Component {
 					: <Grid item xs={5}>
 						{/* Not satisfied with life as a whole (5 or less) */}
 						{this.props.reports.LS_QofL3_SD && this.props.reports.LS_QofL3_SD[this.props.collection] <= 5 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are not satisfied with life as a whole
 								</Typography>
@@ -69,7 +72,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* Not satisfied with standard of living (5 or less) */}
 						{this.props.reports.SL_QofL3_SD && this.props.reports.SL_QofL3_SD[this.props.collection] <= 5 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are not satisfied with your standard of living
 								</Typography>
@@ -77,7 +80,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* Not satisfied with health (5 or less) */}
 						{this.props.reports.YH_QofL3_SD && this.props.reports.YH_QofL3_SD[this.props.collection] <= 5 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are not satisfied with your health
 								</Typography>
@@ -85,7 +88,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* Not satisfied with what you're achieving (5 or less) */}
 						{this.props.reports.AL_QofL3_SD && this.props.reports.AL_QofL3_SD[this.props.collection] <= 5 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are not satisfied with what you are achieving
 								</Typography>
@@ -93,7 +96,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* Not satisfied with your personal realtionships (5 or less) */}
 						{this.props.reports.PR_QofL3_SD && this.props.reports.PR_QofL3_SD[this.props.collection] <= 5 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are not satisfied with your personal relationships
 								</Typography>
@@ -101,7 +104,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* Not satisfied with how safe you feel (5 or less) */}
 						{this.props.reports.HSF_QofL3_SD && this.props.reports.HSF_QofL3_SD[this.props.collection] <= 5 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are not satisfied with how safe you feel
 								</Typography>
@@ -109,7 +112,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* Not satisfied with feeling part of the community (5 or less) */}
 						{this.props.reports.FPC_QofL3_SD && this.props.reports.FPC_QofL3_SD[this.props.collection] <= 5 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are not satisfied with feeling part of the community
 								</Typography>
@@ -117,7 +120,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* Not satisfied with your future security (5 or less) */}
 						{this.props.reports.FS_QofL3_SD && this.props.reports.FS_QofL3_SD[this.props.collection] <= 5 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are not satisfied with your future security
 								</Typography>
@@ -125,7 +128,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* Not satisfied with your spitituality or religion (5 or less) */}
 						{this.props.reports.SR_QofL3_SD && this.props.reports.SR_QofL3_SD[this.props.collection] <= 5 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are not satisfied with your spirituality or religion
 								</Typography>
@@ -133,7 +136,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* Progress on Goals is "hardly ever" (1)  */}
 						{this.props.reports.PAG_QofL1_SD && this.props.reports.PAG_QofL1_SD[this.props.collection] == 3 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are not satisfied with the progress you are making in achieving your goals and wishes
 								</Typography>
@@ -153,7 +156,7 @@ export default class PersonalWellBeingAlert extends Component {
 					: <Grid item xs={5}>
 						{/* sometimes unsatisfied with standard of living (6) */}
 						{this.props.reports.SL_QofL3_SD && this.props.reports.SL_QofL3_SD[this.props.collection] == 6 &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are sometimes unsatisfied with your standard of living
 								</Typography>
@@ -161,7 +164,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* sometimes unsatisfied with health (6) */}
 						{this.props.reports.YH_QofL3_SD && this.props.reports.YH_QofL3_SD[this.props.collection] == 6 &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are sometimes unsatisfied with your health
 								</Typography>
@@ -169,7 +172,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* sometimes unsatisfied with what you're achieving (6) */}
 						{this.props.reports.AL_QofL3_SD && this.props.reports.AL_QofL3_SD[this.props.collection] == 6 &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are sometimes unsatisfied with what you are achieving
 								</Typography>
@@ -177,7 +180,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* sometimes unsatisfied with your personal realtionships (6) */}
 						{this.props.reports.PR_QofL3_SD && this.props.reports.PR_QofL3_SD[this.props.collection] == 6 &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are sometimes unsatisfied with your personal relationships
 								</Typography>
@@ -185,7 +188,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* sometimes unsatisfied with how safe you feel (6) */}
 						{this.props.reports.HSF_QofL3_SD && this.props.reports.HSF_QofL3_SD[this.props.collection] == 6 &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are sometimes unsatisfied with how safe you feel
 								</Typography>
@@ -193,7 +196,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* sometimes unsatisfied with feeling part of the community (6) */}
 						{this.props.reports.FPC_QofL3_SD && this.props.reports.FPC_QofL3_SD[this.props.collection] == 6 &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are sometimes unsatisfied with feeling part of the community
 								</Typography>
@@ -201,7 +204,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* sometimes unsatisfied with your future security (6) */}
 						{this.props.reports.FS_QofL3_SD && this.props.reports.FS_QofL3_SD[this.props.collection] == 6 &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are sometimes unsatisfied with your future security
 								</Typography>
@@ -209,7 +212,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* sometimes unsatisfied with your spitituality or religion (6) */}
 						{this.props.reports.SR_QofL3_SD && this.props.reports.SR_QofL3_SD[this.props.collection] == 6 &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are sometimes unsatisfied with your spirituality or religion
 								</Typography>
@@ -217,7 +220,7 @@ export default class PersonalWellBeingAlert extends Component {
 						}
 						{/* Progress on Goals "sometimes" (2)  */}
 						{this.props.reports.PAG_QofL1_SD && this.props.reports.PAG_QofL1_SD[this.props.collection] == 2 &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You are only sometimes satisfied with the progress you are making in achieving your goals and wishes
 								</Typography>

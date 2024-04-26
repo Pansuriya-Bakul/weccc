@@ -13,6 +13,11 @@ import SupportAvailabilityAlert from './ConcernAlerts/SupportAvailabilityAlert';
 // import SocialHealthAlert from './ConcernAlerts/SocialHealthAlert';
 
 export default class PossibleConcerns extends Component {
+    
+    colors = {
+        red: '#ffb9b9',
+        yellow: '#ffeb99'
+    }
 
     render() {
         return (
@@ -30,10 +35,10 @@ export default class PossibleConcerns extends Component {
                                 Yellow Flags
                             </Typography>
                         </Grid>
-                        <HealthAlert reports={this.props.reports} collection={this.props.collection} />
-                        <PersonalWellBeingAlert reports={this.props.reports} collection={this.props.collection} />
-                        <SupportAvailabilityAlert reports={this.props.reports} collection={this.props.collection} />
-                        <LonelinessAlert reports={this.props.reports} collection={this.props.collection} />
+                        <HealthAlert reports={this.props.reports} collection={this.props.collection} colors={this.colors} />
+                        <PersonalWellBeingAlert reports={this.props.reports} collection={this.props.collection} colors={this.colors} />
+                        <SupportAvailabilityAlert reports={this.props.reports} collection={this.props.collection} colors={this.colors}/>
+                        <LonelinessAlert reports={this.props.reports} collection={this.props.collection} colors={this.colors}/>
                         {/* <CommunityParticipationAlert reports = {this.props.reports} collection = {this.props.collection}/> */}
                     </Grid>
                     {/* <SocialHealthAlert reports = {this.props.reports} collection = {this.props.collection}/> */}
