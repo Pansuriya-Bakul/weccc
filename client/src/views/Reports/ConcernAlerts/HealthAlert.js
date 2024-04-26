@@ -10,6 +10,10 @@ export default class HealthAlert extends Component {
 		yellowAlert: false
 	};
 
+	textBgRed = { backgroundColor: this.props.colors.red };
+	textBgYellow = { backgroundColor: this.props.colors.yellow };
+
+
 	componentDidMount() {
 		// redalerts check
 		if (
@@ -68,6 +72,7 @@ export default class HealthAlert extends Component {
 		}
 	}
 	render() {
+		
 		return (
 			<Grid container item xs={12} spacing={2}>
 				<Grid item xs={2}>
@@ -77,7 +82,7 @@ export default class HealthAlert extends Component {
 				</Grid>
 
 				{/* Red flag row */}
-				{this.state.redAlert == false ?
+				{this.state.redAlert === false ?
 					<Grid item xs={5}>
 						<ListItem>
 							<Typography variant="body1" color="inherit" align="left" gutterBottom>
@@ -89,7 +94,7 @@ export default class HealthAlert extends Component {
 					: <Grid item xs={5}>
 						{/* Health today less than 50*/}
 						{this.props.reports.HT_QofL2_SD && this.props.reports.HT_QofL2_SD[this.props.collection] <= 50 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									Your health today is a concern. On a scale of 0 to 100, you rate your health today as less than 50
 								</Typography>
@@ -97,7 +102,7 @@ export default class HealthAlert extends Component {
 						}
 						{/* general health is poor (0) */}
 						{this.props.reports.PH_QofL2_SD && this.props.reports.PH_QofL2_SD[this.props.collection] === 0 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You rate your health as poor
 								</Typography>
@@ -105,7 +110,7 @@ export default class HealthAlert extends Component {
 						}
 						{/* Mental health rated poor (0) */}
 						{this.props.reports.MH_QofL2_SD && this.props.reports.MH_QofL2_SD[this.props.collection] === 0 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You rate your mental health as poor
 								</Typography>
@@ -114,8 +119,8 @@ export default class HealthAlert extends Component {
 						{
 							(this.props.reports.M_QofL2_SD && this.props.reports.M_QofL2_SD[this.props.collection] &&
 								(this.props.reports.M_QofL2_SD[this.props.collection] === 0 || this.props.reports.M_QofL2_SD[this.props.collection] === 1)) &&
-							<ListItem>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
+							<ListItem style={this.textBgRed}>
+								<Typography variant="body1" color="inherit" align="left" gutterBottom style={{backgroundColor: '#e06666'}}>
 									You have severe problems walking around
 								</Typography>
 							</ListItem>
@@ -124,7 +129,7 @@ export default class HealthAlert extends Component {
 						{
 							(this.props.reports.PC_QofL2_SD && this.props.reports.PC_QofL2_SD[this.props.collection] &&
 								(this.props.reports.PC_QofL2_SD[this.props.collection] === 0 || this.props.reports.PC_QofL2_SD[this.props.collection] === 1)) &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have severe problems washing or dressing
 								</Typography>
@@ -134,7 +139,7 @@ export default class HealthAlert extends Component {
 						{
 							(this.props.reports.UA_QofL2_SD && this.props.reports.UA_QofL2_SD[this.props.collection] &&
 								(this.props.reports.UA_QofL2_SD[this.props.collection] === 0 || this.props.reports.UA_QofL2_SD[this.props.collection] === 1)) &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have severe problems doing usual activities
 								</Typography>
@@ -144,7 +149,7 @@ export default class HealthAlert extends Component {
 						{
 							(this.props.reports.PD_QofL2_SD && this.props.reports.PD_QofL2_SD[this.props.collection] &&
 								(this.props.reports.PD_QofL2_SD[this.props.collection] === 0 || this.props.reports.PD_QofL2_SD[this.props.collection] === 1)) &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have severe problems with pain/discomfort
 								</Typography>
@@ -154,7 +159,7 @@ export default class HealthAlert extends Component {
 						{
 							(this.props.reports.AD_QofL2_SD && this.props.reports.AD_QofL2_SD[this.props.collection] &&
 								(this.props.reports.AD_QofL2_SD[this.props.collection] === 0 || this.props.reports.AD_QofL2_SD[this.props.collection] === 1)) &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have severe problems with anxiety/ depression
 								</Typography>
@@ -175,7 +180,7 @@ export default class HealthAlert extends Component {
 						{/* Health today is between 51 and 65*/}
 						{
 							(this.props.reports.HT_QofL2_SD && this.props.reports.HT_QofL2_SD[this.props.collection] && 50 < this.props.reports.HT_QofL2_SD[this.props.collection] && this.props.reports.HT_QofL2_SD[this.props.collection] <= 65) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									Your health today is fair. On a scale of 0 to 100, you rate your health today as {this.props.reports.HT_QofL2_SD[this.props.collection]}
 								</Typography>
@@ -184,7 +189,7 @@ export default class HealthAlert extends Component {
 						{/* general health is fair (1) */}
 						{
 							(this.props.reports.PH_QofL2_SD && this.props.reports.PH_QofL2_SD[this.props.collection] && this.props.reports.PH_QofL2_SD[this.props.collection] === 1) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You rate your health as fair
 								</Typography>
@@ -193,7 +198,7 @@ export default class HealthAlert extends Component {
 						{/* Mental health rated fair (1) */}
 						{
 							(this.props.reports.MH_QofL2_SD && this.props.reports.MH_QofL2_SD[this.props.collection] && this.props.reports.MH_QofL2_SD[this.props.collection] === 1) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You rate your mental health as fair
 								</Typography>
@@ -202,7 +207,7 @@ export default class HealthAlert extends Component {
 						{/* Moderate(2) problems with mobility */}
 						{
 							(this.props.reports.M_QofL2_SD && this.props.reports.M_QofL2_SD[this.props.collection] && this.props.reports.M_QofL2_SD[this.props.collection] === 2) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have moderate problems walking around
 								</Typography>
@@ -211,7 +216,7 @@ export default class HealthAlert extends Component {
 						{/* Moderate(2) problems with personal care */}
 						{
 							(this.props.reports.PC_QofL2_SD && this.props.reports.PC_QofL2_SD[this.props.collection] && this.props.reports.PC_QofL2_SD[this.props.collection] === 2) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have moderate problems washing or dressing
 								</Typography>
@@ -220,7 +225,7 @@ export default class HealthAlert extends Component {
 						{/* Moderate(2) problems with usual activities */}
 						{
 							(this.props.reports.UA_QofL2_SD && this.props.reports.UA_QofL2_SD[this.props.collection] && this.props.reports.UA_QofL2_SD[this.props.collection] === 2) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have moderate problems doing usual activities
 								</Typography>
@@ -229,7 +234,7 @@ export default class HealthAlert extends Component {
 						{/* Moderate(2) problems with pain / discomfort */}
 						{
 							(this.props.reports.PD_QofL2_SD && this.props.reports.PD_QofL2_SD[this.props.collection] && this.props.reports.PD_QofL2_SD[this.props.collection] === 2) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have moderate problems with pain/discomfort
 								</Typography>
@@ -238,7 +243,7 @@ export default class HealthAlert extends Component {
 						{/* Moderate(2) problems with anxiety / depression */}
 						{
 							(this.props.reports.AD_QofL2_SD && this.props.reports.AD_QofL2_SD[this.props.collection] && this.props.reports.AD_QofL2_SD[this.props.collection] === 2) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You have moderate problems with anxiety/ depression
 								</Typography>
@@ -247,7 +252,7 @@ export default class HealthAlert extends Component {
 						{/* Number of ER visits */}
 						{
 							(this.props.reports.HU_ED_QofL2_SD && this.props.reports.HU_ED_QofL2_SD[this.props.collection] && 999 > this.props.reports.HU_ED_QofL2_SD[this.props.collection] && this.props.reports.HU_ED_QofL2_SD[this.props.collection] > 0) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You had {this.props.reports.HU_ED_QofL2_SD[this.props.collection]} ER visits in the past year.
 								</Typography>
@@ -256,7 +261,7 @@ export default class HealthAlert extends Component {
 						{/* Number of hospitalizations */}
 						{
 							(this.props.reports.HU_HNum_QofL2_SD && this.props.reports.HU_HNum_QofL2_SD[this.props.collection] && 999 > this.props.reports.HU_HNum_QofL2_SD[this.props.collection] && this.props.reports.HU_HNum_QofL2_SD[this.props.collection] > 0) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You had {this.props.reports.HU_HNum_QofL2_SD[this.props.collection]} hospitalizations in the past year.
 								</Typography>
@@ -265,7 +270,7 @@ export default class HealthAlert extends Component {
 						{/* Number of crisis */}
 						{
 							(this.props.reports.HU_EMS_QofL2_SD && this.props.reports.HU_EMS_QofL2_SD[this.props.collection] && 999 > this.props.reports.HU_EMS_QofL2_SD[this.props.collection] && this.props.reports.HU_EMS_QofL2_SD[this.props.collection] > 0) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You had {this.props.reports.HU_EMS_QofL2_SD[this.props.collection]} crisis in the past year.
 								</Typography>
@@ -274,7 +279,7 @@ export default class HealthAlert extends Component {
 						{/* Number of urgent care visits */}
 						{
 							(this.props.reports.HU_UC_QofL2_SD && this.props.reports.HU_UC_QofL2_SD[this.props.collection] && 999 > this.props.reports.HU_UC_QofL2_SD[this.props.collection] && this.props.reports.HU_UC_QofL2_SD[this.props.collection] > 0) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You had {this.props.reports.HU_UC_QofL2_SD[this.props.collection]} urgent care visits in the past year.
 								</Typography>
@@ -283,7 +288,7 @@ export default class HealthAlert extends Component {
 						{/*access to family doctor? */}
 						{
 							(this.props.reports.access_to_family_doctor && this.props.reports.access_to_family_doctor[this.props.collection] && this.props.reports.access_to_family_doctor[this.props.collection] == "No") &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You don’t have access to a family doctor
 								</Typography>

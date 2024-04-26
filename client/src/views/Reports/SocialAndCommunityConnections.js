@@ -5,12 +5,13 @@ import FrequencyByType from "./FrequencyByType";
 import HealthStatus from './Summary/HealthStatus';
 import HealthSupportServices from './Summary/HealthSupportServices';
 import PersonalWellBeing from './Summary/PersonalWellBeing';
+import './reports.css';
 
 
 export default function ({ reports, collection }) {
   return (
     <>
-      <Box m={1}>
+      <Box m={1} className="avoid-break">
         {reports.FCP_INT_COMB && (
           <>
             <Typography variant="h6" color="secondary" align="left" gutterBottom>
@@ -51,9 +52,11 @@ export default function ({ reports, collection }) {
           </>
         )}
       </Box>
+      <div className="avoid-break">
       <HealthStatus reports={reports} collection={collection} />
       <HealthSupportServices reports={reports} collection={collection} />
       <PersonalWellBeing reports={reports} collection={collection} />
+      </div>
     </>
   );
 }

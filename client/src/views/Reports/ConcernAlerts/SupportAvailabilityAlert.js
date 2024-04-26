@@ -12,6 +12,9 @@ export default class SupportAvailabilityAlert extends Component {
 		};
 	}
 
+	textBgRed = { backgroundColor: this.props.colors.red };
+	textBgYellow = { backgroundColor: this.props.colors.yellow };
+
 	componentDidMount() {
 		const { reports, collection } = this.props;
 
@@ -55,7 +58,7 @@ export default class SupportAvailabilityAlert extends Component {
 					: <Grid item xs={5}>
 						{/* Average of answers scored 0-3 trigger if PSS_QofL1_COMB 2.5-3 */}
 						{this.props.reports.PSS_QofL1_COMB && this.props.reports.PSS_QofL1_COMB[this.props.collection] !== undefined && this.props.reports.PSS_QofL1_COMB[this.props.collection] >= 2.5 && this.props.reports.PSS_QofL1_COMB[this.props.collection] <= 3 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You hardly ever feel you have the social support you need from your family and friends.
 								</Typography>
@@ -75,7 +78,7 @@ export default class SupportAvailabilityAlert extends Component {
 					: <Grid item xs={5}>
 						{/* Average of answers scored 0-3 trigger if PSS_QofL1_COMB 1.6-2.4 */}
 						{this.props.reports.PSS_QofL1_COMB && this.props.reports.PSS_QofL1_COMB[this.props.collection] !== undefined && this.props.reports.PSS_QofL1_COMB[this.props.collection] >= 1.6 && this.props.reports.PSS_QofL1_COMB[this.props.collection] <= 2.4 &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You only sometimes feel you have the social support you need from your family and friends.
 								</Typography>

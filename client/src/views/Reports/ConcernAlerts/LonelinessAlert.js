@@ -12,6 +12,9 @@ export default class LonelinessAlert extends Component {
 		};
 	}
 
+	textBgRed = { backgroundColor: this.props.colors.red };
+	textBgYellow = { backgroundColor: this.props.colors.yellow };
+
 	componentDidMount() {
 		const { reports, collection } = this.props;
 
@@ -31,12 +34,9 @@ export default class LonelinessAlert extends Component {
 			reports.PL_QofL1_COMB_often_count[collection] !== undefined &&
 			reports.PL_QofL1_COMB_sometimes_count &&
 			reports.PL_QofL1_COMB_sometimes_count[collection] !== undefined &&
-			reports.PL_QofL1_COMB &&
 			reports.PL_QofL1_COMB[collection] !== undefined &&
-			reports.PL_QofL1_COMB_often_count[collection] <= 0 &&
-			reports.PL_QofL1_COMB_sometimes_count[collection] > 0 &&
+			reports.PL_QofL1_COMB_sometimes_count[collection] >= 2 &&
 			reports.PL_QofL1_COMB_sometimes_count[collection] !== 999 &&
-			reports.PL_QofL1_COMB[collection] >= 1.6 &&
 			reports.PL_QofL1_COMB[collection] !== 999
 		) {
 			this.setState({ yellowAlert: true });
@@ -64,7 +64,7 @@ export default class LonelinessAlert extends Component {
 					: <Grid item xs={5}>
 						{/* Feel isolated, left, out, lack companions <-> answer often for 1*/}
 						{this.props.reports.PL_QofL1_COMB_often_count && this.props.reports.PL_QofL1_COMB_often_count[this.props.collection] !== undefined && this.props.reports.PL_QofL1_COMB_often_count[this.props.collection] > 0 && this.props.reports.PL_QofL1_COMB_often_count[this.props.collection] !== 999 &&
-							<ListItem>
+							<ListItem style={this.textBgRed}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You often feel you lack companions, feel left out or feel isolated from others
 								</Typography>
@@ -85,7 +85,7 @@ export default class LonelinessAlert extends Component {
 						{/* Feel isolated, left, out, lack companions <-> score 1.6 && 1+ [sometimes] */}
 						{(this.props.reports.PL_QofL1_COMB_sometimes_count && this.props.reports.PL_QofL1_COMB_sometimes_count[this.props.collection] !== undefined && this.props.reports.PL_QofL1_COMB_sometimes_count[this.props.collection] > 0 && this.props.reports.PL_QofL1_COMB_sometimes_count[this.props.collection] !== 999) &&
 							(this.props.reports.PL_QofL1_COMB && this.props.reports.PL_QofL1_COMB[this.props.collection] !== undefined && this.props.reports.PL_QofL1_COMB[this.props.collection] >= 1.6 && this.props.reports.PL_QofL1_COMB[this.props.collection] !== 999) &&
-							<ListItem>
+							<ListItem style={this.textBgYellow}>
 								<Typography variant="body1" color="inherit" align="left" gutterBottom>
 									You sometimes feel you lack companions, feel left out, or feel isolated from others
 								</Typography>

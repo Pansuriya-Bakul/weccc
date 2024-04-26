@@ -38,20 +38,20 @@ export default class ReportDashboard extends Component {
     calculateMentalHealth = (reports, collection) => {
         let MH = reports.MH_QofL2_SD && reports.MH_QofL2_SD[collection] !== 999 ? (reports.MH_QofL2_SD[collection] * 25) : null;
         let AD = reports.AD_QofL2_SD && reports.AD_QofL2_SD[collection] !== 999 ? (reports.AD_QofL2_SD[collection] * 25) : null;
-    
+
         let sum = 0;
         let count = 0;
-    
+
         if (MH !== null) {
             sum += MH;
             count++;
         }
-    
+
         if (AD !== null) {
             sum += AD;
             count++;
         }
-    
+
         let mentalHealth = count > 0 ? Math.round(sum / count) : 999;
         return mentalHealth;
     };
@@ -89,6 +89,7 @@ export default class ReportDashboard extends Component {
 
         //isolation
         let isolationHealth = 0;
+       
 
         if ( // These values do no exist for Quality of Life - Short
             !reports.household_size ||
@@ -97,8 +98,9 @@ export default class ReportDashboard extends Component {
         ) {
             isolationHealth = null; // will supress isolation box if null
 
-        } else if (reports.household_size[collection] === 999 || reports.frequency_of_contact_family[collection] === '999' || reports.frequency_of_contact_friends[collection] === '999' || reports.FCP_INT_COMB[collection] === '999') {
+        } else if (reports.household_size[collection] === 999 || reports.frequency_of_contact_family[collection] === 999 || reports.frequency_of_contact_friends[collection] === 999 || reports.FCP_INT_COMB[collection] === 999) {
             isolationHealth = 999;
+            
         } else {
 
             if (reports.household_size[collection] === 0) {
@@ -118,28 +120,32 @@ export default class ReportDashboard extends Component {
             }
 
             if (reports.FCP_INT_COMB[collection] && Array.isArray(reports.FCP_INT_COMB[collection])) {
-                let freq_participation_trigger = reports.FCP_INT_COMB[collection].every(item => item === null || item === 0 || item === 1 || item === 2);
+                let freq_participation_trigger = reports.FCP_INT_COMB[collection].every(item => item === 0 || item === 1);
 
                 if (freq_participation_trigger) {
                     isolationHealth += 1;
                 }
             }
         }
-
+        
         //convert isolation (0-5) to percent according to calculation doc:
         if (isolationHealth !== 999 && isolationHealth !== null) {
-            if (isolationHealth >= 4) {
-                isolationHealth = 0;
-            }
-            else if (isolationHealth === 3) {
-                isolationHealth = 20;
-            }
-            else if (isolationHealth === 2) {
-                isolationHealth = 40;
-            }
-            else if (isolationHealth <= 1) {
-                isolationHealth = 95;
-            }
+            // Convert to reverse percentage
+          
+            isolationHealth = 100 - ((isolationHealth / 5) * 100);
+
+            // if (isolationHealth >= 4) {
+            //     isolationHealth = 0;
+            // }
+            // else if (isolationHealth === 3) {
+            //     isolationHealth = 20;
+            // }
+            // else if (isolationHealth === 2) {
+            //     isolationHealth = 40;
+            // }
+            // else if (isolationHealth <= 1) {
+            //     isolationHealth = 95;
+            // }
         }
 
         return [health, mentalHealth, wellBeing, lifeSatisfaction, loneliness, functionHealth, communityHealth, isolationHealth];

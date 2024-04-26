@@ -38,7 +38,7 @@ const CommunityCircle = (props) => {
 
                             <ul>
 
-                                {reports.household_size[collection] && reports.household_size[collection] !== 999 &&
+                                {reports.household_size[collection]>=0 && reports.household_size[collection] !== 999 &&
                                     <li>
                                         <Typography display="block" component="div" align="left" gutterBottom>
                                             <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>

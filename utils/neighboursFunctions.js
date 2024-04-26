@@ -87,7 +87,8 @@ module.exports = {
   frequency_get_together_family,
   frequency_get_together_friends,
   frequency_get_together_neighbours,
-  frequency_of_social_contacts_month_phone_computer,
+  frequency_of_social_contacts_phone,
+  frequency_of_social_contacts_computer,
   perceived_loneliness_sometimes_count,
   perceived_loneliness_often_count,
   feel_isolated,
@@ -228,6 +229,7 @@ function frequency_of_community_participation(question) {
   //Unavailable Question
   if (!question) return 999;
 
+
   let DF1 = parseInt(question.DF1);
   let DF2 = parseInt(question.DF2);
   let DF3 = parseInt(question.DF3);
@@ -239,25 +241,10 @@ function frequency_of_community_participation(question) {
   let DF9 = parseInt(question.DF9);
   let DF10 = parseInt(question.DF10);
 
-  DF_array = [DF1, DF2, DF3, DF4, DF5, DF6, DF7, DF8, DF9, DF10];
+  let DF_array = [DF1, DF2, DF3, DF4, DF5, DF6, DF7, DF8, DF9, DF10].filter(value => !isNaN(value) && value !== '');
 
   return DF_array;
 
-  // let DF8 = parseInt(question.DF8);
-
-  // DF_array = [DF1, DF2, DF3, DF4, DF5, DF6, DF7, DF8];
-  // sum_array = new Array();
-
-  // DF_array.forEach(item => {
-  //     if (!isNaN(item) && item >= 0) {
-  //         sum_array.push(item);
-  //     }
-  // });
-
-  // let sum = sum_array.reduce((a, b) => a + b, 0);
-
-  // // Max range of total = 0 - 2400
-  // return sum;
 }
 
 function infrequent_participation_in_social_activities(question) {
@@ -592,13 +579,18 @@ function quality_of_social_contact(question) {
   // 1 Yes
   // 0 No
 
+
   if (!question) return 0;
 
-  let DF1 = parseInt(question.DF6) || 0;
-  let DF2 = parseInt(question.DF7) || 0;
-  let DF3 = parseInt(question.DF8) || 0;
+  if (question.DF1 === '' || question.DF2 === '' || question.DF3 === '') {
+    return 999;
+  }
 
-  DF_array = [DF1, DF2, DF3];
+  let DF6 = question.DF6 === 'item1' ? 1 : 0;
+  let DF7 = question.DF7 === 'item1' ? 1 : 0;
+  let DF8 = question.DF8 === 'item1' ? 1 : 0;
+
+  DF_array = [DF6, DF7, DF8];
   sum_array = new Array();
 
   DF_array.forEach((item) => {
@@ -606,17 +598,13 @@ function quality_of_social_contact(question) {
       sum_array.push(item);
     }
   });
+  
   if (sum_array.length == 0) {
-    return 0;
+    return 999;
   }
 
   let sum = sum_array.reduce((a, b) => a + b, 0);
   return sum;
-  // if (sum >= 2) {
-  //   return 2;
-  // } else if (sum >= 0 && sum < 2) {
-  //   return 1;
-  // }
 }
 
 function perceived_social_support(question) {
@@ -658,7 +646,7 @@ function perceived_loneliness(question) {
   // 3 Often
   // 2 Sometimes
   // 1 Hardly Ever
-  // 999 Not applicable
+  // 999 Can't Answer
 
   if (!question) return 999;
 
@@ -958,9 +946,9 @@ function ed_visit(question) {
   // Value Chart of question
   // [0 -> )  || It is fairly resonable to assume max 999 in one year || already accounts for twice a day
 
-  if (question == null || question == undefined) return 999;
+  if (!question || question['Column 2'] === '') return 999;
 
-  let DF = parseInt(question);
+  let DF = parseInt(question['Column 2'].trim());
 
   if (isNaN(DF)) return 999;
 
@@ -975,9 +963,9 @@ function hospitalization(question) {
   // Value Chart of question
   // [0 -> )  || It is fairly resonable to assume max 999 in one year || already accounts for twice a day
 
-  if (question == null || question == undefined) return 999;
+  if (!question || question['Column 2'] === '') return 999;
 
-  let DF = parseInt(question);
+  let DF = parseInt(question['Column 2'].trim());
 
   if (isNaN(DF)) return 999;
 
@@ -1237,50 +1225,31 @@ function pwi_overall_score(
   question_FS_QofL3_SD,
   question_SR_QofL3_SD
 ) {
-  // Value Chart of question
-  // [0 -> 10]
 
-  if (
-    !question_LS_QofL3_SD &&
-    !question_SL_QofL3_SD &&
-    !question_YH_QofL3_SD &&
-    !question_FPC_QofL3_SD &&
-    !question_AL_QofL3_SD &&
-    !question_PR_QofL3_SD &&
-    !question_HSF_QofL3_SD &&
-    !question_FS_QofL3_SD &&
-    !question_SR_QofL3_SD
-  ) {
-    return 999;
-  }
+  let sum = 0;
+  let count = 0;
 
-  let DF1 = parseInt(question_LS_QofL3_SD);
-  let DF2 = parseInt(question_SL_QofL3_SD);
-  let DF3 = parseInt(question_YH_QofL3_SD);
-  // let DF4 = parseInt(question_LS_QofL3_SD);
-  let DF5 = parseInt(question_FPC_QofL3_SD);
-  let DF6 = parseInt(question_AL_QofL3_SD);
-  let DF7 = parseInt(question_PR_QofL3_SD);
-  let DF8 = parseInt(question_HSF_QofL3_SD);
-  let DF9 = parseInt(question_FS_QofL3_SD);
-  let DF10 = parseInt(question_SR_QofL3_SD);
+  const questions = [
+    question_LS_QofL3_SD,
+    question_SL_QofL3_SD,
+    question_YH_QofL3_SD,
+    question_FPC_QofL3_SD,
+    question_AL_QofL3_SD,
+    question_PR_QofL3_SD,
+    question_HSF_QofL3_SD,
+    question_FS_QofL3_SD,
+    question_SR_QofL3_SD,
+  ];
 
-  DF_array = [DF1, DF2, DF3, DF5, DF6, DF7, DF8, DF9, DF10];
-  sum_array = new Array();
-
-  DF_array.forEach((item) => {
-    if (!isNaN(item) && item != 999 && item >= 0 && item <= 10) {
-      sum_array.push(item);
+  for (let i = 0; i < questions.length; i++) {
+    if (questions[i] != null && questions[i] !== '') {
+      sum += parseInt(questions[i]);
+      count++;
     }
-  });
-
-  let average = (sum_array.reduce((a, b) => a + b, 0) / sum_array.length) * 10;
-
-  if (average <= 0) {
-    return 999;
-  } else {
-    return parseFloat(parseFloat(average).toFixed(2));
   }
+
+  return count > 0 ? Math.round((sum / count)*10) : 999;
+
 }
 
 function activities(question_activities, question_activities_others) {
@@ -2448,19 +2417,14 @@ function goals(question) {
 function access_to_family_doctor(question) {
   if (!question) return 999;
 
-  let DF = parseInt(question);
 
-  if (isNaN(DF)) return 999;
-
-  if (DF == 1) {
-    DF = "Yes";
-  } else if (DF == 0) {
-    DF = "No";
+  if (question == 'item1') {
+    return "Yes";
+  } else if (question == 'item2') {
+    return "No";
   } else {
-    DF = 999;
+    return 999;
   }
-
-  return DF;
 }
 
 function frequency_get_together_family(question) {
@@ -2568,20 +2532,74 @@ function frequency_get_together_neighbours(question) {
   return DF;
 }
 
-function frequency_of_social_contacts_month_phone_computer(question) {
+function frequency_of_social_contacts_phone(question) {
+   // Value Chart per sub question of Question
+  // 999  Total invalid or blank answer
+  // 300  Daily
+  // 50   Weekly
+  // 12   Monthly
+  // 4    3-4 Times a Year
+  // 1    Yearly
+  // 0    Never
+
   if (!question) return 999;
 
-  let DF = parseInt(question);
+  let DF = parseInt(question.DF4);
 
   if (isNaN(DF)) return 999;
 
-  if (DF == 12) {
-    return 1;
+  if (DF == 300) {
+    DF = "Daily";
+  } else if (DF == 50) {
+    DF = "Weekly";
+  } else if (DF == 12) {
+    DF = "Monthly";
+  } else if (DF == 4) {
+    DF = "3-4 Times a Year";
+  } else if (DF == 1) {
+    DF = "Yearly";
   } else if (DF == 0) {
-    return 0;
+    DF = "Never";
   } else {
-    return 999;
+    DF = 999;
   }
+
+  return DF;
+}
+
+function frequency_of_social_contacts_computer(question) {
+   // Value Chart per sub question of Question
+  // 999  Total invalid or blank answer
+  // 300  Daily
+  // 50   Weekly
+  // 12   Monthly
+  // 4    3-4 Times a Year
+  // 1    Yearly
+  // 0    Never
+
+  if (!question) return 999;
+
+  let DF = parseInt(question.DF5);
+
+  if (isNaN(DF)) return 999;
+
+  if (DF == 300) {
+    DF = "Daily";
+  } else if (DF == 50) {
+    DF = "Weekly";
+  } else if (DF == 12) {
+    DF = "Monthly";
+  } else if (DF == 4) {
+    DF = "3-4 Times a Year";
+  } else if (DF == 1) {
+    DF = "Yearly";
+  } else if (DF == 0) {
+    DF = "Never";
+  } else {
+    DF = 999;
+  }
+
+  return DF;
 }
 
 function perceived_loneliness_sometimes_count(question) {
