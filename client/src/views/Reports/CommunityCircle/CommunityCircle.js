@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import { List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
 
 import CommunityVisual from './CommunityVisual'
+import './../reports.css';
 
 const CommunityCircle = (props) => {
     const { reports, collection } = props;
@@ -32,7 +33,7 @@ const CommunityCircle = (props) => {
                         </Box>
 
                         <Box>
-                            <Typography variant="h6" color="secondary" align="left" gutterBottom>
+                            <Typography variant="h6" color="secondary" align="left" gutterBottom className='avoid-break'>
                                 Primary Circle
                             </Typography>
 
