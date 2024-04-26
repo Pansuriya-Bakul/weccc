@@ -32,9 +32,10 @@ export default class Loneliness extends Component {
 								<em><b>Feeling left out.</b></em> Talk to others to let them know what’s important to you.
 							</Typography>
 						} */}
+						<br />
 					</>
 				}
-				<br />
+				
 			</div>
 		)
 	}

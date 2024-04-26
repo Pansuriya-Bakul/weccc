@@ -38,9 +38,10 @@ export default class HealthSuggestion extends Component {
                             If you feel concerned about your health generally, you may benefit from developing a plan and building a network of care that is responsive to all aspects of your physical, mental, social and spiritual health.
                             Would you like us to help you develop a personalized plan that aims to improve your health?
                         </Typography>
+                        <br />
                     </>
                 }
-                <br />
+               
                 {/* moderate or higher problems with pain <=2 */}
                 {this.props.reports.problem_pain_discomfort && this.props.reports.problem_pain_discomfort[this.props.collection] !== undefined && this.props.reports.problem_pain_discomfort[this.props.collection] <= 2 && this.props.reports.HU_HNum_QofL2_SD[this.props.collection] !== 999 &&
                     <>
@@ -51,9 +52,10 @@ export default class HealthSuggestion extends Component {
                             Regularly monitor pain and discomfort symptoms, and the circumstances in which they are better and worse.
                             Share information about your symptoms with your trusted providers and your family and ask about pain management and comfort measures to help with deal with pain and symptoms. Make sure you keep track of what seems to help.
                         </Typography>
+                        <br />
                     </>
                 }
-                <br />
+             
                 {/* moderate or higher problems with anxiety or depression <= 2 */}
                 {this.props.reports.problem_anxious_depressed && this.props.reports.problem_anxious_depressed[this.props.collection] !== undefined && this.props.reports.problem_anxious_depressed[this.props.collection] <= 2 && this.props.reports.problem_anxious_depressed[this.props.collection] !== 999 &&
                     <>
@@ -66,9 +68,10 @@ export default class HealthSuggestion extends Component {
                             You may wish to explore options such as counselling, peer support groups, relaxation, meditation or other activities to reduce anxiety.
                             Make sure you keep track of what seems to help.
                         </Typography>
+                        <br />
                     </>
                 }
-                <br />
+                
                 {/* moderate or higher problems with mobility <= 2
             moderate or higher problems with personal care <= 2
             usual activities <= 2*/}
@@ -101,9 +104,10 @@ export default class HealthSuggestion extends Component {
                         <Typography variant="body1" color="inherit" align="left" gutterBottom>
                             You may want to speak to a trusted health care provider and bring this results report with you to ask if you are eligible for extra help, assistive aids, or if they have other suggestions to help you better deal with these challenges. If you don’t already have a trusted provider helping with your in-home or personal care, would you like us to connect you?
                         </Typography>
+                        <br />
                     </>
                 }
-                <br />
+               
                 {/* No access to primary care provider access_to_family_doctor == "No" */}
                 {this.props.reports.access_to_family_doctor && this.props.reports.access_to_family_doctor[this.props.collection] !== undefined && this.props.reports.access_to_family_doctor[this.props.collection] === "No" &&
                     <>
@@ -113,9 +117,10 @@ export default class HealthSuggestion extends Component {
                     <Typography display="block" variant="body1" color="inherit" align="left" gutterBottom>
                         Having your own family doctor is good for your health! Would you like us to help you connect with a primary care provider who is right for you?
                     </Typography>
+                    <br />
                     </>
                 }
-                <br />
+              
             </div>
         )
     }
