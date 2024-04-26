@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import { List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
 
 import CommunityVisual from './CommunityVisual'
-import './reports.css';
+import './../reports.css';
 
 const CommunityCircle = (props) => {
     const { reports, collection } = props;
