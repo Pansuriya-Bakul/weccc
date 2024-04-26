@@ -5,6 +5,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
 import html2canvas from 'html2canvas';
 import html2pdf from 'html2pdf.js';
+import './reports.css';
 
 // ==================== Modules =====================
 import Pagination from "@material-ui/lab/Pagination";
@@ -373,7 +374,7 @@ const Reports = (props) => {
 
 
                             {anyFlags && (
-                              <Grid item xs={12} id="possible concerns">
+                              <Grid item xs={12} id="possible concerns" className="avoid-break">
                                 <Typography
                                   variant="h5"
                                   color="textSecondary"

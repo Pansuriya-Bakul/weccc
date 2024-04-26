@@ -421,7 +421,7 @@ const ClientReports = (props) => {
                             </Grid>
 
                             {anyFlags && (
-                              <Grid item xs={12} id="possible concerns" className="avoid-break">
+                              <Grid item xs={12} id="possible concerns" className="avoid-break" style={{marginTop: '20px'}}>
                                 <Typography
                                   variant="h5"
                                   color="textSecondary"
