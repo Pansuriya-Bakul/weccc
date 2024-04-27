@@ -1,5 +1,5 @@
 // ================================================
-// Code associated with Viewing Reports through history section
+// Code associated with viewing Community Connections Reports through History section
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
@@ -14,20 +14,18 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
 // ==================== Components ==================
-import AlertMessage from "../../components/AlertMessage";
+import AlertMessage from "../../../components/AlertMessage";
 
-import Summary from "./Summary";
-import Summary1 from "./Summary1";
-import PossibleConcerns from "./PossibleConcerns";
-import Suggestions from "./Suggestions";
-import ContactInfo from "./ContactInfo";
-import CommunityCircle from "./CommunityCircle/CommunityCircle";
+import Summary from "../Summary";
+import PossibleConcerns from "../PossibleConcerns";
+import Suggestions from "../Suggestions";
+import CommunityCircle from "../CommunityCircle/CommunityCircle";
 
 // ==================== Helpers =====================
-import AlertType from "../../helpers/models/AlertType";
-import checkAlerts from "./ConcernAlerts/checkAlerts";
-import get from "../../helpers/common/get";
-import post from "../../helpers/common/post";
+import AlertType from "../../../helpers/models/AlertType";
+import checkAlerts from "../ConcernAlerts/checkAlerts";
+import get from "../../../helpers/common/get";
+import post from "../../../helpers/common/post";
 // ==================== MUI =========================
 import { makeStyles } from "@material-ui/core/styles"; // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
 
@@ -38,16 +36,16 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
-import ReportDashboard from "./ReportDashboard";
+import ReportDashboard from "../ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 
 import { CircularProgress } from '@material-ui/core';
 import CardContent from "@material-ui/core/CardContent";
-import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
+import SocialAndCommunityConnections from "../SocialAndCommunityConnections";
 
 
 import GaugeChart from "react-gauge-chart";
-import "../../css/gauge-chart.css";
+import "../../../css/gauge-chart.css";
 
 // ==================== FontAwesome Icons ====================
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -75,7 +73,7 @@ const useStyles = makeStyles(
 
 // ======================== React Modern | Functional Component ========================
 
-const HistoricReports = (props) => {
+const CcReport = (props) => {
   // Notice the arrow function... regular function()  works too
 
   // Variables ===
@@ -631,17 +629,17 @@ const HistoricReports = (props) => {
 };
 
 // ======================== Component PropType Check ========================
-HistoricReports.propTypes = {
+CcReport.propTypes = {
   // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
   appState: PropTypes.object.isRequired,
   ToggleDrawerClose: PropTypes.func.isRequired,
   CheckAuthenticationValidity: PropTypes.func.isRequired,
 };
 
-HistoricReports.defaultProps = {
+CcReport.defaultProps = {
   appState: {},
   ToggleDrawerClose: () => { },
   CheckAuthenticationValidity: () => { },
 };
 
-export default HistoricReports;
+export default CcReport; // You can even shorthand this line by adding this at the function [Component] declaration stage

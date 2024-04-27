@@ -101,7 +101,7 @@ exports.Neighbour = async (req, res) => {
   // get user input collection (for example neighbours or screen)
   // if user input == neighbour => Neighbours
   // else social health
-  Collection.find({ name: "Community Connections" }) //Test_screen_neighbours Community_Connections_Test_2
+  Collection.find({ name: "Community Connections" }) 
     .then((verifiedCollection) => {
       if (verifiedCollection.length == 0) {
         flag1 = 0;
@@ -1337,3 +1337,20 @@ exports.Neighbour = async (req, res) => {
 //     });
 
 // }
+
+exports.Historic = async (req, res) => {
+  log.info(
+    "Incoming request for historic report with memberCollectionID: " +
+    req.params.memberCollectionID
+  );
+
+  MemberCollection.findById({id: req.params.memberCollectionID})
+    .then((foundCollection) => {
+      if (foundCollection.length == 0) {
+        return res.status(404).json({})
+      } else {
+        
+      }
+    })
+
+}
