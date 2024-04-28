@@ -101,7 +101,7 @@ exports.Neighbour = async (req, res) => {
   // get user input collection (for example neighbours or screen)
   // if user input == neighbour => Neighbours
   // else social health
-  Collection.find({ name: "Community Connections" }) 
+  Collection.find({ name: "Community Connections" })
     .then((verifiedCollection) => {
       if (verifiedCollection.length == 0) {
         flag1 = 0;
@@ -1338,19 +1338,323 @@ exports.Neighbour = async (req, res) => {
 
 // }
 
+const historicNeighbour = async (memberSurveyList) => {
+  // FREQUENCY COMMUNITY PARTICIPATION
+  let FCP_INT_COMB = new Array();
+
+  // INFREQUENT PARTICIPATION IN SOCIAL ACTIVITIES
+  let ISA_INT = new Array();
+
+  // SOCIAL ISOLATION INDEX
+  let SII_QofL1 = new Array();
+
+  // SIZE OF PERSONAL NETWORK
+  let PN_QofL1_COMB = new Array();
+
+  // FREQUENCY OF SOCIAL CONTACTS
+  let FSC_QofL1_COMB = new Array();
+
+  // SATISFACTION WITH SOCIAL CONTACT
+  let SSC_QofL1_COMB = new Array();
+
+  // QUALITY OF SOCIAL CONTACT
+  let QSC_QofL1_COMB = new Array();
+
+  // PERCEIVED SOCIAL SUPPORT
+  let PSS_QofL1_COMB = new Array();
+
+  // PERCEIVED LONELINESS
+  let PL_QofL1_COMB = new Array();
+
+  // ASKING FOR HELP
+  let AFH_QofL1_SD = new Array();
+
+  // PROGRESS ACHIEVING GOALS
+  let PAG_QofL1_SD = new Array();
+
+  // HEALTH TODAY
+  let HT_QofL2_SD = new Array();
+
+  // PHYSICAL HEALTH
+  let PH_QofL2_SD = new Array();
+
+  // PHYSICAL HEALTH STRING
+  let PH_QofL2_SD_STRING = new Array();
+
+  // MENTAL HEALTH
+  let MH_QofL2_SD = new Array();
+
+  // MENTAL HEALTH STRING
+  let MH_QofL2_SD_STRING = new Array();
+
+  // MOBILITY
+  let M_QofL2_SD = new Array();
+
+  // PERSONAL CARE
+  let PC_QofL2_SD = new Array();
+
+  // USUAL ACTIVITIES
+  let UA_QofL2_SD = new Array();
+
+  // PAIN/DISCOMFORT
+  let PD_QofL2_SD = new Array();
+
+  // ANXIETY/DEPRESSION
+  let AD_QofL2_SD = new Array();
+
+  // ED VISIT
+  let HU_ED_QofL2_SD = new Array();
+
+  // HOSPITALIZATION
+  let HU_HNum_QofL2_SD = new Array();
+
+  // DAYS IN HOSPITAL
+  let HU_HD_QofL2_SD = new Array();
+
+  // EMS
+  let HU_EMS_QofL2_SD = new Array();
+
+  // URGENT CARE
+  let HU_UC_QofL2_SD = new Array();
+
+  // SOUGHT TREATEMENT
+  let HU_ST_QofL2_SD = new Array();
+
+  // ACCIDENT
+  let HU_A_QofL2_SD = new Array();
+
+  // LIFE SATISFACTION
+  let LS_QofL3_SD = new Array();
+
+  // YOUR STANDARD OF LIVING
+  let SL_QofL3_SD = new Array();
+
+  // YOUR HEALTH
+  let YH_QofL3_SD = new Array();
+
+  // FEELING PART OF THE COMMUNITY
+  let FPC_QofL3_SD = new Array();
+
+  // WHAT YOU ARE ACHIEVING IN LIFE
+  let AL_QofL3_SD = new Array();
+
+  // PERSONAL RELATIONSHIPS
+  let PR_QofL3_SD = new Array();
+
+  // HOW SAFE YOU FEEL
+  let HSF_QofL3_SD = new Array();
+
+  // FUTURE SECURITY
+  let FS_QofL3_SD = new Array();
+
+  // YOUR SPIRITUALITY OR RELIGION
+  let SR_QofL3_SD = new Array();
+
+  // PWI OVERALL SCORE
+  let PWI_QofL3_COMB = new Array();
+
+  // ACTIVITIES
+  let activities = new Array();
+
+  // MEANINGFUL ACTIVITIES
+  let meaningful_activities = new Array();
+
+  // CHALLENGING ACTIVITIES
+  let challenging_activities = new Array();
+
+  //LIKE TO JOIN
+  let like_to_join = new Array();
+
+  // FREQUENCY OF COMMUNITY CARE PARTICIPATION [ STRINGS ]
+  let FCP_STRINGS_COMB = new Array();
+
+  // FREQUENCY OF COMMUNITY CARE PARTICIPATION DO MORE [ STRINGS ]
+  let ISA_DM_STRINGS = new Array();
+
+  // HOUSEHOLD SIZE
+  let household_size = new Array();
+
+  // MARITAL STATUS
+  let marital_status = new Array();
+
+  // TOTAL CHILDREN
+  let total_children = new Array();
+
+  // MEANINGFUL PEOPLE
+  let meaningful_people = new Array();
+
+  // TOTAL RELATIVES
+  let total_relatives = new Array();
+
+  // TOTAL CLOSE FRIENDS
+  let total_close_friends = new Array();
+
+  // TOTAL WELL KNOWN NEIGHBOURS
+  let total_well_known_neighbours = new Array();
+
+  // TRUSTED PEOPLE
+  let trusted_people = new Array();
+
+  // FREQUENCY OF CONTACT FAMILY
+  let frequency_of_contact_family = new Array();
+
+  // FREQUENCY OF CONTACT FRIENDS
+  let frequency_of_contact_friends = new Array();
+
+  // FREQUENCY OF CONTACT NEIGHBOURS
+  let frequency_of_contact_neighbours = new Array();
+
+  // FREQUENCY OF PARTICIPATION RELIGION
+  let frequency_of_participation_religion = new Array();
+
+  // FREQUENCY OF PARTICIPATION RECREATION / HOBBIES
+  let frequency_of_participation_recreation = new Array();
+
+  // FREQUENCY OF PARTICIPATION EDUCATION / CULTURES
+  let frequency_of_participation_education = new Array();
+
+  // FREQUENCY OF PARTICIPATION ASSOCIATIONS / CLUBS
+  let frequency_of_participation_associations = new Array();
+
+  // FREQUENCY OF PARTICIPATION VOLUNTEERING
+  let frequency_of_participation_volunteering = new Array();
+
+  // FREQUENCY OF PARTICIPATION INFORMAL HELP
+  let frequency_of_participation_informal_help = new Array();
+
+  // FREQUENCY OF PARTICIPATION MUSIC
+  let frequency_of_participation_music = new Array();
+
+  // FREQUENCY OF PARTICIPATION SPORTS
+  let frequency_of_participation_sports = new Array();
+
+  // FREQUENCY OF PARTICIPATION OTHER ACTIVITIES
+  let frequency_of_participation_other_activities = new Array();
+
+  // FREQUENCY OF PARTICIPATION COMPUTER
+  let frequency_of_participation_computer = new Array();
+
+  // HEALTH PROBLEM WALKING
+  let problem_walking = new Array();
+
+  // HEALTH PROBLEM WASHING / DRESSING
+  let problem_washing_dressing = new Array();
+
+  // HEALTH PROBLEM USUAL ACTIVITIES
+  let problem_usual_activities = new Array();
+
+  // HEALTH PROBLEM PAIN / DISCOMFORT
+  let problem_pain_discomfort = new Array();
+
+  // HEALTH PROBLEM ANXIOUS / DEPRESSED
+  let problem_anxious_depressed = new Array();
+
+  // SUPPORT HEALTH ATTEND WELLNESS PROGRAM
+  let support_wellness_program = new Array();
+
+  // SUPPORT HEALTHCARE
+  let support_healthcare = new Array();
+
+  // SUPPORT HOME HEALTHCARE
+  let support_home_healthcare = new Array();
+
+  // SUPPORT PRIVATE HEALTHCARE
+  let support_private_healthcare = new Array();
+
+  // SUPPORT INFORMAL
+  let support_informal = new Array();
+
+  // GOALS
+  let goals = new Array();
+
+  // ACCESS TO FAMILY DOCTOR
+  let access_to_family_doctor = new Array();
+
+  // FREQUENCY GET TOGETHER FAMILY
+  let frequency_get_together_family = new Array();
+
+  // FREQUENCY GET TOGETHER FRIENDS
+  let frequency_get_together_friends = new Array();
+
+  // FREQUENCY GET TOGETHER NEIGHBOURS
+  let frequency_get_together_neighbours = new Array();
+
+  // MONTH FREQUENCY OF REGULAR CONTACT THROUGH TELEPHONE OR COMPUTER
+  let frequency_of_social_contacts_month_phone_computer =
+    new Array();
+
+  // PERCIEVED LONELINESS SOMETIMES COUNT
+  let PL_QofL1_COMB_sometimes_count = new Array();
+
+  // PERCIEVED LONELINESS OFTEN COUNT
+  let PL_QofL1_COMB_often_count = new Array();
+
+  // Number of people living with the person
+  let household2_size = new Array();
+
+  // Participating in community activities
+  let community_activity_participate = new Array();
+
+  // Satisfaction rate 1 to 10
+  let life_satisfaction2 = new Array();
+
+  // Community belonging rate
+  let local_community_belonging = new Array();
+
+  // Feeling lack of companionship
+  let lack_companionship = new Array();
+
+  // Feeling leftout
+  let feel_leftout = new Array();
+
+  // Feeling isolated
+  let feel_isolated = new Array();
+
+  memberSurveyList
+
+}
+
 exports.Historic = async (req, res) => {
   log.info(
-    "Incoming request for historic report with memberCollectionID: " +
+    "Incoming request for historic report for with memberCollectionID: " +
     req.params.memberCollectionID
   );
 
-  MemberCollection.findById({id: req.params.memberCollectionID})
-    .then((foundCollection) => {
-      if (foundCollection.length == 0) {
-        return res.status(404).json({})
-      } else {
-        
-      }
-    })
+  try {
+    const foundCollection = await MemberCollection.findById(
+      req.params.memberCollectionID
+    ).populate(["member", "memberSurveyList"]);
 
-}
+    if (!foundCollection) {
+      return res.status(404).json({});
+    } else {
+      let account_name = foundCollection.member.info.name || "";
+      account_name =
+        account_name.length >= 60
+          ? key_private.decrypt(account_name, "utf8")
+          : account_name;
+
+      // Based on the 'name' value, execute different logic
+      if (account_name === 'someValue') {
+        // Run logic for 'someValue'
+        // Example:
+        // const result = await someFunction();
+        // return res.status(200).json({ result });
+      } else if (account_name === 'anotherValue') {
+        // Run logic for 'anotherValue'
+        // Example:
+        // const result = await anotherFunction();
+        // return res.status(200).json({ result });
+      } else {
+        // Default case if 'name' doesn't match any specific value
+        // Example:
+        // return res.status(200).json({ message: 'Default response' });
+      }
+    }
+  } catch (error) {
+    // Handle any errors that occur during the query or execution of logic
+    console.error("Error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
