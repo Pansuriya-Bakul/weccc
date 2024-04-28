@@ -93,7 +93,7 @@ const MarkCompleteChapterDialog = (props) => { // Notice the arrow function... r
                 }
                 else {
                     if (response.status === 200) {
-
+                        
                     }
                     else {
                         setMarkCompleteChapterDialog(false);

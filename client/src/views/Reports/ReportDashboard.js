@@ -88,6 +88,7 @@ export default class ReportDashboard extends Component {
         let communityHealth = reports.FPC_QofL3_SD[collection] * 10
 
         //isolation
+
         let isolationHealth = 0;
        
 
@@ -104,6 +105,7 @@ export default class ReportDashboard extends Component {
         } else {
 
             if (reports.household_size[collection] === 0) {
+
                 isolationHealth += 1;
             }
             if (reports.frequency_of_contact_family[collection] === '3-4 Times a year' || reports.frequency_of_contact_family[collection] === 'Yearly' || reports.frequency_of_contact_family[collection] === 'Never') {
@@ -113,6 +115,7 @@ export default class ReportDashboard extends Component {
                     isolationHealth += 2;
                 }
             }
+
 
             if (reports.frequency_of_contact_friends[collection] === '3-4 Times a year' || reports.frequency_of_contact_friends[collection] === 'Yearly' || reports.frequency_of_contact_friends[collection] === 'Never') {
 

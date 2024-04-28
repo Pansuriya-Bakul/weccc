@@ -80,7 +80,6 @@ const Reports = (props) => {
   // Style variable declaration
   const classes = useStyles();
 
-  // Declaration of Stateful Variables ===
   const { userID, appState, ToggleDrawerClose, CheckAuthenticationValidity } =
     props;
 
