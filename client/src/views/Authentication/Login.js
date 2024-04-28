@@ -92,7 +92,7 @@ class Login extends Component {
     // Change state of user's email address
     handleEmailChange = (event) => {
         this.setState({
-            email: event.target.value.toLowerCase(),
+            email: event.target.value.toLowerCase().trim(),
         });
     }
 
