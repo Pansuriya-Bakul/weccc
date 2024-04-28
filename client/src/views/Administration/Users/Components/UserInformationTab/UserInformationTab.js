@@ -337,13 +337,26 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
     }, [wordsRegex, setGender2, setGender2Error]);
 
     const dateOfBirthHandler = useCallback((event) => {
-        setUserEdit({
-            ...userEdit,
-            info: {
-                ...userEdit.info,
-                dateOfBirth: new Date(event.target.value)
-            }
-        });
+        const dob = event.target.value;
+
+        if (dob === '') {
+            setUserEdit({
+                ...userEdit,
+                info: {
+                    ...userEdit.info,
+                    dateOfBirth: dob
+                }
+            });
+
+        } else {
+            setUserEdit({
+                ...userEdit,
+                info: {
+                    ...userEdit.info,
+                    dateOfBirth: new Date(event.target.value)
+                }
+            });
+        }
 
     }, [userEdit, setUserEdit, setDateOfBirthError]);
 
@@ -654,7 +667,7 @@ const UserInformationTab = (props) => { // Notice the arrow function... regular 
         let updateData = {
             info: {
                 name: userEdit.info.name,
-                dateOfBirth: userEdit.info.dateOfBirth || '',
+                dateOfBirth: userEdit.info.dateOfBirth ? userEdit.info.dateOfBirth.toISOString() : '',
                 currentAddress: {
                     _id: getAddress(userEdit, '_id'),
                     street: getAddress(userEdit, 'street'),

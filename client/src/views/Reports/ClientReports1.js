@@ -1,8 +1,10 @@
 // ================================================
-// Code associated with ClientReport.js
+// CLIENT SCREENER REPORT
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
+import html2canvas from 'html2canvas';
+import html2pdf from 'html2pdf.js';
 
 // ==================== Modules =====================
 import Pagination from "@material-ui/lab/Pagination";
@@ -16,7 +18,6 @@ import Select from "@material-ui/core/Select";
 // ==================== Components ==================
 import AlertMessage from "../../components/AlertMessage";
 
-// import Summary from "./Summary";
 import Summary1 from "./Summary1";
 import PossibleConcerns from "./PossibleConcerns1";
 import Suggestions from "./Suggestions1";
@@ -41,12 +42,12 @@ import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import CardContent from "@material-ui/core/CardContent";
 
-
-import highrisk from "./riskhigh.png";
-import moderaterisk from "./riskmoderate.png";
-import lowrisk from "./risklow.png";
+import risk1 from "../Reports/risk1.png";
+import risk2 from "../Reports/risk2.png"
+import risk3 from "../Reports/risk3.png";
+import risk4 from "../Reports/risk4.png";
+import risk5 from "../Reports/risk5.png";
 import ScreenerResults from "./ScreenerResults";
-import { set } from "joi/lib/types/lazy";
 
 // ==================== MUI Icons ====================
 
@@ -102,6 +103,9 @@ const ClientReports = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [riskScore, setRiskScore] = useState(0);
 
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState("");
+
   // Functions ===
 
   const getPatients = useCallback(() => {
@@ -153,41 +157,6 @@ const ClientReports = (props) => {
       });
     }
   }, [appState]);
-
-
-
-  // const getNeighbours = useCallback(
-  //   (userId) => {
-  //     get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
-  //       console.log(window.location);
-  //       if (err) {
-  //         //Bad callback
-  //         setAlert(
-  //           new AlertType(
-  //             "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again."
-  //           )
-  //         );
-  //       } else {
-  //         if (res.status === 200) {
-  //           if (Object.keys(res.data).length === 0) {
-  //             setReportsData(null);
-  //           } else {
-  //             setReportsData(res.data);
-  //           }
-  //         } else {
-  //           //Bad HTTP Response
-  //           setAlert(
-  //             new AlertType(
-  //               "Unable to retrieve Neighbour Chapter Reports. Please refresh and try again.",
-  //               "error"
-  //             )
-  //           );
-  //         }
-  //       }
-  //     });
-  //   },
-  //   [appState]
-  // );
 
   const getScreen = useCallback(
     (userId) => {
@@ -280,6 +249,25 @@ const ClientReports = (props) => {
     return riskText;
   }
 
+  // generate report pdf and iniate download
+  const handleDownloadPDF = async () => {
+    setIsDownloading(true);
+    const reportElement = document.getElementById('report');
+
+    const canvas = await html2canvas(reportElement);
+    const opt = {
+      margin: 5,
+      filename: 'screener_report.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a2', orientation: 'portrait' }
+    };
+
+    await html2pdf().set(opt).from(reportElement).save();
+    setIsDownloading(false);
+
+  };
+
   // Hooks ===
 
   // First Render only because of the [ ] empty array tracking with the useEffect
@@ -304,6 +292,7 @@ const ClientReports = (props) => {
   useEffect(() => {
     if (reportsData) {
       checkRisk();
+      setLastUpdated(reportsData.collection_last_updated);
     }
   }, [reportsData]);
 
@@ -348,7 +337,7 @@ const ClientReports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      My Reports 
+                      My Reports
 
                     </Typography>
                   </Grid>
@@ -356,262 +345,168 @@ const ClientReports = (props) => {
               </Box>
             </Grid>
 
-            <Grid item xs={12}>
-            <Card raised={true}>
-              <CardContent>
-                <Box mx={1} my={1} boxShadow={0}>
-                  <Grid
-                    container
-                    direction="column"
-                    justifyContent="flex-start"
-                    alignItems="stretch"
-                  >
-                    <Grid item xs={12}>
-                    <Typography
-                        style={{
-                          fontSize: "16px",
-                          color: "grey",
-                        }}
+            <Grid id="report">
+              <Grid item xs={12}>
+                <Card raised={true}>
+                  <CardContent>
+                    <Box mx={1} my={1} boxShadow={0}>
+                      <div
+                        container
+                        style={{ display: "flex", flexDirection: 'row', justifyContent: "space-between" }}
                       >
-                        Member's name:
-                      </Typography>
-                      <Typography variant="h5" component="h1" style={{ marginLeft: "2px",
-                          marginTop: "3px",}}>
-                        {appState.name}
-                      </Typography>
-                    </Grid>
-                  </Grid>
+                        <Grid item xs={12}>
+                          <Typography
+                            style={{
+                              fontSize: "16px",
+                              color: "grey",
+                            }}
+                          >
+                            Member's name:
+                          </Typography>
+                          <Typography variant="h5" component="h1" style={{
+                            marginLeft: "2px",
+                            marginTop: "3px",
+                          }}>
+                            {appState.name}
+                          </Typography>
+                          Last Modified: {lastUpdated}
+                        </Grid>
+                        <div data-html2canvas-ignore="true">
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleDownloadPDF}
+                            style={{ width: "150px", height: "40px" }}
+                          >
+                            {isDownloading ? <CircularProgress size={24} color="white" /> : "Download"}
+                          </Button>
+                        </div>
+                      </div>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              <Grid item xs={4}>
+                <Box mx={1} my={1}>
+                  <AlertMessage alert={alert} setParentAlert={setAlert} />
                 </Box>
-              </CardContent>
-            </Card>
-          </Grid>
+              </Grid>
 
-
-
-            <Grid item xs={4}>
-              <Box mx={1} my={1}>
-                <AlertMessage alert={alert} setParentAlert={setAlert} />
-                {/* <Button
-                                            onClick = { () => {console.log((collectionIndex + 1)%reportsData.SRVNum_PRF_SD.length);}} >
-                                            Viewing data from collection {collectionIndex + 1} out of {reportsData.SRVNum_PRF_SD.length}
-                                        </Button> */}
-              </Box>
-            </Grid>
-            {/* <Grid item xs={12}>
-              <Card raised={true}> */}
-            {/* <Box mx={1} my={1} boxShadow={0}>
-                  {/* <Grid
-                    container
-                    direction="column"
-                    justifyContent="flex-start"
-                    alignItems="stretch"
-                    spacing={1}
-                  >
-                    {/* <Grid item xs={12}>
-                      <FormControl
-                        fullWidth
-                        variant="filled"
-                        size="small"
-                        className={classes.formControl}
+              <Grid item xs={12}>
+                <Card raised={true} style={{ padding: '30px' }}>
+                  <Box mx={1} my={1} boxShadow={0}>
+                    {isLoading ? (<CircularProgress />)
+                      : <Grid
+                        container
+                        direction="column"
+                        justifyContent="flex-start"
+                        alignItems="stretch"
+                        spacing={1}
+                        style={{ padding: '20px 30px 20px 30px' }}
                       >
-                        <InputLabel id="select-label-Member">Member</InputLabel>
-                        <Select
-                          className={classes.selectEmpty}
-                          labelId="select-label-Member"
-                          id="select-Member"
-                          defaultValue=""
-                          disabled={patientData ? false : true}
-                          onChange={(event) => {
-                            patientSelectHandler(event);
-                          }}
-                        >
-                          {patientData.map((item, index) => {
-                            return (
-                              <MenuItem key={item._id} value={item._id}>
-                                <em>{item.info.name}</em>
-                              </MenuItem>
-                            );
-                          })}
-                        </Select>
-                      </FormControl>
-                    </Grid> */}
-            {/* <Grid item xs={12}>
-                      {reportsData ? (
-                        <Pagination
-                          count={reportsData.SRVNum_PRF_SD.length}
-                          showFirstButton
-                          showLastButton
-                          disabled={!reportsData}
-                          onChange={(event, page) => {
-                            reportsPaginationHandler(event, page);
-                          }}
-                        />
-                      ) : (
-                        <> </>
-                      )}
-                    </Grid> 
-                  </Grid> *
-                </Box> */}
-            {/* </Card>
-            </Grid> */}
-            <Grid item xs={12}>
-              <Card raised={true} style={{ padding: '30px' }}>
-                <Box mx={1} my={1} boxShadow={0}>
-                  {isLoading ? (<CircularProgress />)
-                    : <Grid
-                      container
-                      direction="column"
-                      justifyContent="flex-start"
-                      alignItems="stretch"
-                      spacing={1}
-                      style={{ padding: '20px 30px 20px 30px' }}
-                    >
-                      {reportsData &&
-                        Object.keys(reportsData).length != 0 &&
-                        Object.getPrototypeOf(reportsData) === Object.prototype ? (
-                        <>
-                          <Grid item xs={12}>
-                            <Typography variant="h4" color="textPrimary">
-                              Social Risk Screener Report
-                            </Typography>
-                            <Divider light />
-                          </Grid>
+                        {reportsData &&
+                          Object.keys(reportsData).length != 0 &&
+                          Object.getPrototypeOf(reportsData) === Object.prototype ? (
+                          <>
+                            <Grid item xs={12}>
+                              <Typography variant="h4" color="textPrimary">
+                                Social Risk Screener Report
+                              </Typography>
+                              <Divider light />
+                            </Grid>
 
-                          {/* <Grid item xs={12} id="dashboard">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Dashboard
-                            </Typography>
-                            <ReportDashboard
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            ></ReportDashboard>
-                          </Grid> */}
-
-                          {/* <Grid item xs={12} id="summary">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Summary
-                            </Typography>
-                            <Summary1
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid> */}
-                          <Grid item xs={12} id="overall-risk" style={{ marginTop: '24px' }}>
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Your Social Isolation Risk
-                            </Typography>
-                            <Grid container spacing={2}>
-                              <Grid item xs={12} sm={6} md={4} lg={3}>
-                                <img
-                                  src={riskScore > 0 && riskScore < 3 ? moderaterisk : riskScore >= 3 ? highrisk : lowrisk}
-                                  alt="risk meter"
-                                  width="360px"
-                                  height="238px"
-                                />
-                              </Grid>
-                              <Grid item xs={12} sm={6} md={8} lg={9} style={{ paddingTop: '40px', paddingLeft: '40px' }}>
-                                <Typography variant="h5" color="textSecondary" gutterBottom style={{fontWeight: "500", color: riskScore == 0 ? "#42b74a" : riskScore == 1 ? "#cfdf28" : riskScore == 2 ? "#ffbb10" : riskScore == 3 ? "#f76420" : "#cf2020" }}>
-                                  {riskScore == 0 ? "Lowest Risk" : riskScore == 1 ? "Some Risk" : riskScore == 2 ? "Some Risk" : riskScore == 3 ? "Moderate Risk" : "High Risk" }
-                                </Typography>
-                                <Typography variant="body1">
-                                  {getRiskText()}
-                                </Typography>
+                            <Grid item xs={12} id="overall-risk" style={{ marginTop: '24px' }}>
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                              >
+                                Your Social Isolation Risk
+                              </Typography>
+                              <Grid container spacing={2} style={{ alignItems: 'center' }}>
+                                <Grid item xs={12} sm={6} md={4} lg={3}>
+                                  <img
+                                    src={riskScore == 0 ? risk1 : riskScore == 1 ? risk2 : riskScore == 2 ? risk3 : riskScore == 3 ? risk4 : risk5}
+                                    alt="risk meter"
+                                    width="360px"
+                                    height="238px"
+                                    style={{ maxWidth: '100%', height: 'auto' }}
+                                  />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={8} lg={9} style={{ paddingTop: '40px', paddingLeft: '40px' }}>
+                                  <Typography variant="h5" color="textSecondary" gutterBottom style={{ fontWeight: "500", color: riskScore == 0 ? "#42b74a" : riskScore == 1 ? "#cfdf28" : riskScore == 2 ? "#ffbb10" : riskScore == 3 ? "#f76420" : "#cf2020" }}>
+                                    {riskScore == 0 ? "Lowest Risk" : riskScore == 1 ? "Some Risk" : riskScore == 2 ? "Some Risk" : riskScore == 3 ? "Moderate Risk" : "High Risk"}
+                                  </Typography>
+                                  <Typography variant="body1" style={{ whiteSpace: 'pre-wrap' }}>
+                                    {getRiskText()}
+                                  </Typography>
+                                </Grid>
                               </Grid>
                             </Grid>
-                          </Grid>
 
-                          <Grid item xs={12} id="summary1">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                              style={{ paddingBottom: '12px' }}
-                            >
-                              Results
-                            </Typography>
-                            {/* <Summary1
-                                  reports={reportsData}
-                                  collection={currentReportIndex}
-                                /> */}
-                            <ScreenerResults
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid>
+                            <Grid item xs={12} id="results">
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                                style={{ paddingBottom: '12px' }}
+                              >
+                                Results
+                              </Typography>
 
-                          {/* <Grid item xs={12} id="possible concerns1">
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
-                            >
-                              Possible Concerns
-                            </Typography>
-                            <PossibleConcerns
-                              reports={reportsData}
-                              collection={currentReportIndex}
-                            />
-                          </Grid> */}
+                              <ScreenerResults
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
 
-                          <Grid item xs={12} id="suggestions1" style={{ paddingTop: '30px' }}>
-                            <Typography
-                              variant="h5"
-                              color="textSecondary"
-                              align="left"
-                              gutterBottom
 
-                            >
-                              What Now?
-                            </Typography>
-                            {/* <Suggestions
+                            <Grid item xs={12} id="suggestions1" style={{ paddingTop: '30px' }}>
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+
+                              >
+                                What Now?
+                              </Typography>
+                              {/* <Suggestions
                               reports={reportsData}
                               collection={currentReportIndex}
                             /> */}
+                              <Typography
+                                variant="body1"
+                                align="left"
+                                gutterBottom
+                              >
+                                Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
+
+                              </Typography>
+                            </Grid>
+
+                          </>
+                        ) : (
+
+                          <>
                             <Typography
-                              variant="body1"
+                              variant="subtitle2"
+                              color="textSecondary"
                               align="left"
                               gutterBottom
                             >
-                              Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
+                              No available reports.
 
                             </Typography>
-                          </Grid>
-
-                        </>
-                      ) : (
-
-                        <>
-                          <Typography
-                            variant="subtitle2"
-                            color="textSecondary"
-                            align="left"
-                            gutterBottom
-                          >
-                            No available reports.
-
-                          </Typography>
-                        </>
-                      )}
-                    </Grid>}
-                </Box>
-              </Card>
+                          </>
+                        )}
+                      </Grid>}
+                  </Box>
+                </Card>
+              </Grid>
             </Grid>
           </>
         ) : (

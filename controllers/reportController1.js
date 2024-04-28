@@ -1,9 +1,8 @@
 /*
 ==============================================
-MemberSurvey Controller
+SCREENER REPORT CONTROLLER
 ----------------------------------------------
-Methods:
-- Personalized Neighbours
+
 ==============================================
 */
 
@@ -118,6 +117,8 @@ exports.Screen = async (req, res) => {
 
                             let account_language = neighbourFunctions.formatLanguage(memberCollectionList[0].member.info.language || "");
 
+                            let collection_last_updated = new Date(memberCollectionList[0].updatedAt).toISOString().split('T')[0];
+
                             // // END - Account info step ==================================================
 
                             // // START - Collection : Survey info step ==================================================
@@ -188,10 +189,6 @@ exports.Screen = async (req, res) => {
 
                                     let chapter7Values = null;
 
-
-
-
-
                                     let chapter7Results = screenArray.find(survey =>
                                         survey.surveyTemplate.name == "Social Health"
                                     );
@@ -204,10 +201,6 @@ exports.Screen = async (req, res) => {
                                     if (chapter7Results !== undefined)
 
                                         chapter7Values = JSON.parse(chapter7Results.responseJSON);
-
-
-
-
 
 
                                     if (chapter7Values) {
@@ -235,6 +228,7 @@ exports.Screen = async (req, res) => {
                             // log.info(neighboursChapter_ids);  
 
                             return res.status(200).json({
+                                collection_last_updated: collection_last_updated,
                                 ID_PRF_SD: account_id,
                                 SRVNum_PRF_SD: neighboursChapter_ids,
                                 SRVD_PRF_SD: neighboursChapter_dates,

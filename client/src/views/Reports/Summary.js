@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Box from '@material-ui/core/Box';
 
-import LineChart from './LineChart'
+// import LineChart from './LineChart'
 import Interests from './Summary/Interests';
-import FamilyFriendsNeighbours from './Summary/FamilyFriendsNeighbours';
-import CommunityParticipation from './Summary/CommunityParticipation';
+// import FamilyFriendsNeighbours from './Summary/FamilyFriendsNeighbours';
+// import CommunityParticipation from './Summary/CommunityParticipation';
 import Goals from './Summary/Goals';
 
 // import SocialHealth from './Summary/SocialHealth';

@@ -1,6 +1,6 @@
 /*
 ==============================================
-MemberSurvey Controller
+COMMUNITY CONNECTIONS AND QUALITY OF LIFE - SHORT
 ----------------------------------------------
 Methods:
 - Personalized Neighbours
@@ -138,6 +138,7 @@ exports.Neighbour = async (req, res) => {
                 memberCollectionList[0].member.role || ""
               );
 
+              let collection_last_updated = new Date(memberCollectionList[0].updatedAt).toISOString().split('T')[0];
 
               let account_dob = neighbourFunctions.formatDate(memberCollectionList[0].member.info.dateOfBirth || "");
 
@@ -426,8 +427,12 @@ exports.Neighbour = async (req, res) => {
               // FREQUENCY GET TOGETHER NEIGHBOURS
               let frequency_get_together_neighbours = new Array();
 
-              // MONTH FREQUENCY OF REGULAR CONTACT THROUGH TELEPHONE OR COMPUTER
-              let frequency_of_social_contacts_month_phone_computer =
+              // FREQUENCY OF REGULAR CONTACT THROUGH TELEPHONE
+              let frequency_of_social_contacts_phone =
+                new Array();
+
+              // FREQUENCY OF REGULAR CONTACT THROUGH COMPUTER
+              let frequency_of_social_contacts_computer =
                 new Array();
 
               // PERCIEVED LONELINESS SOMETIMES COUNT
@@ -613,20 +618,18 @@ exports.Neighbour = async (req, res) => {
                       chapter3Values.marital_status
                     );
 
-                    // NOT USED SURVEY QUESTION: current_living_situation
-
                     household_size.push(
                       neighbourFunctions.household_size(
                         chapter3Values.household_size
                       )
                     );
-
-                    // NOT USED SURVEY QUESTION: regular_contact_family_relatives
+     
                     QSC_QofL1_COMB.push(
                       neighbourFunctions.quality_of_social_contact(
                         chapter3Values
                       )
                     );
+                    
 
                     // NOT USED SURVEY QUESTION: important_discussion_number_of_people_A
                     // NOT USED SURVEY QUESTION: important_discussion_number_of_people_B
@@ -660,6 +663,19 @@ exports.Neighbour = async (req, res) => {
                         chapter3Values.FSC_QofL1_COMB_A
                       )
                     );
+
+                    frequency_of_social_contacts_phone.push(
+                      neighbourFunctions.frequency_of_social_contacts_phone(
+                        chapter3Values.FSC_QofL1_COMB_A
+                      )
+                    );
+
+                    frequency_of_social_contacts_computer.push(
+                      neighbourFunctions.frequency_of_social_contacts_computer(
+                        chapter3Values.FSC_QofL1_COMB_A
+                      )
+                    );
+                 
                     frequency_of_contact_friends.push(
                       neighbourFunctions.frequency_of_contact_friends(
                         chapter3Values.FSC_QofL1_COMB_A
@@ -696,6 +712,7 @@ exports.Neighbour = async (req, res) => {
                         chapter4Values.activities_B
                       )
                     );
+                    console.log("Activities: ", activities);
                     meaningful_activities.push(
                       neighbourFunctions.meaningful_activities(
                         chapter4Values.meaningful_activities
@@ -884,11 +901,12 @@ exports.Neighbour = async (req, res) => {
                       )
                     );
                     HU_ED_QofL2_SD.push(
-                      neighbourFunctions.ed_visit(chapter6Values.HU_ED_QofL2_SD)
+                      neighbourFunctions.ed_visit(chapter6Values.question1['Row 1'])
                     );
+
                     HU_HNum_QofL2_SD.push(
                       neighbourFunctions.hospitalization(
-                        chapter6Values.HU_HNum_QofL2_SD
+                        chapter6Values.question1['Row 2']
                       )
                     );
                     HU_HD_QofL2_SD.push(
@@ -1018,6 +1036,7 @@ exports.Neighbour = async (req, res) => {
                 // DOB_PRF_SD: account_dob,
                 // PC_PRF_SD: account_postalCode,
                 // L_PRF_SD: account_language,
+                collection_last_updated: collection_last_updated,
                 FCP_INT_COMB: FCP_INT_COMB,
                 // ISA_INT: ISA_INT,
                 // SII_QofL1: SII_QofL1,
@@ -1100,7 +1119,8 @@ exports.Neighbour = async (req, res) => {
                 frequency_get_together_friends: frequency_get_together_friends,
                 frequency_get_together_neighbours:
                   frequency_get_together_neighbours,
-                // frequency_of_social_contacts_month_phone_computer: frequency_of_social_contacts_month_phone_computer,
+                frequency_of_social_contacts_phone: frequency_of_social_contacts_phone,
+                frequency_of_social_contacts_computer: frequency_of_social_contacts_computer,
                 PL_QofL1_COMB_sometimes_count: PL_QofL1_COMB_sometimes_count,
                 PL_QofL1_COMB_often_count: PL_QofL1_COMB_often_count,
                 // feel_isolated: feel_isolated,
@@ -1149,195 +1169,516 @@ exports.Neighbour = async (req, res) => {
     });
 };
 
-//Screen
-// exports.Screen = async (req, res) =>
-// {
-//     log.info("Incoming request for Screen's Report on the Collections of user with id: " + req.params.userId);
 
-//     flag1 = 1;
-//     Collection.find({ name: "Test_Screen"}) //Test_screen_neighbours
-//         .then(verifiedCollection => {
-//             // log.info(verifiedCollection);
-//             if(verifiedCollection.length == 0){
+exports.QualityofLife = async (req, res) => {
+  log.info(
+    "Incoming request for Quality of life - short Report on the Collections of user with id: " +
+    req.params.userId
+  );
 
-//                 log.info("ERRROOOOOR");
-//                 flag1 = 0;
-//             }
-//             if( flag1 == 1){
+  let flag1 = 1;
 
-//                 log.info("Hellooooo SCREEN");
-//                 // log.info(verifiedCollection.length, "\n");
-//                 // log.info(verifiedCollection);
+  Collection.find({ name: "Quality of Life - Short" })
+    .then((verifiedCollection) => {
+      if (verifiedCollection.length == 0) {
+        flag1 = 0;
+      }
 
-//                 MemberCollection.find( { collectionTemplate: verifiedCollection, member: req.params.userId }).sort( { createdAt: 1 })
-//                 .populate( { path: 'member', options: { limit: 1 }, select: '-password', populate: { path: 'info.currentAddress', model: "Address" } })
-//                 .populate( { path: 'memberSurveyList', populate: { path: 'surveyTemplate', model: "Survey" } } )
-//                 .exec()
-//                 .then(memberCollectionList => {
-//                     if(memberCollectionList)
-//                     {
-//                         log.info("NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWwwww HIIIIIIIIIIIIIIII");
-//                         //log.info(memberCollection).find().;
+      if (flag1 == 1) {
+      MemberCollection.find({
+        collectionTemplate: verifiedCollection,
+        member: req.params.userId,
+      })
+        .sort({ createdAt: -1 })
+        .populate({
+          path: "member",
+          options: { limit: 1 },
+          select: "-password",
+          populate: {
+            path: "info.currentAddress",
+            model: "Address",
+          }
+        })
+        .populate({
+          path: "member",
+          options: { limit: 1 },
+          select: "-password",
+          populate: { path: "info.currentAddress", model: "Address" },
+        })
+        .populate({
+          path: "memberSurveyList",
+          populate: { path: "surveyTemplate", model: "Survey" },
+        })
+        .exec()
+        .then((memberCollectionList) => {
+          if (memberCollectionList) {
 
-//                         // START - Account info step ==================================================
+            let collection_last_updated = new Date(memberCollectionList[0].updatedAt).toISOString().split('T')[0];
 
-//                             let account_id = userFunctions.getStandardAccountId(memberCollectionList[0].member.role || "",
-//                             memberCollectionList[0].member.facilityId || "", memberCollectionList[0].member.sequence_id || "");
+            let account_name = memberCollectionList[0].member.info.name || "";
+            account_name =
+              account_name.length >= 60
+                ? key_private.decrypt(account_name, "utf8")
+                : account_name;
 
-//                             let account_involvement = neighbourFunctions.formatInvolvement(memberCollectionList[0].member.role || "");
+            // BASIC NEEDS
+            let basic_needs = new Array();
 
-//                             let account_name = memberCollectionList[0].member.info.name || "";
+            // PHYSICAL HEALTH
+            let PH_QofL2_SD = new Array();
 
-//                             let account_gender = neighbourFunctions.formatGender(memberCollectionList[0].member.info.gender || "");
+            // PHYSICAL HEALTH STRING
+            let PH_QofL2_SD_STRING = new Array();
 
-//                             let account_dob = neighbourFunctions.formatDate(memberCollectionList[0].member.info.dateOfBirth || "");
+            // MENTAL HEALTH
+            let MH_QofL2_SD = new Array();
 
-//                             let account_postalCode = neighbourFunctions.formatPostalCode(memberCollectionList[0].member.info.currentAddress.code || "");
+            // MENTAL HEALTH STRING
+            let MH_QofL2_SD_STRING = new Array();
 
-//                             let account_language = neighbourFunctions.formatLanguage(memberCollectionList[0].member.info.language || "");
+            // MOBILITY
+            let problem_walking = new Array();
 
-//                         // // END - Account info step ==================================================
+            // PERSONAL CARE
+            let problem_washing_dressing = new Array();
 
-//                         // // START - Collection : Survey info step ==================================================
+            // USUAL ACTIVITIES
+            let problem_usual_activities = new Array();
 
-//                             let collection_ids = neighbourFunctions.collectionIds(memberCollectionList);
+            // PAIN/DISCOMFORT
+            let problem_pain_discomfort  = new Array();
 
-//                             let collection_dates = neighbourFunctions.collectionDates(memberCollectionList);
+            // ANXIETY/DEPRESSION
+            let problem_anxious_depressed = new Array();
 
-//                             let neighboursChapter_ids = neighbourFunctions.neighbourChapterIds(memberCollectionList);
+            // SUPPORT HEALTH ATTEND WELLNESS PROGRAM
+            let support_wellness_program = new Array();
 
-//                             let neighboursChapter_dates = neighbourFunctions.neighbourChapterDates(memberCollectionList);
+            // SUPPORT HEALTHCARE
+            let support_healthcare = new Array();
 
-//                         // END - Collection : Survey Info Step ==================================================
+            // SUPPORT HOME HEALTHCARE
+            let support_home_healthcare = new Array();
 
-//                         // START - Neighbour Report info step ==================================================
+            // SUPPORT PRIVATE HEALTHCARE
+            let support_private_healthcare = new Array();
 
-//                             // Number of people living with the person
-//                             let household2_size = new Array();
+            // SUPPORT INFORMAL
+            let support_informal = new Array();
 
-//                             // Participating in community activities
-//                             let community_activity_participate = new Array();
+            // ED VISIT
+            let HU_ED_QofL2_SD = new Array();
 
-//                             // Satisfaction rate 1 to 10
-//                             let life_satisfaction2 = new Array();
+            // HOSPITALIZATION
+            let HU_HNum_QofL2_SD = new Array();
 
-//                             // Community belonging rate
-//                             let local_community_belonging = new Array();
+            // DAYS IN HOSPITAL
+            let HU_HD_QofL2_SD = new Array();
 
-//                             // Feeling lack of companionship
-//                             let lack_companionship = new Array();
+            // EMS
+            let HU_EMS_QofL2_SD = new Array();
 
-//                             // Feeling leftout
-//                             let feel_leftout = new Array();
+            // URGENT CARE
+            let HU_UC_QofL2_SD = new Array();
 
-//                             // Feeling isolated
-//                             let feel_isolated = new Array();
+            // SOUGHT TREATEMENT
+            let HU_ST_QofL2_SD = new Array();
 
-//                             // log.info(memberCollectionList);
+            // ACCIDENT
+            let HU_A_QofL2_SD = new Array();
 
-//                             memberCollectionList.forEach(memberCollection => {
+            // PERCEIVED SOCIAL SUPPORT
+            let PSS_QofL1_COMB = new Array();
 
-//                                 // if( memberCollection.collectionTemplate == '62017ad39894374f8451348e'){
-//                                     // log.info('%' , "MEMBERRRRRRRR COLLECTIOOOOOOOOOON" ,memberCollectionList , "EEEEEEEEEEEEEEEEEND");
+            // PERCEIVED LONELINESS
+            let PL_QofL1_COMB = new Array();
 
-//                                 // if( collectio name == )
+            // PERCIEVED LONELINESS SOMETIMES COUNT
+            let PL_QofL1_COMB_sometimes_count = new Array();
 
-//                                 if(memberCollection.memberSurveyList)
-//                                 {
+            // PERCIEVED LONELINESS OFTEN COUNT
+            let PL_QofL1_COMB_often_count = new Array();
 
-//                                     // log.info(memberCollection.memberSurveyList);
+            // LIFE SATISFACTION
+            let LS_QofL3_SD = new Array();
 
-//                                     const screenArray = Array.from(memberCollection.memberSurveyList);
+            // YOUR STANDARD OF LIVING
+            let SL_QofL3_SD = new Array();
 
-//                                     let chapter7Values = null;
+            // YOUR HEALTH
+            let YH_QofL3_SD = new Array();
 
-//                                     let chapter7Results = screenArray.find(survey =>
-//                                         survey.surveyTemplate.name == "Social Health"
-//                                     );
+            // WHAT YOU ARE ACHIEVING IN LIFE
+            let AL_QofL3_SD = new Array();
 
-//                                     // log.info(chapter7Results);
+            // PERSONAL RELATIONSHIPS
+            let PR_QofL3_SD = new Array();
 
-//                                     if(chapter7Results !==undefined)
+            // HOW SAFE YOU FEEL
+            let HSF_QofL3_SD = new Array();
 
-//                                         chapter7Values = JSON.parse(chapter7Results.responseJSON);
 
-//                                     if(chapter7Values){
+            // FEELING PART OF THE COMMUNITY
+            let FPC_QofL3_SD = new Array();
 
-//                                         household2_size.push(neighbourFunctions.household2_size(chapter7Values.household2_size));
-//                                         community_activity_participate.push(neighbourFunctions.community_activity_participate(chapter7Values.community_activity_participate));
-//                                         life_satisfaction2.push(neighbourFunctions.life_satisfaction2(chapter7Values.life_satisfaction2));
-//                                         local_community_belonging.push(neighbourFunctions.local_community_belonging(chapter7Values.local_community_belonging));
-//                                         lack_companionship.push(neighbourFunctions.lack_companionship(chapter7Values.lack_companionship));
-//                                         feel_leftout.push(neighbourFunctions.feel_isolated(chapter7Values.feel_isolated));
-//                                         feel_isolated.push(neighbourFunctions.feel_isolated(chapter7Values.feel_leftout));
-//                                         // log.info(neighbourFunctions.feel_isolated(chapter7Values.feel_leftout));
+            // FUTURE SECURITY
+            let FS_QofL3_SD = new Array();
 
-//                                     }
+            // YOUR SPIRITUALITY OR RELIGION
+            let SR_QofL3_SD = new Array();
 
-//                                     // log.info(life_satisfaction2);
+            // PWI OVERALL SCORE
+            let PWI_QofL3_COMB = new Array();
 
-//                                 }
 
-//                             });
 
-//                     return res.status(200).json({
-//                         ID_PRF_SD: account_id,
-//                         SRVNum_PRF_SD: neighboursChapter_ids,
-//                         SRVD_PRF_SD: neighboursChapter_dates,
-//                         TINV_PRF_SD: account_involvement,
-//                         GEN_PRF_SD: account_gender,
-//                         DOB_PRF_SD: account_dob,
-//                         PC_PRF_SD: account_postalCode,
-//                         L_PRF_SD: account_language,
-//                         feel_isolated: feel_isolated,
-//                         feel_leftout: feel_leftout,
-//                         lack_companionship: lack_companionship,
-//                         local_community_belonging: local_community_belonging,
-//                         life_satisfaction2: life_satisfaction2,
-//                         community_activity_participate: community_activity_participate,
-//                         household2_size: household2_size,
-//                         request: {
-//                             type: 'GET',
-//                             url: config.server.protocol + '://' + config.server.hostname +':' + config.server.port + '/api/reports/Screen/user/' + req.params.userId
-//                         }
-//                     });
-//                 }
+            memberCollectionList.forEach((memberCollection) => {
+              if (memberCollection.memberSurveyList) {
+                const neighboursArray = Array.from(
+                  memberCollection.memberSurveyList
+                );
 
-//                 else
-//                 {
-//                     return res.status(404).json({
-//                         message: "Collection information for user not found."
-//                     });
-//                 }
-//                 })
-//                 .catch(error => {
+                let chapter1Values = null;
 
-//                 log.error(error.message);
+                let chapter1Results = neighboursArray.find(
+                  (survey) =>
+                    survey.surveyTemplate.name ==
+                    "Quality of Life Reflection - Short"
+                );
 
-//                 return res.status(500).json({
-//                     message: error.message
-//                 });
+                chapter1Values = JSON.parse(chapter1Results.responseJSON);
 
-//                 });
-//                 }
-//                 else
-//                 {
-//                 return res.status(404).json({
-//                 });
-//                 }
+                if (chapter1Values) {
 
-//                 })
-//                 .catch(error => {
+                  basic_needs.push(
+                    chapter1Values.basic_needs
+                  );
 
-//                 log.error(error.message);
+                  // PHYSICAL HEALTH
+                  PH_QofL2_SD.push(
+                    neighbourFunctions.physical_health(
+                      chapter1Values.PH_QofL2_SD
+                    )
+                  );
 
-//                 return res.status(500).json({
-//                 message: error.message
-//                 });
+                  // PHYSICAL HEALTH STRING
+                  PH_QofL2_SD_STRING.push(
+                    neighbourFunctions.physical_health_string(
+                      chapter1Values.PH_QofL2_SD
+                    )
+                  );
 
-//     });
+                  // MENTAL HEALTH
+                  MH_QofL2_SD.push(
+                    neighbourFunctions.mental_health(
+                      chapter1Values.MH_QofL2_SD
+                    )
+                  );
 
-// }
+                  // MENTAL HEALTH STRING
+                  MH_QofL2_SD_STRING.push(
+                    neighbourFunctions.mental_health_string(
+                      chapter1Values.MH_QofL2_SD
+                    )
+                  );
+
+                  // MOBILITY
+                  problem_walking.push(
+                    neighbourFunctions.mobility(chapter1Values.mobility_today)
+                  );
+
+                  // PERSONAL CARE
+                  problem_washing_dressing.push(
+                    neighbourFunctions.personal_care(
+                      chapter1Values.self_care_today
+                    )
+                  );
+
+                  // USUAL ACTIVITIES
+                  problem_usual_activities.push(
+                    neighbourFunctions.usual_activities(
+                      chapter1Values.usual_activities_today
+                    )
+                  );
+
+                  // PAIN/DISCOMFORT
+                  problem_pain_discomfort.push(
+                    neighbourFunctions.pain_discomfort(
+                      chapter1Values.pain_discomfort_today
+                    )
+                  );
+
+                  // ANXIETY/DEPRESSION
+                  problem_anxious_depressed.push(
+                    neighbourFunctions.anxiety_depression(
+                      chapter1Values.anxiety_depression_today
+                    )
+                  );
+
+                  // SUPPORT HEALTH ATTEND WELLNESS PROGRAM
+                  support_wellness_program.push(
+                    neighbourFunctions.support_wellness_program(
+                      chapter1Values.FC_3C_COMB
+                    )
+                  );
+
+                  // SUPPORT HEALTHCARE
+                  support_healthcare.push(
+                    neighbourFunctions.support_healthcare(
+                      chapter1Values.FC_3C_COMB
+                    )
+                  );
+
+                  // SUPPORT HOME HEALTHCARE
+                  support_home_healthcare.push(
+                    neighbourFunctions.support_home_healthcare(
+                      chapter1Values.FC_3C_COMB
+                    )
+                  );
+
+                  // SUPPORT PRIVATE HEALTHCARE
+                  support_private_healthcare.push(
+                    neighbourFunctions.support_private_healthcare(
+                      chapter1Values.FC_3C_COMB
+                    )
+                  );
+
+                  // SUPPORT INFORMAL
+                  support_informal.push(
+                    neighbourFunctions.support_informal(
+                      chapter1Values.FC_3C_COMB
+                    )
+                  );
+
+                  // ED VISIT
+                  HU_ED_QofL2_SD.push(
+                    neighbourFunctions.ed_visit(chapter1Values.HU_ED_QofL2_SD)
+                  );
+
+                  // HOSPITALIZATION
+                  HU_HNum_QofL2_SD.push(
+                    neighbourFunctions.hospitalization(
+                      chapter1Values.HU_HNum_QofL2_SD
+                    )
+                  );
+
+                  // DAYS IN HOSPITAL
+                  HU_HD_QofL2_SD.push(
+                    neighbourFunctions.days_in_hospital(
+                      chapter1Values.HU_HD_QofL2_SD
+                    )
+                  );
+
+                  // EMS
+                  HU_EMS_QofL2_SD.push(
+                    neighbourFunctions.ems(chapter1Values.HU_EMS_QofL2_SD)
+                  );
+
+                  // URGENT CARE
+                  HU_UC_QofL2_SD.push(
+                    neighbourFunctions.urgent_care(
+                      chapter1Values.HU_UC_QofL2_SD
+                    )
+                  );
+
+                  // SOUGHT TREATEMENT
+                  HU_ST_QofL2_SD.push(
+                    neighbourFunctions.sought_treatment(
+                      chapter1Values.HU_ST_QofL2_SD
+                    )
+                  );
+
+                  // ACCIDENT
+                  HU_A_QofL2_SD.push(
+                    neighbourFunctions.accident(chapter1Values.HU_A_QofL2_SD)
+                  );
+
+                  // PERCEIVED SOCIAL SUPPORT
+                  PSS_QofL1_COMB.push(
+                    neighbourFunctions.perceived_social_support(
+                      chapter1Values.PSS_QofL1_COMB
+                    )
+                  );
+
+                  // PERCEIVED LONELINESS
+                  PL_QofL1_COMB.push(
+                    neighbourFunctions.perceived_loneliness(
+                      chapter1Values.PL_QofL1_COMB
+                    )
+                  );
+
+                  // PERCIEVED LONELINESS SOMETIMES COUNT
+                  PL_QofL1_COMB_sometimes_count.push(
+                    neighbourFunctions.perceived_loneliness_sometimes_count(
+                      chapter1Values.PL_QofL1_COMB
+                    )
+                  );
+
+                  // PERCIEVED LONELINESS OFTEN COUNT
+                  PL_QofL1_COMB_often_count.push(
+                    neighbourFunctions.perceived_loneliness_often_count(
+                      chapter1Values.PL_QofL1_COMB
+                    )
+                  );
+
+                  ///////// WELLNESS/////////////
+                  // LIFE SATISFACTION
+                  LS_QofL3_SD.push(
+                    neighbourFunctions.life_satisfaction(
+                      chapter1Values.LS_QofL3_SD
+                    )
+                  );
+
+                  // YOUR STANDARD OF LIVING
+                  SL_QofL3_SD.push(
+                    neighbourFunctions.your_standard_of_living(
+                      chapter1Values.SL_QofL3_SD
+                    )
+                  );
+
+                  // YOUR HEALTH
+                  YH_QofL3_SD.push(
+                    neighbourFunctions.your_health(chapter1Values.YH_QofL3_SD)
+                  );
+
+                  // WHAT YOU ARE ACHIEVING IN LIFE
+                  AL_QofL3_SD.push(
+                    neighbourFunctions.what_you_are_achieving_in_life(
+                      chapter1Values.AL_QofL3_SD
+                    )
+                  );
+
+                  // PERSONAL RELATIONSHIPS
+                  PR_QofL3_SD.push(
+                    neighbourFunctions.personal_relationships(
+                      chapter1Values.PR_QofL3_SD
+                    )
+                  );
+
+                  // HOW SAFE YOU FEEL
+                  HSF_QofL3_SD.push(
+                    neighbourFunctions.how_safe_you_feel(
+                      chapter1Values.HSF_QofL3_SD
+                    )
+                  );
+
+                  // FEELING PART OF THE COMMUNITY
+                  FPC_QofL3_SD.push(
+                    neighbourFunctions.feeling_part_of_the_community(
+                      chapter1Values.FPC_QofL3_SD
+                    )
+                  );
+
+                  // FUTURE SECURITY
+                  FS_QofL3_SD.push(
+                    neighbourFunctions.future_security(
+                      chapter1Values.FS_QofL3_SD
+                    )
+                  );
+
+                  // YOUR SPIRITUALITY OR RELIGION
+                  SR_QofL3_SD.push(
+                    neighbourFunctions.your_spirituality_or_religion(
+                      chapter1Values.SR_QofL3_SD
+                    )
+                  );
+
+                  // PWI OVERALL SCORE
+                  PWI_QofL3_COMB.push(
+                    neighbourFunctions.pwi_overall_score(
+                      chapter1Values.LS_QofL3_SD,
+                      chapter1Values.SL_QofL3_SD,
+                      chapter1Values.YH_QofL3_SD,
+                      chapter1Values.FPC_QofL3_SD,
+                      chapter1Values.AL_QofL3_SD,
+                      chapter1Values.PR_QofL3_SD,
+                      chapter1Values.HSF_QofL3_SD,
+                      chapter1Values.FS_QofL3_SD,
+                      chapter1Values.SR_QofL3_SD
+                    )
+                  );
+                }
+
+              }
+            });
+
+            return res.status(200).json({
+              collection_last_updated: collection_last_updated,
+              basic_needs: basic_needs,
+              PH_QofL2_SD: PH_QofL2_SD,
+              PH_QofL2_SD_STRING: PH_QofL2_SD_STRING,
+              MH_QofL2_SD: MH_QofL2_SD,
+              MH_QofL2_SD_STRING: MH_QofL2_SD_STRING,
+              M_QofL2_SD: problem_walking,
+              PC_QofL2_SD: problem_washing_dressing,
+              UA_QofL2_SD: problem_usual_activities,
+              PD_QofL2_SD: problem_pain_discomfort,
+              AD_QofL2_SD: problem_anxious_depressed,
+              problem_walking: problem_walking,
+              problem_washing_dressing: problem_washing_dressing,
+              problem_usual_activities: problem_usual_activities,
+              problem_pain_discomfort: problem_pain_discomfort,
+              problem_anxious_depressed: problem_anxious_depressed,
+              support_wellness_program: support_wellness_program,
+              support_healthcare: support_healthcare,
+              support_home_healthcare: support_home_healthcare,
+              support_private_healthcare: support_private_healthcare,
+              support_informal: support_informal,
+              HU_ED_QofL2_SD: HU_ED_QofL2_SD,
+              HU_HNum_QofL2_SD: HU_HNum_QofL2_SD,
+              HU_HD_QofL2_SD: HU_HD_QofL2_SD,
+              HU_EMS_QofL2_SD: HU_EMS_QofL2_SD,
+              HU_UC_QofL2_SD: HU_UC_QofL2_SD,
+              HU_ST_QofL2_SD: HU_ST_QofL2_SD,
+              HU_A_QofL2_SD: HU_A_QofL2_SD,
+              PSS_QofL1_COMB: PSS_QofL1_COMB,
+              PL_QofL1_COMB: PL_QofL1_COMB,
+              PL_QofL1_COMB_sometimes_count: PL_QofL1_COMB_sometimes_count,
+              PL_QofL1_COMB_often_count: PL_QofL1_COMB_often_count,
+              LS_QofL3_SD: LS_QofL3_SD,
+              SL_QofL3_SD: SL_QofL3_SD,
+              YH_QofL3_SD: YH_QofL3_SD,
+              AL_QofL3_SD: AL_QofL3_SD,
+              PR_QofL3_SD: PR_QofL3_SD,
+              HSF_QofL3_SD: HSF_QofL3_SD,
+              FPC_QofL3_SD: FPC_QofL3_SD,
+              FS_QofL3_SD: FS_QofL3_SD,
+              SR_QofL3_SD: SR_QofL3_SD,
+              PWI_QofL3_COMB: PWI_QofL3_COMB,
+              memberName: account_name,
+              // request: {
+              //   type: "GET",
+              //   url:
+              //     config.server.protocol +
+              //     "://" +
+              //     config.server.hostname +
+              //     ":" +
+              //     config.server.port +
+              //     "/api/reports/neighbours/user/" +
+              //     req.params.userId,
+              // },
+            });
+          } else {
+            return res.status(404).json({
+              message: "Collection information for user not found.",
+            });
+          }
+        })
+        .catch((error) => {
+          log.error(error.message);
+
+          return res.status(500).json({
+            message: error.message,
+          });
+        });
+      } else {
+        return res.status(404).json({});
+      }
+        
+    })
+    .catch((error) => {
+      log.error(error.message);
+}
 
 const historicNeighbour = async (memberSurveyList) => {
   // FREQUENCY COMMUNITY PARTICIPATION
@@ -2280,4 +2621,3 @@ exports.Historic = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
