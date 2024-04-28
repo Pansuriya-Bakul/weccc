@@ -1682,6 +1682,7 @@ const historicNeighbour = async (memberSurveyList) => {
       "Community_Connections: [10] Post Survey: Health, Wellness and Social Outcomes Survey"
   );
 
+  log.warn(memberSurveyList[0].surveyTemplate.name);
   chapter1Values = JSON.parse(chapter1Results.responseJSON);
   chapter2Values = JSON.parse(chapter2Results.responseJSON);
   chapter3Values = JSON.parse(chapter3Results.responseJSON);
@@ -2241,10 +2242,18 @@ exports.Historic = async (req, res) => {
     req.params.memberCollectionID
   );
 
+  log.warn("CAN YOU SEE ME?");
+
   try {
     const foundCollection = await MemberCollection.findById(
       req.params.memberCollectionID
-    ).populate(["member", "memberSurveyList"]);
+    ).populate([
+      "member",
+      {
+          path: "memberSurveyList",
+          populate: { path: "surveyTemplate" }
+      }
+  ]);
 
     if (!foundCollection) {
       return res.status(404).json({});

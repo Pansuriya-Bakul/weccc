@@ -331,8 +331,6 @@ exports.readByClientId = (req, res, next) => {
                 // For each member collection, calculate and update the completeness score
                 for (let memberCollection of foundMemberCollections) {
                     let memberSurveys = await MemberSurvey.find({ memberCollection: memberCollection._id }).exec();
-                    console.log('MemberCollection ID:', memberCollection._id);
-                    console.log('MemberSurveys:', memberSurveys.map(survey => survey.memberCollection));
                     let completedSurveys = memberSurveys.filter(survey => survey.completeness === 100).length;
                     let totalSurveys = memberSurveys.length;
                     let completenessScore = Math.round((completedSurveys / totalSurveys) * 100);

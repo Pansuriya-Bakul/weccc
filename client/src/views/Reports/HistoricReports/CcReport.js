@@ -102,7 +102,7 @@ const CcReport = (props) => {
 
     const getNeighbours = useCallback(
         (userId) => {
-            get("reports/historic/" + "cc" + userId, appState.token, (err, res) => { // cc => collection code for community connection
+            get("reports/historic/cc/" + userId, appState.token, (err, res) => { // cc => collection code for community connection
                 if (err) {
                     //Bad callback
                     setAlert(
@@ -115,7 +115,9 @@ const CcReport = (props) => {
                         if (Object.keys(res.data).length === 0) {
                             setReportsData(null);
                         } else {
+                            console.log("HEHEHEHEHEH")
                             setReportsData(res.data);
+                            console.log(userId);
                         }
                         setIsLoading(false);
                     } else {

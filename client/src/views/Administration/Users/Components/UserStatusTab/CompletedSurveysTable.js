@@ -6,7 +6,7 @@
 // ================================================
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-
+import { Link } from 'react-router-dom';
 // ===================== Extra Modules ======================
 
 
@@ -58,47 +58,55 @@ export default function CompletedSurveysTable(props) {
 
     const formatDate = (dateString) => {
         return dateString.substring(0, 10); // Extract the yyyy-mm-dd part
-      };
+    };
+
+    // mapping collection template name => view report link for easy navgation
+    // always append the link with the memberCollectionID
+    const nameToLink = { 
+        "Community Connections": "/history/ccReport/"
+    }
 
     // Render Section ===
     return (
 
         <div className={classes.root}>
             <Box mx={1} my={1}>
-            <TableContainer component={Paper} elevation={0} style={{border: "1px solid #e0e0e0",}}>
-                <Table>
-                    <TableHead>
-                        <TableRow className={classes.tableRow} style={{cursor: 'default', backgroundColor: '#f0f0f0'}}>
-                            <TableCell>Series</TableCell>
-                            <TableCell>Completeness </TableCell>
-                            <TableCell>Date Uploaded</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {reversedData.length > 0 ? (
-                            reversedData.map((row, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>
-                                    <Typography s>{row.collectionTemplate.name.charAt(0).toUpperCase() + row.collectionTemplate.name.slice(1)} {role !== 'Patient' ? '- Self Care' : ''}</Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography>{row.completeness}%</Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography>{formatDate(row.updatedAt)}</Typography>
+                <TableContainer component={Paper} elevation={0} style={{ border: "1px solid #e0e0e0", }}>
+                    <Table>
+                        <TableHead>
+                            <TableRow className={classes.tableRow} style={{ cursor: 'default', backgroundColor: '#f0f0f0' }}>
+                                <TableCell>Series</TableCell>
+                                <TableCell>Completeness </TableCell>
+                                <TableCell>Date Uploaded</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {reversedData.length > 0 ? (
+                                reversedData.map((row, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>
+                                            <Typography s component={Link} to={nameToLink[row.collectionTemplate.name] + row._id}>
+                                                {row.collectionTemplate.name.charAt(0).toUpperCase() + row.collectionTemplate.name.slice(1)} {role !== 'Patient' ? '- Self Care' : ''}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{row.completeness}%</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography>{formatDate(row.updatedAt)}</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={4} align="center">
+                                        <Typography>No data available</Typography>
                                     </TableCell>
                                 </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={4} align="center">
-                                    <Typography>No data available</Typography>
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Box>
 
         </div>
