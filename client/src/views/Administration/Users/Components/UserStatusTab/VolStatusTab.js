@@ -43,6 +43,9 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import SaveIcon from '@material-ui/icons/Save';
 import { use } from 'passport';
 import { set } from 'joi/lib/types/lazy';
+import StatusHistoryTable from "./StatusHistoryTable";
+import CompletedSurveysTable from "./CompletedSurveysTable";
+import get from "../../../../../helpers/common/get";
 
 
 // ==================== MUI Styles ===================
@@ -88,11 +91,13 @@ const VolStatusTab = (props) => { // Notice the arrow function... regular functi
     //  Editable Variables ==========
     const [selectedStatus, setSelectedStatus] = useState("");
     const [volInfo, setVolInfo] = useState({ volType: "", startDate: "", endDate: "", fieldOfStudy: "", school: "" });
-
+    const [memberCollections, setMemberCollections] = useState([]);
 
     const [role, setRole] = useState("");
 
     const [enabled, setEnabled] = useState(false);
+    // Alert variable
+    const [alert, setAlert] = useState(new AlertType());
 
     // Functions ===
 
@@ -239,6 +244,27 @@ const VolStatusTab = (props) => { // Notice the arrow function... regular functi
 
     }, [appState, userID, userEdit, role, enabled, volInfo, setParentAlert, getParentInfo]);
 
+
+    const getMemberCollections = useCallback(() => {
+
+        get("membercollections/client/"+ userID, appState.token, (err, res) => {
+            if (err) {
+                //Bad callback call
+                //setAlert(new AlertType(err.message, "error"));
+                setAlert(new AlertType('Unable to retrieve Member Series. Please refresh and try again.', "error"));
+            }
+            else {
+                if (res.status === 200){
+                        setMemberCollections(res.data.memberCollections);
+                }
+                else {
+                    //Bad HTTP Response
+                    setAlert(new AlertType('Unable to retrieve Member Series. Please refresh and try again.', "error"));
+                }
+            }
+
+        });
+    }, [memberCollections, appState.token]);
     // Hooks ===
 
     useEffect(() => {
@@ -247,6 +273,7 @@ const VolStatusTab = (props) => { // Notice the arrow function... regular functi
             setRole(userOriginal.role);
             setEnabled(userOriginal.enabled);
             setSelectedStatus(userOriginal.status);
+            getMemberCollections();
 
             if (userOriginal.volInfo) {
                 setVolInfo({
@@ -396,6 +423,9 @@ const VolStatusTab = (props) => { // Notice the arrow function... regular functi
 
     // }, [userOriginal, userEdit, setChangedGeneralProperties]);
 
+    const formatDate = (dateString) => {
+        return dateString.substring(0, 10); // Extract the yyyy-mm-dd part
+      };
 
 
     // Render Section ===
@@ -495,216 +525,219 @@ const VolStatusTab = (props) => { // Notice the arrow function... regular functi
                                     </Tooltip>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Box mx={1} my={1} boxShadow={0}>
-                                    <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={3}>
+                            <Typography variant="subtitle2" component="subtitle1" style={{fontStyle: 'italic'}}>
+                                Member since {formatDate(userOriginal.createdAt)}
+                            </Typography>
+                            {/*<Grid item xs={12}>*/}
+                            {/*    <Box mx={1} my={1} boxShadow={0}>*/}
+                            {/*        <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={3}>*/}
 
-                                        <Grid item xs={3}>
-                                            <TextField
-                                                id="status"
-                                                select
-                                                //required
-                                                fullWidth
-                                                label="Status"
-                                                value={selectedStatus}
-                                                // value={(userEdit.status) ? userEdit.status : ""}
-                                                onChange={(event) => { statusHandler(event); }}
-                                                size="small"
-                                                variant="outlined"
-                                                readOnly={editable ? false : true}
-                                                disabled={editable ? false : true}
-                                                InputProps={{
-                                                    style: (selectedStatus === "active") ? { color: "green" } : { color: "red" }
-                                                }}
+                            {/*            <Grid item xs={3}>*/}
+                            {/*                <TextField*/}
+                            {/*                    id="status"*/}
+                            {/*                    select*/}
+                            {/*                    //required*/}
+                            {/*                    fullWidth*/}
+                            {/*                    label="Status"*/}
+                            {/*                    value={selectedStatus}*/}
+                            {/*                    // value={(userEdit.status) ? userEdit.status : ""}*/}
+                            {/*                    onChange={(event) => { statusHandler(event); }}*/}
+                            {/*                    size="small"*/}
+                            {/*                    variant="outlined"*/}
+                            {/*                    readOnly={editable ? false : true}*/}
+                            {/*                    disabled={editable ? false : true}*/}
+                            {/*                    InputProps={{*/}
+                            {/*                        style: (selectedStatus === "active") ? { color: "green" } : { color: "red" }*/}
+                            {/*                    }}*/}
 
-                                            >
-                                                <MenuItem key={'active'} value={'active'} style={{ color: 'green' }}>Active</MenuItem>
-                                                <MenuItem key={'terminated'} value={'terminated'} style={{ color: 'red' }}>Terminated</MenuItem>
+                            {/*                >*/}
+                            {/*                    <MenuItem key={'active'} value={'active'} style={{ color: 'green' }}>Active</MenuItem>*/}
+                            {/*                    <MenuItem key={'terminated'} value={'terminated'} style={{ color: 'red' }}>Terminated</MenuItem>*/}
 
-                                            </TextField>
-                                        </Grid>
-                                        <Grid item xs={8}></Grid>
+                            {/*                </TextField>*/}
+                            {/*            </Grid>*/}
+                            {/*            <Grid item xs={8}></Grid>*/}
 
-                                        {(() => {
-                                            if (selectedStatus === 'active') { // Active
-                                                return (<>
-                                                    <Grid item xs={3}>
-                                                        <TextField
-                                                            id="vol-type"
-                                                            select
-                                                            //required
-                                                            fullWidth
-                                                            label="Volunteer Type"
-                                                            // value={(userEdit.volInfo) ? userEdit.volInfo.volType : ""}
-                                                            value={volInfo.volType ? volInfo.volType : ""}
-                                                            onChange={(event) => { volTypeHandler(event, "volType"); }}
-                                                            size="small"
-                                                            variant="outlined"
-                                                            readOnly={editable ? false : true}
-                                                            disabled={editable ? false : true}
-                                                        >
-                                                            <MenuItem key={'student intern'} value={'student intern'}>Student Intern</MenuItem>
-                                                            <MenuItem key={'community volunteer'} value={'community volunteer'}>Community Volunteer</MenuItem>
+                            {/*            {(() => {*/}
+                            {/*                if (selectedStatus === 'active') { // Active*/}
+                            {/*                    return (<>*/}
+                            {/*                        <Grid item xs={3}>*/}
+                            {/*                            <TextField*/}
+                            {/*                                id="vol-type"*/}
+                            {/*                                select*/}
+                            {/*                                //required*/}
+                            {/*                                fullWidth*/}
+                            {/*                                label="Volunteer Type"*/}
+                            {/*                                // value={(userEdit.volInfo) ? userEdit.volInfo.volType : ""}*/}
+                            {/*                                value={volInfo.volType ? volInfo.volType : ""}*/}
+                            {/*                                onChange={(event) => { volTypeHandler(event, "volType"); }}*/}
+                            {/*                                size="small"*/}
+                            {/*                                variant="outlined"*/}
+                            {/*                                readOnly={editable ? false : true}*/}
+                            {/*                                disabled={editable ? false : true}*/}
+                            {/*                            >*/}
+                            {/*                                <MenuItem key={'student intern'} value={'student intern'}>Student Intern</MenuItem>*/}
+                            {/*                                <MenuItem key={'community volunteer'} value={'community volunteer'}>Community Volunteer</MenuItem>*/}
 
-                                                        </TextField>
-                                                    </Grid>
-                                                    <Grid item xs={8}></Grid>
-                                                    {volInfo.volType === 'student intern' ? (
-                                                        <>
-                                                            <Grid item xs={3}>
-                                                                <TextField
-                                                                    id="start-date"
-                                                                    fullWidth
-                                                                    label="Placement Start Date"
-                                                                    type="date"
-                                                                    value={volInfo.startDate ? new Date(volInfo.startDate).toISOString().split('T')[0] : ''}
-                                                                    // error={dateOfBirthError}
-                                                                    onChange={(event) => { volTypeHandler(event, "startDate"); }}
-                                                                    InputLabelProps={{
-                                                                        shrink: true
-                                                                    }}
-                                                                    inputProps={
-                                                                        {
-                                                                            // required: true,
-                                                                            max: new Date().toISOString().split('T')[0]
-                                                                        }
-                                                                    }
-                                                                    size="small"
-                                                                    variant="outlined"
-                                                                    // required
-                                                                    readOnly={editable ? false : true}
-                                                                    disabled={editable ? false : true}
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={8}></Grid>
+                            {/*                            </TextField>*/}
+                            {/*                        </Grid>*/}
+                            {/*                        <Grid item xs={8}></Grid>*/}
+                            {/*                        {volInfo.volType === 'student intern' ? (*/}
+                            {/*                            <>*/}
+                            {/*                                <Grid item xs={3}>*/}
+                            {/*                                    <TextField*/}
+                            {/*                                        id="start-date"*/}
+                            {/*                                        fullWidth*/}
+                            {/*                                        label="Placement Start Date"*/}
+                            {/*                                        type="date"*/}
+                            {/*                                        value={volInfo.startDate ? new Date(volInfo.startDate).toISOString().split('T')[0] : ''}*/}
+                            {/*                                        // error={dateOfBirthError}*/}
+                            {/*                                        onChange={(event) => { volTypeHandler(event, "startDate"); }}*/}
+                            {/*                                        InputLabelProps={{*/}
+                            {/*                                            shrink: true*/}
+                            {/*                                        }}*/}
+                            {/*                                        inputProps={*/}
+                            {/*                                            {*/}
+                            {/*                                                // required: true,*/}
+                            {/*                                                max: new Date().toISOString().split('T')[0]*/}
+                            {/*                                            }*/}
+                            {/*                                        }*/}
+                            {/*                                        size="small"*/}
+                            {/*                                        variant="outlined"*/}
+                            {/*                                        // required*/}
+                            {/*                                        readOnly={editable ? false : true}*/}
+                            {/*                                        disabled={editable ? false : true}*/}
+                            {/*                                    />*/}
+                            {/*                                </Grid>*/}
+                            {/*                                <Grid item xs={8}></Grid>*/}
 
-                                                            {/* End date */}
-                                                            <Grid item xs={3}>
-                                                                <TextField
-                                                                    id="end-date"
-                                                                    fullWidth
-                                                                    label="Placement End Date"
-                                                                    type="date"
-                                                                    value={volInfo.endDate ? new Date(volInfo.endDate).toISOString().split('T')[0] : ''}
-                                                                    // error={dateOfBirthError}
-                                                                    onChange={(event) => { volTypeHandler(event, "endDate"); }}
-                                                                    InputLabelProps={{
-                                                                        shrink: true
-                                                                    }}
-                                                                    inputProps={
-                                                                        {
-                                                                            // required: true,
-                                                                            // max: new Date().toISOString().split('T')[0]
-                                                                        }
-                                                                    }
-                                                                    size="small"
-                                                                    variant="outlined"
-                                                                    // required
-                                                                    readOnly={editable ? false : true}
-                                                                    disabled={editable ? false : true}
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={8}></Grid>
+                            {/*                                /!* End date *!/*/}
+                            {/*                                <Grid item xs={3}>*/}
+                            {/*                                    <TextField*/}
+                            {/*                                        id="end-date"*/}
+                            {/*                                        fullWidth*/}
+                            {/*                                        label="Placement End Date"*/}
+                            {/*                                        type="date"*/}
+                            {/*                                        value={volInfo.endDate ? new Date(volInfo.endDate).toISOString().split('T')[0] : ''}*/}
+                            {/*                                        // error={dateOfBirthError}*/}
+                            {/*                                        onChange={(event) => { volTypeHandler(event, "endDate"); }}*/}
+                            {/*                                        InputLabelProps={{*/}
+                            {/*                                            shrink: true*/}
+                            {/*                                        }}*/}
+                            {/*                                        inputProps={*/}
+                            {/*                                            {*/}
+                            {/*                                                // required: true,*/}
+                            {/*                                                // max: new Date().toISOString().split('T')[0]*/}
+                            {/*                                            }*/}
+                            {/*                                        }*/}
+                            {/*                                        size="small"*/}
+                            {/*                                        variant="outlined"*/}
+                            {/*                                        // required*/}
+                            {/*                                        readOnly={editable ? false : true}*/}
+                            {/*                                        disabled={editable ? false : true}*/}
+                            {/*                                    />*/}
+                            {/*                                </Grid>*/}
+                            {/*                                <Grid item xs={8}></Grid>*/}
 
-                                                            {/* Field of Study */}
-                                                            <Grid item xs={3}>
-                                                                <TextField
-                                                                    id="field-of-study"
-                                                                    // required
-                                                                    size="small"
-                                                                    variant="outlined"
-                                                                    fullWidth label="Field of Study"
-                                                                    onChange={(event) => { volTypeHandler(event, "fieldOfStudy"); }}
-                                                                    value={volInfo.fieldOfStudy}
-                                                                    // error={nameError}
-                                                                    readOnly={editable ? false : true}
-                                                                    disabled={editable ? false : true}
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={8}></Grid>
+                            {/*                                /!* Field of Study *!/*/}
+                            {/*                                <Grid item xs={3}>*/}
+                            {/*                                    <TextField*/}
+                            {/*                                        id="field-of-study"*/}
+                            {/*                                        // required*/}
+                            {/*                                        size="small"*/}
+                            {/*                                        variant="outlined"*/}
+                            {/*                                        fullWidth label="Field of Study"*/}
+                            {/*                                        onChange={(event) => { volTypeHandler(event, "fieldOfStudy"); }}*/}
+                            {/*                                        value={volInfo.fieldOfStudy}*/}
+                            {/*                                        // error={nameError}*/}
+                            {/*                                        readOnly={editable ? false : true}*/}
+                            {/*                                        disabled={editable ? false : true}*/}
+                            {/*                                    />*/}
+                            {/*                                </Grid>*/}
+                            {/*                                <Grid item xs={8}></Grid>*/}
 
-                                                            {/* School */}
-                                                            <Grid item xs={3}>
-                                                                <TextField
-                                                                    id="school"
-                                                                    // required
-                                                                    size="small"
-                                                                    variant="outlined"
-                                                                    fullWidth label="School"
-                                                                    onChange={(event) => { volTypeHandler(event, "school"); }}
-                                                                    value={volInfo.school}
-                                                                    // error={nameError}
-                                                                    readOnly={editable ? false : true}
-                                                                    disabled={editable ? false : true}
-                                                                />
-                                                            </Grid>
-                                                            <Grid item xs={8}></Grid>
-                                                        </>
+                            {/*                                /!* School *!/*/}
+                            {/*                                <Grid item xs={3}>*/}
+                            {/*                                    <TextField*/}
+                            {/*                                        id="school"*/}
+                            {/*                                        // required*/}
+                            {/*                                        size="small"*/}
+                            {/*                                        variant="outlined"*/}
+                            {/*                                        fullWidth label="School"*/}
+                            {/*                                        onChange={(event) => { volTypeHandler(event, "school"); }}*/}
+                            {/*                                        value={volInfo.school}*/}
+                            {/*                                        // error={nameError}*/}
+                            {/*                                        readOnly={editable ? false : true}*/}
+                            {/*                                        disabled={editable ? false : true}*/}
+                            {/*                                    />*/}
+                            {/*                                </Grid>*/}
+                            {/*                                <Grid item xs={8}></Grid>*/}
+                            {/*                            </>*/}
 
-                                                    ) : (
-                                                        volInfo.volType === "community volunteer" ? <Grid item xs={3}>
-                                                            <TextField
-                                                                id="start-date"
-                                                                fullWidth
-                                                                label="Placement Start Date"
-                                                                type="date"
-                                                                value={volInfo.startDate ? new Date(volInfo.startDate).toISOString().split('T')[0] : ''}
-                                                                // error={dateOfBirthError}
-                                                                onChange={(event) => { volTypeHandler(event, "startDate"); }}
-                                                                InputLabelProps={{
-                                                                    shrink: true
-                                                                }}
-                                                                inputProps={
-                                                                    {
-                                                                        // required: true,
-                                                                        max: new Date().toISOString().split('T')[0]
-                                                                    }
-                                                                }
-                                                                size="small"
-                                                                variant="outlined"
-                                                                // required
-                                                                readOnly={editable ? false : true}
-                                                                disabled={editable ? false : true}
-                                                            />
-                                                        </Grid> : ""
-                                                    )}
+                            {/*                        ) : (*/}
+                            {/*                            volInfo.volType === "community volunteer" ? <Grid item xs={3}>*/}
+                            {/*                                <TextField*/}
+                            {/*                                    id="start-date"*/}
+                            {/*                                    fullWidth*/}
+                            {/*                                    label="Placement Start Date"*/}
+                            {/*                                    type="date"*/}
+                            {/*                                    value={volInfo.startDate ? new Date(volInfo.startDate).toISOString().split('T')[0] : ''}*/}
+                            {/*                                    // error={dateOfBirthError}*/}
+                            {/*                                    onChange={(event) => { volTypeHandler(event, "startDate"); }}*/}
+                            {/*                                    InputLabelProps={{*/}
+                            {/*                                        shrink: true*/}
+                            {/*                                    }}*/}
+                            {/*                                    inputProps={*/}
+                            {/*                                        {*/}
+                            {/*                                            // required: true,*/}
+                            {/*                                            max: new Date().toISOString().split('T')[0]*/}
+                            {/*                                        }*/}
+                            {/*                                    }*/}
+                            {/*                                    size="small"*/}
+                            {/*                                    variant="outlined"*/}
+                            {/*                                    // required*/}
+                            {/*                                    readOnly={editable ? false : true}*/}
+                            {/*                                    disabled={editable ? false : true}*/}
+                            {/*                                />*/}
+                            {/*                            </Grid> : ""*/}
+                            {/*                        )}*/}
 
-                                                </>);
+                            {/*                    </>);*/}
 
-                                            } else { // terminated
-                                                return (<Grid item xs={3}>
-                                                    <TextField
-                                                        id="end-date"
-                                                        fullWidth
-                                                        label="End Date"
-                                                        type="date"
-                                                        value={volInfo.endDate ? new Date(volInfo.endDate).toISOString().split('T')[0] : ''}
-                                                        // error={dateOfBirthError}
-                                                        onChange={(event) => { volTypeHandler(event, "endDate"); }}
-                                                        InputLabelProps={{
-                                                            shrink: true
-                                                        }}
-                                                        inputProps={
-                                                            {
-                                                                // required: true,
-                                                                max: new Date().toISOString().split('T')[0]
-                                                            }
-                                                        }
-                                                        size="small"
-                                                        variant="outlined"
-                                                        // required
-                                                        readOnly={editable ? false : true}
-                                                        disabled={editable ? false : true}
-                                                    />
-                                                </Grid>);
-                                            }
-                                        })()}
+                            {/*                } else { // terminated*/}
+                            {/*                    return (<Grid item xs={3}>*/}
+                            {/*                        <TextField*/}
+                            {/*                            id="end-date"*/}
+                            {/*                            fullWidth*/}
+                            {/*                            label="End Date"*/}
+                            {/*                            type="date"*/}
+                            {/*                            value={volInfo.endDate ? new Date(volInfo.endDate).toISOString().split('T')[0] : ''}*/}
+                            {/*                            // error={dateOfBirthError}*/}
+                            {/*                            onChange={(event) => { volTypeHandler(event, "endDate"); }}*/}
+                            {/*                            InputLabelProps={{*/}
+                            {/*                                shrink: true*/}
+                            {/*                            }}*/}
+                            {/*                            inputProps={*/}
+                            {/*                                {*/}
+                            {/*                                    // required: true,*/}
+                            {/*                                    max: new Date().toISOString().split('T')[0]*/}
+                            {/*                                }*/}
+                            {/*                            }*/}
+                            {/*                            size="small"*/}
+                            {/*                            variant="outlined"*/}
+                            {/*                            // required*/}
+                            {/*                            readOnly={editable ? false : true}*/}
+                            {/*                            disabled={editable ? false : true}*/}
+                            {/*                        />*/}
+                            {/*                    </Grid>);*/}
+                            {/*                }*/}
+                            {/*            })()}*/}
 
 
 
-                                    </Grid>
-                                </Box>
-                            </Grid>
+                            {/*        </Grid>*/}
+                            {/*    </Box>*/}
+                            {/*</Grid>*/}
                         </Grid>
                     ) : (
                         <Grid
@@ -723,6 +756,33 @@ const VolStatusTab = (props) => { // Notice the arrow function... regular functi
                             </Grid>
                         </Grid>
                     )}
+                    <Grid item xs={12} container direction="column" spacing={1} style={{ marginTop: '32px' }}>
+                        <Typography variant="subtitle1" component="h6">
+                            Programs
+                        </Typography>
+
+                        <Divider />
+
+                        {userOriginal.memberStatusInfo.statusHistory &&
+                            <StatusHistoryTable
+                                data={userOriginal.memberStatusInfo.statusHistory ? userOriginal.memberStatusInfo.statusHistory : []}
+                            />
+                        }
+                    </Grid>
+
+                    <Grid item xs={12} container direction="column" spacing={1} style={{ marginTop: '32px' }}>
+                        <Typography variant="subtitle1" component="h6">
+                            Completed Surveys
+                        </Typography>
+
+                        <Divider />
+
+                        {memberCollections &&
+                            <CompletedSurveysTable
+                                data={memberCollections ? memberCollections : []}
+                            />
+                        }
+                    </Grid>
                 </Collapse>
             </div>
         ) : (

@@ -44,6 +44,8 @@ import SaveIcon from '@material-ui/icons/Save';
 import { use } from 'passport';
 import { set } from 'joi/lib/types/lazy';
 import StatusHistoryTable from './StatusHistoryTable';
+import CompletedSurveysTable from './CompletedSurveysTable';
+import get from "../../../../../helpers/common/get";
 
 
 // ==================== MUI Styles ===================
@@ -90,7 +92,10 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
     const [selectedStatus, setSelectedStatus] = useState("");
     const [memberStatusInfo, setMemberStatusInfo] = useState({ activeType: "", statusHistory: [], referralDate: "", terminationReason: '', deceasedDate: "" });
     const [statusHistory, setStatusHistory] = useState({ status: "", activeType: "", startDate: "", endDate: "" });
+    const [memberCollections, setMemberCollections] = useState([]);
 
+    // Alert variable
+    const [alert, setAlert] = useState(new AlertType());
 
     const [role, setRole] = useState("");
 
@@ -129,40 +134,37 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
     }, [editable, setEditable, setMemberStatusInfo, userOriginal, setRole, setEnabled]);
 
 
-    const statusHandler = useCallback((event) => {
-
-        // setUserEdit({
-        //     ...userEdit,
-        //     role: event.target.value
-        // });
-        setUserEdit({
-            ...userEdit,
-            status: event.target.value
-        });
-
-        setSelectedStatus(event.target.value);
-        setStatusHistory({ ...statusHistory, status: event.target.value, startDate: new Date().toISOString() });
-
-    }, [setSelectedStatus]);
+    // const statusHandler = useCallback((event) => {
 
 
-    const activeTypeHandler = useCallback((event, key) => {
-        switch (key) {
-            case "activeType":
-                setMemberStatusInfo({ ...memberStatusInfo, activeType: event.target.value });
-                setStatusHistory({ ...statusHistory, status: selectedStatus, activeType: event.target.value, startDate: new Date().toISOString() });
-                break;
-            case "referralDate":
-                setMemberStatusInfo({ ...memberStatusInfo, referralDate: event.target.value });
-                break;
-            case "terminationReason":
-                setMemberStatusInfo({ ...memberStatusInfo, terminationReason: event.target.value });
-                break;
-            case "deceasedDate":
-                setMemberStatusInfo({ ...memberStatusInfo, deceasedDate: event.target.value });
-                break;
-        }
-    }, [userEdit, setUserEdit, memberStatusInfo, setMemberStatusInfo]);
+    //     setUserEdit({
+    //         ...userEdit,
+    //         status: event.target.value
+    //     });
+
+    //     setSelectedStatus(event.target.value);
+    //     setStatusHistory({ ...statusHistory, status: event.target.value, startDate: new Date().toISOString() });
+
+    // }, [setSelectedStatus]);
+
+
+    // const activeTypeHandler = useCallback((event, key) => {
+    //     switch (key) {
+    //         case "activeType":
+    //             setMemberStatusInfo({ ...memberStatusInfo, activeType: event.target.value });
+    //             setStatusHistory({ ...statusHistory, status: selectedStatus, activeType: event.target.value, startDate: new Date().toISOString() });
+    //             break;
+    //         case "referralDate":
+    //             setMemberStatusInfo({ ...memberStatusInfo, referralDate: event.target.value });
+    //             break;
+    //         case "terminationReason":
+    //             setMemberStatusInfo({ ...memberStatusInfo, terminationReason: event.target.value });
+    //             break;
+    //         case "deceasedDate":
+    //             setMemberStatusInfo({ ...memberStatusInfo, deceasedDate: event.target.value });
+    //             break;
+    //     }
+    // }, [userEdit, setUserEdit, memberStatusInfo, setMemberStatusInfo]);
 
 
     // set the intial status history if not already set
@@ -332,6 +334,28 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
 
     }, [appState, userID, userEdit, role, enabled, memberStatusInfo, setParentAlert, getParentInfo, statusHistory]);
 
+
+    const getMemberCollections = useCallback(() => {
+
+        get("membercollections/client/"+ userID, appState.token, (err, res) => {
+            if (err) {
+                //Bad callback call
+                //setAlert(new AlertType(err.message, "error"));
+                setAlert(new AlertType('Unable to retrieve Member Series. Please refresh and try again.', "error"));
+            }
+            else {
+                if (res.status === 200){
+                        setMemberCollections(res.data.memberCollections);
+                }
+                else {
+                    //Bad HTTP Response
+                    setAlert(new AlertType('Unable to retrieve Member Series. Please refresh and try again.', "error"));
+                }
+            }
+
+        });
+    }, [memberCollections, appState.token]);
+
     // Hooks ===
     useEffect(() => {
         setMemberStatusInfo({ activeType: "", statusHistory: [], referralDate: "", terminationReason: '', deceasedDate: "" });
@@ -340,6 +364,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
     useEffect(() => {
         if (userOriginal) {
             setInitHistory();
+            getMemberCollections();
         }
     }, [userOriginal]);
 
@@ -355,7 +380,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
             if (userOriginal.memberStatusInfo) {
                 setMemberStatusInfo({
                     activeType: userOriginal.memberStatusInfo.activeType,
-                    statusHistory: userOriginal.memberStatusInfo.statusHistory,
+                    // statusHistory: userOriginal.memberStatusInfo.statusHistory,
                     referralDate: userOriginal.memberStatusInfo.referralDate,
                     terminationReason: userOriginal.memberStatusInfo.terminationReason,
                     deceasedDate: userOriginal.memberStatusInfo.deceasedDate,
@@ -491,6 +516,10 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
 
     }, [panelIndex, panelId, resetGeneralProperties]);
 
+    const formatDate = (dateString) => {
+        return dateString.substring(0, 10); // Extract the yyyy-mm-dd part
+      };
+
     // useEffect(() => {
     //     if (JSON.stringify(userEdit) === JSON.stringify(userOriginal)) {
     //         setChangedGeneralProperties(false);
@@ -512,7 +541,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                 hidden={panelIndex !== panelId}
                 id={`Panel-${panelId}`}
             >
-                <Collapse in={panelIndex == panelId ? true : false}>
+                <Collapse in={panelIndex === panelId ? true : false}>
                     {userEdit ? (
                         <Grid
                             container
@@ -524,14 +553,14 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                             <Grid item xs={12} container direction="row" justifyContent="space-between" alignItems="stretch" spacing={1}>
                                 <Grid item>
                                     <Typography variant="h6" component="h6">
-                                        Status
+                                        History
                                     </Typography>
                                     <Divider />
                                 </Grid>
                                 <Grid item xs>
                                     <Box mx={3} my={1} boxShadow={0}>
                                         <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                                            {appState.role != 'Volunteer' && appState.role != 'Patient' && <Grid item>
+                                            {appState.role !== 'Volunteer' && appState.role !== 'Patient' && <Grid item>
                                                 <Tooltip
                                                     placement="bottom"
                                                     title="Unlock editable fields"
@@ -600,153 +629,156 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                                     </Tooltip>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Box mx={1} my={1} boxShadow={0}>
-                                    <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={3}>
+                             <Typography variant="subtitle2" component="subtitle1" style={{fontStyle: 'italic'}}>
+                                Member since {formatDate(userOriginal.createdAt)}
+                            </Typography>
+                            {/*<Grid item xs={12}>*/}
+                            {/*    <Box mx={1} my={1} boxShadow={0}>*/}
+                            {/*        <Grid container direction="row" justifyContent="flex-start" alignItems="stretch" spacing={3}>*/}
 
-                                        <Grid item xs={3}>
-                                            <TextField
-                                                id="status"
-                                                select
-                                                //required
-                                                fullWidth
-                                                label="Status"
-                                                value={selectedStatus}
-                                                // value={(userEdit.status) ? userEdit.status : ""}
-                                                onChange={(event) => { statusHandler(event); }}
-                                                size="small"
-                                                variant="outlined"
-                                                readOnly={editable ? false : true}
-                                                disabled={editable ? false : true}
-                                                InputProps={{
-                                                    style: (selectedStatus === "active") ? { color: "green" } : (selectedStatus == 'waitlist') ? { color: "orange" } : { color: "red" }
-                                                }}
+                            {/*            <Grid item xs={3}>*/}
+                            {/*                <TextField*/}
+                            {/*                    id="status"*/}
+                            {/*                    select*/}
+                            {/*                    //required*/}
+                            {/*                    fullWidth*/}
+                            {/*                    label="Status"*/}
+                            {/*                    value={selectedStatus}*/}
+                            {/*                    // value={(userEdit.status) ? userEdit.status : ""}*/}
+                            {/*                    onChange={(event) => { statusHandler(event); }}*/}
+                            {/*                    size="small"*/}
+                            {/*                    variant="outlined"*/}
+                            {/*                    readOnly={editable ? false : true}*/}
+                            {/*                    disabled={editable ? false : true}*/}
+                            {/*                    InputProps={{*/}
+                            {/*                        style: (selectedStatus === "active") ? { color: "green" } : (selectedStatus == 'waitlist') ? { color: "orange" } : { color: "red" }*/}
+                            {/*                    }}*/}
 
-                                            >
-                                                <MenuItem key={'active'} value={'active'} style={{ color: 'green' }}>Active</MenuItem>
-                                                <MenuItem key={'waitlist'} value={'waitlist'} style={{ color: 'orange' }}>Waitlist</MenuItem>
-                                                <MenuItem key={'terminated'} value={'terminated'} style={{ color: 'red' }}>Terminated</MenuItem>
+                            {/*                >*/}
+                            {/*                    <MenuItem key={'active'} value={'active'} style={{ color: 'green' }}>Active</MenuItem>*/}
+                            {/*                    <MenuItem key={'waitlist'} value={'waitlist'} style={{ color: 'orange' }}>Waitlist</MenuItem>*/}
+                            {/*                    <MenuItem key={'terminated'} value={'terminated'} style={{ color: 'red' }}>Terminated</MenuItem>*/}
 
-                                            </TextField>
-                                        </Grid>
-                                        <Grid item xs={8}></Grid>
+                            {/*                </TextField>*/}
+                            {/*            </Grid>*/}
+                            {/*            <Grid item xs={8}></Grid>*/}
 
-                                        {(() => {
-                                            if (selectedStatus === 'active') { // Active
-                                                return (<>
-                                                    <Grid item xs={3}>
-                                                        <TextField
-                                                            id="active-type"
-                                                            select
-                                                            //required
-                                                            fullWidth
-                                                            label="Active Type"
-                                                            // value={(userEdit.memberStatusInfo) ? userEdit.memberStatusInfo.activeType : ""}
-                                                            value={memberStatusInfo.activeType ? memberStatusInfo.activeType : ""}
-                                                            onChange={(event) => { activeTypeHandler(event, "activeType"); }}
-                                                            size="small"
-                                                            variant="outlined"
-                                                            readOnly={editable ? false : true}
-                                                            disabled={editable ? false : true}
-                                                        >
-                                                            <MenuItem key={'screener-pending'} value={'Screener-Pending'}>Screener - Pending</MenuItem>
-                                                            <MenuItem key={'quality life at home'} value={'Quality Life at Home - in home program'}>Quality Life at Home – in home program </MenuItem>
-                                                            <MenuItem key={'connections program'} value={'Connections program'}>Connections Program</MenuItem>
-                                                            <MenuItem key={'education program'} value={'Education program'}>Education/Group Support Program</MenuItem>
-                                                            <MenuItem key={'check-in program'} value={'Check-in - Monitoring Program'}>Check-in - Monitoring Program</MenuItem>
-                                                            <MenuItem key={'student research program'} value={'Student Research Program - Check-in'}>Student Research Program - Check-in</MenuItem>
-                                                            <MenuItem key={'no contact'} value={'No Contact - Self User'}>No Contact - Self User</MenuItem>
+                            {/*            {(() => {*/}
+                            {/*                if (selectedStatus === 'active') { // Active*/}
+                            {/*                    return (<>*/}
+                            {/*                        <Grid item xs={3}>*/}
+                            {/*                            <TextField*/}
+                            {/*                                id="active-type"*/}
+                            {/*                                select*/}
+                            {/*                                //required*/}
+                            {/*                                fullWidth*/}
+                            {/*                                label="Active Type"*/}
+                            {/*                                // value={(userEdit.memberStatusInfo) ? userEdit.memberStatusInfo.activeType : ""}*/}
+                            {/*                                value={memberStatusInfo.activeType ? memberStatusInfo.activeType : ""}*/}
+                            {/*                                onChange={(event) => { activeTypeHandler(event, "activeType"); }}*/}
+                            {/*                                size="small"*/}
+                            {/*                                variant="outlined"*/}
+                            {/*                                readOnly={editable ? false : true}*/}
+                            {/*                                disabled={editable ? false : true}*/}
+                            {/*                            >*/}
+                            {/*                                <MenuItem key={'screener-pending'} value={'Screener-Pending'}>Screener - Pending</MenuItem>*/}
+                            {/*                                <MenuItem key={'quality life at home'} value={'Quality Life at Home - in home program'}>Quality Life at Home – in home program </MenuItem>*/}
+                            {/*                                <MenuItem key={'connections program'} value={'Connections program'}>Connections Program</MenuItem>*/}
+                            {/*                                <MenuItem key={'education program'} value={'Education program'}>Education/Group Support Program</MenuItem>*/}
+                            {/*                                <MenuItem key={'check-in program'} value={'Check-in - Monitoring Program'}>Check-in - Monitoring Program</MenuItem>*/}
+                            {/*                                <MenuItem key={'student research program'} value={'Student Research Program - Check-in'}>Student Research Program - Check-in</MenuItem>*/}
+                            {/*                                <MenuItem key={'no contact'} value={'No Contact - Self User'}>No Contact - Self User</MenuItem>*/}
 
-                                                        </TextField>
-                                                    </Grid>
-                                                    <Grid item xs={8}></Grid>
+                            {/*                            </TextField>*/}
+                            {/*                        </Grid>*/}
+                            {/*                        <Grid item xs={8}></Grid>*/}
 
-                                                </>);
+                            {/*                    </>);*/}
 
-                                            } else if (selectedStatus === 'waitlist') { // waitlist
-                                                return (<Grid item xs={3}>
-                                                    <TextField
-                                                        id="referral-date"
-                                                        fullWidth
-                                                        label="Referral Date"
-                                                        type="date"
-                                                        value={memberStatusInfo.referralDate ? new Date(memberStatusInfo.referralDate).toISOString().split('T')[0] : ''}
-                                                        // error={dateOfBirthError}
-                                                        onChange={(event) => { activeTypeHandler(event, "referralDate"); }}
-                                                        InputLabelProps={{
-                                                            shrink: true
-                                                        }}
-                                                        inputProps={
-                                                            {
-                                                                // required: true,
-                                                                max: new Date().toISOString().split('T')[0]
-                                                            }
-                                                        }
-                                                        size="small"
-                                                        variant="outlined"
-                                                        // required
-                                                        readOnly={editable ? false : true}
-                                                        disabled={editable ? false : true}
-                                                    />
-                                                </Grid>);
-                                            } else if (selectedStatus === 'terminated') { // terminated
-                                                return (<Grid item xs={3}>
-                                                    <TextField
-                                                        id="term-reason"
-                                                        fullWidth
-                                                        label="Termination Reason"
-                                                        select
-                                                        value={memberStatusInfo.terminationReason ? memberStatusInfo.terminationReason : ""}
-                                                        // error={dateOfBirthError}
-                                                        onChange={(event) => { activeTypeHandler(event, "terminationReason"); }}
-                                                        size="small"
-                                                        variant="outlined"
-                                                        // required
-                                                        readOnly={editable ? false : true}
-                                                        disabled={editable ? false : true}
+                            {/*                } else if (selectedStatus === 'waitlist') { // waitlist*/}
+                            {/*                    return (<Grid item xs={3}>*/}
+                            {/*                        <TextField*/}
+                            {/*                            id="referral-date"*/}
+                            {/*                            fullWidth*/}
+                            {/*                            label="Referral Date"*/}
+                            {/*                            type="date"*/}
+                            {/*                            value={memberStatusInfo.referralDate ? new Date(memberStatusInfo.referralDate).toISOString().split('T')[0] : ''}*/}
+                            {/*                            // error={dateOfBirthError}*/}
+                            {/*                            onChange={(event) => { activeTypeHandler(event, "referralDate"); }}*/}
+                            {/*                            InputLabelProps={{*/}
+                            {/*                                shrink: true*/}
+                            {/*                            }}*/}
+                            {/*                            inputProps={*/}
+                            {/*                                {*/}
+                            {/*                                    // required: true,*/}
+                            {/*                                    max: new Date().toISOString().split('T')[0]*/}
+                            {/*                                }*/}
+                            {/*                            }*/}
+                            {/*                            size="small"*/}
+                            {/*                            variant="outlined"*/}
+                            {/*                            // required*/}
+                            {/*                            readOnly={editable ? false : true}*/}
+                            {/*                            disabled={editable ? false : true}*/}
+                            {/*                        />*/}
+                            {/*                    </Grid>);*/}
+                            {/*                } else if (selectedStatus === 'terminated') { // terminated*/}
+                            {/*                    return (<Grid item xs={3}>*/}
+                            {/*                        <TextField*/}
+                            {/*                            id="term-reason"*/}
+                            {/*                            fullWidth*/}
+                            {/*                            label="Termination Reason"*/}
+                            {/*                            select*/}
+                            {/*                            value={memberStatusInfo.terminationReason ? memberStatusInfo.terminationReason : ""}*/}
+                            {/*                            // error={dateOfBirthError}*/}
+                            {/*                            onChange={(event) => { activeTypeHandler(event, "terminationReason"); }}*/}
+                            {/*                            size="small"*/}
+                            {/*                            variant="outlined"*/}
+                            {/*                            // required*/}
+                            {/*                            readOnly={editable ? false : true}*/}
+                            {/*                            disabled={editable ? false : true}*/}
 
-                                                    >
-                                                        <MenuItem key={'user-request'} value={'user-request'}>Request for record to be removed from system</MenuItem>
-                                                        <MenuItem key={'deceased'} value={'deceased'}>Deceased</MenuItem>
-                                                    </TextField>
+                            {/*                        >*/}
+                            {/*                            <MenuItem key={'user-request'} value={'user-request'}>Request for record to be removed from system</MenuItem>*/}
+                            {/*                            <MenuItem key={'deceased'} value={'deceased'}>Deceased</MenuItem>*/}
+                            {/*                        </TextField>*/}
 
-                                                    {memberStatusInfo.terminationReason === 'deceased' && // waitlist
-                                                        <TextField
-                                                            id="deceased-date"
-                                                            fullWidth
-                                                            label="Deceased Date (Optional)"
-                                                            type="date"
-                                                            value={memberStatusInfo.deceasedDate ? new Date(memberStatusInfo.deceasedDate).toISOString().split('T')[0] : ''}
-                                                            // error={dateOfBirthError}
-                                                            onChange={(event) => { activeTypeHandler(event, "deceasedDate"); }}
-                                                            InputLabelProps={{
-                                                                shrink: true
-                                                            }}
-                                                            inputProps={
-                                                                {
-                                                                    // required: true,
-                                                                    max: new Date().toISOString().split('T')[0]
-                                                                }
-                                                            }
-                                                            style={{ marginTop: '24px' }}
-                                                            size="small"
-                                                            variant="outlined"
-                                                            // required
-                                                            readOnly={editable ? false : true}
-                                                            disabled={editable ? false : true}
-                                                        />
-                                                    }
-                                                </Grid>);
+                            {/*                        {memberStatusInfo.terminationReason === 'deceased' && // waitlist*/}
+                            {/*                            <TextField*/}
+                            {/*                                id="deceased-date"*/}
+                            {/*                                fullWidth*/}
+                            {/*                                label="Deceased Date (Optional)"*/}
+                            {/*                                type="date"*/}
+                            {/*                                value={memberStatusInfo.deceasedDate ? new Date(memberStatusInfo.deceasedDate).toISOString().split('T')[0] : ''}*/}
+                            {/*                                // error={dateOfBirthError}*/}
+                            {/*                                onChange={(event) => { activeTypeHandler(event, "deceasedDate"); }}*/}
+                            {/*                                InputLabelProps={{*/}
+                            {/*                                    shrink: true*/}
+                            {/*                                }}*/}
+                            {/*                                inputProps={*/}
+                            {/*                                    {*/}
+                            {/*                                        // required: true,*/}
+                            {/*                                        max: new Date().toISOString().split('T')[0]*/}
+                            {/*                                    }*/}
+                            {/*                                }*/}
+                            {/*                                style={{ marginTop: '24px' }}*/}
+                            {/*                                size="small"*/}
+                            {/*                                variant="outlined"*/}
+                            {/*                                // required*/}
+                            {/*                                readOnly={editable ? false : true}*/}
+                            {/*                                disabled={editable ? false : true}*/}
+                            {/*                            />*/}
+                            {/*                        }*/}
+                            {/*                    </Grid>);*/}
 
-                                            }
-                                        })()}
-
-
+                            {/*                }*/}
+                            {/*            })()}*/}
 
 
-                                    </Grid>
-                                </Box>
-                            </Grid>
+
+
+                            {/*        </Grid>*/}
+                            {/*    </Box>*/}
+                            {/*</Grid>*/}
                         </Grid>
 
                     ) : (
@@ -768,7 +800,7 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                     )}
                     <Grid item xs={12} container direction="column" spacing={1} style={{ marginTop: '32px' }}>
                         <Typography variant="subtitle1" component="h6">
-                            Status history
+                            Programs
                         </Typography>
 
                         <Divider />
@@ -776,6 +808,21 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                         {userOriginal.memberStatusInfo.statusHistory &&
                             <StatusHistoryTable
                                 data={userOriginal.memberStatusInfo.statusHistory ? userOriginal.memberStatusInfo.statusHistory : []}
+                            />
+                        }
+                    </Grid>
+
+                    <Grid item xs={12} container direction="column" spacing={1} style={{ marginTop: '32px' }}>
+                        <Typography variant="subtitle1" component="h6">
+                            Completed Series
+                        </Typography>
+
+                        <Divider />
+
+                        {memberCollections &&
+                            <CompletedSurveysTable
+                                data={memberCollections ? memberCollections : []}
+                                role = {appState.role}
                             />
                         }
                     </Grid>
