@@ -64,7 +64,8 @@ export default function CompletedSurveysTable(props) {
     // always append the link with the memberCollectionID
     const nameToLink = { 
         "Community Connections": "/history/ccReport/",
-        "Social Health Screener - NEW": "/history/screenerReport/"
+        "Social Health Screener - NEW": "/history/screenerReport/",
+        "Quality of Life - Short": "/history/qoflReport/"
     }
 
     // Render Section ===

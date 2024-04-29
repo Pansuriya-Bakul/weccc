@@ -55,6 +55,7 @@ import Dashboard404 from './404';
 import CollectionsManagement from '../Administration/Collections/Pages/CollectionsManagement';
 import ViewCollection from '../Administration/Collections/Pages/ViewCollection';
 import ProjectsManagement from '../Administration/Projects/Pages/ProjectsManagement';
+import HistoricQofLReport from '../Reports/HistoricReports/HistoricQofLReport';
 // import PDFPopup from './PDFPopup';
 
 const drawerWidth = 240;
@@ -180,11 +181,13 @@ class Dashboard extends Component {
                             <Route exact path={`/QofLReports/:userID`} render={(props) => <QofLReports {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             <Route path="/ClientReports1" render={(props) => <ClientReports1 {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             <Route path="/ScreenReports/:userID" render={(props) => <ScreenReports {...props} userID={props.match.params.userID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
-                            
-                             {/* REPORTS WHEN VIEWED THROUGH THE HISTORY SECTION */}
-                             <Route exact path="/history/ccReport/:memberCollectionID" render={(props) => <CcReport {...props} memberCollectionID={props.match.params.memberCollectionID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose}/>}  />
-                            <Route exact path="/history/screenerReport/:memberCollectionID" render={(props) => <ScreenerReport {...props} memberCollectionID={props.match.params.memberCollectionID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose}/>}  />
 
+                            {/* REPORTS WHEN VIEWED THROUGH THE HISTORY SECTION */}
+                            <Route exact path="/history/ccReport/:memberCollectionID" render={(props) => <CcReport {...props} memberCollectionID={props.match.params.memberCollectionID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
+                            <Route exact path="/history/screenerReport/:memberCollectionID" render={(props) => <ScreenerReport {...props} memberCollectionID={props.match.params.memberCollectionID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
+                            <Route exact path="/history/qoflReport/:memberCollectionID" render={(props) => <HistoricQofLReport {...props} memberCollectionID={props.match.params.memberCollectionID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
+
+                            
                             <Route path="/MainReports" render={(props) => <MainReports {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             <Route path="/profile" render={(props) => <ViewUser {...props} userID={this.props.appState._id} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             <Route path="/members" render={(props) => <UsersManagement {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} mode={"Other"} />} />
