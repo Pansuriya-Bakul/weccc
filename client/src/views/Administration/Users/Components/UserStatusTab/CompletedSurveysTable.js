@@ -63,7 +63,8 @@ export default function CompletedSurveysTable(props) {
     // mapping collection template name => view report link for easy navgation
     // always append the link with the memberCollectionID
     const nameToLink = { 
-        "Community Connections": "/history/ccReport/"
+        "Community Connections": "/history/ccReport/",
+        "Social Health Screener - NEW": "/history/screenerReport/"
     }
 
     // Render Section ===
