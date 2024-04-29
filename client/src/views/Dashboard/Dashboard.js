@@ -20,6 +20,7 @@ import { withStyles } from '@material-ui/core/styles';
 import DrawerContents from './DrawerContents';
 import AppBar from './AppBar';
 import Main from './Main';
+import Maintemp from './Maintemp';
 import StartABooklet from './StartABooklet';
 import StartACollection from './StartACollection';
 import Booklet from './Booklet';
@@ -162,7 +163,7 @@ class Dashboard extends Component {
                     >
                         <div className={classes.toolbar} />
                         <Switch>
-                            <Route exact path="/" render={(props) => <Main {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
+                            <Route exact path="/" render={(props) => <Maintemp {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             {/* <Route path="/start/booklet" render={(props) => <StartABooklet {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose}/>} />
                             <Route path="/start/collection" render={(props) => <StartACollection {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose}/>} /> */}
                             {/* <Route path="/booklet/:memberSurveyID" render={(props) => <Booklet {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose}/>} /> */}
