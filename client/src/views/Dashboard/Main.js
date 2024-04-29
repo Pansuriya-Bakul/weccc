@@ -1,3 +1,7 @@
+//=============================================================
+// MAIN DASHBOARD PAGE WHEN USER LOGS IN
+//=============================================================
+
 import React, { Component, useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import get from "../../helpers/common/get";
@@ -78,82 +82,6 @@ class Main extends Component {
       pToggle: temp,
     });
   };
-
-  // getPatients = async () => {
-  // 	let { appState } = this.props;
-
-  // 	if (appState.role == "Patient") {
-  // 	  // setAlert(
-  // 	  //   new AlertType("You do not have Permission to recieve Patients", "error")
-  // 	  // );
-  // 	  return;
-  // 	} else {
-  // 	  if (appState.patients.length <= 0) {
-  // 		// setAlert(
-  // 		//   new AlertType(
-  // 		// 	"You do not have any patients assigned. In order to start a collection, you must first be assigned a member by an Administrator.",
-  // 		// 	"error"
-  // 		//   )
-  // 		// );
-  // 		return;
-  // 	  }
-
-  // 	//   let http_query = {
-  // 	// 	_id: {
-  // 	// 	  $in: appState.patients,
-  // 	// 	},
-  // 	//   };
-  // 	get("users/" + appState._id, appState.token, (err, res) =>
-  //                 {
-  //                     if(err)
-  //                     {
-  //                         //Bad callback call
-  //                         //setAlert(new AlertType(err.message, "error"));
-  //                         // setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
-  //                     }
-  //                     else
-  //                     {
-  //                         if(res.status === 200)
-  //                         {
-  //                             // this.setState({patientsList: res.data.user.patients});
-  // 							console.log(res.data.user.patients);
-  // 							return res.data.user.patients
-  //                         }
-  //                         else
-  //                         {
-  //                             //Bad HTTP Response
-  //                             // setAlert(new AlertType('Unable to retrieve Users. Please refresh and try again.', "error"));
-  //                         }
-  //                     }
-
-  //                 });
-
-  // 	//   post("users/query", appState.token, http_query, (err, res) => {
-  // 	// 	if (err) {
-  // 	// 	  //Bad callback
-  // 	// 	//   setAlert(
-  // 	// 	// 	new AlertType(
-  // 	// 	// 	  "Unable to retrieve Patients. Please refresh and try again.",
-  // 	// 	// 	  "error"
-  // 	// 	// 	)
-  // 	// 	//   );
-  // 	// 	} else {
-  // 	// 	  if (res.status === 200) {
-  // 	// 		this.setState({patientsList : res.data.users});
-  // 	// 		console.log(res.data.users);
-  // 	// 	  } else {
-  // 	// 		//Bad HTTP Response
-  // 	// 		// setAlert(
-  // 	// 		//   new AlertType(
-  // 	// 		// 	"Unable to retrieve Patients. Please refresh and try again.",
-  // 	// 		// 	"error"
-  // 	// 		//   )
-  // 	// 		// );
-  // 	// 	  }
-  // 	// 	}
-  // 	//   });
-  // 	}
-  // };
 
   getPatients = async () => {
     let { appState } = this.props;
@@ -280,7 +208,7 @@ class Main extends Component {
       });
   };
 
-  // First Render only because of the [ ] empty array tracking with the useEffect
+ 
 
   checkComplete = () => {
     if (
