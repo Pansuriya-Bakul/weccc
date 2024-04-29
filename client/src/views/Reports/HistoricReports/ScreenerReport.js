@@ -1,11 +1,10 @@
 // ================================================
-// COMMUNITY CONNECTIONS REPORT WHEN VIEWED THROUGH ADMIN/VOL/COORDINATOR
+// SCREENER REPORT WHEN VIEWED THROUGH HISTORY SECTION
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
 import html2canvas from 'html2canvas';
 import html2pdf from 'html2pdf.js';
-import './reports.css';
 
 // ==================== Modules =====================
 import Pagination from "@material-ui/lab/Pagination";
@@ -17,22 +16,14 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
 // ==================== Components ==================
-import AlertMessage from "../../components/AlertMessage";
-
-import Summary from "./Summary";
-import PossibleConcerns from "./PossibleConcerns";
-import Suggestions from "./Suggestions";
-import ContactInfo from "./ContactInfo";
-import CommunityCircle from "./CommunityCircle/CommunityCircle";
-import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
+import AlertMessage from "../../../components/AlertMessage";
 
 
 // ==================== Helpers =====================
-import AlertType from "../../helpers/models/AlertType";
-import checkAlerts from "./ConcernAlerts/checkAlerts";
-import get from "../../helpers/common/get";
-import post from "../../helpers/common/post";
+import AlertType from "../../../helpers/models/AlertType";
 
+import get from "../../../helpers/common/get";
+import post from "../../../helpers/common/post";
 // ==================== MUI =========================
 import { makeStyles } from "@material-ui/core/styles"; // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
 
@@ -41,12 +32,18 @@ import Box from "@material-ui/core/Box"; // Padding and margins
 import Card from "@material-ui/core/Card"; //Like the paper module, a visual sheet to place things
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
-import { CircularProgress } from "@material-ui/core";
-import CardContent from "@material-ui/core/CardContent";
+import { CircularProgress } from '@material-ui/core';
 import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
-import ReportDashboard from "./ReportDashboard";
+// import ReportDashboard from "./ReportDashboard";
 import AssessmentIcon from "@material-ui/icons/Assessment";
-import { set } from "joi/lib/types/lazy";
+import CardContent from "@material-ui/core/CardContent";
+
+import risk1 from "../../Reports/risk1.png";
+import risk2 from "../../Reports/risk2.png"
+import risk3 from "../../Reports/risk3.png";
+import risk4 from "../../Reports/risk4.png";
+import risk5 from "../../Reports/risk5.png";
+import ScreenerResults from "../ScreenerResults";
 
 // ==================== MUI Icons ====================
 
@@ -72,16 +69,15 @@ const useStyles = makeStyles(
 
 // ======================== React Modern | Functional Component ========================
 
-const Reports = (props) => {
-  // Notice the arrow function... regular function()  works too
+const ScreenerReport = (props) => {
 
   // Variables ===
 
   // Style variable declaration
   const classes = useStyles();
 
-  const { userID, appState, ToggleDrawerClose, CheckAuthenticationValidity } =
-    props;
+  // Declaration of Stateful Variables ===
+  const { appState, memberCollectionID, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
   // Alert variable
   const [alert, setAlert] = useState(new AlertType());
@@ -91,46 +87,43 @@ const Reports = (props) => {
   // const [personId, setPersonId] = useState("60e879aac417375c838307b9");
 
   const [reportsData, setReportsData] = useState(null);
+  // const [reports1Data, setReports1Data] = useState(null);
   const [patientData, setPatientData] = useState([]);
-  const [currentPatient, setCurrentPatient] = useState(userID);
+  const [currentPatient, setCurrentPatient] = useState(memberCollectionID);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
-  const [memberName, setMemberName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [anyFlags, setAnyFlags] = useState(false);
+  const [riskScore, setRiskScore] = useState(0);
+
   const [isDownloading, setIsDownloading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState("");
 
   // Functions ===
 
-  const getNeighbours = useCallback(
+  const getScreen = useCallback(
     (userId) => {
-      get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
+      get("reports/historic/screener/" + userId, appState.token, (err, res) => {
         if (err) {
           //Bad callback
           setAlert(
             new AlertType(
-              "Unable to retrieve Community Connection Series Report. Please refresh and try again.",
-              "error"
+              "Unable to retrieve Social Screen Series Report. Please refresh and try again."
             )
           );
         } else {
           if (res.status === 200) {
-            const { memberName, ...otherData } = res.data;
-
-            if (Object.keys(otherData).length === 0) {
+            if (Object.keys(res.data).length === 0) {
               setReportsData(null);
             } else {
-              // console.log(n);
-              setMemberName(memberName);
-              setReportsData(otherData);
+              setReportsData(res.data);
+              // console.log(res.data);
             }
             setIsLoading(false);
           } else {
             //Bad HTTP Response
             setAlert(
               new AlertType(
-                "Unable to retrieve Community Connection Series Report. Please refresh and try again.",
-                "error"
+                "Unable to retrieve Social Screen Series Report. Please refresh and try again.",
+                // "error"
               )
             );
           }
@@ -140,15 +133,57 @@ const Reports = (props) => {
     [appState]
   );
 
-  const patientSelectHandler = useCallback((event) => {
-    setCurrentPatient(event.target.value);
-  }, []);
 
-  const reportsPaginationHandler = useCallback((event, page) => {
-    setCurrentReportIndex(page - 1);
-  }, []);
+  const checkRisk = () => {
 
-  // generate report pdf and initiate download
+    if (reportsData) {
+      let score = 0;
+      if (reportsData['household2_size'] == 'Lives alone') {
+        score = score + 1;
+      }
+      if (reportsData['community_activity_participate'] == 'No') {
+        score = score + 1;
+      }
+      if (reportsData['life_satisfaction2'] <= 6) {
+        score = score + 1;
+
+      }
+      if (reportsData['local_community_belonging'] == 'Somewhat weak' || reportsData['local_community_belonging'] == 'Very weak') {
+        score = score + 1;
+      }
+      if ((reportsData['lack_companionship'] == 'Often' || reportsData['feel_isolated'] == 'Often' || reportsData['feel_leftout'] == 'Often') || (reportsData['lack_companionship'] == 'Sometimes' && reportsData['feel_isolated'] == 'Sometimes') || (reportsData['feel_leftout'] == 'Sometimes' && reportsData['feel_isolated'] == 'Sometimes') || (reportsData['lack_companionship'] == 'Sometimes' && reportsData['feel_leftout'] == 'Sometimes')) {
+        score = score + 1;
+      }
+      setRiskScore(score);
+    }
+  }
+
+  const getRiskText = () => {
+    let riskText = ''
+    switch (riskScore) {
+      case 0:
+        riskText = "Social health is vital to your overall well-being, as well as your physical and mental health. You're doing great - no risks are flagged currently. See recommendations to learn more about risk factors and the steps you can take to maintain good health."
+        break;
+      case 1:
+        riskText = "Did you know that good social health is vital to your overall well-being, as well as your physical and mental health? At least one risk factor affecting your social health is currently flagged. See recommendations to learn more about your current risk, and the steps you can take now."
+        break;
+      case 2:
+        riskText = "Did you know that good social health is vital to your overall well-being, as well as your physical and mental health? Some risk factors affecting your social health are currently flagged. See recommendations to learn more about your current risks, and the steps you can take now"
+        break;
+      case 3:
+        riskText = "You are at risk of experiencing negative emotional and physical effects of poor social health –some risk factors are currently flagged. See recommendations to learn more about your current risks, and the steps you can take now to reduce future harm"
+        break;
+      case 4:
+        riskText = "You are at high risk of experiencing negative emotional and physical effects of poor social health – several risk factors are currently flagged. See recommendations to learn more about your current risks, and the steps you can take now to reduce future harm."
+        break;
+      case 5:
+        riskText = "You are at high risk of experiencing negative emotional and physical effects of poor social health – several risk factors are currently flagged. See recommendations to learn more about your current risks, and the steps you can take now to reduce future harm."
+        break;
+    }
+    return riskText;
+  }
+
+  // generate report pdf and iniate download
   const handleDownloadPDF = async () => {
     setIsDownloading(true);
     const reportElement = document.getElementById('report');
@@ -156,7 +191,7 @@ const Reports = (props) => {
     const canvas = await html2canvas(reportElement);
     const opt = {
       margin: 5,
-      filename: 'cc_report.pdf',
+      filename: 'screener_report.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'mm', format: 'a2', orientation: 'portrait' }
@@ -172,28 +207,28 @@ const Reports = (props) => {
   // First Render only because of the [ ] empty array tracking with the useEffect
   useEffect(() => {
     ToggleDrawerClose();
-    // setTimeout(() => {
-    //   CheckAuthenticationValidity((tokenValid) => {
-    //     getPatients(currentPatient);
-    //   });
-    // }, 200); //
+    setTimeout(() => {
+      CheckAuthenticationValidity((tokenValid) => {
+
+      });
+    }, 200); //
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (currentPatient != "") {
-      getNeighbours(currentPatient);
-      // getScreen(currentPatient);
+      getScreen(currentPatient);
     }
   }, [currentPatient]);
 
   useEffect(() => {
-    if (reportsData !== null) {
-      const flags = checkAlerts(reportsData, currentReportIndex);
-      setAnyFlags(flags);
+    if (reportsData) {
+      checkRisk();
       setLastUpdated(reportsData.collection_last_updated);
     }
-  }, [reportsData, currentReportIndex]);
+  }, [reportsData]);
+
+
 
   // useEffect( () =>
   // {
@@ -234,7 +269,8 @@ const Reports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      Reports
+                      My Reports
+
                     </Typography>
                   </Grid>
                 </Grid>
@@ -251,24 +287,22 @@ const Reports = (props) => {
                         style={{ display: "flex", flexDirection: 'row', justifyContent: "space-between" }}
                       >
                         <Grid item xs={12}>
-
                           <Typography
                             style={{
                               fontSize: "16px",
                               color: "grey",
-                              marginLeft: "2px",
-
                             }}
                           >
                             Member's name:
                           </Typography>
-                          <Typography variant="h5" component="h1">
-                            {memberName}
+                          <Typography variant="h5" component="h1" style={{
+                            marginLeft: "2px",
+                            marginTop: "3px",
+                          }}>
+                            {reportsData ? reportsData.account_name : ''}
                           </Typography>
-
-                          <p>Last Modified: {lastUpdated}</p>
+                          Last Modified: {lastUpdated}
                         </Grid>
-
                         <div data-html2canvas-ignore="true">
                           <Button
                             variant="contained"
@@ -279,7 +313,6 @@ const Reports = (props) => {
                             {isDownloading ? <CircularProgress size={24} color="white" /> : "Download"}
                           </Button>
                         </div>
-
                       </div>
                     </Box>
                   </CardContent>
@@ -293,120 +326,77 @@ const Reports = (props) => {
               </Grid>
 
               <Grid item xs={12}>
-                <Card raised={true} style={{ padding: "10px" }}>
+                <Card raised={true} style={{ padding: '30px' }}>
                   <Box mx={1} my={1} boxShadow={0}>
-                    {isLoading ? (
-                      <CircularProgress />
-                    ) : (
-                      <Grid
+                    {isLoading ? (<CircularProgress />)
+                      : <Grid
                         container
                         direction="column"
                         justifyContent="flex-start"
                         alignItems="stretch"
                         spacing={1}
+                        style={{ padding: '20px 30px 20px 30px' }}
                       >
                         {reportsData &&
                           Object.keys(reportsData).length != 0 &&
-                          Object.getPrototypeOf(reportsData) ===
-                          Object.prototype ? (
+                          Object.getPrototypeOf(reportsData) === Object.prototype ? (
                           <>
                             <Grid item xs={12}>
                               <Typography variant="h4" color="textPrimary">
-                                Compassion Care Community Connections Report
+                                Social Risk Screener Report
                               </Typography>
                               <Divider light />
                             </Grid>
 
-                            <Grid item xs={12} id="dashboard">
+                            <Grid item xs={12} id="overall-risk" style={{ marginTop: '24px' }}>
                               <Typography
                                 variant="h5"
                                 color="textSecondary"
                                 align="left"
                                 gutterBottom
                               >
-                                Highlights
+                                Your Social Isolation Risk
                               </Typography>
-
-                              <ReportDashboard
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              ></ReportDashboard>
-                            </Grid>
-
-                            <Grid item xs={12} id="summary" style={{ marginTop: '10px' }}>
-                              <Typography
-                                variant="h5"
-                                color="textSecondary"
-                                align="left"
-                                gutterBottom
-                              >
-                                Summary
-                              </Typography>
-                              <Summary
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                              <CommunityCircle
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                              <Typography
-                                variant="h5"
-                                color="textSecondary"
-                                align="left"
-                                gutterBottom
-                              >
-                                Social and Community Connections
-                              </Typography>
-                              <SocialAndCommunityConnections
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
-                            </Grid>
-
-
-
-                            {anyFlags && (
-                              <Grid item xs={12} id="possible concerns" className="avoid-break">
-                                <Typography
-                                  variant="h5"
-                                  color="textSecondary"
-                                  align="left"
-                                  gutterBottom
-                                >
-                                  Possible Concerns
-                                </Typography>
-                                <PossibleConcerns
-                                  reports={reportsData}
-                                  collection={currentReportIndex}
-                                />
+                              <Grid container spacing={2} style={{ alignItems: 'center' }}>
+                                <Grid item xs={12} sm={6} md={4} lg={3}>
+                                  <img
+                                    src={riskScore == 0 ? risk1 : riskScore == 1 ? risk2 : riskScore == 2 ? risk3 : riskScore == 3 ? risk4 : risk5}
+                                    alt="risk meter"
+                                    width="360px"
+                                    height="238px"
+                                    style={{ maxWidth: '100%', height: 'auto' }}
+                                  />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={8} lg={9} style={{ paddingTop: '40px', paddingLeft: '40px' }}>
+                                  <Typography variant="h5" color="textSecondary" gutterBottom style={{ fontWeight: "500", color: riskScore == 0 ? "#42b74a" : riskScore == 1 ? "#cfdf28" : riskScore == 2 ? "#ffbb10" : riskScore == 3 ? "#f76420" : "#cf2020" }}>
+                                    {riskScore == 0 ? "Lowest Risk" : riskScore == 1 ? "Some Risk" : riskScore == 2 ? "Some Risk" : riskScore == 3 ? "Moderate Risk" : "High Risk"}
+                                  </Typography>
+                                  <Typography variant="body1" style={{ whiteSpace: 'pre-wrap' }}>
+                                    {getRiskText()}
+                                  </Typography>
+                                </Grid>
                               </Grid>
-                            )}
+                            </Grid>
 
-                            {anyFlags && (
-                              <Grid item xs={12} id="suggestions">
-                                <Typography
-                                  variant="h5"
-                                  color="textSecondary"
-                                  align="left"
-                                  gutterBottom
-                                >
-                                  Suggestions
-                                </Typography>
-                                <Suggestions
-                                  reports={reportsData}
-                                  collection={currentReportIndex}
-                                />
-                              </Grid>
-                            )}
+                            <Grid item xs={12} id="results">
+                              <Typography
+                                variant="h5"
+                                color="textSecondary"
+                                align="left"
+                                gutterBottom
+                                style={{ paddingBottom: '12px' }}
+                              >
+                                Results
+                              </Typography>
 
-                            <Grid item xs={12} style={{ paddingTop: '30px' }}>
+                              <ScreenerResults
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
+
+
+                            <Grid item xs={12} id="suggestions1" style={{ paddingTop: '30px' }}>
                               <Typography
                                 variant="h5"
                                 color="textSecondary"
@@ -416,6 +406,10 @@ const Reports = (props) => {
                               >
                                 What Now?
                               </Typography>
+                              {/* <Suggestions
+                              reports={reportsData}
+                              collection={currentReportIndex}
+                            /> */}
                               <Typography
                                 variant="body1"
                                 align="left"
@@ -425,8 +419,10 @@ const Reports = (props) => {
 
                               </Typography>
                             </Grid>
+
                           </>
                         ) : (
+
                           <>
                             <Typography
                               variant="subtitle2"
@@ -434,13 +430,12 @@ const Reports = (props) => {
                               align="left"
                               gutterBottom
                             >
-                              No available data
+                              No available reports.
+
                             </Typography>
                           </>
                         )}
-                      </Grid>
-                    )}
-
+                      </Grid>}
                   </Box>
                 </Card>
               </Grid>
@@ -453,7 +448,7 @@ const Reports = (props) => {
             align="left"
             gutterBottom
           >
-            Data Not Available
+            Person's Data Not Available
           </Typography>
         )}
       </Grid>
@@ -466,17 +461,17 @@ const Reports = (props) => {
 };
 
 // ======================== Component PropType Check ========================
-Reports.propTypes = {
+ScreenerReport.propTypes = {
   // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
   appState: PropTypes.object.isRequired,
   ToggleDrawerClose: PropTypes.func.isRequired,
   CheckAuthenticationValidity: PropTypes.func.isRequired,
 };
 
-Reports.defaultProps = {
+ScreenerReport.defaultProps = {
   appState: {},
   ToggleDrawerClose: () => { },
   CheckAuthenticationValidity: () => { },
 };
 
-export default Reports; // You can even shorthand this line by adding this at the function [Component] declaration stage
+export default ScreenerReport; 

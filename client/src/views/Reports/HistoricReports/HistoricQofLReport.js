@@ -1,11 +1,10 @@
 // ================================================
-// COMMUNITY CONNECTIONS REPORT WHEN VIEWED THROUGH ADMIN/VOL/COORDINATOR
+// HISTORIC QUALITY OF LIFE - SHORT REPORT WHEN VIEWED THROUGH HISTORY SECTION
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
 import html2canvas from 'html2canvas';
 import html2pdf from 'html2pdf.js';
-import './reports.css';
 
 // ==================== Modules =====================
 import Pagination from "@material-ui/lab/Pagination";
@@ -17,22 +16,20 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
 // ==================== Components ==================
-import AlertMessage from "../../components/AlertMessage";
+import AlertMessage from "../../../components/AlertMessage";
 
-import Summary from "./Summary";
-import PossibleConcerns from "./PossibleConcerns";
-import Suggestions from "./Suggestions";
-import ContactInfo from "./ContactInfo";
-import CommunityCircle from "./CommunityCircle/CommunityCircle";
-import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
-
+import PossibleConcerns from "../PossibleConcerns";
+import Suggestions from "../Suggestions";
+import ContactInfo from "../ContactInfo";
+import CommunityCircle from "../CommunityCircle/CommunityCircle";
+import SocialAndCommunityConnections from "../SocialAndCommunityConnections";
+import ReportDashboard from "../ReportDashboard";
 
 // ==================== Helpers =====================
-import AlertType from "../../helpers/models/AlertType";
-import checkAlerts from "./ConcernAlerts/checkAlerts";
-import get from "../../helpers/common/get";
-import post from "../../helpers/common/post";
-
+import AlertType from "../../../helpers/models/AlertType";
+import checkAlerts from "../ConcernAlerts/checkAlerts";
+import get from "../../../helpers/common/get";
+import post from "../../../helpers/common/post";
 // ==================== MUI =========================
 import { makeStyles } from "@material-ui/core/styles"; // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
 
@@ -41,14 +38,16 @@ import Box from "@material-ui/core/Box"; // Padding and margins
 import Card from "@material-ui/core/Card"; //Like the paper module, a visual sheet to place things
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
-import { CircularProgress } from "@material-ui/core";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
-import ReportDashboard from "./ReportDashboard";
-import AssessmentIcon from "@material-ui/icons/Assessment";
-import { set } from "joi/lib/types/lazy";
 
-// ==================== MUI Icons ====================
+import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
+
+import AssessmentIcon from "@material-ui/icons/Assessment";
+
+import { CircularProgress } from '@material-ui/core';
+import CardContent from "@material-ui/core/CardContent";
+
+import GaugeChart from "react-gauge-chart";
+import "../../../css/gauge-chart.css";
 
 // ==================== MUI Styles ===================
 
@@ -72,7 +71,7 @@ const useStyles = makeStyles(
 
 // ======================== React Modern | Functional Component ========================
 
-const Reports = (props) => {
+const HistoricQofLReport = (props) => {
   // Notice the arrow function... regular function()  works too
 
   // Variables ===
@@ -80,8 +79,8 @@ const Reports = (props) => {
   // Style variable declaration
   const classes = useStyles();
 
-  const { userID, appState, ToggleDrawerClose, CheckAuthenticationValidity } =
-    props;
+  // Declaration of Stateful Variables ===
+  const { appState, memberCollectionID, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
   // Alert variable
   const [alert, setAlert] = useState(new AlertType());
@@ -91,10 +90,10 @@ const Reports = (props) => {
   // const [personId, setPersonId] = useState("60e879aac417375c838307b9");
 
   const [reportsData, setReportsData] = useState(null);
+  const [reports1Data, setReports1Data] = useState(null);
   const [patientData, setPatientData] = useState([]);
-  const [currentPatient, setCurrentPatient] = useState(userID);
+  const [currentPatient, setCurrentPatient] = useState(memberCollectionID);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
-  const [memberName, setMemberName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -102,34 +101,30 @@ const Reports = (props) => {
 
   // Functions ===
 
-  const getNeighbours = useCallback(
+
+  const getQofL = useCallback(
     (userId) => {
-      get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
+      get("reports/historic/qofl/" + userId, appState.token, (err, res) => {
         if (err) {
           //Bad callback
           setAlert(
             new AlertType(
-              "Unable to retrieve Community Connection Series Report. Please refresh and try again.",
-              "error"
+              "Unable to retrieve Quality of Life - Short Report. Please refresh and try again."
             )
           );
         } else {
           if (res.status === 200) {
-            const { memberName, ...otherData } = res.data;
-
-            if (Object.keys(otherData).length === 0) {
+            if (Object.keys(res.data).length === 0) {
               setReportsData(null);
             } else {
-              // console.log(n);
-              setMemberName(memberName);
-              setReportsData(otherData);
+              setReportsData(res.data);
             }
             setIsLoading(false);
           } else {
             //Bad HTTP Response
             setAlert(
               new AlertType(
-                "Unable to retrieve Community Connection Series Report. Please refresh and try again.",
+                "Unable to retrieve Quality of Life - Short Report. Please refresh and try again.",
                 "error"
               )
             );
@@ -139,14 +134,6 @@ const Reports = (props) => {
     },
     [appState]
   );
-
-  const patientSelectHandler = useCallback((event) => {
-    setCurrentPatient(event.target.value);
-  }, []);
-
-  const reportsPaginationHandler = useCallback((event, page) => {
-    setCurrentReportIndex(page - 1);
-  }, []);
 
   // generate report pdf and initiate download
   const handleDownloadPDF = async () => {
@@ -172,17 +159,17 @@ const Reports = (props) => {
   // First Render only because of the [ ] empty array tracking with the useEffect
   useEffect(() => {
     ToggleDrawerClose();
-    // setTimeout(() => {
-    //   CheckAuthenticationValidity((tokenValid) => {
-    //     getPatients(currentPatient);
-    //   });
-    // }, 200); //
+    setTimeout(() => {
+      CheckAuthenticationValidity((tokenValid) => {
+
+      });
+    }, 200); //
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (currentPatient != "") {
-      getNeighbours(currentPatient);
+    if (currentPatient !== "") {
+      getQofL(currentPatient);
       // getScreen(currentPatient);
     }
   }, [currentPatient]);
@@ -195,11 +182,6 @@ const Reports = (props) => {
     }
   }, [reportsData, currentReportIndex]);
 
-  // useEffect( () =>
-  // {
-  //     console.log(currentReportIndex);
-
-  // }, [ currentReportIndex ]);
 
   // Render Section ===
 
@@ -213,8 +195,6 @@ const Reports = (props) => {
         alignItems="stretch"
         spacing={1}
       >
-        {patientData ? (
-          <>
             <Grid item xs={8}>
               <Box mx={1} my={1}>
                 <Grid
@@ -234,7 +214,7 @@ const Reports = (props) => {
                       align="left"
                       gutterBottom={false}
                     >
-                      Reports
+                      My Reports
                     </Typography>
                   </Grid>
                 </Grid>
@@ -250,8 +230,7 @@ const Reports = (props) => {
                         container
                         style={{ display: "flex", flexDirection: 'row', justifyContent: "space-between" }}
                       >
-                        <Grid item xs={12}>
-
+                        <Grid item xs={12} >
                           <Typography
                             style={{
                               fontSize: "16px",
@@ -263,12 +242,11 @@ const Reports = (props) => {
                             Member's name:
                           </Typography>
                           <Typography variant="h5" component="h1">
-                            {memberName}
+                            {reportsData ? reportsData.account_name : ''}
                           </Typography>
 
                           <p>Last Modified: {lastUpdated}</p>
                         </Grid>
-
                         <div data-html2canvas-ignore="true">
                           <Button
                             variant="contained"
@@ -279,7 +257,6 @@ const Reports = (props) => {
                             {isDownloading ? <CircularProgress size={24} color="white" /> : "Download"}
                           </Button>
                         </div>
-
                       </div>
                     </Box>
                   </CardContent>
@@ -312,7 +289,7 @@ const Reports = (props) => {
                           <>
                             <Grid item xs={12}>
                               <Typography variant="h4" color="textPrimary">
-                                Compassion Care Community Connections Report
+                                Quality of Life - Short Report
                               </Typography>
                               <Divider light />
                             </Grid>
@@ -327,32 +304,11 @@ const Reports = (props) => {
                                 Highlights
                               </Typography>
 
+                              {/* chart */}
                               <ReportDashboard
                                 reports={reportsData}
                                 collection={currentReportIndex}
                               ></ReportDashboard>
-                            </Grid>
-
-                            <Grid item xs={12} id="summary" style={{ marginTop: '10px' }}>
-                              <Typography
-                                variant="h5"
-                                color="textSecondary"
-                                align="left"
-                                gutterBottom
-                              >
-                                Summary
-                              </Typography>
-                              <Summary
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                              <CommunityCircle
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
                             </Grid>
 
                             <Grid item xs={12}>
@@ -370,10 +326,8 @@ const Reports = (props) => {
                               />
                             </Grid>
 
-
-
                             {anyFlags && (
-                              <Grid item xs={12} id="possible concerns" className="avoid-break">
+                              <Grid item xs={12} id="possible concerns">
                                 <Typography
                                   variant="h5"
                                   color="textSecondary"
@@ -424,7 +378,8 @@ const Reports = (props) => {
                                 Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
 
                               </Typography>
-                            </Grid>
+                            </Grid> 
+
                           </>
                         ) : (
                           <>
@@ -434,30 +389,19 @@ const Reports = (props) => {
                               align="left"
                               gutterBottom
                             >
-                              No available data
+                              No available reports.
                             </Typography>
                           </>
                         )}
                       </Grid>
                     )}
-
                   </Box>
                 </Card>
               </Grid>
             </Grid>
-          </>
-        ) : (
-          <Typography
-            variant="subtitle2"
-            color="textSecondary"
-            align="left"
-            gutterBottom
-          >
-            Data Not Available
-          </Typography>
-        )}
+          
       </Grid>
-    </div>
+    </div >
   ) : (
     <Typography variant="h6" color="inherit" align="center" gutterBottom>
       Not Authorized. Please refresh and try again.
@@ -466,17 +410,17 @@ const Reports = (props) => {
 };
 
 // ======================== Component PropType Check ========================
-Reports.propTypes = {
+HistoricQofLReport.propTypes = {
   // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
   appState: PropTypes.object.isRequired,
   ToggleDrawerClose: PropTypes.func.isRequired,
   CheckAuthenticationValidity: PropTypes.func.isRequired,
 };
 
-Reports.defaultProps = {
+HistoricQofLReport.defaultProps = {
   appState: {},
   ToggleDrawerClose: () => { },
   CheckAuthenticationValidity: () => { },
 };
 
-export default Reports; // You can even shorthand this line by adding this at the function [Component] declaration stage
+export default HistoricQofLReport; // You can even shorthand this line by adding this at the function [Component] declaration stage
