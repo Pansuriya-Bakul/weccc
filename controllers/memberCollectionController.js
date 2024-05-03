@@ -321,7 +321,21 @@ exports.readByClientId = (req, res, next) => {
     log.warn("Incoming read request for MemberCollections associated to Client with Id " + id);
 
     MemberCollection.find({ "member": id })
-        .populate('collectionTemplate memberSurveyList member').exec()
+        .populate({
+            path: 'collectionTemplate',
+        })
+        .populate({
+            path: 'member',
+            select: 'info', // Specify the fields you want to populate for the member
+        })
+        .populate({
+            path: 'memberSurveyList',
+            populate: {
+                path: 'surveyTemplate',
+                select: 'name' // Specify the fields you want to populate for the survey template
+            }
+        })
+        .exec()
         .then(async foundMemberCollections => {
             if (foundMemberCollections) {
                 log.info("Successful read request for MemberCollections associated to Client with Id " + id);

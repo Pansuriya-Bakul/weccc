@@ -37,22 +37,10 @@ const Maintemp = (props) => {
     const [quote, setQuote] = useState({ text: '', author: '' });
     const [facilityName, setFacilityName] = useState("");
     const [userCollections, setUserCollections] = useState([]);
+    const [patientCollections, setPatientCollections] = useState([]);
 
 
-    const checkAuth = () => {
-        ToggleDrawerClose();
-
-        CheckAuthenticationValidity((tokenValid) => {
-            if (tokenValid) {
-                this.setState({
-                    render: true,
-                });
-            }
-        });
-
-    };
-
-
+    // Retrieve user's member collections
     const getMemberCollections = useCallback(async (userID) => {
         return new Promise((resolve, reject) => {
             get("membercollections/client/"+ userID, appState.token, (err, res) => {
@@ -71,24 +59,36 @@ const Maintemp = (props) => {
             });
         });
     }, [userCollections, appState.token]);
+
+    const getPatients = useCallback( async () => {
+        
+    }, [appState.token]);
     
 
     useEffect(() => {
         const fetchData = async () => {
-            if (appState.role !== "admin") {
+            console.log(appState);
+
+            // fetch user's collections
+            if (appState.role !== "Admin") {
                 try {
                     const userCollections = await getMemberCollections(appState._id);
-                    setUserCollections(userCollections); // Update state with the response
+                    setUserCollections(userCollections); 
                     console.log(userCollections);
                 } catch (error) {
                     console.error('Error fetching client collections:', error);
-                    // Handle the error here (e.g., set error state, display error message)
-                    // For example:
                     setAlert(new AlertType(error.message, "error"));
                 }
             }
+
+            // fetch collections of assigned patients (clients) for Volunteer & Coordinator users
+            if (appState.role !== 'Admin' && appState.role !== 'Patient') {
+
+            }
+
         };
-    
+        
+        ToggleDrawerClose();
         fetchData();
     }, []); 
     
