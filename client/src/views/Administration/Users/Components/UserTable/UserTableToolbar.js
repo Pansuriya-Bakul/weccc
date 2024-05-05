@@ -19,6 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';  // withStyles can be use
 
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import { lighten } from '@material-ui/core/styles';
@@ -34,6 +35,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import Ballot from '@material-ui/icons/Ballot';
 import ImageSearchIcon from '@material-ui/icons/ChromeReaderMode';
 import PersonIcon from '@material-ui/icons/Person';
+import { set } from 'joi/lib/types/lazy';
 // ==================== MUI Styles ===================
 
 const useStyles = makeStyles((theme) =>    //Notice the hook useStyles
@@ -84,6 +86,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
     const [viewUrl, setViewUrl] = useState("");
     const [reportUrl, setReportUrl] = useState("");
     const [reportUrl1, setReportUrl1] = useState("");
+    const [StartProgramUrl, setStartProgramUrl] = useState("");
 
     const [tool, setTool] = useState(0);
 
@@ -109,7 +112,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
 
     useEffect(() => {
 
-        if (tool == 1) {
+        if (tool === 1) {
             if (appState.role === "Admin") {
                 setViewUrl(viewUserBaseLinkAdministration + "view/" + selectedDataItemsList[0]._id);
                 localStorage.setItem('_id', selectedDataItemsList[0]._id);
@@ -125,10 +128,12 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
             }
             setReportUrl('/reports/' + selectedDataItemsList[0]._id);
             setReportUrl1('/ScreenReports/' + selectedDataItemsList[0]._id);
+            setStartProgramUrl(viewUserBaseLinkAdministration + 'start-program/' + selectedDataItemsList[0]._id);
         } else {
             setViewUrl("");
             setReportUrl("");
             setReportUrl1("");
+            setStartProgramUrl("");
         }
     }, [tool, viewUrl]);
 
@@ -151,7 +156,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                 </Typography>
             )}
 
-            {(tool == 0) ? (
+            {(tool === 0) ? (
                 <>
                     <Tooltip title="Filter list">
                         <IconButton aria-label="filter list">
@@ -161,16 +166,36 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                 </>
             ) : (null)}
 
-            {(tool == 1) ? (
-                <>
+            {(tool === 1) ? (
+                <div style={{display: "flex", flexDirection:"row", gap:"5px", alignItems: "center"}}>
                     <Tooltip title="View Profile">
-                        <IconButton aria-label="view" component={Link} to={viewUrl} >
-                            {viewUrl.length > 0 ? (
-                                <PersonIcon />
-                            ) : (
-                                <></>
-                            )}
-                        </IconButton>
+                        <Button
+                            aria-label="view profile"
+                            component={Link}
+                            to={viewUrl}
+                            disabled={viewUrl.length === 0}
+                            color="primary"
+                            variant="contained"
+                            size="small"
+                            style={{ width: "150px", fontSize: "12px", height: "32px"}}
+                        >
+                            View Profile
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Start Program">
+                        <Button
+                            aria-label="start program"
+                            component={Link}
+                            to={StartProgramUrl}
+                            disabled={StartProgramUrl.length === 0}
+                            color="primary"
+                            variant="contained"
+                            size="small"
+                            style={{display: "flex", fontSize: "12px", whiteSpace: "nowrap", width: "150px", height: "32px"}}
+                        >
+                            Start Program
+                        </Button>
                     </Tooltip>
 
                     {/* <Tooltip title="Export" onClick={() => exportHandler()}>
@@ -194,7 +219,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>
-                </>
+                </div>
             ) : (null)}
             {(tool > 1) ? (
                 <>
