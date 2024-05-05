@@ -142,7 +142,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                 <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
                     <>
                         {selectedDataItemsList.length} Selected Item{selectedDataItemsList.length > 1 ? "s. In order to view/edit Patient's survey, please check 1 box" : null}
-                        {viewUrl.length == 0 && selectedDataItemsList.length <= 1 ? " There are no survey for selected user" : null}
+                        {viewUrl.length === 0 && selectedDataItemsList.length <= 1 ? " There are no survey for selected user" : null}
                     </>
                 </Typography>
             ) : (

@@ -61,8 +61,7 @@ const UserTableHead = (props) => { // Notice the arrow function... regular funct
     // Style variable declaration
     const classes = useStyles();
 
-    // Declaration of Stateful Variables ===
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+    const {appState, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
 
     const [headCells, setHeadCells] = useState(headCellsUserChapters);
 
@@ -74,6 +73,11 @@ const UserTableHead = (props) => { // Notice the arrow function... regular funct
     }, [onRequestSort]);
 
     // Hooks ===
+    useEffect(() => {
+        if (appState.role !== 'Admin') {
+          setHeadCells(headCellsUserChapters.filter(cell => cell.id !== 'enabled'));
+        }
+      }, [appState]);
 
     // Render Section ===
 

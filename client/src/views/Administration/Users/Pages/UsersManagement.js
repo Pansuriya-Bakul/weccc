@@ -52,7 +52,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
     const classes = useStyles();
 
     // Declaration of Stateful Variables ===
-    const { appState, ToggleDrawerClose, CheckAuthenticationValidity, mode } = props;
+    const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
 
     // IsDense ; is the template table in compact form
     const [isDense, setIsDense] = useState(true);
@@ -124,7 +124,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
     const getUsers = useCallback(() => {
 
         if (appState) {
-            if (mode === "Admin") {
+            if (appState.role === "Admin" || appState.role === "Coordinator") {
                 get("users/", appState.token, (err, res) => {
                     if (err) {
                         //Bad callback call
@@ -141,7 +141,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                                 const datatest = [];
                                 //console.log(appState.facilityId);
                                 res.data.response.users.forEach(k => {
-                                    if (k.facid == appState.facilityId) {
+                                    if (k.facid === appState.facilityId) {
                                         //console.log(k._id, k.facid);
                                         datatest.push(k);
                                     }
@@ -160,7 +160,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
 
                 });
             }
-            else if (mode === "Other") {
+            else if (appState.role === "Volunteer") {
                 get("users/" + appState._id, appState.token, (err, res) => {
                     if (err) {
                         //Bad callback call
@@ -183,7 +183,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
         }
 
 
-    }, [populateList, appState, mode]);
+    }, [populateList, appState]);
 
     // Hooks ===
 
@@ -206,7 +206,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
 
     useEffect(() => {
         getUsers();
-    }, [mode]);
+    }, [appState]);
 
     useEffect(() => {
         setSearchFilteredDataList(dataList);
@@ -227,7 +227,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                 >
                     <Grid item xs={5}>
                         <Box mx={1} my={1}>
-                            {mode === "Admin" ? (
+                            {appState.role === "Admin" || appState.role === "Coordinator" ? (
                                 <Typography variant="h5" color="inherit" align="left" gutterBottom>
                                     Manage Users
                                 </Typography>
@@ -235,7 +235,7 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                                 <>
                                 </>
                             )}
-                            {mode === "Other" ? (
+                            {appState.role === "Volunteer" ? (
                                 <Grid container direction="row" justifyContent="flex-start" alignItems="flex-end" spacing={2}>
                                     <Grid item>
                                         <PeopleIcon color="primary" />
@@ -271,7 +271,6 @@ const UsersManagement = (props) => { // Notice the arrow function... regular fun
                                         <Grid item xs={12}>
                                             <UsersManagementControlPanel
                                                 appState={appState}
-                                                mode={mode}
                                                 isDense={isDense}
                                                 setIsDense={setIsDense}
                                                 dataList={dataList}
