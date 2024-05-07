@@ -43,16 +43,16 @@ const Maintemp = (props) => {
     // Retrieve user's member collections
     const getMemberCollections = useCallback(async (userID) => {
         return new Promise((resolve, reject) => {
-            get("membercollections/client/"+ userID, appState.token, (err, res) => {
+            get("membercollections/client/" + userID, appState.token, (err, res) => {
                 if (err) {
-                    // Reject the promise with the error
+
                     reject(new Error('Unable to retrieve Member Series. Please refresh and try again.'));
                 } else {
-                    if (res.status === 200){
-                        // Resolve the promise with the data
+                    if (res.status === 200) {
+
                         resolve(res.data.memberCollections);
                     } else {
-                        // Reject the promise with an error message
+
                         reject(new Error('Bad HTTP Response'));
                     }
                 }
@@ -60,10 +60,40 @@ const Maintemp = (props) => {
         });
     }, [userCollections, appState.token]);
 
-    const getPatients = useCallback( async () => {
-        
-    }, [appState.token]);
-    
+    const getPatientCollections = useCallback(async () => {
+        if (appState && appState.patients.length > 0) {
+            try {
+                const collectionsPromises = appState.patients.map(patientID => getMemberCollections(patientID));
+                const collections = await Promise.all(collectionsPromises);
+
+                // Flatten the array of arrays into a single array
+                const flattenedCollections = collections.reduce((acc, val) => acc.concat(val), []);
+                console.log(flattenedCollections);
+                // Update the state with the patient collections
+                setPatientCollections(flattenedCollections);
+            } catch (error) {
+                console.error('Error fetching patient collections:', error);
+            }
+        }
+    }, [appState, getMemberCollections, setPatientCollections]);
+
+    // fetch daily quote
+    const getQuote = async () => {
+        return fetch("https://type.fit/api/quotes")
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                var today = new Date();
+                var dd = parseInt(String(today.getDate()).padStart(2, "0"));
+                var mm = parseInt(String(today.getMonth() + 1).padStart(2, "0")); //January is 0!
+                var num = mm + dd;
+                var count = Object.keys(data).length - 1;
+                var randomnumber = Math.floor(count / num);
+                return data[randomnumber];
+            });
+    };
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -73,7 +103,7 @@ const Maintemp = (props) => {
             if (appState.role !== "Admin") {
                 try {
                     const userCollections = await getMemberCollections(appState._id);
-                    setUserCollections(userCollections); 
+                    setUserCollections(userCollections);
                     console.log(userCollections);
                 } catch (error) {
                     console.error('Error fetching client collections:', error);
@@ -83,15 +113,29 @@ const Maintemp = (props) => {
 
             // fetch collections of assigned patients (clients) for Volunteer & Coordinator users
             if (appState.role !== 'Admin' && appState.role !== 'Patient') {
+                try {
+                    // Call the getPatientCollections function
+                    await getPatientCollections();
 
+                } catch (error) {
+                    console.error('Error fetching patient collections:', error);
+                    setAlert(new AlertType(error.message, "error"));
+                }
             }
 
+            // fetch quote of the day and update state
+            let quoteResponse = await getQuote();
+            setQuote({ text: quoteResponse["text"], author: quoteResponse["author"] });
+
+            // stop loading
+            setIsLoading(false);
+
         };
-        
+
         ToggleDrawerClose();
         fetchData();
-    }, []); 
-    
+    }, []);
+
 
 
 
@@ -166,6 +210,96 @@ const Maintemp = (props) => {
                     </CardContent>
                 </Card>
             </Grid>
+
+            {appState.role !== "Admin" &&
+                <Grid item xs={12}>
+                    <Card raised={true}>
+                        <CardContent className="dashboard-card">
+                            <Box mx={1} my={1} boxShadow={0}>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justifyContent="flex-start"
+                                    alignItems="stretch"
+                                    spacing={1}
+                                >
+                                    <Grid item xs={12}>
+                                        {appState.role === 'Patient'
+                                            ? <Typography variant="subtitle2" component="h2">
+                                                What would you like to do today?
+                                            </Typography>
+                                            : <Typography variant="subtitle2" component="h2">
+                                                Current Assigned Tasks
+                                            </Typography>
+                                        }
+                                    </Grid>
+
+                                    {isLoading ? <CircularProgress />
+                                        : (
+                                            <Grid item xs={12}>
+                                                <Grid item xs={12}>
+                                                    {/* Display list of user collections with completeness score != 100 */}
+                                                    {userCollections.length > 0 &&
+                                                        userCollections.map((collection, index) => (
+                                                             collection.completeness < 100 &&
+                                                            <div key={index}>
+                                                                <Box
+                                                                    mt={1.5}
+                                                                    p={1.5}
+                                                                    className="box-container"
+                                                                >
+                                                                    <div
+                                                                        size="small"
+                                                                        variant="contained"
+                                                                        color="primary"
+                                                                    >
+                                                                        <h3>
+                                                                            {collection.collectionTemplate.name} - {collection.member.info.name}
+                                                                        </h3>
+                                                                    </div>
+
+                                                                </Box>
+                                                            </div>
+                                                            
+                                                        ))
+                                                    }
+                                                    {patientCollections.length > 0 &&
+                                                        patientCollections.map((collection, index) => (
+                                                             collection.completeness < 100 &&
+                                                            <div key={index}>
+                                                                <Box
+                                                                    mt={1.5}
+                                                                    p={1.5}
+                                                                    className="box-container"
+                                                                >
+                                                                    <div
+                                                                        size="small"
+                                                                        variant="contained"
+                                                                        color="primary"
+                                                                    >
+                                                                        <h3>
+                                                                            {collection.collectionTemplate.name} - {collection.member.info.name}
+                                                                        </h3>
+                                                                    </div>
+
+                                                                </Box>
+                                                            </div>
+                                                            
+                                                        ))
+                                                    }
+                                                </Grid>
+                                            </Grid>
+                                        )
+                                    }
+
+
+                                </Grid>
+                            </Box>
+
+                        </CardContent>
+                    </Card>
+                </Grid>
+            }
 
         </Grid>
     );
