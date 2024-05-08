@@ -86,7 +86,8 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
     const [viewUrl, setViewUrl] = useState("");
     const [reportUrl, setReportUrl] = useState("");
     const [reportUrl1, setReportUrl1] = useState("");
-    const [StartProgramUrl, setStartProgramUrl] = useState("");
+    const [startProgramUrl, setStartProgramUrl] = useState("");
+    const [completeProgramUrl, setCompleteProgramUrl] = useState("");
 
     const [tool, setTool] = useState(0);
 
@@ -129,11 +130,13 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
             setReportUrl('/reports/' + selectedDataItemsList[0]._id);
             setReportUrl1('/ScreenReports/' + selectedDataItemsList[0]._id);
             setStartProgramUrl(viewUserBaseLinkAdministration + 'start-program/' + selectedDataItemsList[0]._id);
+            setCompleteProgramUrl(viewUserBaseLinkAdministration + 'complete-program/' + selectedDataItemsList[0]._id);
         } else {
             setViewUrl("");
             setReportUrl("");
             setReportUrl1("");
             setStartProgramUrl("");
+            setCompleteProgramUrl("");
         }
     }, [tool, viewUrl]);
 
@@ -187,14 +190,29 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                         <Button
                             aria-label="start program"
                             component={Link}
-                            to={StartProgramUrl}
-                            disabled={StartProgramUrl.length === 0}
+                            to={startProgramUrl}
+                            disabled={startProgramUrl.length === 0}
                             color="primary"
                             variant="contained"
                             size="small"
                             style={{display: "flex", fontSize: "12px", whiteSpace: "nowrap", width: "150px", height: "32px"}}
                         >
                             Start Program
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Complete Program">
+                        <Button
+                            aria-label="complete program"
+                            component={Link}
+                            to={completeProgramUrl}
+                            disabled={completeProgramUrl.length === 0}
+                            color="primary"
+                            variant="contained"
+                            size="small"
+                            style={{display: "flex", fontSize: "12px", whiteSpace: "nowrap", width: "150px", height: "32px"}}
+                        >
+                            Complete Program
                         </Button>
                     </Tooltip>
 

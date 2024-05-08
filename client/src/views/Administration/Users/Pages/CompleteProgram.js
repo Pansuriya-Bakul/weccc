@@ -20,7 +20,7 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import { CircularProgress } from '@material-ui/core';
 
-const StartProgram = (props) => {
+const CompleteProgram = (props) => {
     const { appState, userID, ToggleDrawerClose, CheckAuthenticationValidity } = props;
     const [user, setUser] = useState({});
 
@@ -36,6 +36,9 @@ const StartProgram = (props) => {
     const [originalStatus, setOriginalStatus] = useState('');
     const [originalProgram, setOriginalProgram] = useState('');
     const [originalProgramStartDate, setOriginalProgramStartDate] = useState('');
+
+
+
 
     const programs = [
         "Quality Life - in home",
@@ -140,7 +143,7 @@ const StartProgram = (props) => {
                 setUser(response.data.user);
                 setAlert(new AlertType('Changes saved successfully', "success"));
             }
-            
+
 
         } catch (error) {
             console.error(error);
@@ -206,9 +209,9 @@ const StartProgram = (props) => {
 
     return (
         <div>
-            <Box mx={1} my={1} style={{display:"flex", flexDirection:"row", gap:"10px", alignItems:"center" }}>
+            <Box mx={1} my={1} style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
                 <Typography variant="h5" color="inherit" align="left" gutterBottom>
-                    Start Program
+                    Complete Program
                 </Typography>
                 <AlertMessage alert={alert} setParentAlert={setAlert} />
             </Box>
@@ -216,9 +219,14 @@ const StartProgram = (props) => {
 
             <Card raised={true} style={{ padding: "16px", marginTop: "16px" }}>
                 {user &&
-                    <Typography variant="body1" color="inherit" align="left" gutterBottom style={{ fontSize: "18px" }}>
-                        <span style={{ fontWeight: "500" }}>Name:</span> {user.info ? user.info.name : ""}
-                    </Typography>
+                    <>
+                        <Typography variant="body1" color="inherit" align="left" gutterBottom style={{ fontSize: "18px" }}>
+                            <span style={{ fontWeight: "500" }}>Name:</span> {user.info ? user.info.name : ""}
+                        </Typography>
+                        <Typography variant="body1" color="inherit" align="left" gutterBottom style={{ fontSize: "18px" }}>
+                            <span style={{ fontWeight: "500" }}>Current Status:</span> {user.status ? user.status : ""}
+                        </Typography>
+                    </>
                 }
 
                 <div style={{ marginTop: "24px" }}>
@@ -334,4 +342,4 @@ const StartProgram = (props) => {
     )
 }
 
-export default StartProgram
+export default CompleteProgram

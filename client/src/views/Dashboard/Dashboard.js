@@ -42,6 +42,7 @@ import ViewProfile from '../Profiles/View';
 import OldUsersManagement from '../Administration/Users/Management';
 import UsersManagement from '../Administration/Users/Pages/UsersManagement';
 import StartProgram from '../Administration/Users/Pages/StartProgram';
+import CompleteProgram from '../Administration/Users/Pages/CompleteProgram';
 import ViewUser from '../Administration/Users/Pages/ViewUser';
 import EditPerson from '../Administration/Users/EditPerson';
 import EnableDisablePerson from '../Administration/Users/EnableDisablePerson';
@@ -203,6 +204,7 @@ class Dashboard extends Component {
                             <Route path="/administration/users/management" render={(props) => <UsersManagement {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             <Route path="/administration/users/view/:userID" render={(props) => <ViewUser {...props} userID={props.match.params.userID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             <Route path="/administration/users/start-program/:userID" render={(props) => <StartProgram {...props} userID={props.match.params.userID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
+                            <Route path="/administration/users/complete-program/:userID" render={(props) => <CompleteProgram {...props} userID={props.match.params.userID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
                             
                             {/* <Route path="/administration/booklets/edit/:bookletID" render={(props) => <EditBooklet {...props} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose}/>} /> */}
                             <Route path="/administration/booklets/template/edit/:bookletID" render={(props) => <EditChapterTemplate {...props} ChapterID={props.match.params.bookletID} appState={this.props.appState} CheckAuthenticationValidity={this.props.CheckAuthenticationValidity} ToggleDrawerClose={this.toggleDrawerClose} />} />
