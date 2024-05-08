@@ -141,7 +141,7 @@ const StartProgram = (props) => {
                 setUser(response.data.user);
                 setAlert(new AlertType('Changes saved successfully', "success"));
             }
-            
+
 
         } catch (error) {
             console.error(error);
@@ -185,7 +185,7 @@ const StartProgram = (props) => {
                     let activePrograms = user.memberStatusInfo.statusHistory;
 
                     if (currentProgram.hasOwnProperty('activeType')) {
-                        setActivePrograms(user.memberStatusInfo.statusHistory);
+                        setActivePrograms(activePrograms);
                         setOriginalProgram(handleProgramValue(currentProgram.activeType));
                         setCurrentProgram(handleProgramValue(currentProgram.activeType));
                         setCurrentProgramStartDate(currentProgram.startDate.split('T')[0]);
@@ -209,7 +209,7 @@ const StartProgram = (props) => {
 
     return (
         <div>
-            <Box mx={1} my={1} style={{display:"flex", flexDirection:"row", gap:"10px", alignItems:"center" }}>
+            <Box mx={1} my={1} style={{ display: "flex", flexDirection: "row", gap: "10px", alignItems: "center" }}>
                 <Typography variant="h5" color="inherit" align="left" gutterBottom>
                     Start Program
                 </Typography>
@@ -219,9 +219,25 @@ const StartProgram = (props) => {
 
             <Card raised={true} style={{ padding: "16px", marginTop: "16px" }}>
                 {user &&
-                    <Typography variant="body1" color="inherit" align="left" gutterBottom style={{ fontSize: "18px" }}>
-                        <span style={{ fontWeight: "500" }}>Name:</span> {user.info ? user.info.name : ""}
-                    </Typography>
+                    <>
+                        <Typography variant="body1" color="inherit" align="left" gutterBottom style={{ fontSize: "18px" }}>
+                            <span style={{ fontWeight: "500" }}>Name:</span> {user.info ? user.info.name : ""}
+                        </Typography>
+
+                        <Typography variant="body1" color="inherit" align="left" gutterBottom style={{ fontSize: "18px", marginTop:"16px" }}>
+                            <span style={{ fontWeight: "500" }}>Current Active Programs:</span>
+                        </Typography>
+                        
+                        {activePrograms.length > 0 ?
+                            <ul>
+                            {activePrograms.map((program, index) => (
+                               <li key={index}>{program.activeType} (started on {program.startDate.split('T')[0]})</li>
+                            ))}
+                            </ul>
+                            : <p>No active programs</p>
+                        }
+
+                    </>
                 }
 
                 <div style={{ marginTop: "24px" }}>
