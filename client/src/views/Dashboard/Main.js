@@ -3,9 +3,7 @@
 //=============================================================
 
 import React, { Component, useEffect, useState, useCallback } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
 import get from "../../helpers/common/get";
-import post from "../../helpers/common/post";
 import { Link } from "react-router-dom";
 
 import AlertType from '../../helpers/models/AlertType';
