@@ -38,7 +38,7 @@ const Maintemp = (props) => {
     const [facilityName, setFacilityName] = useState("");
     const [userCollections, setUserCollections] = useState([]);
     const [patientCollections, setPatientCollections] = useState([]);
-
+    const [openBoxes, setOpenBoxes] = useState({});
 
     // Retrieve user's member collections
     const getMemberCollections = useCallback(async (userID) => {
@@ -92,6 +92,14 @@ const Maintemp = (props) => {
                 var randomnumber = Math.floor(count / num);
                 return data[randomnumber];
             });
+    };
+
+    // handles toggle of open/close collection boxes
+    const toggleBox = (key) => {
+        setOpenBoxes(prevState => ({
+            ...prevState,
+            [key]: !prevState[key]
+        }));
     };
 
 
@@ -241,12 +249,13 @@ const Maintemp = (props) => {
                                                     {/* Display list of user collections with completeness score != 100 */}
                                                     {userCollections.length > 0 &&
                                                         userCollections.map((collection, index) => (
-                                                             collection.completeness < 100 &&
-                                                            <div key={index}>
+                                                            collection.completeness < 100 &&
+                                                            <div key={`user-${index}`}>
                                                                 <Box
                                                                     mt={1.5}
                                                                     p={1.5}
                                                                     className="box-container"
+                                                                    onClick={() => toggleBox(`user-${index}`)}
                                                                 >
                                                                     <div
                                                                         size="small"
@@ -257,20 +266,81 @@ const Maintemp = (props) => {
                                                                             {collection.collectionTemplate.name} - {collection.member.info.name}
                                                                         </h3>
                                                                     </div>
-
                                                                 </Box>
+                                                                {openBoxes[`user-${index}`] &&
+                                                                    <Box
+                                                                        m={0}
+                                                                        p={1.5}
+                                                                        className="bottom-container"
+                                                                    >
+                                                                        <div className="survey-div">
+                                                                            {collection.memberSurveyList.map((survey, index) => (
+                                                                                <Grid item xs={12} key={index}>
+                                                                                    <Tooltip
+                                                                                        placement="bottom"
+                                                                                        title="Edit Module"
+                                                                                    >
+                                                                                        <Box m={1} pt={1} className="survey-box">
+                                                                                            <Button
+                                                                                                className="survey-name"
+                                                                                                size="small"
+                                                                                                variant="contained"
+                                                                                                color="primary"
+                                                                                                startIcon={<EditIcon />}
+                                                                                                component={Link}
+                                                                                                to={`/administration/booklets/user/view/${survey._id}`}
+
+                                                                                            >
+                                                                                                {survey.surveyTemplate.name}
+                                                                                            </Button>
+
+                                                                                            {/* Survey Progress indicator */}
+                                                                                            {survey.completeness === 0 &&
+                                                                                                <div className="status-div not-started">
+                                                                                                    <span>
+                                                                                                        Not
+                                                                                                        Started
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            }
+                                                                                            {survey.completeness > 0 && survey.completeness < 100 &&
+                                                                                                <div className="status-div in-progress">
+                                                                                                    <span>
+                                                                                                        In Progress
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            }
+                                                                                            {survey.completeness === 100 &&
+                                                                                                <div className="status-div completed">
+                                                                                                    <span>
+                                                                                                        Completed
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            }
+                                                                                        </Box>
+
+                                                                                    </Tooltip>
+
+                                                                                </Grid>
+                                                                            ))}
+
+                                                                        </div>
+
+                                                                    </Box>
+                                                                }
                                                             </div>
-                                                            
+
                                                         ))
                                                     }
                                                     {patientCollections.length > 0 &&
                                                         patientCollections.map((collection, index) => (
-                                                             collection.completeness < 100 &&
-                                                            <div key={index}>
+                                                            collection.completeness < 100 &&
+                                                            <div key={`patient-${index}`}>
                                                                 <Box
                                                                     mt={1.5}
                                                                     p={1.5}
                                                                     className="box-container"
+                                                                    onClick={() => toggleBox(`patient-${index}`)}
                                                                 >
                                                                     <div
                                                                         size="small"
@@ -283,9 +353,76 @@ const Maintemp = (props) => {
                                                                     </div>
 
                                                                 </Box>
+
+                                                                {openBoxes[`patient-${index}`] &&
+                                                                    <Box
+                                                                        m={0}
+                                                                        p={1.5}
+                                                                        className="bottom-container"
+                                                                    >
+                                                                        <div className="survey-div">
+                                                                            {collection.memberSurveyList.map((survey, index) => (
+                                                                                <Grid item xs={12} key={index}>
+                                                                                    <Tooltip
+                                                                                        placement="bottom"
+                                                                                        title="Edit Module"
+                                                                                    >
+                                                                                        <Box m={1} pt={1} className="survey-box">
+                                                                                            <Button
+                                                                                                className="survey-name"
+                                                                                                size="small"
+                                                                                                variant="contained"
+                                                                                                color="primary"
+                                                                                                startIcon={<EditIcon />}
+                                                                                                component={Link}
+                                                                                                to={`/administration/booklets/user/view/${survey._id}`}
+
+                                                                                            >
+                                                                                                {survey.surveyTemplate.name}
+                                                                                            </Button>
+
+                                                                                            {/* Survey Progress indicator */}
+                                                                                            {survey.completeness === 0 &&
+                                                                                                <div className="status-div not-started">
+                                                                                                    <span>
+                                                                                                        Not
+                                                                                                        Started
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            }
+                                                                                            {survey.completeness > 0 && survey.completeness < 100 &&
+                                                                                                <div className="status-div in-progress">
+                                                                                                    <span>
+                                                                                                        In Progress
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            }
+                                                                                            {survey.completeness === 100 &&
+                                                                                                <div className="status-div completed">
+                                                                                                    <span>
+                                                                                                        Completed
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            }
+                                                                                        </Box>
+
+                                                                                    </Tooltip>
+
+                                                                                </Grid>
+                                                                            ))}
+
+                                                                        </div>
+
+                                                                    </Box>
+                                                                }
                                                             </div>
-                                                            
+
                                                         ))
+                                                    }
+
+                                                    {(!userCollections.length || userCollections.every(collection => collection.completeness === 100)) &&
+                                                        (!patientCollections.length || patientCollections.every(collection => collection.completeness === 100)) &&
+                                                        <div>No series assigned</div>
                                                     }
                                                 </Grid>
                                             </Grid>
@@ -300,6 +437,21 @@ const Maintemp = (props) => {
                     </Card>
                 </Grid>
             }
+
+            {/* <Grid item xs={4}>
+                <Card variant="outlined" style={{ backgroundColor: "aliceblue"}}>
+                    <CardContent>
+                        <Typography variant="h6" component="h2">
+                            Thought for the Day
+                        </Typography>
+                        <br />
+                        <Typography variant="body2" component="p" style={{fontWeight:"500"}}>
+                            {quote.text}
+                        </Typography>
+                        <br
+                    </CardContent>
+                </Card>
+            </Grid> */}
 
         </Grid>
     );
