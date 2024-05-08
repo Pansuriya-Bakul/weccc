@@ -27,6 +27,7 @@ const StartProgram = (props) => {
     const [currentStatus, setCurrentStatus] = useState('');
     const [currentProgram, setCurrentProgram] = useState("");
     const [currentProgramStartDate, setCurrentProgramStartDate] = useState("");
+    const [activePrograms, setActivePrograms] = useState([]);
 
     const [editable, setEditable] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -180,9 +181,11 @@ const StartProgram = (props) => {
 
                 if (user.memberStatusInfo && user.memberStatusInfo.statusHistory && user.memberStatusInfo.statusHistory.length > 0) {
 
-                    let currentProgram = user.memberStatusInfo.statusHistory[user.memberStatusInfo.statusHistory.length - 1]
+                    let currentProgram = user.memberStatusInfo.statusHistory[user.memberStatusInfo.statusHistory.length - 1];
+                    let activePrograms = user.memberStatusInfo.statusHistory;
 
                     if (currentProgram.hasOwnProperty('activeType')) {
+                        setActivePrograms(user.memberStatusInfo.statusHistory);
                         setOriginalProgram(handleProgramValue(currentProgram.activeType));
                         setCurrentProgram(handleProgramValue(currentProgram.activeType));
                         setCurrentProgramStartDate(currentProgram.startDate.split('T')[0]);
