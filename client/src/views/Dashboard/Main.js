@@ -66,7 +66,6 @@ const Maintemp = (props) => {
 
         // Flatten the array of arrays into a single array
         const flattenedCollections = collections.reduce((acc, val) => acc.concat(val), []);
-        console.log(flattenedCollections);
         // Update the state with the patient collections
         setPatientCollections(flattenedCollections);
       } catch (error) {
@@ -103,8 +102,6 @@ const Maintemp = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(appState);
-
       // fetch quote of the day and update state
       let quoteResponse = await getQuote();
       setQuote({ text: quoteResponse["text"], author: quoteResponse["author"] });
@@ -114,7 +111,7 @@ const Maintemp = (props) => {
         try {
           const userCollections = await getMemberCollections(appState._id);
           setUserCollections(userCollections);
-          console.log(userCollections);
+        
         } catch (error) {
           console.error('Error fetching client collections:', error);
           setAlert(new AlertType(error.message, "error"));
