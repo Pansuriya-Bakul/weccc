@@ -74,7 +74,7 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
     const classes = useStyles();
 
     // Declaration of Stateful Variables ===
-    const { appState, mode, setParentAlert,
+    const { appState, setParentAlert,
         isDense, setIsDense,
         dataList, getParentData,
         setSearchFilteredDataList,
@@ -229,7 +229,7 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
                                         </Tooltip>
                                     </Grid>
                                     <Grid item>
-                                        {mode === "Other" ? (
+                                        {appState.role === "Volunteer" ? (
                                             <>
                                             </>
                                         ) : (
@@ -250,7 +250,7 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
                                         )}
                                     </Grid>
 
-                                    {appState.role != "Volunteer" ? (
+                                    {appState.role !== "Volunteer" ? (
                                         <Grid item>
                                             <Tooltip
                                                 placement="bottom"
@@ -360,7 +360,6 @@ UsersManagementControlPanel.propTypes =
 {
     // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
     appState: PropTypes.object.isRequired,
-    mode: PropTypes.string,
     setParentAlert: PropTypes.func.isRequired,
     isDense: PropTypes.bool.isRequired,
     setIsDense: PropTypes.func.isRequired,
@@ -375,7 +374,6 @@ UsersManagementControlPanel.propTypes =
 UsersManagementControlPanel.defaultProps =
 {
     appState: {},
-    mode: null,
     setParentAlert: () => { },
     setIsDense: () => { },
     dataList: {},

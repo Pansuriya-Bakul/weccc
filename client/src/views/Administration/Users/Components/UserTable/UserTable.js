@@ -197,6 +197,7 @@ export default function UserTable(props) {
                             aria-label="enhanced table"
                         >
                             <UserTableHead
+                                appState={appState}
                                 numSelected={selectedDataItemsList.length}
                                 order={order}
                                 orderBy={orderBy}
@@ -212,57 +213,52 @@ export default function UserTable(props) {
                                         const isItemSelected = isSelected(item);
                                         const labelId = `enhanced-table-checkbox-${index}`;
 
-                                        return (
-                                            <TableRow
-                                                className={classes.tableRow}
-                                                hover
-                                                onClick={(event) => handleClick(event, item)}
-                                                role="checkbox"
-                                                aria-checked={isItemSelected}
-                                                tabIndex={-1}
-                                                key={item.name + item._id}
-                                                selected={isItemSelected}
+                                        if (appState.role !== "Admin" && item.status === "active") {
 
-                                            >
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox
-                                                        checked={isItemSelected}
-                                                        inputProps={{ 'aria-labelledby': labelId }}
-                                                    />
-                                                </TableCell>
+                                            return (
+                                                <TableRow
+                                                    className={classes.tableRow}
+                                                    hover
+                                                    onClick={(event) => handleClick(event, item)}
+                                                    role="checkbox"
+                                                    aria-checked={isItemSelected}
+                                                    tabIndex={-1}
+                                                    key={item.name + item._id}
+                                                    selected={isItemSelected}
 
-                                                <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                    <Typography color="textPrimary" variant="subtitle2" style={{ display: 'inline-block' }}>
-                                                        {item.info.name}
-                                                    </Typography>
-                                                </TableCell>
+                                                >
+                                                    <TableCell padding="checkbox">
+                                                        <Checkbox
+                                                            checked={isItemSelected}
+                                                            inputProps={{ 'aria-labelledby': labelId }}
+                                                        />
+                                                    </TableCell>
 
-                                                {/* <TableCell align="left">
-                                                    <Typography color="primary" variant="body2" style={{ display: 'inline-block' }}>
-                                                        {item.sequenceId}
-                                                    </Typography>
-                                                </TableCell> */}
+                                                    <TableCell component="th" id={labelId} scope="row" padding="none">
+                                                        <Typography color="textPrimary" variant="subtitle2" style={{ display: 'inline-block' }}>
+                                                            {item.info.name}
+                                                        </Typography>
+                                                    </TableCell>
 
-                                                <TableCell align="left" padding="none">
-                                                    {/* <Typography color="primary" variant="body2" style={{ display: 'inline-block', color: item.enabled ? 'green' : 'red' }}> */}
-                                                    <Typography color="primary" variant="body2" style={{ display: 'inline-block', color: item.status == 'active' ? 'green' : item.status == 'waitlist' ? 'orange': 'red'}}>
-                                                        {item.status}
-                                                    </Typography>
-                                                </TableCell>
+                                                    {/* <TableCell align="left" padding="none">
+                                                        <Typography color="primary" variant="body2" style={{ display: 'inline-block', color: item.status === 'active' ? 'green' : item.status === 'waitlist' ? 'orange' : 'red' }}>
+                                                            {item.status}
+                                                        </Typography>
+                                                    </TableCell> */}
 
-                                                <TableCell align="left" padding="none">
-                                                    <Typography color="textPrimary" variant="body2" style={{ display: 'inline-block' }}>
-                                                        {item.email}
-                                                    </Typography>
-                                                </TableCell>
+                                                    <TableCell align="left" padding="none">
+                                                        <Typography color="textPrimary" variant="body2" style={{ display: 'inline-block' }}>
+                                                            {item.email}
+                                                        </Typography>
+                                                    </TableCell>
 
-                                                <TableCell align="left" padding="none">
-                                                    <Typography color="textPrimary" variant="body2" style={{ display: 'inline-block' }}>
-                                                        {item.role === 'Patient' ? 'Member' : item.role}
-                                                    </Typography>
-                                                </TableCell>
+                                                    <TableCell align="left" padding="none">
+                                                        <Typography color="textPrimary" variant="body2" style={{ display: 'inline-block' }}>
+                                                            {item.role === 'Patient' ? 'Member' : item.role}
+                                                        </Typography>
+                                                    </TableCell>
 
-                                                {/* <TableCell align="left" padding="none">
+                                                    {/* <TableCell align="left" padding="none">
                                                 <Typography color="textPrimary" variant="body2" style={{display: 'inline-block', width: '120px'}}>
                                                     {item.collectionId}
                                                 </Typography>
@@ -286,8 +282,86 @@ export default function UserTable(props) {
                                                 </Typography>
                                             </TableCell> */}
 
-                                            </TableRow>
-                                        );
+                                                </TableRow>
+                                            );
+                                        } else if (appState.role === "Admin") {
+                                            return (
+                                                <TableRow
+                                                    className={classes.tableRow}
+                                                    hover
+                                                    onClick={(event) => handleClick(event, item)}
+                                                    role="checkbox"
+                                                    aria-checked={isItemSelected}
+                                                    tabIndex={-1}
+                                                    key={item.name + item._id}
+                                                    selected={isItemSelected}
+
+                                                >
+                                                    <TableCell padding="checkbox">
+                                                        <Checkbox
+                                                            checked={isItemSelected}
+                                                            inputProps={{ 'aria-labelledby': labelId }}
+                                                        />
+                                                    </TableCell>
+
+                                                    <TableCell component="th" id={labelId} scope="row" padding="none">
+                                                        <Typography color="textPrimary" variant="subtitle2" style={{ display: 'inline-block' }}>
+                                                            {item.info.name}
+                                                        </Typography>
+                                                    </TableCell>
+
+                                                    {/* <TableCell align="left">
+                                                    <Typography color="primary" variant="body2" style={{ display: 'inline-block' }}>
+                                                        {item.sequenceId}
+                                                    </Typography>
+                                                </TableCell> */}
+
+                                                    <TableCell align="left" padding="none">
+                                                        {/* <Typography color="primary" variant="body2" style={{ display: 'inline-block', color: item.enabled ? 'green' : 'red' }}> */}
+                                                        <Typography color="primary" variant="body2" style={{ display: 'inline-block', color: item.status === 'active' ? 'green' : item.status == 'waitlist' ? 'orange' : 'red' }}>
+                                                            {item.status}
+                                                        </Typography>
+                                                    </TableCell>
+
+                                                    <TableCell align="left" padding="none">
+                                                        <Typography color="textPrimary" variant="body2" style={{ display: 'inline-block' }}>
+                                                            {item.email}
+                                                        </Typography>
+                                                    </TableCell>
+
+                                                    <TableCell align="left" padding="none">
+                                                        <Typography color="textPrimary" variant="body2" style={{ display: 'inline-block' }}>
+                                                            {item.role === 'Patient' ? 'Member' : item.role}
+                                                        </Typography>
+                                                    </TableCell>
+
+                                                    {/* <TableCell align="left" padding="none">
+                                                <Typography color="textPrimary" variant="body2" style={{display: 'inline-block', width: '120px'}}>
+                                                    {item.collectionId}
+                                                </Typography>
+                                            </TableCell>
+
+                                            <TableCell align="right">
+                                                <Typography color="primary" variant="body2" style={{display: 'inline-block', width: '120px'}}>
+                                                    {new Date(item.createdAt).toLocaleDateString()}
+                                                </Typography>
+                                                <Typography color="secondary" variant="body2" style={{display: 'inline-block', width: '120px'}}>
+                                                    {new Date(item.createdAt).toLocaleTimeString()}
+                                                </Typography>
+                                            </TableCell>
+
+                                            <TableCell align="right">
+                                                <Typography color="primary" variant="body2" style={{display: 'inline-block', width: '120px'}}>
+                                                    {new Date(item.updatedAt).toLocaleDateString()}
+                                                </Typography>
+                                                <Typography color="secondary" variant="body2" style={{display: 'inline-block', width: '120px'}}>
+                                                    {new Date(item.updatedAt).toLocaleTimeString()}
+                                                </Typography>
+                                            </TableCell> */}
+
+                                                </TableRow>
+                                            );
+                                        }
                                     })}
 
                                 {emptyRows > 0 && (
