@@ -38,6 +38,7 @@ const StartProgram = (props) => {
     const [originalProgram, setOriginalProgram] = useState('');
     const [originalProgramStartDate, setOriginalProgramStartDate] = useState('');
 
+
     const programs = [
         "Quality Life - in home",
         "Quality Life - phone",
@@ -140,6 +141,12 @@ const StartProgram = (props) => {
             if (response.status === 200) {
                 setUser(response.data.user);
                 setAlert(new AlertType('Changes saved successfully', "success"));
+
+                if (user.memberStatusInfo && user.memberStatusInfo.statusHistory && user.memberStatusInfo.statusHistory.length > 0) {
+                    let activePrograms = user.memberStatusInfo.statusHistory.filter(entry => entry.endDate === "");
+                    setActivePrograms(activePrograms);
+                }
+
             }
 
 
@@ -172,6 +179,20 @@ const StartProgram = (props) => {
         });
     }, [appState]);
 
+    // Function to determine color based on status
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'active':
+                return { color: 'green', fontWeight: '500' };
+            case 'waitlist':
+                return { color: 'yellow', fontWeight: '500' };
+            case 'terminated':
+                return { color: 'red', fontWeight: '500' };
+            default:
+                return { fontWeight: '500' };
+        }
+    }
+
     useEffect(() => {
         getUser(userID)
             .then((user) => {
@@ -182,10 +203,16 @@ const StartProgram = (props) => {
                 if (user.memberStatusInfo && user.memberStatusInfo.statusHistory && user.memberStatusInfo.statusHistory.length > 0) {
 
                     let currentProgram = user.memberStatusInfo.statusHistory[user.memberStatusInfo.statusHistory.length - 1];
-                    let activePrograms = user.memberStatusInfo.statusHistory;
+                    let activePrograms = user.memberStatusInfo.statusHistory.filter(entry => entry.endDate === "");
 
                     if (currentProgram.hasOwnProperty('activeType')) {
-                        setActivePrograms(activePrograms);
+
+                        let handledActivePrograms = activePrograms.map(program => {
+                            let handledProgramValue = handleProgramValue(program.activeType);
+                            return handledProgramValue !== "" ? { ...program, activeType: handledProgramValue } : null;
+                        }).filter(Boolean);
+                    
+                        setActivePrograms(handledActivePrograms);
                         setOriginalProgram(handleProgramValue(currentProgram.activeType));
                         setCurrentProgram(handleProgramValue(currentProgram.activeType));
                         setCurrentProgramStartDate(currentProgram.startDate.split('T')[0]);
@@ -194,11 +221,13 @@ const StartProgram = (props) => {
                     } else {
                         setCurrentProgram("");
                         setOriginalProgram("");
+                        setActivePrograms([]);
 
                     }
                 } else {
                     setCurrentProgram("");
                     setOriginalProgram("");
+                    setActivePrograms([]);
                 }
             })
             .catch((err) => {
@@ -224,15 +253,19 @@ const StartProgram = (props) => {
                             <span style={{ fontWeight: "500" }}>Name:</span> {user.info ? user.info.name : ""}
                         </Typography>
 
-                        <Typography variant="body1" color="inherit" align="left" gutterBottom style={{ fontSize: "18px", marginTop:"16px" }}>
+                        <Typography variant="body1" color="inherit" align="left" gutterBottom style={{ fontSize: "18px" }}>
+                            <span style={{ fontWeight: "500" }}>Current Status:</span> <span style={getStatusColor(user.status)}>{user.status ? user.status : ""}</span>
+                        </Typography>
+
+                        <Typography variant="body1" color="inherit" align="left" gutterBottom style={{ fontSize: "18px", marginTop: "16px" }}>
                             <span style={{ fontWeight: "500" }}>Current Active Programs:</span>
                         </Typography>
-                        
+
                         {activePrograms.length > 0 ?
                             <ul>
-                            {activePrograms.map((program, index) => (
-                               <li key={index}>{program.activeType} (started on {program.startDate.split('T')[0]})</li>
-                            ))}
+                                {activePrograms.map((program, index) => (
+                                    <li key={index}>{program.activeType} (started on {program.startDate.split('T')[0]})</li>
+                                ))}
                             </ul>
                             : <p>No active programs</p>
                         }

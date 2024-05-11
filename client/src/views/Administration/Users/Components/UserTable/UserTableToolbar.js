@@ -121,10 +121,10 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
             else if (appState.role === "Volunteer") {
                 // localStorage.setItem('_id', selectedDataItemsList[0]._id);
                 localStorage.setItem('_pid', selectedDataItemsList[0]._id);
-                setViewUrl(viewUserDashboard + selectedDataItemsList[0]._id);
+                setViewUrl(viewUserBaseLinkAdministration + "view/" + selectedDataItemsList[0]._id);
             }
             else if (appState.role === "Coordinator") {
-                setViewUrl(viewUserBaseLinkStaff + "view/" + selectedDataItemsList[0]._id);
+                setViewUrl(viewUserBaseLinkAdministration + "view/" + selectedDataItemsList[0]._id);
                 localStorage.setItem('_id', selectedDataItemsList[0]._id);
             }
             setReportUrl('/reports/' + selectedDataItemsList[0]._id);
