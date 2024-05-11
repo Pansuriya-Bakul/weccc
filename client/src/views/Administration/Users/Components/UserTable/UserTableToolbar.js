@@ -190,6 +190,22 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                         </Button>
                     </Tooltip>
 
+                   
+                    <Tooltip title="View Reports">
+                        <Button
+                            aria-label="view reports"
+                            component={Link}
+                            to={viewReportsUrl}
+                            disabled={viewReportsUrl.length === 0}
+                            color="primary"
+                            variant="contained"
+                            size="small"
+                            style={{display: "flex", fontSize: "12px", whiteSpace: "nowrap", width: "150px", height: "32px"}}
+                        >
+                            View Reports
+                        </Button>
+                    </Tooltip>
+
                     <Tooltip title="Start Program">
                         <Button
                             aria-label="start program"
@@ -205,20 +221,6 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                         </Button>
                     </Tooltip>
 
-                    <Tooltip title="View Reports">
-                        <Button
-                            aria-label="view reports"
-                            component={Link}
-                            to={viewReportsUrl}
-                            disabled={viewReportsUrl.length === 0}
-                            color="primary"
-                            variant="contained"
-                            size="small"
-                            style={{display: "flex", fontSize: "12px", whiteSpace: "nowrap", width: "150px", height: "32px"}}
-                        >
-                            View Reports
-                        </Button>
-                    </Tooltip>
 
                     <Tooltip title="Complete Program">
                         <Button
