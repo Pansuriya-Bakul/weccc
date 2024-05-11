@@ -36,10 +36,17 @@ import { colors } from "@material-ui/core";
 
 // import { View, Image, StyleSheet, Text } from "react-native";
 
-function MainReports() {
-    // const screenerLink = '/ClientReports1';
-    // const neighboursLink = '/ClientReports';
-    const _id = localStorage.getItem('_id')
+function MainReports({ userID }) {
+
+    // if userID is passed as a prop => viewing through admin/staff
+    // else => viewing through client
+
+    const _id = userID || localStorage.getItem('_id');
+    // const isFromProps = Boolean(userID);
+
+    // const screenerLink = isFromProps ? `/ClientReports1/${_id}` : `ScreenReports/${_id}`;
+    // const neighboursLink = isFromProps ? `/ClientReports/${_id}` : `/reports/${_id}`;
+    // const qoflLink = isFromProps ? `/QofLReports/${_id}` : `/QofLReports/${_id}`;
 
     return (
         // BrowserRouter to wrap all

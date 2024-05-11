@@ -68,6 +68,7 @@ const viewUserDashboard = "/Dashboard/";
 
 const viewBookletBaseLink = "/administration/booklets/user/";
 
+
 // ================= Static Functions ================
 
 
@@ -88,6 +89,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
     const [reportUrl1, setReportUrl1] = useState("");
     const [startProgramUrl, setStartProgramUrl] = useState("");
     const [completeProgramUrl, setCompleteProgramUrl] = useState("");
+    const [viewReportsUrl, setViewReportsUrl] = useState("");
 
     const [tool, setTool] = useState(0);
 
@@ -131,12 +133,14 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
             setReportUrl1('/ScreenReports/' + selectedDataItemsList[0]._id);
             setStartProgramUrl(viewUserBaseLinkAdministration + 'start-program/' + selectedDataItemsList[0]._id);
             setCompleteProgramUrl(viewUserBaseLinkAdministration + 'complete-program/' + selectedDataItemsList[0]._id);
+            setViewReportsUrl('/MainReports/' + selectedDataItemsList[0]._id);
         } else {
             setViewUrl("");
             setReportUrl("");
             setReportUrl1("");
             setStartProgramUrl("");
             setCompleteProgramUrl("");
+            setViewReportsUrl("");
         }
     }, [tool, viewUrl]);
 
@@ -201,6 +205,21 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                         </Button>
                     </Tooltip>
 
+                    <Tooltip title="View Reports">
+                        <Button
+                            aria-label="view reports"
+                            component={Link}
+                            to={viewReportsUrl}
+                            disabled={viewReportsUrl.length === 0}
+                            color="primary"
+                            variant="contained"
+                            size="small"
+                            style={{display: "flex", fontSize: "12px", whiteSpace: "nowrap", width: "150px", height: "32px"}}
+                        >
+                            View Reports
+                        </Button>
+                    </Tooltip>
+
                     <Tooltip title="Complete Program">
                         <Button
                             aria-label="complete program"
@@ -222,7 +241,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                             </IconButton>
                         </Tooltip> */}
 
-                    <Tooltip title="Community Connections Report">
+                    {/* <Tooltip title="Community Connections Report">
                         <IconButton aria-label="edit" component={Link} to={reportUrl} >
                             <Ballot />
                         </IconButton>
@@ -236,7 +255,7 @@ const UserTableToolbar = (props) => { // Notice the arrow function... regular fu
                         <IconButton aria-label="delete" onClick={() => deleteHandler()}>
                             <DeleteIcon />
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                 </div>
             ) : (null)}
             {(tool > 1) ? (
