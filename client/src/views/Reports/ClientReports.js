@@ -73,7 +73,7 @@ const ClientReports = (props) => {
   const classes = useStyles();
 
   // Declaration of Stateful Variables ===
-  const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+  const { appState, ToggleDrawerClose, userID, CheckAuthenticationValidity } = props;
 
   // Alert variable
   const [alert, setAlert] = useState(new AlertType());
@@ -85,9 +85,7 @@ const ClientReports = (props) => {
   const [reportsData, setReportsData] = useState(null);
   const [patientData, setPatientData] = useState([]);
   // eslint-disable-next-line no-unused-vars
-  const [currentPatient, setCurrentPatient] = useState(
-    localStorage.getItem("_id")
-  );
+  const [currentPatient, setCurrentPatient] = useState(userID ? {} : appState);
   // eslint-disable-next-line no-unused-vars
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -96,6 +94,26 @@ const ClientReports = (props) => {
   const [lastUpdated, setLastUpdated] = useState("");
 
   // Functions ===
+
+
+  const getUser = useCallback(async (userID) => {
+    return new Promise((resolve, reject) => {
+      get("users/" + userID, appState.token, (err, res) => {
+        if (err) {
+          // Reject the promise with the error
+          reject(new Error('Unable to retrieve Member Series. Please refresh and try again.'));
+        } else {
+          if (res.status === 200) {
+            // Resolve the promise with the data
+            resolve(res.data.user);
+          } else {
+            // Reject the promise with an error message
+            reject(new Error('Coud not retrieve user. Please refresh and try again.'));
+          }
+        }
+      });
+    });
+  }, [appState]);
 
   const getPatients = useCallback(() => {
     if (appState.role === "Patient") {
@@ -224,23 +242,36 @@ const ClientReports = (props) => {
     setIsDownloading(false);
   };
 
-  
+
   // Hooks ===
 
   // First Render only because of the [ ] empty array tracking with the useEffect
   useEffect(() => {
     ToggleDrawerClose();
     setTimeout(() => {
-      CheckAuthenticationValidity((tokenValid) => {
-        getPatients(currentPatient);
+      CheckAuthenticationValidity(async (tokenValid) => {
+        if (userID) {
+          let currPatient = {};
+          await getUser(userID).then((user) => {
+
+            currPatient = {
+              _id: user._id,
+              name: user.info.name,
+            }
+
+            setCurrentPatient(currPatient);
+
+          });
+        }
+        getPatients(currentPatient._id);
       });
     }, 200); //
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (currentPatient !== "") {
-      getNeighbours(currentPatient);
+    if (Object.keys(currentPatient).length !== 0) {
+      getNeighbours(currentPatient._id);
       // getScreen(currentPatient);
     }
   }, [currentPatient]);
@@ -315,7 +346,7 @@ const ClientReports = (props) => {
                             Member's name:
                           </Typography>
                           <Typography variant="h5" component="h1">
-                            {appState.name}
+                            {currentPatient && currentPatient.name ? currentPatient.name : ""}
                           </Typography>
 
                           <p>Last Modified: {lastUpdated}</p>
@@ -384,7 +415,7 @@ const ClientReports = (props) => {
                               ></ReportDashboard>
                             </Grid>
 
-                            <Grid item xs={12} id="summary" style={{marginTop:'24px'}}>
+                            <Grid item xs={12} id="summary" style={{ marginTop: '24px' }}>
                               <Typography
                                 variant="h5"
                                 color="textSecondary"
@@ -421,7 +452,7 @@ const ClientReports = (props) => {
                             </Grid>
 
                             {anyFlags && (
-                              <Grid item xs={12} id="possible concerns" className="avoid-break" style={{marginTop: '20px'}}>
+                              <Grid item xs={12} id="possible concerns" className="avoid-break" style={{ marginTop: '20px' }}>
                                 <Typography
                                   variant="h5"
                                   color="textSecondary"

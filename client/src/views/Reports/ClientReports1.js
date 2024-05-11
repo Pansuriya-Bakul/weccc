@@ -82,7 +82,7 @@ const ClientReports = (props) => {
   const classes = useStyles();
 
   // Declaration of Stateful Variables ===
-  const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+  const { appState, ToggleDrawerClose, CheckAuthenticationValidity, userID } = props;
 
   // console.log("PROPPPPPPPPPPPPPPS" , props);
 
@@ -96,9 +96,7 @@ const ClientReports = (props) => {
   const [reportsData, setReportsData] = useState(null);
   // const [reports1Data, setReports1Data] = useState(null);
   const [patientData, setPatientData] = useState([]);
-  const [currentPatient, setCurrentPatient] = useState(
-    localStorage.getItem("_id")
-  );
+  const [currentPatient, setCurrentPatient] = useState(userID ? {} : appState);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [riskScore, setRiskScore] = useState(0);
@@ -108,8 +106,28 @@ const ClientReports = (props) => {
 
   // Functions ===
 
+
+  const getUser = useCallback(async (userID) => {
+    return new Promise((resolve, reject) => {
+      get("users/" + userID, appState.token, (err, res) => {
+        if (err) {
+          // Reject the promise with the error
+          reject(new Error('Unable to retrieve Member Series. Please refresh and try again.'));
+        } else {
+          if (res.status === 200) {
+            // Resolve the promise with the data
+            resolve(res.data.user);
+          } else {
+            // Reject the promise with an error message
+            reject(new Error('Coud not retrieve user. Please refresh and try again.'));
+          }
+        }
+      });
+    });
+  }, [appState]);
+
   const getPatients = useCallback(() => {
-    if (appState.role == "Patient") {
+    if (appState.role === "Patient") {
       // console.log(reportsData);
       // setAlert(
       //   new AlertType("You do not have Permission to recieve Patients", "error")
@@ -192,13 +210,13 @@ const ClientReports = (props) => {
     [appState]
   );
 
-  const patientSelectHandler = useCallback((event) => {
-    setCurrentPatient(event.target.value);
-  }, []);
+  // const patientSelectHandler = useCallback((event) => {
+  //   setCurrentPatient(event.target.value);
+  // }, []);
 
-  const reportsPaginationHandler = useCallback((event, page) => {
-    setCurrentReportIndex(page - 1);
-  }, []);
+  // const reportsPaginationHandler = useCallback((event, page) => {
+  //   setCurrentReportIndex(page - 1);
+  // }, []);
 
   const checkRisk = () => {
 
@@ -226,6 +244,7 @@ const ClientReports = (props) => {
 
   const getRiskText = () => {
     let riskText = ''
+    // eslint-disable-next-line default-case
     switch (riskScore) {
       case 0:
         riskText = "Social health is vital to your overall well-being, as well as your physical and mental health. You're doing great - no risks are flagged currently. See recommendations to learn more about risk factors and the steps you can take to maintain good health."
@@ -274,20 +293,33 @@ const ClientReports = (props) => {
   useEffect(() => {
     ToggleDrawerClose();
     setTimeout(() => {
-      CheckAuthenticationValidity((tokenValid) => {
-        getPatients(currentPatient);
+      CheckAuthenticationValidity(async (tokenValid) => {
+        if (userID) {
+          let currPatient = {};
+          await getUser(userID).then((user) => {
+
+            currPatient = {
+              _id: user._id,
+              name: user.info.name,
+            }
+
+            setCurrentPatient(currPatient);
+     
+          });
+        }
+        getPatients(currentPatient._id);
       });
     }, 200); //
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (currentPatient != "") {
+    if (Object.keys(currentPatient).length !== 0) {
       // getNeighbours(currentPatient);
-      getScreen(currentPatient);
+      getScreen(currentPatient._id);
       // console.log("RES",reportsData);
     }
-  }, [currentPatient]);
+  }, [currentPatient, setCurrentPatient]);
 
   useEffect(() => {
     if (reportsData) {
@@ -367,7 +399,7 @@ const ClientReports = (props) => {
                             marginLeft: "2px",
                             marginTop: "3px",
                           }}>
-                            {appState.name}
+                           {currentPatient && currentPatient.name ? currentPatient.name : ""}
                           </Typography>
                           Last Modified: {lastUpdated}
                         </Grid>
@@ -406,7 +438,7 @@ const ClientReports = (props) => {
                         style={{ padding: '20px 30px 20px 30px' }}
                       >
                         {reportsData &&
-                          Object.keys(reportsData).length != 0 &&
+                          Object.keys(reportsData).length !== 0 &&
                           Object.getPrototypeOf(reportsData) === Object.prototype ? (
                           <>
                             <Grid item xs={12}>
@@ -437,7 +469,7 @@ const ClientReports = (props) => {
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={8} lg={9} style={{ paddingTop: '40px', paddingLeft: '40px' }}>
                                   <Typography variant="h5" color="textSecondary" gutterBottom style={{ fontWeight: "500", color: riskScore == 0 ? "#42b74a" : riskScore == 1 ? "#cfdf28" : riskScore == 2 ? "#ffbb10" : riskScore == 3 ? "#f76420" : "#cf2020" }}>
-                                    {riskScore == 0 ? "Lowest Risk" : riskScore == 1 ? "Some Risk" : riskScore == 2 ? "Some Risk" : riskScore == 3 ? "Moderate Risk" : "High Risk"}
+                                    {riskScore === 0 ? "Lowest Risk" : riskScore == 1 ? "Some Risk" : riskScore == 2 ? "Some Risk" : riskScore == 3 ? "Moderate Risk" : "High Risk"}
                                   </Typography>
                                   <Typography variant="body1" style={{ whiteSpace: 'pre-wrap' }}>
                                     {getRiskText()}

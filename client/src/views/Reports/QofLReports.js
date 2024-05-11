@@ -54,6 +54,7 @@ import "../../css/gauge-chart.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers, faPersonCane, faHandshake, faPerson } from '@fortawesome/free-solid-svg-icons'
 import { set } from "joi/lib/types/lazy";
+import { use } from "passport";
 
 // ==================== MUI Styles ===================
 
@@ -86,7 +87,7 @@ const QofLReports = (props) => {
   const classes = useStyles();
 
   // Declaration of Stateful Variables ===
-  const { appState, ToggleDrawerClose, CheckAuthenticationValidity } = props;
+  const { appState, ToggleDrawerClose, userID, CheckAuthenticationValidity } = props;
 
   // Alert variable
   const [alert, setAlert] = useState(new AlertType());
@@ -98,9 +99,7 @@ const QofLReports = (props) => {
   const [reportsData, setReportsData] = useState(null);
   const [reports1Data, setReports1Data] = useState(null);
   const [patientData, setPatientData] = useState([]);
-  const [currentPatient, setCurrentPatient] = useState(
-    localStorage.getItem("_id")
-  );
+  const [currentPatient, setCurrentPatient] = useState(userID ? {} : appState);
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
@@ -108,6 +107,25 @@ const QofLReports = (props) => {
   const [lastUpdated, setLastUpdated] = useState("");
 
   // Functions ===
+
+  const getUser = useCallback(async (userID) => {
+    return new Promise((resolve, reject) => {
+      get("users/" + userID, appState.token, (err, res) => {
+        if (err) {
+          // Reject the promise with the error
+          reject(new Error('Unable to retrieve Member Series. Please refresh and try again.'));
+        } else {
+          if (res.status === 200) {
+            // Resolve the promise with the data
+            resolve(res.data.user);
+          } else {
+            // Reject the promise with an error message
+            reject(new Error('Coud not retrieve user. Please refresh and try again.'));
+          }
+        }
+      });
+    });
+  }, [appState]);
 
   const getPatients = useCallback(() => {
     if (appState.role === "Patient") {
@@ -209,13 +227,13 @@ const QofLReports = (props) => {
   );
 
 
-  const patientSelectHandler = useCallback((event) => {
-    setCurrentPatient(event.target.value);
-  }, []);
+  // const patientSelectHandler = useCallback((event) => {
+  //   setCurrentPatient(event.target.value);
+  // }, []);
 
-  const reportsPaginationHandler = useCallback((event, page) => {
-    setCurrentReportIndex(page - 1);
-  }, []);
+  // const reportsPaginationHandler = useCallback((event, page) => {
+  //   setCurrentReportIndex(page - 1);
+  // }, []);
 
   // generate report pdf and initiate download
   const handleDownloadPDF = async () => {
@@ -242,16 +260,29 @@ const QofLReports = (props) => {
   useEffect(() => {
     ToggleDrawerClose();
     setTimeout(() => {
-      CheckAuthenticationValidity((tokenValid) => {
-        getPatients(currentPatient);
+      CheckAuthenticationValidity(async (tokenValid) => {
+        if (userID) {
+          let currPatient = {};
+          await getUser(userID).then((user) => {
+
+            currPatient = {
+              _id: user._id,
+              name: user.info.name,
+            }
+
+            setCurrentPatient(currPatient);
+     
+          });
+        }
+        getPatients(currentPatient._id);
       });
     }, 200); //
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (currentPatient !== "") {
-      getQofL(currentPatient);
+    if (Object.keys(currentPatient).length !== 0){
+      getQofL(currentPatient._id);
       // getScreen(currentPatient);
     }
   }, [currentPatient]);
@@ -326,7 +357,7 @@ const QofLReports = (props) => {
                             Member's name:
                           </Typography>
                           <Typography variant="h5" component="h1">
-                            {appState.name}
+                            {currentPatient && currentPatient.name ? currentPatient.name : ""}
                           </Typography>
 
                           <p>Last Modified: {lastUpdated}</p>
