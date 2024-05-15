@@ -295,7 +295,7 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                                 {/* <Tab label="Collections" id={`Tab-${0}`} aria-controls={`Tab-${0}`} /> */}
 
                                                 <Tab label="Profile" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
-                                                <Tab label="Personal Wellness Summary" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
+                                                <Tab label="Assigned Member" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
                                                 <Tab label="History" id={`Tab-${3}`} aria-controls={`Tab-${3}`} />
                                                 <Tab label="Change password" id={`Tab-${4}`} aria-controls={`Tab-${4}`} />
                                                 <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
@@ -303,7 +303,7 @@ const ViewUser = (props) => { // Notice the arrow function... regular function()
                                         ) : (
                                             <Tabs value={panelIndex} onChange={(event, newValue) => { panelHandler(event, newValue); }} aria-label="Account Tabs">
                                                 <Tab label="Profile" id={`Tab-${0}`} aria-controls={`Tab-${0}`} />
-                                                <Tab label="Personal Wellness Summary" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
+                                                <Tab label="Assigned Volunteer" id={`Tab-${2}`} aria-controls={`Tab-${2}`} />
                                                 <Tab label="History" id={`Tab-${3}`} aria-controls={`Tab-${3}`} />
                                                 <Tab label="Change password" id={`Tab-${4}`} aria-controls={`Tab-${4}`} />
                                                 <Tab label="Notes" id={`Tab-${1}`} aria-controls={`Tab-${1}`} />
