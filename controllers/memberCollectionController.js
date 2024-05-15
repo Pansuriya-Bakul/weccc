@@ -353,6 +353,11 @@ exports.readByClientId = (req, res, next) => {
                     if (memberCollection.completeness !== completenessScore) {
                         await MemberCollection.findByIdAndUpdate(memberCollection._id, { completeness: completenessScore }).exec();
                     }
+
+                    // Decrypt the member's name if it's encrypted
+                    if (memberCollection.member.info.name.length > 60) {
+                        memberCollection.member.info.name = key_private.decrypt(memberCollection.member.info.name, 'utf8');
+                    }
                 }
 
                 res.status(200).json({
