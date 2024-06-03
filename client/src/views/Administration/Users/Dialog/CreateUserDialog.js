@@ -1241,7 +1241,7 @@ const togglePasswordVisibility2 = () => {
                               {appState.role == "Admin" && <MenuItem key={"Admin"} value={"Admin"}>
                                 Admin
                               </MenuItem>}
-                              {appState.role == "Admin" && <MenuItem key={"Coordinator"} value={"Coordinator"}>
+                              {appState.role == "Admin" || appState.role == "Coordinator" && <MenuItem key={"Coordinator"} value={"Coordinator"}>
                                 Coordinator
                               </MenuItem>}
                               <MenuItem key={"Volunteer"} value={"Volunteer"}>
