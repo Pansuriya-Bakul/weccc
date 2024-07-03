@@ -170,7 +170,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
             }
             else {
                 if (res.status === 200) {
-                    if (appState.role == "Admin") {
+                    if (appState.role == "Admin"||appState.role == "Coordinator") {
                         populateList(res.data.collectionList);
                     }
                     else {
@@ -206,7 +206,7 @@ const CollectionsManagement = (props) => { // Notice the arrow function... regul
             }
             else {
                 if (res.status === 200) {
-                    if (appState.role == "Admin") {
+                    if (appState.role == "Admin"||appState.role == "Coordinator") {
                         populateList(res.data.memberCollectionList);
                     }
                     else {

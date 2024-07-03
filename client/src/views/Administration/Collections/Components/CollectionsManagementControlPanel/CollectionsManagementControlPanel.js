@@ -91,10 +91,13 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
         dataList, getParentData,
         userID,
         setSearchFilteredDataList,
-        setCreateCollectionTemplateDialog, setCreateMemberCollectionDialog, setAssignMemberDialog, setAssignProjectDialog, setAssignCoordinatorDialog } = props;
+        setCreateCollectionTemplateDialog, setCreateMemberCollectionDialog, setAssignMemberDialog, setAssignProjectDialog, setAssignCoordinatorDialog,
+        setCreateWorkbookDialog
+     } = props;
 
     const [selectSearchFilterOption, setSelectSearchFilterOption] = useState(selectFilterOptionsTemplate[0].value);
     const [searchFilter, setSearchFilter] = useState("");
+
 
     // Functions ===
 
@@ -113,6 +116,12 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
     const createCollectionTemplateHandler = useCallback(() => {
         setCreateCollectionTemplateDialog(true);
     }, [setCreateCollectionTemplateDialog]);
+
+    const createWorkbookHandler = useCallback(() => {
+        console.log("Create Workbook button clicked.");
+        setCreateWorkbookDialog(true);
+    }, [setCreateWorkbookDialog]);
+    
 
     const createMemberCollectionHandler = useCallback(() => {
         setCreateMemberCollectionDialog(true);
@@ -309,11 +318,28 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                             </Button>
                                         </Tooltip>
                                     </Grid>
-
+    
                                     {isTemplates ? (
                                         <>
-                                            {appState.role == "Admin" ? (
-                                                //Edited by P. Only Admin can create a new survey template
+                                            {(appState.role === "Admin" || appState.role === "Coordinator") && (
+                                                <Grid item>
+                                                    <Tooltip
+                                                        placement="bottom"
+                                                        title="Create Workbook"
+                                                    >
+                                                        <Button
+                                                            size="small"
+                                                            variant="contained"
+                                                            color="primary"
+                                                            startIcon={<AddBoxOutlinedIcon />}
+                                                            onClick={() => { createWorkbookHandler(); }}
+                                                        >
+                                                            Create Workbook
+                                                        </Button>
+                                                    </Tooltip>
+                                                </Grid>
+                                            )}
+                                            {appState.role === "Admin" && (
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
@@ -329,8 +355,9 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                             Start a Series Template
                                                         </Button>
                                                     </Tooltip>
-                                                </Grid>) : <></>}
-                                            {appState.role == "Admin" ? (
+                                                </Grid>
+                                            )}
+                                            {appState.role === "Admin" && (
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
@@ -347,7 +374,8 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                             Assign Coordinator
                                                         </Button>
                                                     </Tooltip>
-                                                </Grid>) : (<></>)}
+                                                </Grid>
+                                            )}
                                             <Grid item>
                                                 <Tooltip
                                                     placement="bottom"
@@ -365,8 +393,8 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                     </Button>
                                                 </Tooltip>
                                             </Grid>
-
-                                            {appState.role == "Admin" ? ( //Edited by P., appState has been added to show the project assignment only to the Admin
+    
+                                            {appState.role === "Admin" && (
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
@@ -384,14 +412,11 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                         </Button>
                                                     </Tooltip>
                                                 </Grid>
-                                            ) : (
-                                                <>
-                                                </>
                                             )}
                                         </>
                                     ) : (
                                         <>
-                                            {appState.role == "Admin" ? ( //Edited by P., appState has been added to remove create new instance link
+                                            {appState.role === "Admin" && (
                                                 <Grid item>
                                                     <Tooltip
                                                         placement="bottom"
@@ -407,11 +432,11 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
                                                             Start a Series Instance
                                                         </Button>
                                                     </Tooltip>
-                                                </Grid>) : <></>}
+                                                </Grid>
+                                            )}
                                         </>
                                     )}
-
-
+    
                                 </Grid>
                             </Box>
                         </Grid>
@@ -518,6 +543,7 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
             </Box>
         </>
     );
+    
 }
 
 // ======================== Component PropType Check ========================
@@ -539,6 +565,7 @@ CollectionsManagementControlPanel.propTypes =
     setCreateMemberCollectionDialog: PropTypes.func.isRequired,
     setAssignMemberDialog: PropTypes.func.isRequired,
     setAssignProjectDialog: PropTypes.func.isRequired,
+    setCreateWorkbookDialog: PropTypes.func.isRequired,
     setAssignCoordinatorDialog: PropTypes.func.isRequired //Edited by P.
 }
 
@@ -556,6 +583,7 @@ CollectionsManagementControlPanel.defaultProps =
     setCreateMemberCollectionDialog: () => { },
     setAssignMemberDialog: () => { },
     setAssignProjectDialog: () => { },
+    setCreateWorkbookDialog: () => { },
     setAssignCoordinatorDialog: () => { }    //Edited by P.
 }
 

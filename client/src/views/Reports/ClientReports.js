@@ -188,9 +188,10 @@ const ClientReports = (props) => {
           //Bad callback
           setAlert(
             new AlertType(
-              "Unable to retrieve Community Connection Series Report. Please refresh and try again."
+              "Please fill the client survey for generating report.."
             )
           );
+          setIsLoading(false);
         } else {
           if (res.status === 200) {
             if (Object.keys(res.data).length === 0) {

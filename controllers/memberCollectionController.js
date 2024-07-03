@@ -340,6 +340,8 @@ exports.readByClientId = (req, res, next) => {
             if (foundMemberCollections) {
                 log.info("Successful read request for MemberCollections associated to Client with Id " + id);
 
+                let allSurveys
+                let recentSurvey
 
                 // added to auto fix completeness scores in the history section under user profile
                 // For each member collection, calculate and update the completeness score
@@ -348,6 +350,14 @@ exports.readByClientId = (req, res, next) => {
                     let completedSurveys = memberSurveys.filter(survey => survey.completeness === 100).length;
                     let totalSurveys = memberSurveys.length;
                     let completenessScore = Math.round((completedSurveys / totalSurveys) * 100);
+                    if(recentSurvey == null){
+                        recentSurvey = memberCollection.memberSurveyList[0];
+                    }
+                    for(let survey of memberCollection.memberSurveyList){
+                        recentSurvey = recentSurvey.updatedAt > survey.updatedAt ? recentSurvey : survey
+
+                    }
+                    allSurveys+= memberCollection.memberSurveyList;
 
                     // Only update if the calculated completeness score is different from the current one
                     if (memberCollection.completeness !== completenessScore) {
@@ -359,9 +369,9 @@ exports.readByClientId = (req, res, next) => {
                         memberCollection.member.info.name = key_private.decrypt(memberCollection.member.info.name, 'utf8');
                     }
                 }
-
                 res.status(200).json({
                     memberCollections: foundMemberCollections,
+                    recentSurvey: recentSurvey,
                     request: {
                         type: 'GET',
                         url: config.server.protocol + '://' + config.server.hostname + ':' + config.server.port + '/api/membercollections/client/' + id

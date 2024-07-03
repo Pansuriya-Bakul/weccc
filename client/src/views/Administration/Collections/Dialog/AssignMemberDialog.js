@@ -146,7 +146,7 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
             }
             else {
                 if (res.status === 200) {
-                    if (appState.role == "Admin") {
+                    if (appState.role == "Admin"||appState.role == "Coordinator") {
                         populateCollections(res.data.collectionList);
                     }
                     else {
@@ -180,7 +180,7 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
             }
             else {
                 if (res.status === 200) {
-                    if (appState.role === 'Admin') {
+                    if (appState.role === 'Admin'||appState.role == "Coordinator") {
                         populateUsers(res.data.response.users);
                     }
                     else {
@@ -207,20 +207,18 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
         if (selectedCollectionList.length > 0 && selectedMemberList.length > 0) {
             selectedCollectionList.forEach(collection => {
                 const selectedMemberIdList = selectedMemberList.map(item => { return item._id; });
-
+    
                 let postBody = {
                     collectionId: collection._id,
                     memberList: selectedMemberIdList
                 };
-
+    
                 post("collections/assign/member", appState.token, postBody, (error, response) => {
                     if (error) {
                         setParentAlert(new AlertType('Unable to update series. Please refresh and try again.', "error"));
                     }
                     else {
                         if (response.status === 200) {
-                            // getParentData();
-                            //  const _id = response.data.survey._id; The id to redirect to if you wish
                             getParentData();
                             setParentAlert(new AlertType('Successfully updated series.', "success"));
                         }
@@ -230,13 +228,11 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                     }
                 });
             });
-        }
-        else {
+        } else {
             setParentAlert(new AlertType('Unable to assign members to series. Please refresh and try again.', "error"));
         }
-
     }, [appState, getParentData, setParentAlert, selectedCollectionList, selectedMemberList]);
-
+    
 
     const closeHandler = useCallback(() => {
 
@@ -249,11 +245,6 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
     }, [setAssignMemberDialog, setCurrentCollection, setCurrentMember, setSelectedCollectionList, setSelectedMemberList]);
 
     const createMemberCollection = useCallback(() => {
-        // if(selectedCollectionTemplateList.length == 0 || selectedMemberList.length == 0)
-        // {
-        //     setParentAlert(new AlertType('Unable create member Collection. Please make sure Service, and member are not empty.', "error"))
-        //     return;
-        // }
         if (selectedCollectionList.length > 0 && selectedMemberList.length > 0) {
             selectedCollectionList.forEach(collection => {
                 const selectedMemberIdList = selectedMemberList.map(item => { return item._id; });
@@ -261,15 +252,13 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                     let postBody = {
                         collectionTemplate: collection._id,
                         member: memberId,
-                        // collectionTemplate: selectedCollectionTemplateList[0]._id,
-                        // member: selectedMemberList[0]._id,
                         createdBy: appState._id,
                         modifiedBy: appState._id,
-                    }
-
+                    };
+    
                     post("membercollections/", appState.token, postBody, (error, response) => {
                         if (error) {
-                            setParentAlert(new AlertType('Unable create  member Collection. Please refresh and try again.', "error"));
+                            setParentAlert(new AlertType('Unable to create member Collection. Please refresh and try again.', "error"));
                         }
                         else {
                             if (response.status === 201) {
@@ -277,15 +266,15 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                                 setParentAlert(new AlertType('Member Collection created.', "success"));
                             }
                             else {
-                                setParentAlert(new AlertType('Unable create Member Collection. Please refresh and try again.', "error"));
+                                setParentAlert(new AlertType('Unable to create Member Collection. Please refresh and try again.', "error"));
                             }
                         }
                     });
                 });
             });
         }
-
     }, [appState, getParentData, setParentAlert, selectedCollectionList, selectedMemberList]);
+    
 
 
     const createHandler = useCallback(() => {
@@ -476,7 +465,7 @@ const AssignMemberDialog = (props) => { // Notice the arrow function... regular 
                                                                 labelId="Collection-options-label"
                                                                 value={currentCollection}
                                                                 onChange={(event) => { selectCollectionHandler(event); }}
-                                                                disabled={selectedCollectionList.length >= 1 ? true : false}
+                                                                // disabled={selectedCollectionList.length >= 1 ? true : false}
                                                             >
                                                                 <MenuItem value="">
                                                                     <em>None</em>

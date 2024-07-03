@@ -45,6 +45,7 @@ const projectRoutes = require('./routes/projectRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const publicSurveyRoutes = require('./routes/publicSurveyRoutes');
+const workbookRoutes = require('./routes/workbookRoutes');
 
 // ============================================
 // Mongoose Setup
@@ -103,6 +104,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/notes", noteRoutes);
 app.use("/api/publicsurveys", publicSurveyRoutes);
+app.use('/api/workbooks', workbookRoutes);
 
 // ============================================
 // Heroku Addition
@@ -117,6 +119,9 @@ if (process.env.NODE_ENV === "production") {
     app.get("*", function (request, response) {
         response.sendFile(path.join(__dirname, "client/build", "index.html"));
     });
+}
+else{
+    app.use('/utils/uploads', express.static(path.join(__dirname, 'utils/uploads')));
 }
 
 // ============================================

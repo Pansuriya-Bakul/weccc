@@ -1,3 +1,5 @@
+
+
 // ================================================
 // Code associated with 
 // ================================================
@@ -29,7 +31,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
+import Select, { SelectChangeEvent } from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import Typography from '@material-ui/core/Typography';  //h1, p replacement Tag
@@ -42,6 +44,9 @@ import ListAltOutlinedIcon from '@material-ui/icons/ListAltOutlined';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import Modal from '@material-ui/core/Modal';
 
 
 // ==================== MUI Styles ===================
@@ -90,8 +95,7 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
             getParentData();
             setParentAlert(new AlertType('Refreshed initiated...', "info"));
         }
-        catch
-        {
+        catch {
 
         }
 
@@ -189,10 +193,88 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setSelectSearchFilterOption, searchFilter]);
 
+
+
+
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    
+    const [age, setAge] = React.useState('');
+
+    const handleChange = (event) => {
+      setAge(event.target.value);
+    };
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+      };
+
     // Render Section ===
 
     return (
         <>
+
+<Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            {/* <Typography id="transition-modal-title" variant="h6" component="h2">
+              Text in a modal
+            </Typography>
+            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            </Typography> */}
+
+<TextField
+          required
+          id="outlined-required"
+          label="Name"
+          defaultValue="Workbook Name"
+        />
+        <div>
+        <InputLabel style={{marginTop:'15px'}}id="demo-simple-select-label">Select Series</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={age}
+          label="Select Series "
+          onChange={handleChange}
+        >
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+        </div>
+            
+
+          </Box>
+        </Fade>
+      </Modal>
+
+
+
+
             <Box mx={2} my={1} boxShadow={0}>
                 <Grid
                     container
@@ -271,6 +353,32 @@ const UsersManagementControlPanel = (props) => { // Notice the arrow function...
                                         <>
                                         </>
                                     )}
+
+
+                                    {appState.role !== "Volunteer" ? (
+                                        <Grid item>
+                                            <Tooltip
+                                                placement="bottom"
+                                                title="Assign User"
+                                            >
+                                                <Button
+                                                    size="small"
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    startIcon={<SupervisorAccountIcon />}
+                                                    // onClick={() => { assignUserHandler(); }}
+                                                    onClick={handleOpen}
+                                                >
+                                                    create workbook
+                                                </Button>
+                                            </Tooltip>
+                                        </Grid>
+                                    ) : (
+                                        <>
+                                        </>
+                                    )}
+
+
                                 </Grid>
                             </Box>
                         </Grid>

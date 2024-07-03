@@ -1,11 +1,3 @@
-/*
-=======================================================================================
-This sets the model for each note between a volunteer and patient, admin etc.
-
-"Note Id, senderId, receiverId, Message, Status"
-=======================================================================================
-*/
-
 const mongoose = require('mongoose');
 
 const noteSchema = mongoose.Schema(
@@ -30,6 +22,20 @@ const noteSchema = mongoose.Schema(
 			description: 'Note status',
 			enum: ['read', 'unread'],
 			default: 'unread'
+		},
+		pdf: {
+			url: {
+				type: String,
+				required: false
+			},
+			fileName: {
+				type: String,
+				required: false
+			},
+			fileSize: {
+				type: Number,
+				required: false
+			}
 		}
 	},
 	{ timestamps: true }
