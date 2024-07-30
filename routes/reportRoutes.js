@@ -19,6 +19,7 @@ router.get('/Screen/user/:userId', ReportController1.Screen);
 
 router.get('/historic/:collectionCode/:memberCollectionID', ReportController.Historic);
 router.get('/qoflShort/user/:userId', ReportController.QualityofLife);
+router.get('/qofl/user/:userId', ReportController.QualityLife);
 
 router.get('/communityCare/StandardId/:userId', ReportController.standardAccountId);
 

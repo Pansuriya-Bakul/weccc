@@ -1,21 +1,28 @@
 // ================================================
-// CLIENT COMMUNITY CONNECTIONS REPORT
+// QUALITY LIFE
 // ================================================
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types"; //Development Package to validate prop types [Type Checking] passed down
 import html2canvas from 'html2canvas';
 import html2pdf from 'html2pdf.js';
 
-import './reports.css'; // needed to specify page breaks for pdf download
-
 // ==================== Modules =====================
+import Pagination from "@material-ui/lab/Pagination";
 
-// ==================== Components ================== 
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+
+// ==================== Components ==================
 import AlertMessage from "../../components/AlertMessage";
 
 import Summary from "./Summary";
+import Summary1 from "./Summary1";
 import PossibleConcerns from "./PossibleConcerns";
 import Suggestions from "./Suggestions";
+import ContactInfo from "./ContactInfo";
 import CommunityCircle from "./CommunityCircle/CommunityCircle";
 import SocialAndCommunityConnections from "./SocialAndCommunityConnections";
 
@@ -39,8 +46,15 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 
 import { CircularProgress } from '@material-ui/core';
 import CardContent from "@material-ui/core/CardContent";
+
+import GaugeChart from "react-gauge-chart";
 import "../../css/gauge-chart.css";
 
+// ==================== FontAwesome Icons ====================
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHeartPulse, faBrain, faSpa, faFaceSmile, faUsers, faPersonCane, faHandshake, faPerson } from '@fortawesome/free-solid-svg-icons'
+import { set } from "joi/lib/types/lazy";
+import { use } from "passport";
 
 // ==================== MUI Styles ===================
 
@@ -64,7 +78,7 @@ const useStyles = makeStyles(
 
 // ======================== React Modern | Functional Component ========================
 
-const ClientReports = (props) => {
+const QofLReports = (props) => {
   // Notice the arrow function... regular function()  works too
 
   // Variables ===
@@ -83,10 +97,9 @@ const ClientReports = (props) => {
   // const [personId, setPersonId] = useState("60e879aac417375c838307b9");
 
   const [reportsData, setReportsData] = useState(null);
+  const [reports1Data, setReports1Data] = useState(null);
   const [patientData, setPatientData] = useState([]);
-  // eslint-disable-next-line no-unused-vars
   const [currentPatient, setCurrentPatient] = useState(userID ? {} : appState);
-  // eslint-disable-next-line no-unused-vars
   const [currentReportIndex, setCurrentReportIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [anyFlags, setAnyFlags] = useState(false);
@@ -95,11 +108,14 @@ const ClientReports = (props) => {
 
   // Functions ===
 
-
   const getUser = useCallback(async (userID) => {
+    
     return new Promise((resolve, reject) => {
-      get("users/" + userID, appState.token, (err, res) => {
+      const _id = localStorage.getItem('_id')
+      get("users/" + _id, appState.token, (err, res) => {
         if (err) {
+          console.log(err);
+
           // Reject the promise with the error
           reject(new Error('Unable to retrieve Member Series. Please refresh and try again.'));
         } else {
@@ -181,23 +197,22 @@ const ClientReports = (props) => {
   //     });
   // }
 
-  const getNeighbours = useCallback(
+  const getQofL = useCallback(
     (userId) => {
-      get("reports/neighbours/user/" + userId, appState.token, (err, res) => {
+      get("reports/qofl/user/" + userId, appState.token, (err, res) => {
         if (err) {
           //Bad callback
           setAlert(
             new AlertType(
-              "Unable to retrieve Community Connection Series Report. Please Fill client survey"
-              
+              "Unable to retrieve Quality Life . Please refresh and try again."
             )
           );
-          setIsLoading(false);
         } else {
           if (res.status === 200) {
             if (Object.keys(res.data).length === 0) {
               setReportsData(null);
             } else {
+              console.log(res.data);
               setReportsData(res.data);
             }
             setIsLoading(false);
@@ -205,7 +220,7 @@ const ClientReports = (props) => {
             //Bad HTTP Response
             setAlert(
               new AlertType(
-                "Unable to retrieve Community Connection Series Report. Please refresh and try again.",
+                "Unable to retrieve Quality Life Report. Please refresh and try again.",
                 "error"
               )
             );
@@ -230,11 +245,10 @@ const ClientReports = (props) => {
     setIsDownloading(true);
     const reportElement = document.getElementById('report');
 
-    // eslint-disable-next-line no-unused-vars
     const canvas = await html2canvas(reportElement);
     const opt = {
       margin: 5,
-      filename: 'cc_report.pdf',
+      filename: 'QL_report.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'mm', format: 'a2', orientation: 'portrait' }
@@ -242,8 +256,8 @@ const ClientReports = (props) => {
 
     await html2pdf().set(opt).from(reportElement).save();
     setIsDownloading(false);
-  };
 
+  };
 
   // Hooks ===
 
@@ -262,7 +276,7 @@ const ClientReports = (props) => {
             }
 
             setCurrentPatient(currPatient);
-
+     
           });
         }
         getPatients(currentPatient._id);
@@ -272,8 +286,8 @@ const ClientReports = (props) => {
   }, []);
 
   useEffect(() => {
-    if (Object.keys(currentPatient).length !== 0) {
-      getNeighbours(currentPatient._id);
+    if (Object.keys(currentPatient).length !== 0){
+      getQofL(currentPatient._id);
       // getScreen(currentPatient);
     }
   }, [currentPatient]);
@@ -389,13 +403,13 @@ const ClientReports = (props) => {
                         spacing={1}
                       >
                         {reportsData &&
-                          Object.keys(reportsData).length !== 0 &&
+                          Object.keys(reportsData).length != 0 &&
                           Object.getPrototypeOf(reportsData) ===
                           Object.prototype ? (
                           <>
                             <Grid item xs={12}>
                               <Typography variant="h4" color="textPrimary">
-                                Compassion Care Community Connections Report
+                                Quality Life Report
                               </Typography>
                               <Divider light />
                             </Grid>
@@ -416,28 +430,8 @@ const ClientReports = (props) => {
                                 collection={currentReportIndex}
                               ></ReportDashboard>
                             </Grid>
+                            
 
-                            <Grid item xs={12} id="summary" style={{ marginTop: '24px' }}>
-                              <Typography
-                                variant="h5"
-                                color="textSecondary"
-                                align="left"
-                                gutterBottom
-                              >
-                                Summary
-                              </Typography>
-                              <Summary
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
-                            </Grid>
-
-                            <Grid item xs={12} className="avoid-break" >
-                              <CommunityCircle
-                                reports={reportsData}
-                                collection={currentReportIndex}
-                              />
-                            </Grid>
                             <Grid item xs={12}>
                               <Typography
                                 variant="h5"
@@ -454,7 +448,7 @@ const ClientReports = (props) => {
                             </Grid>
 
                             {anyFlags && (
-                              <Grid item xs={12} id="possible concerns" className="avoid-break" style={{ marginTop: '20px' }}>
+                              <Grid item xs={12} id="possible concerns">
                                 <Typography
                                   variant="h5"
                                   color="textSecondary"
@@ -477,7 +471,6 @@ const ClientReports = (props) => {
                                   color="textSecondary"
                                   align="left"
                                   gutterBottom
-                                  className="avoid-break"
                                 >
                                   Suggestions
                                 </Typography>
@@ -487,8 +480,14 @@ const ClientReports = (props) => {
                                 />
                               </Grid>
                             )}
+                            <Grid item xs={12} className="avoid-break" >
+                              <CommunityCircle
+                                reports={reportsData}
+                                collection={currentReportIndex}
+                              />
+                            </Grid>
 
-                            <Grid item xs={12} style={{ paddingTop: '30px' }} className="avoid-break">
+                            <Grid item xs={12} style={{ paddingTop: '30px' }}>
                               <Typography
                                 variant="h5"
                                 color="textSecondary"
@@ -506,7 +505,7 @@ const ClientReports = (props) => {
                                 Maintaining good social health and addressing social health concerns will improve your well-being along with your physical and mental health. Having trouble figuring out next steps?<br></br> CONTACT US at <a href="mailto:hwfc.lab@gmail.com" target="_blank" rel="noopener noreferrer">hwfc.lab@gmail.com</a> to talk to a trained Community Connector - we can help you set goals and find activities and resources to promote your health and address social risks.
 
                               </Typography>
-                            </Grid>
+                            </Grid> 
 
                           </>
                         ) : (
@@ -548,17 +547,17 @@ const ClientReports = (props) => {
 };
 
 // ======================== Component PropType Check ========================
-ClientReports.propTypes = {
+QofLReports.propTypes = {
   // You can specify the props types in object style with ___.PropTypes.string.isRequired etc...
   appState: PropTypes.object.isRequired,
   ToggleDrawerClose: PropTypes.func.isRequired,
   CheckAuthenticationValidity: PropTypes.func.isRequired,
 };
 
-ClientReports.defaultProps = {
+QofLReports.defaultProps = {
   appState: {},
   ToggleDrawerClose: () => { },
   CheckAuthenticationValidity: () => { },
 };
 
-export default ClientReports; // You can even shorthand this line by adding this at the function [Component] declaration stage
+export default QofLReports; // You can even shorthand this line by adding this at the function [Component] declaration stage

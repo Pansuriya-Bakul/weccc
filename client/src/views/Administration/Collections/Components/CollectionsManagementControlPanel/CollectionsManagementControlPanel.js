@@ -321,24 +321,6 @@ const CollectionsManagementControlPanel = (props) => { // Notice the arrow funct
     
                                     {isTemplates ? (
                                         <>
-                                            {(appState.role === "Admin" || appState.role === "Coordinator") && (
-                                                <Grid item>
-                                                    <Tooltip
-                                                        placement="bottom"
-                                                        title="Create Workbook"
-                                                    >
-                                                        <Button
-                                                            size="small"
-                                                            variant="contained"
-                                                            color="primary"
-                                                            startIcon={<AddBoxOutlinedIcon />}
-                                                            onClick={() => { createWorkbookHandler(); }}
-                                                        >
-                                                            Create Workbook
-                                                        </Button>
-                                                    </Tooltip>
-                                                </Grid>
-                                            )}
                                             {appState.role === "Admin" && (
                                                 <Grid item>
                                                     <Tooltip

@@ -340,27 +340,27 @@ exports.readByClientId = (req, res, next) => {
             if (foundMemberCollections) {
                 log.info("Successful read request for MemberCollections associated to Client with Id " + id);
 
-                let allSurveys
-                let recentSurvey
+                let allSurveys = [];
+                let recentSurvey = null;
 
                 // added to auto fix completeness scores in the history section under user profile
                 // For each member collection, calculate and update the completeness score
                 for (let memberCollection of foundMemberCollections) {
                     let memberSurveys = await MemberSurvey.find({ memberCollection: memberCollection._id }).exec();
-                    let completedSurveys = memberSurveys.filter(survey => survey.completeness === 100).length;
+                    let completedSurveys = memberSurveys.filter(survey => survey.completeness == 100).length;
                     let totalSurveys = memberSurveys.length;
-                    let completenessScore = Math.round((completedSurveys / totalSurveys) * 100);
-                    if(recentSurvey == null){
+                    let completenessScore = totalSurveys === 0 ? 0 : Math.round((completedSurveys / totalSurveys) * 100);
+                    
+                    if (recentSurvey == null) {
                         recentSurvey = memberCollection.memberSurveyList[0];
                     }
-                    for(let survey of memberCollection.memberSurveyList){
-                        recentSurvey = recentSurvey.updatedAt > survey.updatedAt ? recentSurvey : survey
-
+                    for (let survey of memberCollection.memberSurveyList) {
+                        recentSurvey = recentSurvey.updatedAt > survey.updatedAt ? recentSurvey : survey;
                     }
-                    allSurveys+= memberCollection.memberSurveyList;
+                    allSurveys.push(...memberCollection.memberSurveyList);
 
                     // Only update if the calculated completeness score is different from the current one
-                    if (memberCollection.completeness !== completenessScore) {
+                    if (memberCollection.completeness != completenessScore) {
                         await MemberCollection.findByIdAndUpdate(memberCollection._id, { completeness: completenessScore }).exec();
                     }
 
@@ -387,7 +387,7 @@ exports.readByClientId = (req, res, next) => {
             }
         })
         .catch(error => {
-            log.error(error.message);
+            log.error("Error Occured!!! "+ error);
 
             return res.status(500).json({
                 message: error.message

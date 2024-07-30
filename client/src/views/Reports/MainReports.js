@@ -1,130 +1,92 @@
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import PropTypes from 'prop-types';
+import CompletedSurveysTable from "../Administration/Users/Components/UserStatusTab/CompletedSurveysTable";
 
-import React from "react";
-
-//import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { BrowserRouter as Router, Route, Link, Switch }
-    from "react-router-dom";
-
-// Importing newly created components
-import SecondComponent from "./ClientReports1";
-import FirstComponent from "./ClientReports";
-import FamilyFriendsNeighbours from "./Summary/FamilyFriendsNeighbours";
-import NeighboursImg from "./Neighbours.jpg"
-import SocialHealth from "./Social_Health.jpeg"
-import Typography from "@material-ui/core/Typography"; //h1, p replacement Tag
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import { CircularProgress , Divider, LinearProgress} from "@material-ui/core";
+import get from '../../helpers/common/get';
+import AlertType from "../../helpers/models/AlertType";
+import patch from "../../helpers/common/patch";
 
 
 
-import { makeStyles } from "@material-ui/core/styles"; // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
 
-import Grid from "@material-ui/core/Grid"; // Normal Markup with MUI is layout -> Container -> Grid -> Paper etc...
-import Box from "@material-ui/core/Box"; // Padding and margins
-import Card from "@material-ui/core/Card"; //Like the paper module, a visual sheet to place things
-import Button from "@material-ui/core/Button";
-import Divider from "@material-ui/core/Divider";
+const MainReports= (props) => {
+    // const appState = useRef(AppState.currentState);
+    const { appState} = props;
+    const [userID,setuserID] = useState(null)
+    const [alert, setAlert] = useState(new AlertType());
+    const [memberCollections, setMemberCollections] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
+    const getMemberCollections = useCallback(() => {
+        if (!userID) {
+            setAlert(new AlertType('User ID is not defined.', "error"));
+            return;
+        }
 
-// ==================== Modules =====================
-import Pagination from "@material-ui/lab/Pagination";
+        get("membercollections/client/" + userID, appState.token, (err, res) => {
+            if (err) {
+                setAlert(new AlertType('Unable to retrieve Member Series. Please refresh and try again.', "error"));
+            } else {
+                if (res.status === 200) {
+                    setMemberCollections(res.data.memberCollections);
+                    setIsLoading(false);
+                } else {
+                    setAlert(new AlertType('Unable to retrieve Member Series. Please refresh and try again.', "error"));
+                }
+            }
+        });
+    }, [userID, appState.token]);
 
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import { colors } from "@material-ui/core";
+    useEffect(() => {
+        getMemberCollections();
+        const userID = localStorage.getItem('_id');
+        setuserID(userID)
 
-// import { View, Image, StyleSheet, Text } from "react-native";
-
-function MainReports({ userID }) {
-
-    // if userID is passed as a prop => viewing through admin/staff
-    // else => viewing through client
-
-    const _id = userID || localStorage.getItem('_id');
-    // const isFromProps = Boolean(userID);
-
-    // const screenerLink = isFromProps ? `/ClientReports1/${_id}` : `ScreenReports/${_id}`;
-    // const neighboursLink = isFromProps ? `/ClientReports/${_id}` : `/reports/${_id}`;
-    // const qoflLink = isFromProps ? `/QofLReports/${_id}` : `/QofLReports/${_id}`;
+        getMemberCollections();
+      // stop loading
+    //   setIsLoading(false);
+    },[ getMemberCollections]);
 
     return (
-        // BrowserRouter to wrap all
-        // the other components
-
-        //     <Router>
-
-        //         {/*switch used to render only the first
-        // route that matches the location rather
-        // than rendering all matching routes. */}
-        //         <Switch>
-        //             <Route exact path="/" component={MainReports} />
-        //             <Route exact path="/ClientReports1" component={SecondComponent} />
-        //             <Route exact path="/ClientReports" component={FirstComponent} />
-
-        //         </Switch>
-        //     </Router>
         <>
-            <ul>
-                <div>
-
-
-
-                    {/* <li> */}
-
-                    {/* Link component uses the to prop
-                to describe the location where the
-                links should navigate to. */}
-                    {/* <Link to={"/ClientReports1"} >
-                                Social Health
-                            </Link> */}
-                    {/* </li> */}
-
-
-                    <br>
-                    </br>
-                    <br>
-                    </br>
-                    <br>
-                    </br>
-                    <br>
-                    </br>
-                    <br>
-                    </br>
-
-
-                    <table cellSpacing="2" bgcolor="#000000" align="center">
-                        <tr bgcolor="#ffffff">
-                            <th>
-                                <Link to={`/ClientReports1/${_id}`}>
-                                    <Typography style={{ padding: '5px' }}>
-                                        Social Health Screener Report
-                                    </Typography>
-                                    <img height="200" width="200" src={SocialHealth} alt="Screener report" />
-                                </Link>
-                            </th>
-                            <th>
-                                <Link to={`/ClientReports/${_id}`}>
-                                    <Typography style={{ padding: '5px' }}>
-                                        Community Connections Report
-                                    </Typography>
-                                    <img height="200" width="200" src={NeighboursImg} alt="Community Connections Report" />
-                                </Link>
-                            </th>
-                            <th>
-                                <Link to={`/QofLReports/${_id}`}>
-                                    <Typography style={{ padding: '5px' }}>
-                                        Quality of Life - Short Report
-                                    </Typography>
-                                    <img height="200" width="200" src={NeighboursImg} alt="Quality of Life Short Report" />
-                                </Link>
-                            </th>
-                        </tr>
-                    </table>
-
-                </div>
-            </ul>
+            <div>
+                
+                <Typography>Completed Report</Typography>
+                <Divider />
+                {isLoading?<CircularProgress style={{position: 'absolute',
+    top: '20%',
+    left: '50%',
+    }}/>:
+                
+                <CompletedSurveysTable
+                    data={memberCollections ? memberCollections : []}
+                    role={appState.role}
+                />
+}
+            </div>
         </>
     );
-}
+};
+
+MainReports.propTypes = {
+    userID: PropTypes.string.isRequired,
+    appState: PropTypes.object.isRequired,
+    userOriginal: PropTypes.object,
+    setParentAlert: PropTypes.func,
+    getParentInfo: PropTypes.func,
+};
+
+MainReports.defaultProps = {
+    appState: {},
+    userID: null,
+    userOriginal: {},
+    setParentAlert: () => {},
+    getParentInfo: () => {},
+};
+
 export default MainReports;
+
+

@@ -136,6 +136,12 @@ module.exports = {
                 modifiedBy: Joi.string().required(),
             })
         },
+        workbook: {
+            create: Joi.object({
+                name: Joi.string().required(),
+                collectionIds: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)).required()
+            }),
+        },
         memberCollection: {
             create: Joi.object().keys({
                 collectionTemplate: Joi.string().required(),

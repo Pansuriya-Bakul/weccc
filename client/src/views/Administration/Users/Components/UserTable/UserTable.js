@@ -240,11 +240,11 @@ export default function UserTable(props) {
                                                         </Typography>
                                                     </TableCell>
 
-                                                    {/* <TableCell align="left" padding="none">
+                                                    <TableCell align="left" padding="none">
                                                         <Typography color="primary" variant="body2" style={{ display: 'inline-block', color: item.status === 'active' ? 'green' : item.status === 'waitlist' ? 'orange' : 'red' }}>
                                                             {item.status}
                                                         </Typography>
-                                                    </TableCell> */}
+                                                    </TableCell>
 
                                                     <TableCell align="left" padding="none">
                                                         <Typography color="textPrimary" variant="body2" style={{ display: 'inline-block' }}>

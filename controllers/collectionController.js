@@ -395,7 +395,7 @@ exports.assignMember = (req, res, next) =>
                 }
             })
             .catch(error => {
-                log.error(error.message);
+                log.error("Assign Error occured: "+error.message);
 
                 return res.status(500).json({
                     message: error.message

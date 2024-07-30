@@ -31,7 +31,7 @@ import "survey-react/survey.css";
 import get from '../../../../helpers/common/get';
 import AlertType from '../../../../helpers/models/AlertType';
 
-import calculateCompleteness from '../../../../helpers/reports/reports';
+// import  calculateCompleteness  from '../../../../helpers/reports/reports';
 
 // ==================== MUI =========================
 import { makeStyles } from '@material-ui/core/styles';  // withStyles can be used for classes and functional componenents but makeStyle is designed for new React with hooks
@@ -166,7 +166,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
 
         if (chapterCopy) {
             if (!survey.current.hasErrors()) {
-                setChapterCopy({ ...chapterCopy, completeness: calculateCompleteness(survey.current), responseJSON: JSON.stringify(result.data) });
+                // setChapterCopy({ ...chapterCopy, completeness: calculateCompleteness(survey.current), responseJSON: JSON.stringify(result.data) });
             }
         }
 
@@ -254,7 +254,7 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
             setProgress(false);
         }
 
-        setChapterCopy({ ...chapterCopy, completeness: calculateCompleteness(survey.current), responseJSON: JSON.stringify(result.data) });
+        // setChapterCopy({ ...chapterCopy, completeness: calculateCompleteness(survey.current), responseJSON: JSON.stringify(result.data) });
         //We can use this to check change of specific inputs
     };
 
@@ -654,6 +654,23 @@ const EditChapterUser = (props) => { // Notice the arrow function... regular fun
                                                                 >
                                                                     Mark Complete
                                                                 </Button>
+                                                                <Button
+        size="small"
+        variant="contained"
+        color="default"
+        style={{ marginRight: '5px' }}
+        onClick={() => { survey.current.prevPage(); }}
+    >
+        Previous
+    </Button>
+    <Button
+        size="small"
+        variant="contained"
+        color="primary"
+        onClick={() => { survey.current.nextPage(); }}
+    >
+        Next
+    </Button>
 
                                                             </div>
 

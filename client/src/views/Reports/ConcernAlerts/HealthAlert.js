@@ -1,331 +1,322 @@
 import React, { Component } from 'react';
-import Typography from '@material-ui/core/Typography';  //h1, p replacement Tag
+import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { ListItem } from '@material-ui/core';
-
+import Paper from '@material-ui/core/Paper';
+import { Alert } from '@material-ui/lab';
 
 export default class HealthAlert extends Component {
-	state = {
-		redAlert: false,
-		yellowAlert: false
-	};
+    state = {
+        redAlert: false,
+        yellowAlert: false,
+    };
 
-	textBgRed = { backgroundColor: this.props.colors.red };
-	textBgYellow = { backgroundColor: this.props.colors.yellow };
+    textBgRed = { backgroundColor: this.props.colors.red, padding: '10px', margin: '1px 0' };
+    textBgYellow = { backgroundColor: this.props.colors.yellow, padding: '10px', margin: '1px 0' };
 
+    componentDidMount() {
+        const { reports, collection } = this.props;
 
-	componentDidMount() {
-		// redalerts check
-		if (
-			(this.props.reports && this.props.reports.HT_QofL2_SD && this.props.reports.HT_QofL2_SD[this.props.collection] <= 50) ||
-			(this.props.reports && this.props.reports.PH_QofL2_SD && this.props.reports.PH_QofL2_SD[this.props.collection] === 0) ||
-			(this.props.reports && this.props.reports.MH_QofL2_SD && this.props.reports.MH_QofL2_SD[this.props.collection] === 0) ||
-			(this.props.reports && this.props.reports.M_QofL2_SD && this.props.reports.M_QofL2_SD[this.props.collection] === 0) ||
-			(this.props.reports && this.props.reports.M_QofL2_SD && this.props.reports.M_QofL2_SD[this.props.collection] === 1) ||
-			(this.props.reports && this.props.reports.PC_QofL2_SD && this.props.reports.PC_QofL2_SD[this.props.collection] === 0) ||
-			(this.props.reports && this.props.reports.PC_QofL2_SD && this.props.reports.PC_QofL2_SD[this.props.collection] === 1) ||
-			(this.props.reports && this.props.reports.UA_QofL2_SD && this.props.reports.UA_QofL2_SD[this.props.collection] === 0) ||
-			(this.props.reports && this.props.reports.UA_QofL2_SD && this.props.reports.UA_QofL2_SD[this.props.collection] === 1) ||
-			(this.props.reports && this.props.reports.PD_QofL2_SD && this.props.reports.PD_QofL2_SD[this.props.collection] === 0) ||
-			(this.props.reports && this.props.reports.PD_QofL2_SD && this.props.reports.PD_QofL2_SD[this.props.collection] === 1) ||
-			(this.props.reports && this.props.reports.AD_QofL2_SD && this.props.reports.AD_QofL2_SD[this.props.collection] === 0) ||
-			(this.props.reports && this.props.reports.AD_QofL2_SD && this.props.reports.AD_QofL2_SD[this.props.collection] === 1)
-		) {
-			this.setState({ redAlert: true });
-		}
+        if (
+            (reports && reports.HT_QofL2_SD && reports.HT_QofL2_SD[collection] <= 50) ||
+            (reports && reports.PH_QofL2_SD && reports.PH_QofL2_SD[collection] === 0) ||
+            (reports && reports.MH_QofL2_SD && reports.MH_QofL2_SD[collection] === 0) ||
+            (reports && reports.M_QofL2_SD && (reports.M_QofL2_SD[collection] === 0 || reports.M_QofL2_SD[collection] === 1)) ||
+            (reports && reports.PC_QofL2_SD && (reports.PC_QofL2_SD[collection] === 0 || reports.PC_QofL2_SD[collection] === 1)) ||
+            (reports && reports.UA_QofL2_SD && (reports.UA_QofL2_SD[collection] === 0 || reports.UA_QofL2_SD[collection] === 1)) ||
+            (reports && reports.PD_QofL2_SD && (reports.PD_QofL2_SD[collection] === 0 || reports.PD_QofL2_SD[collection] === 1)) ||
+            (reports && reports.AD_QofL2_SD && (reports.AD_QofL2_SD[collection] === 0 || reports.AD_QofL2_SD[collection] === 1))
+        ) {
+            this.setState({ redAlert: true });
+        }
 
-		//yellow alerts check
-		if (
-			(this.props.reports && this.props.reports.HT_QofL2_SD && this.props.reports.HT_QofL2_SD[this.props.collection] > 50 && this.props.reports.HT_QofL2_SD[this.props.collection] <= 65) ||
-			(this.props.reports && this.props.reports.PH_QofL2_SD && this.props.reports.PH_QofL2_SD[this.props.collection] === 1) ||
-			(this.props.reports && this.props.reports.MH_QofL2_SD && this.props.reports.MH_QofL2_SD[this.props.collection] === 1) ||
-			(this.props.reports && this.props.reports.M_QofL2_SD && this.props.reports.M_QofL2_SD[this.props.collection] === 2) ||
-			(this.props.reports && this.props.reports.PC_QofL2_SD && this.props.reports.PC_QofL2_SD[this.props.collection] === 2) ||
-			(this.props.reports && this.props.reports.UA_QofL2_SD && this.props.reports.UA_QofL2_SD[this.props.collection] === 2) ||
-			(this.props.reports && this.props.reports.PD_QofL2_SD && this.props.reports.PD_QofL2_SD[0] === 2) ||
-			(this.props.reports && this.props.reports.AD_QofL2_SD && this.props.reports.AD_QofL2_SD[this.props.collection] === 2) ||
-			(this.props.reports && this.props.reports.HU_ED_QofL2_SD && this.props.reports.HU_ED_QofL2_SD[this.props.collection] > 0 && this.props.reports.HU_ED_QofL2_SD[this.props.collection] < 999) ||
-			(this.props.reports && this.props.reports.HU_HNum_QofL2_SD && this.props.reports.HU_HNum_QofL2_SD[this.props.collection] > 0 && this.props.reports.HU_HNum_QofL2_SD[this.props.collection] < 999) ||
-			(this.props.reports && this.props.reports.HU_EMS_QofL2_SD && this.props.reports.HU_EMS_QofL2_SD[this.props.collection] > 0 && this.props.reports.HU_EMS_QofL2_SD[this.props.collection] < 999) ||
-			(this.props.reports && this.props.reports.HU_UC_QofL2_SD && this.props.reports.HU_UC_QofL2_SD[this.props.collection] > 0 && this.props.reports.HU_UC_QofL2_SD[this.props.collection] < 999) ||
-			(this.props.reports && this.props.reports.access_to_family_doctor && this.props.reports.access_to_family_doctor[this.props.collection] == "No") ||
-			(
-				this.props.reports && this.props.reports.support_wellness_program && this.props.reports.problem_walking && this.props.reports.problem_washing_dressing && this.props.reports.problem_usual_activities && this.props.reports.problem_pain_discomfort && this.props.reports.problem_anxious_depressed &&
-				this.props.reports.support_wellness_program[this.props.collection] &&
-				(this.props.reports.problem_walking[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-				(this.props.reports.problem_washing_dressing[this.props.collection] > 1 && this.props.reports.problem_washing_dressing[this.props.collection] < 999) &&
-				(this.props.reports.problem_usual_activities[this.props.collection] > 1 && this.props.reports.problem_usual_activities[this.props.collection] < 999) &&
-				(this.props.reports.problem_pain_discomfort[this.props.collection] > 1 && this.props.reports.problem_pain_discomfort[this.props.collection] < 999) &&
-				(this.props.reports.problem_anxious_depressed[this.props.collection] > 1 && this.props.reports.problem_anxious_depressed[this.props.collection] < 999)
-			) ||
-			(
-				this.props.reports && this.props.reports.support_informal && this.props.reports.problem_walking && this.props.reports.problem_washing_dressing && this.props.reports.problem_usual_activities && this.props.reports.problem_pain_discomfort && this.props.reports.problem_anxious_depressed &&
-				this.props.reports.support_informal[this.props.collection] &&
-				(this.props.reports.problem_walking[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-				(this.props.reports.problem_washing_dressing[this.props.collection] > 1 && this.props.reports.problem_washing_dressing[this.props.collection] < 999) &&
-				(this.props.reports.problem_usual_activities[this.props.collection] > 1 && this.props.reports.problem_usual_activities[this.props.collection] < 999) &&
-				(this.props.reports.problem_pain_discomfort[this.props.collection] > 1 && this.props.reports.problem_pain_discomfort[this.props.collection] < 999) &&
-				(this.props.reports.problem_anxious_depressed[this.props.collection] > 1 && this.props.reports.problem_anxious_depressed[this.props.collection] < 999)
-			)
-		) {
-			this.setState({ yellowAlert: true });
-		}
-	}
-	render() {
-		
-		return (
-			<Grid container item xs={12} spacing={2}>
-				<Grid item xs={2}>
-					<Typography variant="h5" color="inherit" align="left" gutterBottom>
-						Health Alert
-					</Typography>
-				</Grid>
+        if (
+            (reports && reports.HT_QofL2_SD && reports.HT_QofL2_SD[collection] > 50 && reports.HT_QofL2_SD[collection] <= 65) ||
+            (reports && reports.PH_QofL2_SD && reports.PH_QofL2_SD[collection] === 1) ||
+            (reports && reports.MH_QofL2_SD && reports.MH_QofL2_SD[collection] === 1) ||
+            (reports && reports.M_QofL2_SD && reports.M_QofL2_SD[collection] === 2) ||
+            (reports && reports.PC_QofL2_SD && reports.PC_QofL2_SD[collection] === 2) ||
+            (reports && reports.UA_QofL2_SD && reports.UA_QofL2_SD[collection] === 2) ||
+            (reports && reports.PD_QofL2_SD && reports.PD_QofL2_SD[collection] === 2) ||
+            (reports && reports.AD_QofL2_SD && reports.AD_QofL2_SD[collection] === 2) ||
+            (reports && reports.HU_ED_QofL2_SD && reports.HU_ED_QofL2_SD[collection] > 0 && reports.HU_ED_QofL2_SD[collection] < 999) ||
+            (reports && reports.HU_HNum_QofL2_SD && reports.HU_HNum_QofL2_SD[collection] > 0 && reports.HU_HNum_QofL2_SD[collection] < 999) ||
+            (reports && reports.HU_EMS_QofL2_SD && reports.HU_EMS_QofL2_SD[collection] > 0 && reports.HU_EMS_QofL2_SD[collection] < 999) ||
+            (reports && reports.HU_UC_QofL2_SD && reports.HU_UC_QofL2_SD[collection] > 0 && reports.HU_UC_QofL2_SD[collection] < 999) ||
+            (reports && reports.access_to_family_doctor && reports.access_to_family_doctor[collection] === "No") ||
+            (
+                reports && reports.support_wellness_program && reports.support_wellness_program[collection] &&
+                reports.problem_walking && reports.problem_walking[collection] > 1 && reports.problem_walking[collection] < 999 &&
+                reports.problem_washing_dressing && reports.problem_washing_dressing[collection] > 1 && reports.problem_washing_dressing[collection] < 999 &&
+                reports.problem_usual_activities && reports.problem_usual_activities[collection] > 1 && reports.problem_usual_activities[collection] < 999 &&
+                reports.problem_pain_discomfort && reports.problem_pain_discomfort[collection] > 1 && reports.problem_pain_discomfort[collection] < 999 &&
+                reports.problem_anxious_depressed && reports.problem_anxious_depressed[collection] > 1 && reports.problem_anxious_depressed[collection] < 999
+            ) ||
+            (
+                reports && reports.support_informal && reports.support_informal[collection] &&
+                reports.problem_walking && reports.problem_walking[collection] > 1 && reports.problem_walking[collection] < 999 &&
+                reports.problem_washing_dressing && reports.problem_washing_dressing[collection] > 1 && reports.problem_washing_dressing[collection] < 999 &&
+                reports.problem_usual_activities && reports.problem_usual_activities[collection] > 1 && reports.problem_usual_activities[collection] < 999 &&
+                reports.problem_pain_discomfort && reports.problem_pain_discomfort[collection] > 1 && reports.problem_pain_discomfort[collection] < 999 &&
+                reports.problem_anxious_depressed && reports.problem_anxious_depressed[collection] > 1 && reports.problem_anxious_depressed[collection] < 999
+            )
+        ) {
+            this.setState({ yellowAlert: true });
+        }
+    }
 
-				{/* Red flag row */}
-				{this.state.redAlert === false ?
-					<Grid item xs={5}>
-						<ListItem>
-							<Typography variant="body1" color="inherit" align="left" gutterBottom>
-								None
-							</Typography>
-						</ListItem>
-					</Grid>
+    render() {
+        const { reports, collection } = this.props;
+        const { redAlert, yellowAlert } = this.state;
 
-					: <Grid item xs={5}>
-						{/* Health today less than 50*/}
-						{this.props.reports.HT_QofL2_SD && this.props.reports.HT_QofL2_SD[this.props.collection] <= 50 &&
-							<ListItem style={this.textBgRed}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									Your health today is a concern. On a scale of 0 to 100, you rate your health today as less than 50
-								</Typography>
-							</ListItem>
-						}
-						{/* general health is poor (0) */}
-						{this.props.reports.PH_QofL2_SD && this.props.reports.PH_QofL2_SD[this.props.collection] === 0 &&
-							<ListItem style={this.textBgRed}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You rate your health as poor
-								</Typography>
-							</ListItem>
-						}
-						{/* Mental health rated poor (0) */}
-						{this.props.reports.MH_QofL2_SD && this.props.reports.MH_QofL2_SD[this.props.collection] === 0 &&
-							<ListItem style={this.textBgRed}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You rate your mental health as poor
-								</Typography>
-							</ListItem>
-						}
-						{
-							(this.props.reports.M_QofL2_SD && this.props.reports.M_QofL2_SD[this.props.collection] &&
-								(this.props.reports.M_QofL2_SD[this.props.collection] === 0 || this.props.reports.M_QofL2_SD[this.props.collection] === 1)) &&
-							<ListItem style={this.textBgRed}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom style={{backgroundColor: '#e06666'}}>
-									You have severe problems walking around
-								</Typography>
-							</ListItem>
-						}
-						{/* Severe (1) or extreme (0) problems with personal care */}
-						{
-							(this.props.reports.PC_QofL2_SD && this.props.reports.PC_QofL2_SD[this.props.collection] &&
-								(this.props.reports.PC_QofL2_SD[this.props.collection] === 0 || this.props.reports.PC_QofL2_SD[this.props.collection] === 1)) &&
-							<ListItem style={this.textBgRed}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You have severe problems washing or dressing
-								</Typography>
-							</ListItem>
-						}
-						{/* Severe (1) or extreme (0) problems with usual activities */}
-						{
-							(this.props.reports.UA_QofL2_SD && this.props.reports.UA_QofL2_SD[this.props.collection] &&
-								(this.props.reports.UA_QofL2_SD[this.props.collection] === 0 || this.props.reports.UA_QofL2_SD[this.props.collection] === 1)) &&
-							<ListItem style={this.textBgRed}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You have severe problems doing usual activities
-								</Typography>
-							</ListItem>
-						}
-						{/* Severe (1) or extreme (0) problems with pain / discomfort */}
-						{
-							(this.props.reports.PD_QofL2_SD && this.props.reports.PD_QofL2_SD[this.props.collection] &&
-								(this.props.reports.PD_QofL2_SD[this.props.collection] === 0 || this.props.reports.PD_QofL2_SD[this.props.collection] === 1)) &&
-							<ListItem style={this.textBgRed}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You have severe problems with pain/discomfort
-								</Typography>
-							</ListItem>
-						}
-						{/* Severe (1) or extreme (0) problems with anxiety / depression */}
-						{
-							(this.props.reports.AD_QofL2_SD && this.props.reports.AD_QofL2_SD[this.props.collection] &&
-								(this.props.reports.AD_QofL2_SD[this.props.collection] === 0 || this.props.reports.AD_QofL2_SD[this.props.collection] === 1)) &&
-							<ListItem style={this.textBgRed}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You have severe problems with anxiety/ depression
-								</Typography>
-							</ListItem>
-						}
-					</Grid>}
+        return (
+            <Grid container spacing={3} style={{ fontFamily: 'Roboto, sans-serif' }}>
+                <Grid item xs={12}>
+                    <Typography variant="h5" color="inherit" align="left" gutterBottom>
+                        Health Alert
+                    </Typography>
+                </Grid>
 
-				{/* Yellow flag row */}
-				{this.state.yellowAlert === false ?
-					<Grid item xs={5}>
-						<ListItem>
-							<Typography variant="body1" color="inherit" align="center" gutterBottom>
-								None
-							</Typography>
-						</ListItem>
-					</Grid>
-					: <Grid item xs={5}>
-						{/* Health today is between 51 and 65*/}
-						{
-							(this.props.reports.HT_QofL2_SD && this.props.reports.HT_QofL2_SD[this.props.collection] && 50 < this.props.reports.HT_QofL2_SD[this.props.collection] && this.props.reports.HT_QofL2_SD[this.props.collection] <= 65) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									Your health today is fair. On a scale of 0 to 100, you rate your health today as {this.props.reports.HT_QofL2_SD[this.props.collection]}
-								</Typography>
-							</ListItem>
-						}
-						{/* general health is fair (1) */}
-						{
-							(this.props.reports.PH_QofL2_SD && this.props.reports.PH_QofL2_SD[this.props.collection] && this.props.reports.PH_QofL2_SD[this.props.collection] === 1) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You rate your health as fair
-								</Typography>
-							</ListItem>
-						}
-						{/* Mental health rated fair (1) */}
-						{
-							(this.props.reports.MH_QofL2_SD && this.props.reports.MH_QofL2_SD[this.props.collection] && this.props.reports.MH_QofL2_SD[this.props.collection] === 1) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You rate your mental health as fair
-								</Typography>
-							</ListItem>
-						}
-						{/* Moderate(2) problems with mobility */}
-						{
-							(this.props.reports.M_QofL2_SD && this.props.reports.M_QofL2_SD[this.props.collection] && this.props.reports.M_QofL2_SD[this.props.collection] === 2) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You have moderate problems walking around
-								</Typography>
-							</ListItem>
-						}
-						{/* Moderate(2) problems with personal care */}
-						{
-							(this.props.reports.PC_QofL2_SD && this.props.reports.PC_QofL2_SD[this.props.collection] && this.props.reports.PC_QofL2_SD[this.props.collection] === 2) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You have moderate problems washing or dressing
-								</Typography>
-							</ListItem>
-						}
-						{/* Moderate(2) problems with usual activities */}
-						{
-							(this.props.reports.UA_QofL2_SD && this.props.reports.UA_QofL2_SD[this.props.collection] && this.props.reports.UA_QofL2_SD[this.props.collection] === 2) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You have moderate problems doing usual activities
-								</Typography>
-							</ListItem>
-						}
-						{/* Moderate(2) problems with pain / discomfort */}
-						{
-							(this.props.reports.PD_QofL2_SD && this.props.reports.PD_QofL2_SD[this.props.collection] && this.props.reports.PD_QofL2_SD[this.props.collection] === 2) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You have moderate problems with pain/discomfort
-								</Typography>
-							</ListItem>
-						}
-						{/* Moderate(2) problems with anxiety / depression */}
-						{
-							(this.props.reports.AD_QofL2_SD && this.props.reports.AD_QofL2_SD[this.props.collection] && this.props.reports.AD_QofL2_SD[this.props.collection] === 2) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You have moderate problems with anxiety/ depression
-								</Typography>
-							</ListItem>
-						}
-						{/* Number of ER visits */}
-						{
-							(this.props.reports.HU_ED_QofL2_SD && this.props.reports.HU_ED_QofL2_SD[this.props.collection] && 999 > this.props.reports.HU_ED_QofL2_SD[this.props.collection] && this.props.reports.HU_ED_QofL2_SD[this.props.collection] > 0) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You had {this.props.reports.HU_ED_QofL2_SD[this.props.collection]} ER visits in the past year.
-								</Typography>
-							</ListItem>
-						}
-						{/* Number of hospitalizations */}
-						{
-							(this.props.reports.HU_HNum_QofL2_SD && this.props.reports.HU_HNum_QofL2_SD[this.props.collection] && 999 > this.props.reports.HU_HNum_QofL2_SD[this.props.collection] && this.props.reports.HU_HNum_QofL2_SD[this.props.collection] > 0) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You had {this.props.reports.HU_HNum_QofL2_SD[this.props.collection]} hospitalizations in the past year.
-								</Typography>
-							</ListItem>
-						}
-						{/* Number of crisis */}
-						{
-							(this.props.reports.HU_EMS_QofL2_SD && this.props.reports.HU_EMS_QofL2_SD[this.props.collection] && 999 > this.props.reports.HU_EMS_QofL2_SD[this.props.collection] && this.props.reports.HU_EMS_QofL2_SD[this.props.collection] > 0) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You had {this.props.reports.HU_EMS_QofL2_SD[this.props.collection]} crisis in the past year.
-								</Typography>
-							</ListItem>
-						}
-						{/* Number of urgent care visits */}
-						{
-							(this.props.reports.HU_UC_QofL2_SD && this.props.reports.HU_UC_QofL2_SD[this.props.collection] && 999 > this.props.reports.HU_UC_QofL2_SD[this.props.collection] && this.props.reports.HU_UC_QofL2_SD[this.props.collection] > 0) &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You had {this.props.reports.HU_UC_QofL2_SD[this.props.collection]} urgent care visits in the past year.
-								</Typography>
-							</ListItem>
-						}
-						{/*access to family doctor? */}
-						{
-							(this.props.reports.access_to_family_doctor && this.props.reports.access_to_family_doctor[this.props.collection] && this.props.reports.access_to_family_doctor[this.props.collection] == "No") &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You don’t have access to a family doctor
-								</Typography>
-							</ListItem>
-						}
+                {/* Red flag row */}
+                <Grid item xs={6}>
+                    <Typography variant="h6" color="inherit" align="left" gutterBottom>
+                        Red Flags
+                    </Typography>
+                    {redAlert ? (
+                        <Grid container >
+                            {reports && reports.HT_QofL2_SD && reports.HT_QofL2_SD[collection] <= 50 && (
+                                <Grid item xs={6}>
+                                    <Paper style={this.textBgRed}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            Your health today is a concern. On a scale of 0 to 100, you rate your health today as less than 50.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.PH_QofL2_SD && reports.PH_QofL2_SD[collection] === 0 && (
+                                <Grid>
+                                    <Paper style={this.textBgRed}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You rate your health as poor.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.MH_QofL2_SD && reports.MH_QofL2_SD[collection] === 0 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgRed} >
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You rate your mental health as poor.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.M_QofL2_SD && (reports.M_QofL2_SD[collection] === 0 || reports.M_QofL2_SD[collection] === 1) && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgRed}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have severe problems walking around.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.PC_QofL2_SD && (reports.PC_QofL2_SD[collection] === 0 || reports.PC_QofL2_SD[collection] === 1) && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgRed}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have severe problems washing or dressing.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.UA_QofL2_SD && (reports.UA_QofL2_SD[collection] === 0 || reports.UA_QofL2_SD[collection] === 1) && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgRed}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have severe problems doing usual activities.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.PD_QofL2_SD && (reports.PD_QofL2_SD[collection] === 0 || reports.PD_QofL2_SD[collection] === 1) && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgRed}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have severe problems with pain/discomfort.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.AD_QofL2_SD && (reports.AD_QofL2_SD[collection] === 0 || reports.AD_QofL2_SD[collection] === 1) && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgRed} elevation={3}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have severe problems with anxiety/depression.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                        </Grid>
+                    ) : (
+                        <Alert severity="info">No Red Flags</Alert>
+                    )}
+                </Grid>
 
-						
-						{/* Seldom participated in wellness activities */}
-						{/* {this.props.reports.support_wellness_program[this.props.collection] &&
-						(this.props.reports.problem_walking[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						(this.props.reports.problem_washing_dressing[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						(this.props.reports.problem_usual_activities[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						(this.props.reports.problem_walking[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						(this.props.reports.problem_pain_discomfort[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						(this.props.reports.problem_anxious_depressed[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						<ListItem>
-							<Typography variant="body1" color="inherit" align="left" gutterBottom>
-								Despite serious health limitations, you seldom participated in wellness activities
-							</Typography>
-						</ListItem>
-					} */}
-						{/* No access to informal care */}
-						{/* {this.props.reports.support_informal[this.props.collection] &&
-						(this.props.reports.problem_walking[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						(this.props.reports.problem_washing_dressing[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						(this.props.reports.problem_usual_activities[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						(this.props.reports.problem_walking[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						(this.props.reports.problem_pain_discomfort[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						(this.props.reports.problem_anxious_depressed[this.props.collection] > 1 && this.props.reports.problem_walking[this.props.collection] < 999) &&
-						<ListItem>
-							<Typography variant="body1" color="inherit" align="left" gutterBottom>
-								Despite serious health limitations, you did not have access to informal care
-							</Typography>
-						</ListItem>
-					} */}
-					</Grid>}
-			</Grid>
-		)
-	}
+                {/* Yellow flag row */}
+                <Grid item xs={6}>
+                    <Typography variant="h6" color="inherit" align="left" gutterBottom>
+                        Yellow Flags
+                    </Typography>
+                    {yellowAlert ? (
+                        <Grid container>
+                            {reports && reports.HT_QofL2_SD && reports.HT_QofL2_SD[collection] > 50 && reports.HT_QofL2_SD[collection] <= 65 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            Your health today is a concern. On a scale of 0 to 100, you rate your health today as between 50 and 65.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.PH_QofL2_SD && reports.PH_QofL2_SD[collection] === 1 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You rate your health as fair.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.MH_QofL2_SD && reports.MH_QofL2_SD[collection] === 1 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You rate your mental health as fair.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.M_QofL2_SD && reports.M_QofL2_SD[collection] === 2 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have moderate problems walking around.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.PC_QofL2_SD && reports.PC_QofL2_SD[collection] === 2 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have moderate problems washing or dressing.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.UA_QofL2_SD && reports.UA_QofL2_SD[collection] === 2 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have moderate problems doing usual activities.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.PD_QofL2_SD && reports.PD_QofL2_SD[collection] === 2 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have moderate problems with pain/discomfort.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.AD_QofL2_SD && reports.AD_QofL2_SD[collection] === 2 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have moderate problems with anxiety/depression.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.HU_ED_QofL2_SD && reports.HU_ED_QofL2_SD[collection] > 0 && reports.HU_ED_QofL2_SD[collection] < 999 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have visited the Emergency Department in the last year.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.HU_HNum_QofL2_SD && reports.HU_HNum_QofL2_SD[collection] > 0 && reports.HU_HNum_QofL2_SD[collection] < 999 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have been hospitalized in the last year.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.HU_EMS_QofL2_SD && reports.HU_EMS_QofL2_SD[collection] > 0 && reports.HU_EMS_QofL2_SD[collection] < 999 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have used ambulance services in the last year.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.HU_UC_QofL2_SD && reports.HU_UC_QofL2_SD[collection] > 0 && reports.HU_UC_QofL2_SD[collection] < 999 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You have visited urgent care in the last year.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.access_to_family_doctor && reports.access_to_family_doctor[collection] === "No" && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left">
+                                            You do not have access to a family doctor.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                            {reports && reports.support_wellness_program && reports.problem_walking && reports.problem_walking[collection] > 1 && reports.problem_walking[collection] < 999 &&
+                                reports.problem_washing_dressing && reports.problem_washing_dressing[collection] > 1 && reports.problem_washing_dressing[collection] < 999 &&
+                                reports.problem_usual_activities && reports.problem_usual_activities[collection] > 1 && reports.problem_usual_activities[collection] < 999 &&
+                                reports.problem_pain_discomfort && reports.problem_pain_discomfort[collection] > 1 && reports.problem_pain_discomfort[collection] < 999 &&
+                                reports.problem_anxious_depressed && reports.problem_anxious_depressed[collection] > 1 && reports.problem_anxious_depressed[collection] < 999 && (
+                                    <Grid item xs={12}>
+                                        <Paper style={this.textBgYellow}>
+                                            <Typography variant="body1" color="inherit" align="left">
+                                                You need support for multiple moderate problems.
+                                            </Typography>
+                                        </Paper>
+                                    </Grid>
+                            )}
+                            {reports && reports.support_informal && reports.problem_walking && reports.problem_walking[collection] > 1 && reports.problem_walking[collection] < 999 &&
+                                reports.problem_washing_dressing && reports.problem_washing_dressing[collection] > 1 && reports.problem_washing_dressing[collection] < 999 &&
+                                reports.problem_usual_activities && reports.problem_usual_activities[collection] > 1 && reports.problem_usual_activities[collection] < 999 &&
+                                reports.problem_pain_discomfort && reports.problem_pain_discomfort[collection] > 1 && reports.problem_pain_discomfort[collection] < 999 &&
+                                reports.problem_anxious_depressed && reports.problem_anxious_depressed[collection] > 1 && reports.problem_anxious_depressed[collection] < 999 && (
+                                    <Grid item xs={12}>
+                                        <Paper style={this.textBgYellow}>
+                                            <Typography variant="body1" color="inherit" align="left">
+                                                You need support for multiple moderate problems.
+                                            </Typography>
+                                        </Paper>
+                                    </Grid>
+                            )}
+                        </Grid>
+                    ) : (
+                        <Alert severity="info">No Yellow Flags</Alert>
+                    )}
+                </Grid>
+            </Grid>
+        );
+    }
 }

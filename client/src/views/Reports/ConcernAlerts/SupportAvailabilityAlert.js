@@ -1,107 +1,99 @@
 import React, { Component } from 'react';
-import Typography from '@material-ui/core/Typography';  //h1, p replacement Tag
+import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { ListItem } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Alert from '@material-ui/lab/Alert';
 
 export default class SupportAvailabilityAlert extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			redAlert: false,
-			yellowAlert: false,
-		};
-	}
+    constructor(props) {
+        super(props);
+        this.state = {
+            redAlert: false,
+            yellowAlert: false,
+        };
+    }
 
-	textBgRed = { backgroundColor: this.props.colors.red };
-	textBgYellow = { backgroundColor: this.props.colors.yellow };
+    textBgRed = { backgroundColor: this.props.colors.red, padding: '10px', margin: '1px 0'  };
+    textBgYellow = { backgroundColor: this.props.colors.yellow, padding: '10px', margin: '1px 0'  };
 
-	componentDidMount() {
-		const { reports, collection } = this.props;
+    componentDidMount() {
+        const { reports, collection } = this.props;
 
-		if (reports.PSS_QofL1_COMB && reports.PSS_QofL1_COMB[collection] !== undefined) {
-			// Check conditions for Red Flags
-			if (
-				reports.PSS_QofL1_COMB[collection] >= 2.5 &&
-				reports.PSS_QofL1_COMB[collection] <= 3
-			) {
-				this.setState({ redAlert: true });
-			}
+        if (reports.PSS_QofL1_COMB && reports.PSS_QofL1_COMB[collection] !== undefined) {
+            // Check conditions for Red Flags
+            if (
+                reports.PSS_QofL1_COMB[collection] >= 2.5 &&
+                reports.PSS_QofL1_COMB[collection] <= 3
+            ) {
+                this.setState({ redAlert: true });
+            }
 
-			// Check conditions for Yellow Flags
-			if (
-				reports.PSS_QofL1_COMB[collection] >= 1.6 &&
-				reports.PSS_QofL1_COMB[collection] <= 2.4
-			) {
-				this.setState({ yellowAlert: true });
-			}
-		}
-	}
+            // Check conditions for Yellow Flags
+            if (
+                reports.PSS_QofL1_COMB[collection] >= 1.6 &&
+                reports.PSS_QofL1_COMB[collection] <= 2.4
+            ) {
+                this.setState({ yellowAlert: true });
+            }
+        }
+    }
 
-	render() {
-		return (
-			<Grid container item xs={12} spacing={2}>
-				<Grid item xs={2}>
-					<Typography variant="h5" color="inherit" align="left" gutterBottom>
-						Availability of Support
-					</Typography>
-				</Grid>
+    render() {
+        const { reports, collection } = this.props;
+        const { redAlert, yellowAlert } = this.state;
 
-				{/* Red Flags */}
-				{this.state.redAlert === false ?
-					<Grid item xs={5}>
-						<ListItem>
-							<Typography variant="body1" color="inherit" align="left" gutterBottom>
-								None
-							</Typography>
-						</ListItem>
-					</Grid>
-					: <Grid item xs={5}>
-						{/* Average of answers scored 0-3 trigger if PSS_QofL1_COMB 2.5-3 */}
-						{this.props.reports.PSS_QofL1_COMB && this.props.reports.PSS_QofL1_COMB[this.props.collection] !== undefined && this.props.reports.PSS_QofL1_COMB[this.props.collection] >= 2.5 && this.props.reports.PSS_QofL1_COMB[this.props.collection] <= 3 &&
-							<ListItem style={this.textBgRed}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You hardly ever feel you have the social support you need from your family and friends.
-								</Typography>
-							</ListItem>
-						}
-					</Grid>}
+        return (
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <Typography variant="h5" color="inherit" align="left" gutterBottom>
+                        Availability of Support
+                    </Typography>
+                </Grid>
 
-				{/* Yellow Flags */}
-				{this.state.yellowAlert === false ?
-					<Grid item xs={5}>
-						<ListItem>
-							<Typography variant="body1" color="inherit" align="left" gutterBottom>
-								None
-							</Typography>
-						</ListItem>
-					</Grid>
-					: <Grid item xs={5}>
-						{/* Average of answers scored 0-3 trigger if PSS_QofL1_COMB 1.6-2.4 */}
-						{this.props.reports.PSS_QofL1_COMB && this.props.reports.PSS_QofL1_COMB[this.props.collection] !== undefined && this.props.reports.PSS_QofL1_COMB[this.props.collection] >= 1.6 && this.props.reports.PSS_QofL1_COMB[this.props.collection] <= 2.4 &&
-							<ListItem style={this.textBgYellow}>
-								<Typography variant="body1" color="inherit" align="left" gutterBottom>
-									You only sometimes feel you have the social support you need from your family and friends.
-								</Typography>
-							</ListItem>
-						}
-						{/* Comfortable asking for help alert for not comfortable(3) or only sometimes(2) */}
-						{/* {this.props.reports.AFH_QofL1_SD[this.props.collection] == 2 &&
-						<ListItem>
-							<Typography variant="body1" color="inherit" align="left" gutterBottom>
-							You are only sometimes comfortable asking for help.		
-							</Typography>
-						</ListItem>
-					}
-					{this.props.reports.AFH_QofL1_SD[this.props.collection] == 3 &&
-						<ListItem>
-							<Typography variant="body1" color="inherit" align="left" gutterBottom>
-							You are not comfortable asking for help.		
-							{this.props.reports.AFH_QofL1_SD[this.props.collection] }
-							</Typography>
-						</ListItem>
-					} */}
-					</Grid>}
-			</Grid>
-		)
-	}
+                {/* Red Flags */}
+                <Grid item xs={6}>
+                    <Typography variant="h6" color="inherit" align="left" gutterBottom>
+                        Red Flags
+                    </Typography>
+                    {redAlert ? (
+                        <Grid container>
+                            {reports && reports.PSS_QofL1_COMB && reports.PSS_QofL1_COMB[collection] >= 2.5 && reports.PSS_QofL1_COMB[collection] <= 3 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgRed}>
+                                        <Typography variant="body1" color="inherit" align="left" gutterBottom>
+                                            You hardly ever feel you have the social support you need from your family and friends.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                        </Grid>
+                    ) : (
+                        <Alert severity="info">No Red Flags</Alert>
+                    )}
+                </Grid>
+
+                {/* Yellow Flags */}
+                <Grid item xs={6}>
+                    <Typography variant="h6" color="inherit" align="left" gutterBottom>
+                        Yellow Flags
+                    </Typography>
+                    {yellowAlert ? (
+                        <Grid container>
+                            {reports && reports.PSS_QofL1_COMB && reports.PSS_QofL1_COMB[collection] >= 1.6 && reports.PSS_QofL1_COMB[collection] <= 2.4 && (
+                                <Grid item xs={12}>
+                                    <Paper style={this.textBgYellow}>
+                                        <Typography variant="body1" color="inherit" align="left" gutterBottom>
+                                            You only sometimes feel you have the social support you need from your family and friends.
+                                        </Typography>
+                                    </Paper>
+                                </Grid>
+                            )}
+                        </Grid>
+                    ) : (
+                        <Alert severity="info">No Yellow Flags</Alert>
+                    )}
+                </Grid>
+            </Grid>
+        );
+    }
 }

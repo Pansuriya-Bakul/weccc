@@ -28,6 +28,7 @@ class AppRouter extends Component {
                             :
                             <Login
                                 Login={this.props.Login}
+                                errorMessage={this.props.errorMessage}
                             />
                     )} />
                 </Switch>

@@ -297,7 +297,7 @@ class Login extends Component {
     }
 
     render() {
-        let { classes } = this.props;
+        let { classes, errorMessage } = this.props;
         let { email, loginValidText, password, authenticating, showPassword } = this.state;
 
         return (
@@ -357,8 +357,9 @@ class Login extends Component {
                             onClick={this.handleLogin}
                         >
                             Sign in
-                            {authenticating && <CircularProgress size={24} className={classes.spinner} />}
+                            {!errorMessage && authenticating && <CircularProgress size={24} className={classes.spinner} />}
                         </Button>
+                        <div>{errorMessage && <div style={{ color: 'red',  marginTop:"10px" }}>{errorMessage}</div>}</div>
                         <Box mt={2}>
                             <Typography variant="body2" color="primary" style={{ textAlign: 'right' }}>
                                 Don't have an account?{' '}

@@ -1283,30 +1283,31 @@ function activities(question_activities, question_activities_others) {
 }
 
 function meaningful_activities(question) {
-  if (!question) return 999;
+  // if (!question) return 999;
 
-  let answer_array = new Array();
+  let answer_array = [];
 
-  // Dynamic Matrix containing Array of Objects
-
-  if (question && Array.isArray(question)) {
+  if (Array.isArray(question)) {
     question.forEach((item) => {
-      if (item.hasOwnProperty("column1")) {
-        // answer_array.push(String(item.column1).toLowerCase().trim());
+      // Check if item is an object with 'column1' property
+      if (item && typeof item === 'object' && item.hasOwnProperty('column1')) {
         answer_array.push(
           item.column1.charAt(0).toUpperCase() +
           item.column1.slice(1).toLowerCase().trim()
+        );
+      } else if (typeof item === 'string') { // Check if item is a string
+        answer_array.push(
+          item.charAt(0).toUpperCase() +
+          item.slice(1).toLowerCase().trim()
         );
       }
     });
   }
 
-  if (answer_array.length == 0) {
-    return 999;
-  } else {
-    return answer_array;
-  }
+  // Return 999 if no valid entries were added to the array
+  return answer_array.length > 0 ? answer_array : 999;
 }
+
 
 function like_to_join(question) {
   if (!question) return 999;

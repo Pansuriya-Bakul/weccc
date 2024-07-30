@@ -25,7 +25,7 @@ export default class PossibleConcerns extends Component {
                 <Box m={1}>
                     <Grid container spacing={2} id="concernsGrid">
                         <Grid item xs={4} />
-                        <Grid item xs={4}>
+                        {/* <Grid item xs={4}>
                             <Typography variant="h5" color="inherit" align="left" gutterBottom>
                                 Red Flags
                             </Typography>
@@ -34,7 +34,7 @@ export default class PossibleConcerns extends Component {
                             <Typography variant="h5" color="inherit" align="left" gutterBottom>
                                 Yellow Flags
                             </Typography>
-                        </Grid>
+                        </Grid> */}
                         <HealthAlert reports={this.props.reports} collection={this.props.collection} colors={this.colors} />
                         <PersonalWellBeingAlert reports={this.props.reports} collection={this.props.collection} colors={this.colors} />
                         <SupportAvailabilityAlert reports={this.props.reports} collection={this.props.collection} colors={this.colors}/>

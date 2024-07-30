@@ -664,20 +664,6 @@ const MemberStatusTab = (props) => { // Notice the arrow function... regular fun
                         }
                     </Grid>
 
-                    <Grid item xs={12} container direction="column" spacing={1} style={{ marginTop: '32px' }}>
-                        <Typography variant="subtitle1" component="h6">
-                            Completed Series
-                        </Typography>
-
-                        <Divider />
-
-                        {memberCollections &&
-                            <CompletedSurveysTable
-                                data={memberCollections ? memberCollections : []}
-                                role = {appState.role}
-                            />
-                        }
-                    </Grid>
                 </Collapse>
             </div>
         ) : (

@@ -1,16 +1,31 @@
-import React, { useEffect } from 'react'
-
-import axios from 'axios';
-
+import React from 'react';
 import Box from '@material-ui/core/Box';
 import Typography from "@material-ui/core/Typography";
-import { List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
-
-import CommunityVisual from './CommunityVisual'
+import CommunityVisual from './CommunityVisual';
 import './../reports.css';
 
 const CommunityCircle = (props) => {
     const { reports, collection } = props;
+
+    // Helper function to safely get values from arrays
+    const getArrayValue = (arr, index) => {
+        return arr && arr.length > index ? arr[index] : [];
+    };
+
+    // Convert string values to numbers where applicable
+    const convertToNumber = (value) => {
+        const num = Number(value);
+        return isNaN(num) ? 0 : num;
+    };
+
+    // Extract values
+    const householdSize = convertToNumber(getArrayValue(reports.household_size, collection));
+    const maritalStatus = getArrayValue(reports.marital_status, collection);
+    const totalChildren = convertToNumber(getArrayValue(reports.total_children, collection));
+    const meaningfulPeople = getArrayValue(reports.meaningful_people, collection);
+    const meaningfulActivities = getArrayValue(reports.meaningful_activities, 0);
+    const likeToJoin = getArrayValue(reports.like_to_join, collection);
+    const challengingActivities = getArrayValue(reports.challenging_activities, collection);
 
     return (
         <Box m={1}>
@@ -24,72 +39,58 @@ const CommunityCircle = (props) => {
             </Typography>
 
             <Box>
-
                 {/* Community Visual */}
-
-
-                        <Box>
-                            <CommunityVisual reports={reports} collection={collection} />
-                        </Box>
-
-                        <Box>
-                            <Typography variant="h6" color="secondary" align="left" gutterBottom className='avoid-break'>
-                                Primary Circle
-                            </Typography>
-
-                            <ul>
-
-                                {reports.household_size[collection]>=0 && reports.household_size[collection] !== 999 &&
-                                    <li>
-                                        <Typography display="block" component="div" align="left" gutterBottom>
-                                            <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
-                                                {reports.household_size[collection] > 0 ? `I live with ${reports.household_size[collection]} others` : "I live alone."}
-                                            </Typography>
-                                        </Typography>
-                                    </li>
-                                }
-
-                                {reports.marital_status[collection] && reports.marital_status[collection] !== 999 &&
-
-                                    <li>
-                                        <Typography display="block" component="div" align="left" gutterBottom>
-                                            <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
-                                                I am {reports.marital_status[collection]}
-                                            </Typography>
-                                        </Typography>
-                                    </li>
-                                }
-                                {reports.total_children[collection] > 0 && reports.total_children[collection] !== 999 &&
-                                    <li>
-                                        <Typography display="block" component="div" align="left" gutterBottom>
-                                            <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
-                                                {reports.total_children[collection] > 1 ? `I have ${reports.total_children[collection]} children` : "I have 1 child"}
-                                            </Typography>
-                                        </Typography>
-                                    </li>
-                                }
-
-                                {reports.meaningful_people[collection] && reports.meaningful_people[collection] !== 999 &&
-                                    <li>
-                                        <Typography display="block" component="div" align="left" gutterBottom>
-                                            <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
-                                                My most meaningful social relationships are with {reports.meaningful_people[collection]}
-                                            </Typography>
-                                        </Typography>
-                                    </li>
-                                }
-
-                            </ul>
-                        </Box>
-
-
-
-                {/* 
                 <Box>
-                <Typography variant="h6" color="secondary" align="left" gutterBottom>
-                    Caregiving Roles
-                </Typography>
-                </Box> */}
+                    <CommunityVisual reports={reports} collection={collection} />
+                </Box>
+
+                <Box>
+                    <Typography variant="h6" color="secondary" align="left" gutterBottom className='avoid-break'>
+                        Primary Circle
+                    </Typography>
+
+                    <ul>
+                        {householdSize > 0 && householdSize !== 999 &&
+                            <li>
+                                <Typography display="block" component="div" align="left" gutterBottom>
+                                    <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
+                                        {householdSize > 0 ? `I live with ${householdSize} others` : "I live alone."}
+                                    </Typography>
+                                </Typography>
+                            </li>
+                        }
+
+                        {maritalStatus &&
+                            <li>
+                                <Typography display="block" component="div" align="left" gutterBottom>
+                                    <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
+                                        I am {maritalStatus}
+                                    </Typography>
+                                </Typography>
+                            </li>
+                        }
+
+                        {totalChildren > 0 && totalChildren !== 999 &&
+                            <li>
+                                <Typography display="block" component="div" align="left" gutterBottom>
+                                    <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
+                                        {totalChildren > 1 ? `I have ${totalChildren} children` : "I have 1 child"}
+                                    </Typography>
+                                </Typography>
+                            </li>
+                        }
+
+                        {meaningfulPeople &&
+                            <li>
+                                <Typography display="block" component="div" align="left" gutterBottom>
+                                    <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
+                                        My most meaningful social relationships are with {meaningfulPeople}
+                                    </Typography>
+                                </Typography>
+                            </li>
+                        }
+                    </ul>
+                </Box>
 
                 <Box>
                     <Typography variant="h6" color="secondary" align="left" gutterBottom>
@@ -97,7 +98,7 @@ const CommunityCircle = (props) => {
                     </Typography>
 
                     <ul>
-                        {reports.meaningful_activities[collection] && reports.meaningful_activities[collection] !== 999 &&
+                        {meaningfulActivities.length > 0 &&
                             <li>
                                 <Typography display="block" component="div" align="left" gutterBottom>
                                     <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
@@ -105,17 +106,18 @@ const CommunityCircle = (props) => {
                                     </Typography>
                                 </Typography>
                                 <ul style={{ listStyleType: 'circle' }}>
-                                    {reports.meaningful_activities[collection].map((item, index) =>
+                                    {meaningfulActivities.map((item, index) =>
                                         <li key={`activities_${index}`}>
                                             <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
                                                 {item}
                                             </Typography>
-                                        </li>)}
+                                        </li>
+                                    )}
                                 </ul>
                             </li>
                         }
 
-                        {reports.like_to_join[collection] && reports.like_to_join[collection] !== 999 &&
+                        {likeToJoin && likeToJoin.length > 0 &&
                             <li>
                                 <Typography display="block" component="div" align="left" gutterBottom>
                                     <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
@@ -123,17 +125,18 @@ const CommunityCircle = (props) => {
                                     </Typography>
                                 </Typography>
                                 <ul style={{ listStyleType: 'circle' }}>
-                                    {reports.like_to_join[collection].map((item, index) =>
-                                        <li key={`activities_${index}`}>
+                                    {likeToJoin.map((item, index) =>
+                                        <li key={`likeToJoin_${index}`}>
                                             <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
                                                 {item}
                                             </Typography>
-                                        </li>)}
+                                        </li>
+                                    )}
                                 </ul>
                             </li>
                         }
 
-                        {reports.challenging_activities[collection] && reports.challenging_activities[collection] !== 999 &&
+                        {challengingActivities && challengingActivities.length > 0 &&
                             <li>
                                 <Typography display="block" component="div" align="left" gutterBottom>
                                     <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
@@ -141,24 +144,21 @@ const CommunityCircle = (props) => {
                                     </Typography>
                                 </Typography>
                                 <ul style={{ listStyleType: 'circle' }}>
-                                    {reports.challenging_activities[collection].map((item, index) =>
-                                        <li key={`activities_${index}`}>
+                                    {challengingActivities.map((item, index) =>
+                                        <li key={`challengingActivities_${index}`}>
                                             <Typography display="inline" variant="body1" component="div" color="black" align="left" gutterBottom>
                                                 {item}
                                             </Typography>
-                                        </li>)}
+                                        </li>
+                                    )}
                                 </ul>
                             </li>
                         }
-
                     </ul>
                 </Box>
-
             </Box>
-
-        </Box >
-
-    )
+        </Box>
+    );
 }
 
-export default CommunityCircle
+export default CommunityCircle;

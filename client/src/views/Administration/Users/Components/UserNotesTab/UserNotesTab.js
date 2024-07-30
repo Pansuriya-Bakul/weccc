@@ -327,6 +327,7 @@ const useStyles = makeStyles((theme) => ({
                     <Box mx={3} my={1} boxShadow={0}>
                       <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
                         <Grid item lg={8}>
+                        <Typography variant="h7">Add PDF</Typography><br/>
                           <input type="file" accept="application/pdf" onChange={handleFileChange} />
                         </Grid>
                       </Grid>
